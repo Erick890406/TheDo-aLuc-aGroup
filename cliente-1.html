@@ -1,0 +1,1115 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Cuenta VIP - Cafetería Pizzería</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <style>
+        :root {
+            --primary-color: #E74C3C; /* Rojo/coral vibrante */
+            --secondary-color: #2C3E50; /* Azul oscuro elegante */
+            --accent-color: #F1C40F; /* Dorado/Amarillo para acentos */
+            --light-bg: #F8F9FA; /* Fondo claro */
+            --dark-text: #34495E; /* Texto oscuro legible */
+            --light-text: #ECF0F1; /* Texto claro para fondos oscuros */
+            --card-bg: #FFFFFF;
+            --shadow-color: rgba(0, 0, 0, 0.08);
+            --success-color: #2ECC71;
+            --warning-color: #F39C12;
+            --info-color: #3498DB;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--light-bg);
+            color: var(--dark-text);
+            padding-top: 70px; 
+            line-height: 1.6;
+        }
+
+        .navbar-custom {
+            background-color: var(--secondary-color);
+            box-shadow: 0 4px 12px var(--shadow-color);
+        }
+        .navbar-brand {
+            font-family: 'Playfair Display', serif;
+            font-weight: 700;
+            color: var(--accent-color) !important;
+            font-size: 1.6rem;
+        }
+        .navbar-custom .btn-outline-light:hover,
+        .navbar-custom .btn-warning:hover {
+            transform: translateY(-2px);
+        }
+        .navbar-custom .nav-item .cart-nav-button {
+            color: var(--light-text);
+            font-size: 1.5rem; 
+            position: relative;
+            padding: 0.5rem 0.75rem;
+            margin-left: 0.5rem;
+            background: none; /* Asegurar que sea transparente */
+            border: none; /* Sin borde */
+        }
+        .navbar-custom .nav-item .cart-nav-button:hover {
+            color: var(--accent-color);
+        }
+        .navbar-custom .cart-count-nav {
+            position: absolute;
+            top: 0px; 
+            right: 0px; 
+            font-size: 0.7rem;
+            padding: 2px 5px;
+            line-height: 1;
+            font-weight: bold;
+            background-color: var(--primary-color); 
+            color: white;
+            border-radius: 50%;
+        }
+
+
+        #vip-card-container {
+            background: linear-gradient(145deg, var(--secondary-color) 0%, #34495e 100%);
+            color: var(--light-text);
+            border-radius: 20px; 
+            box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+            padding: 2rem 1.5rem; 
+            margin-top: 1rem;
+            text-align: center;
+            position: relative; 
+        }
+        #client-name {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem; 
+            color: var(--light-text);
+            margin-bottom: 0.25rem;
+        }
+        .points-display {
+            font-size: 3.5rem; 
+            font-weight: bold;
+            color: var(--accent-color);
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+            margin: 0.5rem 0;
+        }
+        .vip-badge { 
+            background-color: var(--primary-color);
+            color: white;
+            font-size: 0.8rem;
+            padding: 0.4em 0.8em;
+            border-radius: 20px;
+            font-weight: bold;
+        }
+         #client-status { 
+             font-size: 1rem;
+             opacity: 0.85;
+             margin-bottom: 0.5rem;
+        }
+        #client-phone-display {
+            font-size: 0.9rem;
+        }
+
+        #guest-prompt {
+            border-left: 5px solid var(--info-color);
+            background-color: #eaf6ff; 
+        }
+
+
+        .nav-pills .nav-link {
+            color: var(--secondary-color);
+            font-weight: 600; 
+            border-radius: 50px; 
+            margin: 0 0.3rem;
+            padding: 0.6rem 1.2rem;
+            transition: all 0.3s ease;
+        }
+        .nav-pills .nav-link:hover {
+            background-color: rgba(230, 57, 70, 0.05); 
+            color: var(--primary-color);
+        }
+        .nav-pills .nav-link.active {
+            background-color: var(--primary-color);
+            color: white;
+            box-shadow: 0 4px 10px rgba(230, 57, 70, 0.3);
+        }
+
+        .tab-pane h3 { 
+            font-family: 'Playfair Display', serif;
+            color: var(--secondary-color);
+            margin-bottom: 1.5rem !important; 
+            font-size: 2.2rem;
+        }
+        .tab-pane .d-flex.justify-content-center.align-items-center h3 { 
+            margin-bottom: 0 !important;
+        }
+
+
+        .menu-item-card, .reward-card {
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); 
+            border-radius: 16px; 
+            border: none; 
+            background-color: var(--card-bg);
+            margin-bottom: 2rem; 
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 4px 15px var(--shadow-color);
+            overflow: hidden; 
+        }
+        .menu-item-card:hover, .reward-card:hover {
+            transform: translateY(-8px) scale(1.02); 
+            box-shadow: 0 12px 25px rgba(0,0,0,0.12);
+        }
+        .product-image, .reward-image {
+            height: 220px; 
+            object-fit: cover;
+            width: 100%;
+        }
+        .card-body { padding: 1.25rem; display: flex; flex-direction: column; flex-grow: 1;} 
+        .card-title { 
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: var(--dark-text);
+        }
+        .card-text.small { 
+            font-size: 0.85rem;
+            color: #555;
+            min-height: 50px; 
+            margin-bottom: 1rem; 
+        }
+         .menu-item-card .price-points-row, .reward-card .price-points-row { 
+            margin-top: auto; 
+            padding-top: 0.75rem;
+            border-top: 1px solid #eee;
+        }
+        .menu-item-card .btn-primary, .reward-card .btn-warning {
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 0.6rem 1rem;
+            border-radius: 50px; 
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            width: 100%; 
+            margin-top: 1rem;
+        }
+        .menu-item-card .btn-primary:hover, .reward-card .btn-warning:hover {
+            transform: translateY(-2px);
+            opacity: 0.9;
+        }
+        .menu-item-card .btn-primary {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+        .reward-card .btn-warning {
+            background-color: var(--accent-color);
+            border-color: var(--accent-color);
+            color: var(--secondary-color);
+        }
+
+
+        #filter-container { 
+            margin-bottom: 2rem;
+            padding: 1rem;
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            box-shadow: 0 4px 15px var(--shadow-color);
+        }
+        #filter-container .btn-filter {
+            margin: 0.25rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            border-width: 1px;
+            transition: all 0.2s ease-in-out;
+            padding: 0.4rem 0.9rem;
+        }
+        #filter-container .btn-filter.active,
+        #filter-container .btn-filter:hover:not(.active) {
+            background-color: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+            transform: scale(1.05);
+        }
+        #filter-container .btn-filter:not(.active) {
+            background-color: transparent;
+            color: var(--secondary-color);
+            border-color: var(--secondary-color);
+        }
+
+
+        #loadingSpinnerUser { 
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(30, 30, 40, 0.95); 
+            display: none; 
+            align-items: center; justify-content: center;
+            z-index: 9999; transition: opacity 0.3s ease-out; opacity: 0; pointer-events: none;
+        }
+        #loadingSpinnerUser.show { 
+            display: flex; opacity: 1; pointer-events: auto;
+        }
+        .luxury-spinner { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1.2rem; }
+        .luxury-spinner-inner {
+            width: 4.5rem; height: 4.5rem; border: 5px solid rgba(255, 255, 255, 0.2);
+            border-radius: 50%; border-top-color: var(--light-text); 
+            animation: spin 1s linear infinite; 
+            position: relative; box-shadow: 0 0 25px rgba(255, 255, 255, 0.15);
+        }
+        .luxury-spinner-inner::before {
+            content: ""; position: absolute; top: -5px; left: -5px; right: -5px; bottom: -5px;
+            border-radius: 50%; border: 5px solid transparent; border-top-color: var(--accent-color); 
+            animation: spin 1.5s linear infinite reverse; 
+            filter: drop-shadow(0 0 8px var(--accent-color));
+        }
+        .luxury-spinner-text {
+            color: var(--light-text); font-family: 'Montserrat', sans-serif; font-size: 1.1rem;
+            letter-spacing: 1.5px; text-transform: uppercase;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.4); animation: pulse 1.8s infinite ease-in-out;
+        }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+        @keyframes pulse { 0%, 100% { opacity: 0.7; transform: scale(0.98); } 50% { opacity: 1; transform: scale(1); } }
+
+
+        .modal-header { background-color: var(--secondary-color); color: var(--light-text); border-bottom: 3px solid var(--primary-color);}
+        .modal-header .btn-close { filter: brightness(0) invert(1); }
+        .modal-title {font-family: 'Playfair Display', serif;}
+        .form-control:focus, .form-select:focus { border-color: var(--primary-color); box-shadow: 0 0 0 0.25rem rgba(230, 57, 70, 0.25); }
+        
+        .accordion-button { font-weight: 600; }
+        .accordion-button:not(.collapsed) { color: var(--light-text); background-color: var(--secondary-color); box-shadow: inset 0 -1px 0 rgba(255,255,255,.125);}
+        .accordion-button:focus { box-shadow: 0 0 0 0.25rem rgba(230, 57, 70, 0.25); }
+        .accordion-item { border-radius: 0.5rem; margin-bottom: 0.5rem; border: 1px solid #ddd; overflow: hidden;}
+        .accordion-item:first-of-type { border-top-left-radius: 0.5rem; border-top-right-radius: 0.5rem; }
+        .accordion-item:last-of-type { border-bottom-left-radius: 0.5rem; border-bottom-right-radius: 0.5rem; }
+
+        .toast-container { z-index: 1100 !important; } 
+        .toast { border-radius: 0.5rem; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        .toast-header { font-weight: 600; }
+
+        #qr-video { width: 100%; max-width: 300px; border-radius: 8px; border: 3px solid var(--secondary-color); display: block; margin: 1rem auto; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        #scanner-container button { font-weight: 500; }
+
+        .btn-canjear[disabled] { cursor: not-allowed; opacity: 0.65; background-color: #6c757d; border-color: #6c757d;}
+
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-sm navbar-custom fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="#"><i class="bi bi-star-half me-2"></i>Cafetería VIP</a>
+            
+            <div class="ms-auto d-flex align-items-center">
+                <div id="auth-buttons-nav" class="d-flex align-items-center">
+                    <!-- Botones login/registro o nombre de usuario -->
+                </div>
+                <button id="logoutButtonNav" class="btn btn-sm btn-outline-warning ms-2" style="display:none;" onclick="logoutClient()"><i class="bi bi-box-arrow-right"></i> Salir</button>
+                
+                <div class="nav-item ms-2" id="cartNavItem" style="display: none;">
+                    <button class="btn cart-nav-button p-0" type="button" data-bs-toggle="modal" data-bs-target="#cartModal">
+                        <i class="bi bi-cart-fill"></i>
+                        <span class="badge rounded-pill cart-count-nav" id="cart-count-nav">0</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4 py-4">
+        <div id="vip-card-container" class="vip-card p-4 mb-4 position-relative animate__animated animate__fadeInDown" style="display: none;">
+            <span class="position-absolute top-0 start-0 m-3 badge vip-badge" id="vip-status-badge">VIP</span>
+            <img id="user-avatar" src="https://via.placeholder.com/80/FFFFFF/2C3E50?Text=VIP" alt="User Avatar" class="rounded-circle mb-2 shadow-sm border border-2 border-light" width="80" height="80">
+            <h2 class="mb-1" id="client-name">¡Hola!</h2>
+            <p class="mb-1 opacity-75" id="client-status">Miembro VIP</p>
+            <div class="points-display mb-2" id="client-points">0</div>
+            <small id="client-phone-display" class="text-light opacity-75"></small>
+        </div>
+         <div id="guest-prompt" class="alert alert-info text-center shadow-sm animate__animated animate__fadeInUp" style="display: block;">
+            <h4><i class="bi bi-award-fill me-2"></i>¡Bienvenido a Cafetería Pizzería VIP!</h4>
+            <p class="lead mb-2">Inicia sesión para ver tus puntos y acceder a beneficios exclusivos, o regístrate para empezar a acumular.</p>
+        </div>
+
+
+        <ul class="nav nav-pills nav-fill mb-4 justify-content-center shadow-sm p-2 bg-white rounded">
+            <li class="nav-item" role="presentation"><a class="nav-link active" id="menu-tab-link" data-bs-toggle="pill" href="#menu-tab" role="tab" aria-controls="menu-tab" aria-selected="true"><i class="bi bi-card-list me-1"></i>Menú</a></li>
+            <li class="nav-item" role="presentation"><a class="nav-link" id="rewards-tab-link" data-bs-toggle="pill" href="#rewards-tab" role="tab" aria-controls="rewards-tab" aria-selected="false"><i class="bi bi-gift me-1"></i>Recompensas</a></li>
+            <li class="nav-item" role="presentation"><a class="nav-link" id="my-orders-tab-link" data-bs-toggle="pill" href="#my-orders-tab" role="tab" aria-controls="my-orders-tab" aria-selected="false"><i class="bi bi-receipt me-1"></i>Mis Pedidos</a></li>
+            <li class="nav-item" role="presentation"><a class="nav-link" data-bs-toggle="modal" data-bs-target="#scanModal" id="verifyButtonByQR"><i class="bi bi-qr-code-scan me-1"></i>QR Admin</a></li>
+        </ul>
+
+        <div class="tab-content" id="pills-tabContent">
+            <div class="tab-pane fade show active" id="menu-tab" role="tabpanel" aria-labelledby="menu-tab-link">
+                <div class="d-flex justify-content-center align-items-center mb-4">
+                    <h3 class="mb-0 me-3"><i class="bi bi-cup-straw me-2"></i>Nuestro Delicioso Menú</h3>
+                    <button class="btn btn-sm btn-outline-secondary" id="refreshMenuButton" onclick="forceLoadMenuItems()" title="Actualizar menú">
+                        <i class="bi bi-arrow-clockwise"></i>
+                    </button>
+                </div>
+                
+                <div id="filter-container" class="d-flex flex-wrap justify-content-center align-items-center">
+                    <button class="btn btn-sm btn-filter active" onclick="filterMenuByCategory('all')">Todos</button>
+                    <!-- Los botones de categoría se generarán aquí por JS -->
+                </div>
+
+                <div class="row g-4" id="menu-container">
+                    <div class="col-12 text-center p-5">
+                        <div class="spinner-border text-primary-color" style="width: 3rem; height: 3rem;" role="status">
+                            <span class="visually-hidden">Cargando...</span>
+                        </div>
+                        <p class="mt-2 fs-5">Cargando menú...</p>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane fade" id="rewards-tab" role="tabpanel" aria-labelledby="rewards-tab-link">
+                <h3 class="mb-4 text-center"><i class="bi bi-stars me-2"></i>Recompensas Disponibles</h3>
+                <div class="row g-4" id="rewards-container"><div class="col-12 text-center p-5"><div class="spinner-border text-primary-color" style="width: 3rem; height: 3rem;" role="status"></div><p class="mt-2 fs-5">Cargando recompensas...</p></div></div>
+            </div>
+            <div class="tab-pane fade" id="my-orders-tab" role="tabpanel" aria-labelledby="my-orders-tab-link">
+                <h3 class="mb-4 text-center"><i class="bi bi-clock-history me-2"></i>Historial de Pedidos</h3>
+                <div id="orders-history-container"><div class="col-12 text-center p-5"><p class="fs-5">Inicia sesión para ver tus pedidos.</p></div></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="loadingSpinnerUser" class="loading-spinner"> 
+      <div class="luxury-spinner">
+        <div class="luxury-spinner-inner"></div>
+        <span class="luxury-spinner-text">Cargando...</span>
+      </div>
+    </div>
+    
+    <div class="toast-container position-fixed bottom-0 end-0 p-3" id="toastPlacement"></div>
+
+
+    <!-- Modales -->
+    <div class="modal fade" id="scanModal" tabindex="-1" aria-labelledby="scanModalLabel" aria-hidden="true"><div class="modal-dialog modal-dialog-centered"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="scanModalLabel">Verificar con QR Admin</h5><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button></div><div class="modal-body"><div id="scanner-view"><p class="text-muted text-center">Apunta la cámara al QR proporcionado por el administrador.</p><div class="text-center mb-3"><button id="startScanner" class="btn btn-primary"><i class="bi bi-camera-video me-2"></i>Iniciar Escáner</button></div><div id="scanner-container" style="display:none;" class="text-center"><video id="qr-video" playsinline></video><button id="stopScanner" class="btn btn-danger mt-2"><i class="bi bi-x-circle me-2"></i>Detener</button></div></div><div id="confirmation-view" style="display:none;"></div><div id="verification-result" class="mt-3"></div></div></div></div></div>
+    <div class="modal fade" id="registerUserModal" tabindex="-1" aria-labelledby="registerUserModalLabel" aria-hidden="true"><div class="modal-dialog modal-dialog-centered"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="registerUserModalLabel">Crear Cuenta VIP</h5><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button></div><div class="modal-body"><form id="newUserRegistrationForm"><div class="mb-3"><label for="newUserName" class="form-label">Nombre Completo <span class="text-danger">*</span></label><input type="text" class="form-control" id="newUserName" required autocomplete="name"></div><div class="mb-3"><label for="newUserPhone" class="form-label">Teléfono <span class="text-danger">*</span></label><input type="tel" class="form-control" id="newUserPhone" required placeholder="Ej: 5xxxxxxx" autocomplete="tel"></div><div class="mb-3"><label for="newUserEmail" class="form-label">Correo (Opcional)</label><input type="email" class="form-control" id="newUserEmail" autocomplete="email"></div><div class="mb-3"><label for="newUserPassword" class="form-label">Contraseña <span class="text-danger">*</span></label><input type="password" class="form-control" id="newUserPassword" required autocomplete="new-password"></div><div class="mb-3"><label for="newUserConfirmPassword" class="form-label">Confirmar Contraseña <span class="text-danger">*</span></label><input type="password" class="form-control" id="newUserConfirmPassword" required autocomplete="new-password"></div><div id="registration-feedback" class="mt-3"></div></form></div><div class="modal-footer"><button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button><button type="button" class="btn btn-primary" onclick="handleUserRegistrationAttempt()">Registrarme</button></div></div></div></div>
+    <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true"><div class="modal-dialog modal-dialog-centered"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="loginModalLabel">Iniciar Sesión VIP</h5><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button></div><div class="modal-body"><form id="loginForm"><div class="mb-3"><label for="loginPhone" class="form-label">Teléfono</label><input type="tel" class="form-control" id="loginPhone" required autocomplete="username tel"></div><div class="mb-3"><label for="loginPassword" class="form-label">Contraseña</label><input type="password" class="form-control" id="loginPassword" required autocomplete="current-password"></div><div id="login-feedback" class="mt-3"></div></form></div><div class="modal-footer"><button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button><button type="button" class="btn btn-primary" onclick="handleLoginAttempt()">Acceder</button></div></div></div></div>
+    <div class="modal fade" id="cartModal" tabindex="-1" aria-labelledby="cartModalLabel" aria-hidden="true"><div class="modal-dialog modal-lg modal-dialog-scrollable modal-dialog-centered"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="cartModalLabel"><i class="bi bi-cart3 me-2"></i>Mi Pedido</h5><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button></div><div class="modal-body" id="cart-items-container"><p class="text-center">Tu carrito está vacío.</p></div><div class="modal-footer justify-content-between flex-wrap"><div class="text-start mb-2 mb-sm-0"><small class="text-muted d-block">Puntos a ganar: <span id="cart-points-to-earn" class="fw-bold">0</span></small><strong class="fs-5">Total: <span id="cart-total-price" style="color: var(--primary-color);">0.00</span> CUP</strong></div><div class="d-flex"><button type="button" class="btn btn-outline-danger me-2" onclick="clearCart()"><i class="bi bi-trash3 me-1"></i>Vaciar</button><button type="button" class="btn btn-success" onclick="confirmAndPlaceOrder()"><i class="bi bi-check-circle me-1"></i>Confirmar</button></div></div><div id="order-placement-feedback" class="m-3"></div></div></div></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
+    
+    <script>
+        // ========================================================================
+        //             CAFETERÍA PIZZERÍA - VIP SYSTEM - SCRIPT DE USUARIO
+        // ========================================================================
+
+        // --- CONFIGURACIÓN ---
+        const GOOGLE_SCRIPT_URL_USER = 'https://script.google.com/macros/s/AKfycbx9cSLbeD6NzAHC1aV2xpxVtlzdq3cbQ2sLETcUKKUMnHLyU-ACB70Z1-P-TprVr7C_/exec'; // ¡¡¡ REEMPLAZA ESTO !!!
+        
+        const LOGGED_IN_CLIENT_KEY = 'cafeteriaVipClientLoggedIn_v8'; 
+        const PRODUCTS_USER_CACHE_KEY = 'cafeteriaUserProductsCache_v8';
+        const USER_CART_KEY = 'cafeteriaUserCart_v5';
+        const REWARDS_USER_CACHE_KEY = 'cafeteriaUserRewardsCache_v3';
+        const MENU_CACHE_EXPIRY_KEY = 'cafeteriaMenuCacheExpiry_v1';
+        const CACHE_DURATION_MS = 60 * 60 * 1000; // 1 hora
+
+        // --- ESTADO GLOBAL ---
+        let clientData = null; 
+        let menuItems = []; 
+        let availableRewards = [];
+        let shoppingCart = [];
+        let currentFilterCategory = 'all'; 
+
+        // --- Variables para el Escáner QR ---
+        let videoElement, scannerActive = false;
+        let qrDataObjectFromAdmin = null; 
+
+        // --- ELEMENTOS DEL DOM FRECUENTES ---
+        const loadingSpinnerUser = document.getElementById('loadingSpinnerUser');
+        
+        // --- INSTANCIAS DE MODALES (Bootstrap 5) ---
+        let registrationModalInstance, loginModalInstance, scanModalInstance, cartModalInstance;
+
+        // --- INICIALIZACIÓN ---
+        document.addEventListener('DOMContentLoaded', async function() {
+            initializeModals();
+            loadCartFromStorage();
+            loadClientDataFromStorage(); 
+            updateClientDisplayAndUI();  
+            await loadMenuItems();       
+            setupEventListeners();       
+        });
+
+        function initializeModals() {
+            try {
+                ['registerUserModal', 'loginModal', 'scanModal', 'cartModal'].forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el) {
+                        if (id === 'registerUserModal') registrationModalInstance = new bootstrap.Modal(el);
+                        else if (id === 'loginModal') loginModalInstance = new bootstrap.Modal(el);
+                        else if (id === 'scanModal') scanModalInstance = new bootstrap.Modal(el);
+                        else if (id === 'cartModal') cartModalInstance = new bootstrap.Modal(el);
+                    } else { console.warn(`Modal con ID '${id}' no encontrado.`); }
+                });
+            } catch (error) { console.error("Error inicializando modales:", error); }
+        }
+
+        function setupEventListeners() {
+            document.getElementById('startScanner')?.addEventListener('click', startScanner);
+            document.getElementById('stopScanner')?.addEventListener('click', stopScanner);
+            document.getElementById('scanModal')?.addEventListener('hidden.bs.modal', handleScanModalClose);
+            
+            document.getElementById('registerUserModal')?.addEventListener('hidden.bs.modal', () => clearFormAndFeedback('newUserRegistrationForm', 'registration-feedback'));
+            document.getElementById('loginModal')?.addEventListener('hidden.bs.modal', () => clearFormAndFeedback('loginForm', 'login-feedback'));
+            
+            document.getElementById('cartModal')?.addEventListener('show.bs.modal', renderCartItems);
+
+            const rewardsTabEl = document.getElementById('rewards-tab-link'); 
+            if (rewardsTabEl) {
+                rewardsTabEl.addEventListener('shown.bs.tab', event => {
+                    console.log("Pestaña de recompensas mostrada");
+                    if (!clientData || !clientData.id) {
+                        document.getElementById('rewards-container').innerHTML = '<p class="text-center p-5 fs-5">Inicia sesión para ver y canjear recompensas.</p>';
+                        return;
+                    }
+                    if (availableRewards.length === 0 || !localStorage.getItem(REWARDS_USER_CACHE_KEY)) {
+                        loadAvailableRewards(true); 
+                    } else {
+                        generateRewardsList(); 
+                    }
+                });
+            }
+            const ordersTabEl = document.getElementById('my-orders-tab-link'); 
+            if (ordersTabEl) {
+                ordersTabEl.addEventListener('shown.bs.tab', event => {
+                    console.log("Pestaña de mis pedidos mostrada");
+                    loadUserOrders(); 
+                });
+            }
+        }
+        
+        function clearFormAndFeedback(formId, feedbackId) { 
+            if (formId && document.getElementById(formId)) document.getElementById(formId).reset(); 
+            const feedbackEl = document.getElementById(feedbackId); 
+            if (feedbackEl) feedbackEl.innerHTML = '';
+        }
+        
+        function handleScanModalClose() { 
+            stopScanner(); 
+            const verificationResultEl = document.getElementById('verification-result');
+            if (verificationResultEl) verificationResultEl.innerHTML = '';
+            
+            const scannerViewEl = document.getElementById('scanner-view');
+            if (scannerViewEl) scannerViewEl.style.display = 'block';
+            
+            const confirmationViewEl = document.getElementById('confirmation-view');
+            if (confirmationViewEl) { 
+                confirmationViewEl.innerHTML = ''; 
+                confirmationViewEl.style.display = 'none'; 
+            }
+            qrDataObjectFromAdmin = null; 
+        }
+
+        // --- COMUNICACIÓN CON GOOGLE APPS SCRIPT ---
+        async function fetchDataFromGAS(action, method = 'POST', payloadData = null) {
+            if (GOOGLE_SCRIPT_URL_USER === 'TU_URL_DE_SCRIPT_AQUI' || !GOOGLE_SCRIPT_URL_USER || GOOGLE_SCRIPT_URL_USER.length < 20) {
+                showGlobalFeedback("Error de Configuración: URL del script no definida.", "danger");
+                if (loadingSpinnerUser) loadingSpinnerUser.classList.remove('show');
+                return { success: false, message: 'GOOGLE_SCRIPT_URL_USER no configurada o inválida.' };
+            }
+            console.log(`User fetchData: Acción='${action}', Método='${method}', Payload=`, payloadData ? JSON.stringify(payloadData).substring(0,100) + "..." : "N/A");
+            if (loadingSpinnerUser) loadingSpinnerUser.classList.add('show');
+
+            try {
+                let url = GOOGLE_SCRIPT_URL_USER;
+                 if (!url.startsWith('https://script.google.com/macros/s/')) {
+                     url = 'https://script.google.com/macros/s/' + url + '/exec';
+                } else if (!url.endsWith('/exec')) {
+                    url += '/exec';
+                }
+
+                const options = { method: method, headers: {}, mode: 'cors', redirect: 'follow' };
+
+                if (method === 'GET') {
+                    const params = new URLSearchParams({ action: action, cacheBuster: new Date().getTime() });
+                    if (payloadData) { 
+                        for (const key in payloadData) { 
+                            if (payloadData.hasOwnProperty(key)) { params.append(key, payloadData[key]); }
+                        } 
+                    }
+                    url += `?${params.toString()}`;
+                } else { 
+                    options.headers['Content-Type'] = 'application/x-www-form-urlencoded';
+                    const formBody = new URLSearchParams();
+                    formBody.append("data", JSON.stringify({ action, payload: payloadData })); 
+                    options.body = formBody.toString();
+                }
+                
+                const res = await fetch(url, options);
+                if (!res.ok) { 
+                    const errorText = await res.text(); 
+                    throw new Error(`Error de red/servidor (${res.status}): ${errorText.substring(0,150)}`);
+                }
+                const responseData = await res.json();
+                console.log(`User fetchData completado para '${action}'. Respuesta:`, responseData);
+                return responseData;
+
+            } catch (error) {
+                console.error(`Excepción en fetchDataFromGAS (Acción: ${action}):`, error);
+                showGlobalFeedback(`Error de conexión: ${error.message || 'Desconocido'}. Intenta de nuevo.`, "danger", 7000);
+                return { success: false, message: `Error de conexión: ${error.message || 'Desconocido'}.` };
+            } finally {
+                if (loadingSpinnerUser) loadingSpinnerUser.classList.remove('show');
+            }
+        }
+
+        // --- MANEJO DE DATOS DEL CLIENTE ---
+        function loadClientDataFromStorage() {
+            const storedClientData = localStorage.getItem(LOGGED_IN_CLIENT_KEY);
+            if (storedClientData) {
+                try { 
+                    clientData = JSON.parse(storedClientData); 
+                } catch (e) { 
+                    localStorage.removeItem(LOGGED_IN_CLIENT_KEY); clientData = null;
+                }
+            } else { clientData = null; }
+        }
+
+        function updateClientDisplayAndUI() {
+            const el = id => document.getElementById(id);
+            const authNavContainer = el('auth-buttons-nav');
+            const logoutNavButton = el('logoutButtonNav');
+            const vipCardContainer = el('vip-card-container');
+            const guestPromptContainer = el('guest-prompt');
+            const verifyQRButton = el('verifyButtonByQR');
+
+            if (clientData && clientData.id && (clientData.verificado === true || String(clientData.verificado).toLowerCase() === 'true')) {
+                el('client-name').textContent = `¡Hola, ${clientData.nombre ? clientData.nombre.split(' ')[0] : 'Amigo'}!`;
+                el('client-points').textContent = clientData.puntos !== undefined ? clientData.puntos : 0;
+                el('client-status').textContent = `Nivel: ${(clientData.puntos||0)>=150?"Oro":(clientData.puntos||0)>=75?"Plata":"Bronce"}`;
+                el('client-phone-display').textContent = clientData.telefono ? `Tel: ${clientData.telefono}` : '';
+                el('vip-status-badge').style.display = 'inline-block';
+                
+                if(authNavContainer) authNavContainer.innerHTML = `<span class="navbar-text text-light me-2 small">Hola, ${clientData.nombre ? clientData.nombre.split(' ')[0] : 'VIP'}</span>`; 
+                if(logoutNavButton) logoutNavButton.style.display = 'inline-block';
+                if(vipCardContainer) vipCardContainer.style.display = 'block';
+                if(guestPromptContainer) guestPromptContainer.style.display = 'none';
+                if(verifyQRButton) verifyQRButton.classList.add('d-none'); 
+            } else {
+                el('client-name').textContent = `¡Bienvenido!`;
+                el('client-points').textContent = 0;
+                el('client-status').textContent = "Inicia sesión o regístrate.";
+                el('client-phone-display').textContent = '';
+                el('vip-status-badge').style.display = 'none';
+
+                if(authNavContainer) authNavContainer.innerHTML = `<button class="btn btn-sm btn-outline-light me-2" data-bs-toggle="modal" data-bs-target="#loginModal"><i class="bi bi-box-arrow-in-right"></i> Login</button><button class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#registerUserModal"><i class="bi bi-person-plus"></i> Registro</button>`;
+                if(logoutNavButton) logoutNavButton.style.display = 'none';
+                if(vipCardContainer) vipCardContainer.style.display = 'none';
+                if(guestPromptContainer) guestPromptContainer.style.display = 'block';
+
+                el('orders-history-container').innerHTML = '<p class="text-center p-5 fs-5">Inicia sesión para ver tus pedidos.</p>';
+                el('rewards-container').innerHTML = '<p class="text-center p-5 fs-5">Inicia sesión para ver y canjear recompensas.</p>';
+                if(verifyQRButton) verifyQRButton.classList.remove('d-none');
+            }
+            updateCartDisplay(); 
+        }
+
+        function logoutClient() { 
+            clientData = null; 
+            localStorage.removeItem(LOGGED_IN_CLIENT_KEY); 
+            shoppingCart = []; 
+            availableRewards = [];
+            localStorage.removeItem(USER_CART_KEY);
+            localStorage.removeItem(REWARDS_USER_CACHE_KEY); 
+            localStorage.removeItem(PRODUCTS_USER_CACHE_KEY); 
+            localStorage.removeItem(MENU_CACHE_EXPIRY_KEY);   
+            updateClientDisplayAndUI(); 
+            showGlobalFeedback('Sesión cerrada. ¡Vuelve pronto!', 'info');
+            
+            const activeTab = document.querySelector('.nav-pills .nav-link.active');
+            if (activeTab) {
+                const activeTabHref = activeTab.getAttribute('href');
+                if (activeTabHref === '#my-orders-tab') loadUserOrders();
+                else if (activeTabHref === '#rewards-tab') {
+                     document.getElementById('rewards-container').innerHTML = '<p class="text-center p-5 fs-5">Inicia sesión para ver y canjear recompensas.</p>';
+                } else if (activeTabHref === '#menu-tab') {
+                    forceLoadMenuItems(); 
+                }
+            }
+        }
+
+        // --- REGISTRO DE USUARIO ---
+        async function handleUserRegistrationAttempt() {
+            const nombre = document.getElementById('newUserName').value.trim();
+            const telefono = document.getElementById('newUserPhone').value.trim();
+            const email = document.getElementById('newUserEmail').value.trim();
+            const password = document.getElementById('newUserPassword').value;
+            const confirmPassword = document.getElementById('newUserConfirmPassword').value;
+            const feedbackEl = 'registration-feedback';
+            
+            if (!nombre || !telefono || !password || !confirmPassword) { showFeedbackInModal(null, feedbackEl, 'Todos los campos marcados con * son requeridos.', 'danger'); return; }
+            if (password !== confirmPassword) { showFeedbackInModal(null, feedbackEl, 'Las contraseñas no coinciden.', 'danger'); return; }
+            if (!/^\d{7,15}$/.test(telefono)) { showFeedbackInModal(null, feedbackEl, 'Por favor, ingresa un número de teléfono válido (7-15 dígitos).', 'danger'); return; }
+            if (password.length < 6) { showFeedbackInModal(null, feedbackEl, 'La contraseña debe tener al menos 6 caracteres.', 'danger'); return; }
+
+            showFeedbackInModal(null, feedbackEl, '<div class="spinner-border spinner-border-sm me-2"></div>Registrando...', 'info', null);
+            const payload = { nombre, telefono, email, password };
+            const result = await fetchDataFromGAS('registerNewUser', 'POST', payload);
+
+            if (result.success && result.data) {
+                showFeedbackInModal(null, feedbackEl, `${result.message || '¡Registro exitoso!'} Ahora puedes iniciar sesión.`, 'success', 4000);
+                document.getElementById('newUserRegistrationForm').reset();
+                setTimeout(() => { registrationModalInstance?.hide(); loginModalInstance?.show(); }, 3000);
+            } else {
+                showFeedbackInModal(null, feedbackEl, result.message || 'Error al registrar. Intenta de nuevo.', 'danger');
+            }
+        }
+
+        // --- INICIO DE SESIÓN ---
+        async function handleLoginAttempt() {
+            const telefono = document.getElementById('loginPhone').value.trim();
+            const password = document.getElementById('loginPassword').value;
+            const feedbackEl = 'login-feedback';
+            if (!telefono || !password) { showFeedbackInModal(null, feedbackEl, 'Teléfono y contraseña son requeridos.', 'danger'); return; }
+            
+            showFeedbackInModal(null, feedbackEl, '<div class="spinner-border spinner-border-sm me-2"></div>Iniciando sesión...', 'info', null);
+            const payload = { telefono, password };
+            const result = await fetchDataFromGAS('loginUser', 'POST', payload);
+
+            if (result.success && result.data) {
+                clientData = result.data; 
+                localStorage.setItem(LOGGED_IN_CLIENT_KEY, JSON.stringify(clientData));
+                updateClientDisplayAndUI(); 
+                showFeedbackInModal(null, feedbackEl, `¡Bienvenido de nuevo, ${clientData.nombre.split(' ')[0]}!`, 'success', 3000);
+                setTimeout(() => loginModalInstance?.hide(), 2000);
+                localStorage.removeItem(PRODUCTS_USER_CACHE_KEY); 
+                localStorage.removeItem(MENU_CACHE_EXPIRY_KEY);   
+                loadMenuItems(true); 
+                loadAvailableRewards(true); 
+                loadUserOrders(); 
+            } else {
+                showFeedbackInModal(null, feedbackEl, result.message || 'Error al iniciar sesión. Verifica tus datos.', 'danger');
+            }
+        }
+        
+        // --- MENÚ Y PRODUCTOS ---
+        async function loadMenuItems(forceRefresh = false) {
+            const menuContainer = document.getElementById('menu-container');
+            if (!menuContainer) { console.error("Contenedor de menú no encontrado"); return; }
+            
+            const cachedProducts = localStorage.getItem(PRODUCTS_USER_CACHE_KEY);
+            const cacheExpiry = localStorage.getItem(MENU_CACHE_EXPIRY_KEY);
+            const now = new Date().getTime();
+
+            if (!forceRefresh && cachedProducts && cacheExpiry && now < parseInt(cacheExpiry)) {
+                try {
+                    menuItems = JSON.parse(cachedProducts);
+                    console.log("Menú cargado de caché válido.");
+                    generateCategoryFilters(); 
+                    generateMenu();
+                    return; 
+                } catch(e) {
+                    console.warn("Caché de menú corrupta, limpiando...");
+                    localStorage.removeItem(PRODUCTS_USER_CACHE_KEY); 
+                    localStorage.removeItem(MENU_CACHE_EXPIRY_KEY);
+                }
+            }
+            
+            menuContainer.innerHTML = '<div class="col-12 text-center p-5"><div class="spinner-border text-primary-color" style="width: 3rem; height: 3rem;" role="status"></div><p class="mt-2 fs-5">Actualizando menú...</p></div>';
+            // No mostrar spinner general aquí si ya está el específico del menú
+            // if (loadingSpinnerUser) loadingSpinnerUser.classList.add('show'); 
+
+            const res = await fetchDataFromGAS('getPublicProducts', 'GET');
+            // if (loadingSpinnerUser) loadingSpinnerUser.classList.remove('show'); 
+            
+            if (res.success && Array.isArray(res.data)) {
+                menuItems = res.data.map(p => ({ 
+                    ...p, 
+                    price: parseFloat(p.price) || 0, 
+                    points: parseInt(p.points) || 0,
+                    id: String(p.id),
+                    category: p.category || "Otros" 
+                }));
+                localStorage.setItem(PRODUCTS_USER_CACHE_KEY, JSON.stringify(menuItems));
+                localStorage.setItem(MENU_CACHE_EXPIRY_KEY, (now + CACHE_DURATION_MS).toString()); 
+                console.log("Menú cargado desde servidor y guardado en caché.");
+                generateCategoryFilters(); 
+                generateMenu();
+                if (forceRefresh) {
+                    showGlobalFeedback("Menú actualizado.", "success", 2000);
+                }
+            } else {
+                menuContainer.innerHTML = `<p class="text-center text-danger p-5">Error al actualizar el menú: ${res.message || 'Desconocido.'}</p>`;
+                console.error("Fallo al cargar menú:", res);
+                if (cachedProducts) { 
+                    try {
+                        menuItems = JSON.parse(cachedProducts);
+                        console.warn("Usando caché expirada de menú debido a error de carga del servidor.");
+                        generateCategoryFilters(); generateMenu();
+                        showGlobalFeedback("No se pudo actualizar el menú, mostrando última versión disponible.", "warning", 4000);
+                    } catch(e) { /* No hacer nada si el caché también está corrupto */ }
+                }
+            }
+        }
+
+        function forceLoadMenuItems() {
+            console.log("Forzando actualización del menú...");
+            localStorage.removeItem(PRODUCTS_USER_CACHE_KEY);
+            localStorage.removeItem(MENU_CACHE_EXPIRY_KEY);
+            loadMenuItems(true); 
+        }
+
+        function generateCategoryFilters() { 
+            const filterContainer = document.getElementById('filter-container');
+            if (!filterContainer || !menuItems || menuItems.length === 0) return;
+
+            const categories = [...new Set(menuItems.map(item => item.category))].sort((a,b) => a.localeCompare(b));
+            
+            const existingFilters = filterContainer.querySelectorAll('.btn-filter:not([onclick*="all"])');
+            existingFilters.forEach(btn => btn.remove());
+
+            categories.forEach(category => {
+                const btn = document.createElement('button');
+                btn.className = 'btn btn-sm btn-filter'; 
+                btn.textContent = category;
+                btn.onclick = () => filterMenuByCategory(category);
+                filterContainer.appendChild(btn);
+            });
+             filterMenuByCategory(currentFilterCategory); 
+        }
+
+        function filterMenuByCategory(category) { 
+            currentFilterCategory = category;
+            const filterButtons = document.querySelectorAll('#filter-container .btn-filter');
+            filterButtons.forEach(btn => {
+                const btnCategoryText = btn.textContent.trim(); 
+                if (btnCategoryText.toLowerCase() === category.toLowerCase() || (category === 'all' && btnCategoryText.toLowerCase() === 'todos')) {
+                    btn.classList.add('active', 'btn-primary'); 
+                    btn.classList.remove('btn-outline-secondary');
+                } else {
+                    btn.classList.remove('active', 'btn-primary');
+                    btn.classList.add('btn-outline-secondary'); 
+                }
+            });
+            generateMenu(); 
+        }
+
+        function generateMenu() {
+            const mc = document.getElementById('menu-container'); 
+            if (!mc) return;
+            mc.innerHTML = '';
+
+            const itemsToDisplay = currentFilterCategory === 'all' ? 
+                                   menuItems : 
+                                   menuItems.filter(item => item.category === currentFilterCategory);
+
+            if (!itemsToDisplay || itemsToDisplay.length === 0) { 
+                mc.innerHTML = `<p class="text-center p-5 fs-5">No hay productos disponibles ${currentFilterCategory === 'all' ? '' : 'en la categoría "' + currentFilterCategory + '"'}.</p>`; 
+                return; 
+            }
+            
+            itemsToDisplay.sort((a,b) => (a.name || "").localeCompare(b.name || "")).forEach(item => {
+                let placeholderText = encodeURIComponent(item.name || 'Producto');
+                if (item.category && item.category.toLowerCase().includes('pizza')) placeholderText = 'Pizza';
+                else if (item.category && item.category.toLowerCase().includes('bebida')) placeholderText = 'Bebida';
+                else if (item.category && item.category.toLowerCase().includes('hamburguesa')) placeholderText = 'Hamburguesa';
+
+
+                mc.innerHTML += `
+                <div class="col-md-6 col-lg-4 d-flex align-items-stretch animate__animated animate__fadeInUp" style="animation-duration: 0.5s;">
+                    <div class="menu-item-card card w-100"> 
+                        <img src="${item.imageurl || 'https://via.placeholder.com/350x220/E74C3C/FFF?text=' + placeholderText}" class="product-image card-img-top" alt="${item.name || 'Producto'}">
+                        <div class="card-body">
+                            <h5 class="card-title mb-1">${item.name||'Sin Nombre'}</h5>
+                            <p class="card-text small text-muted flex-grow-1 mb-3">${item.description||'Deliciosa opción de nuestro menú.'}</p>
+                            <div class="price-points-row d-flex justify-content-between align-items-center">
+                                <span class="fw-bold fs-5" style="color: var(--primary-color);">${(item.price || 0).toFixed(2)} CUP</span>
+                                <span class="badge points-badge">+${item.points || 0} Puntos</span>
+                            </div>
+                            <button class="btn btn-primary" onclick="addToCart('${String(item.id)}')">
+                                <i class="bi bi-cart-plus-fill me-2"></i>Añadir
+                            </button>
+                        </div>
+                    </div>
+                </div>`;
+            });
+        }
+
+        // --- LÓGICA DEL CARRITO DE COMPRAS ---
+        function loadCartFromStorage(){ const s=localStorage.getItem(USER_CART_KEY); if(s)try{shoppingCart=JSON.parse(s); }catch(e){shoppingCart=[];console.error("Error parseando carrito",e);} else {shoppingCart=[];} updateCartDisplay();}
+        function saveCartToStorage(){ try{localStorage.setItem(USER_CART_KEY,JSON.stringify(shoppingCart));}catch(e){console.error("Error guardando carrito",e);}}
+        
+        function addToCart(productIdToFind) {
+            if (!clientData || !clientData.id) {
+                showGlobalFeedback('Inicia sesión para añadir productos al carrito.', 'warning');
+                loginModalInstance?.show();
+                return;
+            }
+            if (!menuItems || menuItems.length === 0) {
+                showGlobalFeedback("Error: El menú no está cargado. Intenta recargar la página.", "danger");
+                return;
+            }
+            const product = menuItems.find(item => String(item.id).trim() === String(productIdToFind).trim()); 
+            if (!product) {
+                showGlobalFeedback("Producto no encontrado. Intenta de nuevo o recarga la página.", "danger");
+                return;
+            }
+            const existingItem = shoppingCart.find(item => String(item.productId).trim() === String(productIdToFind).trim());
+            if (existingItem) {
+                existingItem.quantity = (existingItem.quantity || 0) + 1;
+            } else {
+                const newItem = {productId: String(product.id), name:product.name, price:parseFloat(product.price)||0, quantity:1, points:parseInt(product.points)||0};
+                shoppingCart.push(newItem);
+            }
+            saveCartToStorage();
+            updateCartDisplay();
+            // La animación del botón de la navbar es más sutil, quizás no sea necesaria
+            // const cartBtn=document.getElementById('cartNavItem'); // El div que contiene el botón
+            // if(cartBtn){cartBtn.classList.remove('animate__bounce');void cartBtn.offsetWidth; cartBtn.classList.add('animate__animated','animate__bounce');}
+            showGlobalFeedback(`${product.name} añadido al carrito!`, 'success', 2000);
+        }
+
+        function updateCartQuantity(productId, change) {
+            const itemInCart = shoppingCart.find(item => String(item.productId) === String(productId));
+            if (itemInCart) {
+                itemInCart.quantity += change;
+                if (itemInCart.quantity <= 0) {
+                    shoppingCart = shoppingCart.filter(item => String(item.productId) !== String(productId));
+                }
+            }
+            saveCartToStorage(); renderCartItems(); updateCartDisplay();
+        }
+        function removeFromCart(productId) { 
+            shoppingCart = shoppingCart.filter(item => String(item.productId) !== String(productId));
+            saveCartToStorage(); renderCartItems(); updateCartDisplay();
+        }
+        function clearCart() { 
+            if (confirm("¿Estás seguro de que quieres vaciar tu carrito?")) {
+                shoppingCart = []; saveCartToStorage(); renderCartItems(); updateCartDisplay();
+                showFeedbackInModal(null, 'order-placement-feedback', 'Carrito vaciado.', 'info', 2000);
+            }
+        }
+        function updateCartDisplay() {
+            const cartCountNavEl = document.getElementById('cart-count-nav'); 
+            const cartNavItemEl = document.getElementById('cartNavItem');    
+            
+            let totalItems = 0;
+            if(Array.isArray(shoppingCart)) {
+                totalItems = shoppingCart.reduce((sum, item) => sum + (item.quantity || 0), 0);
+            } else {
+                shoppingCart = []; 
+            }
+
+            if (cartCountNavEl) {
+                cartCountNavEl.textContent = totalItems;
+            }
+
+            if (cartNavItemEl) {
+                cartNavItemEl.style.display = (totalItems > 0 && clientData && clientData.id) ? 'block' : 'none';
+            }
+            
+            const pointsEl = document.getElementById('cart-points-to-earn');
+            if(pointsEl && Array.isArray(shoppingCart)) {
+                pointsEl.textContent = shoppingCart.reduce((s,i)=>s+((i.points||0)*(i.quantity||0)),0);
+            } else if(pointsEl) {
+                pointsEl.textContent = 0;
+            }
+        }
+        function renderCartItems() {
+            const container = document.getElementById('cart-items-container');
+            const totalPriceEl = document.getElementById('cart-total-price');
+            if (!container || !totalPriceEl) return;
+            container.innerHTML = ''; let currentTotal = 0;
+
+            if (shoppingCart.length === 0) {
+                container.innerHTML = '<p class="text-center py-4 fs-5">Tu carrito está vacío. ¡Añade algo delicioso!</p>';
+                totalPriceEl.textContent = '0.00'; updateCartDisplay(); return;
+            }
+            const ul = document.createElement('ul'); ul.className = 'list-group list-group-flush';
+            shoppingCart.forEach(item => {
+                const li = document.createElement('li'); li.className = 'list-group-item d-flex justify-content-between align-items-center flex-wrap gap-2 py-3';
+                const itemTotal = (item.price || 0) * (item.quantity || 0); currentTotal += itemTotal;
+                li.innerHTML = `
+                    <div class="me-auto">
+                        <strong class="d-block">${item.name || 'Producto Desconocido'}</strong>
+                        <small class="text-muted">${item.quantity || 0} x ${(item.price || 0).toFixed(2)} CUP</small>
+                    </div>
+                    <div class="fw-bold me-3 fs-5">${itemTotal.toFixed(2)} CUP</div>
+                    <div class="btn-group btn-group-sm" role="group">
+                        <button type="button" class="btn btn-outline-secondary px-2 py-1" onclick="updateCartQuantity('${String(item.productId)}', -1)"><i class="bi bi-dash-lg"></i></button>
+                        <span class="btn btn-light disabled px-3 py-1 border-secondary">${item.quantity || 0}</span>
+                        <button type="button" class="btn btn-outline-secondary px-2 py-1" onclick="updateCartQuantity('${String(item.productId)}', 1)"><i class="bi bi-plus-lg"></i></button>
+                        <button type="button" class="btn btn-outline-danger ms-2 px-2 py-1" onclick="removeFromCart('${String(item.productId)}')"><i class="bi bi-trash"></i></button>
+                    </div>`;
+                ul.appendChild(li);
+            });
+            container.appendChild(ul); totalPriceEl.textContent = currentTotal.toFixed(2);
+            updateCartDisplay(); 
+        }
+        async function confirmAndPlaceOrder() {
+            if (shoppingCart.length === 0) { showGlobalFeedback("Tu carrito está vacío.", "warning"); return; }
+            if (!clientData || !clientData.id) { showGlobalFeedback('Inicia sesión para realizar un pedido.', 'warning'); cartModalInstance?.hide(); loginModalInstance?.show(); return; }
+            
+            showFeedbackInModal(null, 'order-placement-feedback', '<div class="spinner-border spinner-border-sm me-2"></div>Procesando pedido...', 'info', null);
+            const cartPayload = shoppingCart.map(item => ({ productId: String(item.productId), quantity: item.quantity || 0 }));
+            const result = await fetchDataFromGAS('placeOrder', 'POST', { clientId: String(clientData.id), cartItems: cartPayload });
+
+            if (result.success && result.data) {
+                showFeedbackInModal(null, 'order-placement-feedback', `${result.message || 'Pedido realizado con éxito!'} ID: ${result.data.orderId}`, 'success', 7000);
+                shoppingCart = []; saveCartToStorage();
+                updateClientDisplayAndUI(); 
+                setTimeout(() => { cartModalInstance?.hide(); clearFormAndFeedback(null, 'order-placement-feedback'); loadUserOrders(); }, 4000);
+            } else {
+                showFeedbackInModal(null, 'order-placement-feedback', result.message || 'Error al realizar el pedido. Intenta de nuevo.', 'danger');
+            }
+        }
+
+        // --- HISTORIAL DE PEDIDOS ---
+        async function loadUserOrders() {
+            const container = document.getElementById('orders-history-container'); if (!container) return;
+            if (!clientData || !clientData.id) { container.innerHTML = '<p class="text-center p-5 fs-5">Inicia sesión para ver tu historial.</p>'; return; }
+            container.innerHTML = '<div class="col-12 text-center p-5"><div class="spinner-border text-primary-color" style="width: 3rem; height: 3rem;"></div><p class="mt-2 fs-5">Cargando historial...</p></div>';
+            const result = await fetchDataFromGAS('getUserOrders', 'POST', { clientId: String(clientData.id) });
+            if (result.success && Array.isArray(result.data)) {
+                if (result.data.length === 0) { container.innerHTML = '<p class="text-center p-5 fs-5">Aún no has realizado ningún pedido.</p>'; return; }
+                let html = '<div class="accordion shadow-sm" id="ordersAccordion">';
+                result.data.forEach((order, index) => {
+                    const items = order.itemsjson; let itemsHtml = '<ul class="list-unstyled small text-muted ms-3 mt-1">';
+                    if (Array.isArray(items) && items.length > 0) {
+                        items.forEach(item => { itemsHtml += `<li>${item.quantity}x ${item.name} (${((item.price||0) * (item.quantity||0)).toFixed(2)} CUP)</li>`; });
+                    } else { itemsHtml += '<li>No hay detalles de ítems.</li>'; }
+                    itemsHtml += '</ul>';
+                    
+                    let statusBadgeClass = 'bg-secondary';
+                    if (order.status === 'Pendiente') statusBadgeClass = 'bg-warning text-dark';
+                    else if (order.status === 'Procesado') statusBadgeClass = 'bg-info';
+                    else if (order.status === 'Entregado') statusBadgeClass = 'bg-success';
+                    else if (order.status === 'Cancelado') statusBadgeClass = 'bg-danger';
+
+                    html += `
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingOrder${order.orderid}">
+                                <button class="accordion-button ${index > 0 ? 'collapsed' : ''}" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOrder${order.orderid}" aria-expanded="${index === 0}" aria-controls="collapseOrder${order.orderid}">
+                                    <span class="me-auto">${order.orderdate} - Pedido #${String(order.orderid).substr(-6)} - ${(parseFloat(order.totalamount)||0).toFixed(2)} CUP</span>
+                                    <span class="badge ${statusBadgeClass}">${order.status||'N/A'}</span>
+                                </button>
+                            </h2>
+                            <div id="collapseOrder${order.orderid}" class="accordion-collapse collapse ${index === 0 ? 'show' : ''}" aria-labelledby="headingOrder${order.orderid}" data-bs-parent="#ordersAccordion">
+                                <div class="accordion-body">
+                                    <strong>Puntos ${order.pointsgiven ? 'Otorgados' : 'A Otorgar (al entregar)'}:</strong> ${order.totalpointsawarded || 0}<br>
+                                    <strong>Ítems del Pedido:</strong>
+                                    ${itemsHtml}
+                                </div>
+                            </div>
+                        </div>`;
+                });
+                html += '</div>'; container.innerHTML = html;
+            } else {
+                container.innerHTML = `<p class="text-center text-danger p-5">Error al cargar historial: ${result.message || 'Error desconocido.'}</p>`;
+            }
+        }
+        
+        // --- LÓGICA DE RECOMPENSAS ---
+        async function loadAvailableRewards(forceReload = false) {
+            const rewardsContainer = document.getElementById('rewards-container'); if (!rewardsContainer) return;
+            if (!clientData || !clientData.id) { rewardsContainer.innerHTML = '<p class="text-center p-5 fs-5">Inicia sesión para ver recompensas.</p>'; return; }
+            
+            const cachedRewards = localStorage.getItem(REWARDS_USER_CACHE_KEY);
+            if (!forceReload && cachedRewards) {
+                try { availableRewards = JSON.parse(cachedRewards); generateRewardsList(); return; }
+                catch(e) { localStorage.removeItem(REWARDS_USER_CACHE_KEY); }
+            }
+            rewardsContainer.innerHTML = '<div class="col-12 text-center p-5"><div class="spinner-border text-primary-color" style="width: 3rem; height: 3rem;"></div><p class="mt-2 fs-5">Cargando recompensas...</p></div>';
+            const res = await fetchDataFromGAS('getAvailableRewards', 'GET');
+            if (res.success && Array.isArray(res.data)) {
+                availableRewards = res.data.map(r => ({...r, pointsrequired:parseInt(r.pointsrequired)||0, stock:parseInt(r.stock)||0 }));
+                localStorage.setItem(REWARDS_USER_CACHE_KEY, JSON.stringify(availableRewards));
+                generateRewardsList();
+            } else {
+                rewardsContainer.innerHTML = `<p class="text-center text-danger p-5">No se pudo cargar recompensas: ${res.message || 'Error.'}</p>`;
+            }
+        }
+        function generateRewardsList() {
+            const rc = document.getElementById('rewards-container'); rc.innerHTML = '';
+            if (!availableRewards || availableRewards.length === 0) { rc.innerHTML = '<p class="text-center p-5 fs-5">No hay recompensas disponibles en este momento.</p>'; return; }
+            const clientPoints = clientData ? (clientData.puntos || 0) : 0;
+            availableRewards.sort((a,b) => (a.pointsrequired || 0) - (b.pointsrequired || 0));
+            availableRewards.forEach(reward => {
+                const canAfford = clientPoints >= reward.pointsrequired;
+                const hasStock = reward.stock === 9999 || reward.stock > 0;
+                const canRedeem = canAfford && hasStock;
+                rc.innerHTML += `
+                <div class="col-md-6 col-lg-4 d-flex align-items-stretch animate__animated animate__fadeInUp" style="animation-duration: 0.5s;">
+                    <div class="reward-card card w-100 ${!canRedeem ? 'bg-light opacity-75' : ''}">
+                        <img src="${reward.imageurl || 'https://via.placeholder.com/350x220/F1C40F/2C3E50?text=' + encodeURIComponent(reward.name || 'Recompensa')}" class="reward-image card-img-top" alt="${reward.name || 'Recompensa'}">
+                        <div class="card-body">
+                            <h5 class="card-title mb-1">${reward.name || 'Sin Nombre'}</h5>
+                            <p class="card-text small text-muted flex-grow-1 mb-3">${reward.description || 'Beneficio exclusivo para nuestros miembros VIP.'}</p>
+                            <div class="price-points-row d-flex justify-content-between align-items-center">
+                                <span class="fw-bold fs-5" style="color: var(--accent-color);">${reward.pointsrequired} Puntos</span>
+                                ${reward.stock !== 9999 ? `<span class="small text-muted">Disponibles: ${reward.stock}</span>` : '<span class="small text-muted">¡Ilimitado!</span>'}
+                            </div>
+                            <button class="btn btn-warning btn-canjear" onclick="attemptRedeemReward('${String(reward.rewardid)}')" ${!canRedeem ? 'disabled' : ''}>
+                                <i class="bi bi-award-fill me-2"></i> ${canRedeem ? 'Canjear' : (canAfford ? 'Agotado' : 'Insuficientes')}
+                            </button>
+                        </div>
+                    </div>
+                </div>`;
+            });
+        }
+        async function attemptRedeemReward(rewardIdToRedeem) {
+            if (!clientData || !clientData.id) { showGlobalFeedback("Debes iniciar sesión para canjear.", "warning"); loginModalInstance?.show(); return; }
+            const reward = availableRewards.find(r => String(r.rewardid) === String(rewardIdToRedeem));
+            if (!reward) { showGlobalFeedback("Recompensa no encontrada.", "danger"); return; }
+            if (!confirm(`¿Deseas canjear "${reward.name}" por ${reward.pointsrequired} puntos?`)) return;
+
+            showGlobalFeedback("Procesando canje...", "info", null); 
+            const result = await fetchDataFromGAS('redeemReward', 'POST', { clientId: String(clientData.id), rewardId: String(rewardIdToRedeem) });
+
+            if (result.success && result.data) {
+                showGlobalFeedback(result.message || "¡Recompensa canjeada con éxito!", "success", 5000);
+                if (result.data.updatedClient) {
+                    clientData = result.data.updatedClient;
+                    localStorage.setItem(LOGGED_IN_CLIENT_KEY, JSON.stringify(clientData));
+                    updateClientDisplayAndUI();
+                }
+                loadAvailableRewards(true); 
+            } else {
+                showGlobalFeedback(result.message || "No se pudo canjear la recompensa. Intenta de nuevo.", "danger", 7000);
+            }
+        }
+
+        // --- LÓGICA DEL ESCÁNER QR ADMIN ---
+        function startScanner(){const b=document.getElementById('startScanner'),c=document.getElementById('scanner-container'),r=document.getElementById('verification-result');if(b)b.style.display='none';if(c)c.style.display='block';if(r)r.innerHTML='';videoElement=document.getElementById('qr-video');if(!videoElement){console.error("Video #qr-video no hallado");return;}scannerActive=true;navigator.mediaDevices.getUserMedia({video:{facingMode:"environment"}}).then(s=>{videoElement.srcObject=s;videoElement.onloadedmetadata=()=>{videoElement.play();requestAnimationFrame(scanQRContinuously);};}).catch(e=>{showVerificationResult(false,`Error cámara: ${e.message}`);stopScanner();});}
+        function stopScanner(){scannerActive=false;if(videoElement&&videoElement.srcObject){videoElement.srcObject.getTracks().forEach(t=>t.stop());videoElement.srcObject=null;}const b=document.getElementById('startScanner'),c=document.getElementById('scanner-container');if(b)b.style.display='block';if(c)c.style.display='none';}
+        function scanQRContinuously(){if(!scannerActive||!videoElement||!videoElement.videoWidth){if(scannerActive)requestAnimationFrame(scanQRContinuously);return;}const canv=document.createElement('canvas');canv.width=videoElement.videoWidth;canv.height=videoElement.videoHeight;const ctx=canv.getContext('2d');if(!ctx){if(scannerActive)requestAnimationFrame(scanQRContinuously);return;}ctx.drawImage(videoElement,0,0,canv.width,canv.height);const imgD=ctx.getImageData(0,0,canv.width,canv.height);const code=jsQR(imgD.data,imgD.width,imgD.height,{inversionAttempts:"dontInvert"});if(code&&code.data)processQRCodeData(code.data);else if(scannerActive)requestAnimationFrame(scanQRContinuously);}
+        function processQRCodeData(str){stopScanner();showVerificationResult(false,"Procesando QR Admin...");try{qrDataObjectFromAdmin=JSON.parse(str);if(qrDataObjectFromAdmin&&qrDataObjectFromAdmin.id&&qrDataObjectFromAdmin.telefono&&qrDataObjectFromAdmin.action==='verifyClientByQR'){const sV=document.getElementById('scanner-view'),cV=document.getElementById('confirmation-view');if(sV)sV.style.display='none';if(cV){cV.style.display='block';cV.innerHTML=`<h5>Confirmar Vinculación</h5><p>Vincular con la cuenta de:<br><strong>ID:</strong> ${qrDataObjectFromAdmin.id}<br><strong>Teléfono:</strong> ${qrDataObjectFromAdmin.telefono}<br><strong>Nombre:</strong> ${qrDataObjectFromAdmin.nombre || 'N/A'}</p><button class="btn btn-success w-100 mt-3" onclick="confirmAndVerifyWithGAS_AdminQR()">Confirmar y Vincular</button><button class="btn btn-outline-secondary w-100 mt-2" onclick="cancelConfirmation_AdminQR()">Cancelar</button>`;}}else{showVerificationResult(false,"QR no válido para admin.");qrDataObjectFromAdmin=null;}}catch(e){showVerificationResult(false,"Error al leer QR.");qrDataObjectFromAdmin=null;}}
+        function cancelConfirmation_AdminQR(){const sV=document.getElementById('scanner-view'),cV=document.getElementById('confirmation-view'),vR=document.getElementById('verification-result');if(sV)sV.style.display='block';if(cV){cV.style.display='none';cV.innerHTML='';}if(vR)vR.innerHTML='';qrDataObjectFromAdmin=null;}
+        async function confirmAndVerifyWithGAS_AdminQR(){if(!qrDataObjectFromAdmin){showVerificationResult(false,"No hay datos QR.");return;}showVerificationResult(false,"Verificando con el servidor...");const payload={clientId:String(qrDataObjectFromAdmin.id),phoneToVerify:String(qrDataObjectFromAdmin.telefono)};const res=await fetchDataFromGAS('getClientForUserVerification','POST',payload);if(res.success&&res.data){clientData=res.data;localStorage.setItem(LOGGED_IN_CLIENT_KEY,JSON.stringify(clientData));updateClientDisplayAndUI();showVerificationResult(true,`¡Bienvenido ${clientData.nombre||'Cliente'}! Vinculado con éxito.`);showGlobalFeedback(`Sesión iniciada como ${clientData.nombre}!`, "success");setTimeout(()=>scanModalInstance?.hide(),2500);localStorage.removeItem(PRODUCTS_USER_CACHE_KEY); localStorage.removeItem(MENU_CACHE_EXPIRY_KEY); loadMenuItems(true);loadAvailableRewards(true);loadUserOrders();}else{showVerificationResult(false,res.message||"No se pudo vincular la cuenta.");}qrDataObjectFromAdmin=null;}
+        function showVerificationResult(ok,msg){const div=document.getElementById('verification-result');if(div)div.innerHTML=`<div class="alert alert-${ok?'success':'danger'} mt-2 p-2 small rounded"><i class="bi ${ok?'bi-check-circle-fill':'bi-exclamation-triangle-fill'} me-2"></i>${msg}</div>`;}
+
+        // --- FUNCIONES DE FEEDBACK VISUAL ---
+        function showFeedbackInModal(modalIdUnused, elId, msg, type='info', dur=4000) {
+            const div = document.getElementById(elId); if (!div) return;
+            div.innerHTML = `<div class="alert alert-${type} alert-dismissible fade show small py-2" role="alert">${msg}<button type="button" class="btn-close btn-sm py-2" data-bs-dismiss="alert" aria-label="Close"></button></div>`;
+            if (dur !== null && type !== 'info' && !(msg.includes('spinner-border'))) { 
+                 setTimeout(() => { if (div && div.innerHTML.includes(msg)) div.innerHTML = ''; }, dur);
+            }
+        }
+        function showGlobalFeedback(msg, type = 'info', dur = 4000) {
+            const toastPlacement = document.getElementById('toastPlacement');
+            if (!toastPlacement) { console.warn("Toast container #toastPlacement no encontrado. Usando alert."); alert(`${type.toUpperCase()}: ${msg}`); return; }
+            const toastId = 'liveToast-' + Date.now();
+            let toastBG = 'bg-info text-dark'; // Default for info
+            if (type === 'danger') toastBG = 'bg-danger text-white';
+            else if (type === 'success') toastBG = 'bg-success text-white';
+            else if (type === 'warning') toastBG = 'bg-warning text-dark';
+            
+            const toastHTML = `
+                <div class="toast align-items-center ${toastBG} border-0" role="alert" aria-live="assertive" aria-atomic="true" id="${toastId}">
+                    <div class="d-flex">
+                        <div class="toast-body">${msg}</div>
+                        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                    </div>
+                </div>`;
+            toastPlacement.insertAdjacentHTML('beforeend', toastHTML);
+            const toastEl = document.getElementById(toastId);
+            if (toastEl) {
+                const toast = new bootstrap.Toast(toastEl, { delay: dur });
+                toast.show();
+                toastEl.addEventListener('hidden.bs.toast', () => toastEl.remove());
+            }
+        }
+    </script>
+</body>
+</html>
