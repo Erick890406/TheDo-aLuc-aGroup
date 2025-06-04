@@ -6,7 +6,7 @@
     <title>Panel Admin - Cafetería Pizzería</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/qrcodejs/qrcode.min.js"></script>
+    <!-- qrcode.min.js ELIMINADO -->
     <style>
         :root { --primary: #e63946; --secondary: #1d3557; --gold: #ffd166; --light: #f1faee; --dark: #1a1a1a; }
         body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif; background-color: #f8f9fa; color: var(--dark); }
@@ -26,90 +26,82 @@
         }
         .btn:active, .menu-item-card:active { transform: scale(0.98); }
        .loading-spinner {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(10, 10, 20, 0.9);
-  display: none; /* Inicialmente oculto */
-  align-items: center;
-  justify-content: center;
-  z-index: 9999;
-  transition: opacity 0.5s ease;
-}
-
-.luxury-spinner {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 1rem;
-}
-
-.luxury-spinner-inner {
-  width: 4rem;
-  height: 4rem;
-  border: 4px solid rgba(255, 255, 255, 0.3);
-  border-radius: 50%;
-  border-top-color: #fff;
-  animation: spin 1s ease-in-out infinite;
-  position: relative;
-  box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
-}
-
-.luxury-spinner-inner::before {
-  content: "";
-  position: absolute;
-  top: -4px;
-  left: -4px;
-  right: -4px;
-  bottom: -4px;
-  border-radius: 50%;
-  border: 4px solid transparent;
-  border-top-color: #9c27b0;
-  animation: spin 1.5s ease-in-out infinite;
-  filter: drop-shadow(0 0 5px rgba(156, 39, 176, 0.7));
-}
-
-.luxury-spinner-inner::after {
-  content: "";
-  position: absolute;
-  top: -8px;
-  left: -8px;
-  right: -8px;
-  bottom: -8px;
-  border-radius: 50%;
-  border: 4px solid transparent;
-  border-top-color: #ff9800;
-  animation: spin 2s ease-in-out infinite;
-  filter: drop-shadow(0 0 5px rgba(255, 152, 0, 0.7));
-}
-
-.luxury-spinner-text {
-  color: #fff;
-  font-family: 'Arial', sans-serif;
-  font-size: 1rem;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-  text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
-  animation: pulse 2s infinite;
-}
-
-@keyframes spin {
-  100% { transform: rotate(360deg); }
-}
-
-@keyframes pulse {
-  0% { opacity: 0.6; }
-  50% { opacity: 1; }
-  100% { opacity: 0.6; }
-}
-
-.overlay-hidden {
-  opacity: 0;
-  pointer-events: none;
-}
+          position: fixed;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background: rgba(10, 10, 20, 0.9);
+          display: none; /* Inicialmente oculto */
+          align-items: center;
+          justify-content: center;
+          z-index: 9999;
+          transition: opacity 0.5s ease;
+        }
+        .luxury-spinner {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          gap: 1rem;
+        }
+        .luxury-spinner-inner {
+          width: 4rem;
+          height: 4rem;
+          border: 4px solid rgba(255, 255, 255, 0.3);
+          border-radius: 50%;
+          border-top-color: #fff;
+          animation: spin 1s ease-in-out infinite;
+          position: relative;
+          box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+        }
+        .luxury-spinner-inner::before {
+          content: "";
+          position: absolute;
+          top: -4px;
+          left: -4px;
+          right: -4px;
+          bottom: -4px;
+          border-radius: 50%;
+          border: 4px solid transparent;
+          border-top-color: #9c27b0;
+          animation: spin 1.5s ease-in-out infinite;
+          filter: drop-shadow(0 0 5px rgba(156, 39, 176, 0.7));
+        }
+        .luxury-spinner-inner::after {
+          content: "";
+          position: absolute;
+          top: -8px;
+          left: -8px;
+          right: -8px;
+          bottom: -8px;
+          border-radius: 50%;
+          border: 4px solid transparent;
+          border-top-color: #ff9800;
+          animation: spin 2s ease-in-out infinite;
+          filter: drop-shadow(0 0 5px rgba(255, 152, 0, 0.7));
+        }
+        .luxury-spinner-text {
+          color: #fff;
+          font-family: 'Arial', sans-serif;
+          font-size: 1rem;
+          letter-spacing: 1px;
+          text-transform: uppercase;
+          text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+          animation: pulse 2s infinite;
+        }
+        @keyframes spin {
+          100% { transform: rotate(360deg); }
+        }
+        @keyframes pulse {
+          0% { opacity: 0.6; }
+          50% { opacity: 1; }
+          100% { opacity: 0.6; }
+        }
+        .overlay-hidden {
+          opacity: 0;
+          pointer-events: none;
+        }
         .status-badge { padding: 0.3em 0.6em; font-size: 0.8rem; border-radius: 0.25rem; }
         .status-pendiente { background-color: #ffc107; color: #000; }
         .status-procesado { background-color: #198754; color: #fff; }
@@ -206,15 +198,15 @@
     </div>
 
    <div id="loadingSpinner" class="luxury-overlay">
-  <div class="luxury-spinner">
-    <div class="luxury-spinner-inner"></div>
-    <span class="luxury-spinner-text">Cargando...</span>
-  </div>
-</div>
+      <div class="luxury-spinner">
+        <div class="luxury-spinner-inner"></div>
+        <span class="luxury-spinner-text">Cargando...</span>
+      </div>
+    </div>
     <!-- Modales -->
     <div class="modal fade" id="addClientModal" tabindex="-1"><div class="modal-dialog"><div class="modal-content"><div class="modal-header"><h5 class="modal-title">Nuevo Cliente</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><form id="newClientForm"><div class="mb-3"><label for="clientName" class="form-label">Nombre Completo <span class="text-danger">*</span></label><input type="text" class="form-control" id="clientName" required></div><div class="mb-3"><label for="clientPhone" class="form-label">Teléfono</label><input type="tel" class="form-control" id="clientPhone"></div><div class="mb-3"><label for="clientEmail" class="form-label">Correo (Opcional)</label><input type="email" class="form-control" id="clientEmail"></div><div class="mb-3"><label for="clientInitialPoints" class="form-label">Puntos Iniciales</label><input type="number" class="form-control" id="clientInitialPoints" value="0" min="0"></div></form></div><div class="modal-footer"><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button><button type="button" class="btn btn-primary" onclick="addNewClient()">Guardar Cliente</button></div></div></div></div>
     <div class="modal fade" id="clientModal" tabindex="-1"><div class="modal-dialog modal-lg"><div class="modal-content"><div class="modal-header"><h5 class="modal-title">Detalles del Cliente</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body" id="client-details"></div><div class="modal-footer"><button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cerrar</button></div></div></div></div>
-    <div class="modal fade" id="qrModal" tabindex="-1"><div class="modal-dialog"><div class="modal-content"><div class="modal-header"><h5 class="modal-title">QR de Verificación</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body text-center"><p>Muestre este QR al cliente para escanear.</p><div id="verification-qr" class="mx-auto my-3" style="width:200px;height:200px; border:1px solid #ccc; padding:5px;"></div><p><small>ID Cliente: <strong id="qr-client-id"></strong><br>Teléfono: <strong id="phone-to-verify"></strong></small></p></div><div class="modal-footer"><button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cerrar</button></div></div></div></div>
+    <!-- Modal qrModal ELIMINADO -->
     <div class="modal fade" id="addPointsModal" tabindex="-1"><div class="modal-dialog"><div class="modal-content"><div class="modal-header"><h5 class="modal-title">Añadir/Quitar Puntos</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><form id="addPointsForm"><div class="mb-3"><label for="pointsAmount" class="form-label">Cantidad de Puntos (negativo para quitar)</label><input type="number" class="form-control" id="pointsAmount" value="10" required></div><div class="mb-3"><label for="pointsReason" class="form-label">Razón (Opcional)</label><select class="form-select" id="pointsReason"><option value="compra">Compra</option><option value="ajuste">Ajuste Manual</option><option value="promocion">Promoción</option><option value="recompensa_canjeada">Canje Recompensa</option><option value="correccion">Corrección</option><option value="otro">Otro</option></select></div><input type="hidden" id="currentClientIdPoints"></form></div><div class="modal-footer"><button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cancelar</button><button type="button" class="btn btn-primary btn-sm" onclick="confirmAddPoints()">Aplicar Puntos</button></div></div></div></div>
     <div class="modal fade" id="deleteModal" tabindex="-1"><div class="modal-dialog"><div class="modal-content"><div class="modal-header bg-danger text-white"><h5 class="modal-title">Confirmar Eliminación</h5><button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button></div><div class="modal-body"><p>¿Seguro que desea eliminar este <strong id="delete-item-type">elemento</strong>?</p><p>Detalles: <strong class="fw-bold" id="item-to-delete"></strong></p><p class="text-danger small">Esta acción no se puede deshacer.</p></div><div class="modal-footer"><button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cancelar</button><button type="button" class="btn btn-danger btn-sm" id="confirm-delete-btn">Eliminar</button></div></div></div></div>
     <div class="modal fade" id="addProductModal" tabindex="-1"><div class="modal-dialog modal-lg"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="addProductModalTitle">Añadir Producto</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><form id="productForm"><input type="hidden" id="productId"><div class="mb-3"><label for="productName" class="form-label">Nombre <span class="text-danger">*</span></label><input type="text" class="form-control" id="productName" required></div><div class="mb-3"><label for="productDescription" class="form-label">Descripción</label><textarea class="form-control" id="productDescription" rows="2"></textarea></div><div class="row"><div class="col-md-6 mb-3"><label for="productPrice" class="form-label">Precio (CUP) <span class="text-danger">*</span></label><input type="number" class="form-control" id="productPrice" step="0.01" min="0" required></div><div class="col-md-6 mb-3"><label for="productPoints" class="form-label">Puntos Otorga</label><input type="number" class="form-control" id="productPoints" min="0" value="0"></div></div><div class="mb-3"><label for="productCategory" class="form-label">Categoría</label><input type="text" class="form-control" id="productCategory"></div><div class="mb-3"><label for="productImageUrl" class="form-label">URL Imagen</label><input type="url" class="form-control" id="productImageUrl" placeholder="https://ejemplo.com/imagen.jpg"></div><div class="form-check mb-3"><input class="form-check-input" type="checkbox" id="productActive" checked><label class="form-check-label" for="productActive">Producto Activo</label></div></form></div><div class="modal-footer"><button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cancelar</button><button type="button" class="btn btn-primary btn-sm" onclick="saveProduct()">Guardar Producto</button></div></div></div></div>
@@ -408,9 +400,8 @@
             const tb = document.getElementById('clients-table'); tb.innerHTML = '';
             if (displayedClients.length === 0) { tb.innerHTML = '<tr><td colspan="6" class="text-center">No hay clientes para mostrar.</td></tr>'; return; } 
             displayedClients.sort((a,b) => (a.nombre||"").localeCompare(b.nombre||"")).forEach(c => {
-                // console.log("Cliente en renderClientsTable:", c); // Para depurar qué propiedades tiene 'c'
                 const vIcon = c.verificado ? '<i class="bi bi-check-circle-fill text-success" title="Verificado"></i>' : '<i class="bi bi-patch-question-fill text-warning" title="Pendiente"></i>';
-                const telefonoDisplay = c.telefono && String(c.telefono).trim() !== "" ? c.telefono : 'N/A'; // Usar c.telefono
+                const telefonoDisplay = c.telefono && String(c.telefono).trim() !== "" ? c.telefono : 'N/A';
                 tb.innerHTML += `<tr>
                     <td>${c.id||'N/A'}</td>
                     <td>${c.nombre||'S/N'} ${vIcon}<small class="d-block d-md-none text-muted">${telefonoDisplay}</small></td>
@@ -420,7 +411,7 @@
                     <td><div class="btn-group btn-group-sm">
                         <button class="btn btn-outline-primary" onclick="viewClientDetails('${c.id}')"><i class="bi bi-eye"></i></button>
                         <button class="btn btn-outline-success" onclick="showAddPointsModal('${c.id}')"><i class="bi bi-plus-circle"></i></button>
-                        <button class="btn btn-outline-info" onclick="generateVerificationQR('${c.id}','${c.nombre}','${c.telefono}')"><i class="bi bi-qr-code"></i></button>
+                        <!-- Botón QR Eliminado -->
                         <button class="btn btn-outline-danger" onclick="showDeleteModal('${c.id}','${c.nombre}','client')"><i class="bi bi-trash"></i></button>
                     </div></td>
                 </tr>`;
@@ -436,31 +427,22 @@
             const c=allClients.find(x=>x.id===id); 
             if(!c){alert('Cliente no hallado.');return;} 
             let btns=''; 
-            if(!c.verificado){btns=`<button class="btn btn-info btn-sm me-2" onclick="generateVerificationQR('${c.id}','${c.nombre}','${c.telefono}'); bootstrap.Modal.getInstance(document.getElementById('clientModal')).hide();">QR</button><button class="btn btn-success btn-sm" onclick="manuallyMarkVerified('${c.id}'); bootstrap.Modal.getInstance(document.getElementById('clientModal')).hide();">Verificar</button>`;} 
-            const telefonoDisplay = c.telefono && String(c.telefono).trim() !== "" ? c.telefono : 'N/A'; // Usar c.telefono
+            // Botón QR Eliminado de aquí, solo queda el de verificar
+            if(!c.verificado){btns=`<button class="btn btn-success btn-sm" onclick="manuallyMarkVerified('${c.id}'); bootstrap.Modal.getInstance(document.getElementById('clientModal')).hide();">Verificar Manualmente</button>`;} 
+            const telefonoDisplay = c.telefono && String(c.telefono).trim() !== "" ? c.telefono : 'N/A';
             document.getElementById('client-details').innerHTML=`<h5>${c.nombre||'S/N'} <span class="badge bg-${c.verificado?'success':'warning text-dark'}">${c.verificado?'Verificado':'No Verificado'}</span></h5><p><strong>ID:</strong> ${c.id||'N/A'}</p><p><strong>Tel:</strong> ${telefonoDisplay}</p><p><strong>Email:</strong> ${c.email||'N/A'}</p><p><strong>Puntos:</strong> <span class="badge points-badge fs-6">${c.puntos||0}</span></p><p><strong>Desde:</strong> ${c.fecharegistro||'N/A'}</p><p><strong>Últ. Visita:</strong> ${c.ultimavisita||'N/A'}</p><p><strong>Compras:</strong> ${c.compras||0}</p><hr>${btns}`; 
             (bootstrap.Modal.getInstance(document.getElementById('clientModal'))||new bootstrap.Modal(document.getElementById('clientModal'))).show(); 
         }
         function showAddPointsModal(id) { const c=allClients.find(x=>x.id===id); if(!c){alert('Cliente no hallado.');return;} document.getElementById('currentClientIdPoints').value=id; document.getElementById('addPointsForm').reset(); document.getElementById('pointsAmount').value=10; (bootstrap.Modal.getInstance(document.getElementById('addPointsModal'))||new bootstrap.Modal(document.getElementById('addPointsModal'))).show(); }
-        function generateVerificationQR(id,name,phone) { // phone aquí será c.telefono
-            if(!id){alert("ID no provisto.");return;} 
-            const div=document.getElementById('verification-qr'); 
-            div.innerHTML=''; 
-            const data=JSON.stringify({id,telefono:phone,nombre:name,action:'verifyClientByQR'}); 
-            try{new QRCode(div,{text:data,width:180,height:180,correctLevel:QRCode.CorrectLevel.H});}
-            catch(e){div.innerHTML="<p class='text-danger'>Error QR.</p>";} 
-            document.getElementById('qr-client-id').textContent=id; 
-            document.getElementById('phone-to-verify').textContent=phone||"N/A"; 
-            (bootstrap.Modal.getInstance(document.getElementById('qrModal'))||new bootstrap.Modal(document.getElementById('qrModal'))).show(); 
-        }
+        // Función generateVerificationQR ELIMINADA
         async function manuallyMarkVerified(id) { if(!confirm(`Verificar cliente '${id}'?`))return; const res=await fetchData('markClientVerified','POST',{clientId:id}); if(res.success){alert(res.message||"Verificado.");await loadClients(true);}else{alert(`Error: ${res.message||'Error.'}`);}}
         async function addNewClient() { 
             const data={
                 nombre:document.getElementById('clientName').value.trim(),
-                telefono:document.getElementById('clientPhone').value.trim(), // La clave que se envía es 'telefono'
+                telefono:document.getElementById('clientPhone').value.trim(),
                 email:document.getElementById('clientEmail').value.trim(),
                 puntos:parseInt(document.getElementById('clientInitialPoints').value),
-                verificado:true
+                verificado:true 
             }; 
             if(!data.nombre){alert('Nombre requerido.');return;} 
             if(isNaN(data.puntos)||data.puntos<0){alert('Puntos inválidos.');return;} 
@@ -622,7 +604,7 @@
             }
 
             const action = rewardData.rewardid ? 'updateReward' : 'addReward';
-            const res = await fetchData(action, 'POST', { reward: rewardData }); // payload es {reward: rewardData}
+            const res = await fetchData(action, 'POST', { reward: rewardData }); 
 
             if (res.success && res.data) {
                 alert(res.message || `Recompensa guardada.`);
