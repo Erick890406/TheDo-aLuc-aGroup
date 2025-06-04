@@ -40,6 +40,8 @@
             margin-bottom: 20px;
             text-align: center;
             transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+            display: flex; /* Para asegurar misma altura */
+            flex-direction: column; /* Para asegurar misma altura */
         }
         .dashboard-card:hover {
             transform: translateY(-5px);
@@ -60,7 +62,7 @@
             font-size: 0.95rem;
             color: #555;
             margin-bottom: 20px;
-            min-height: 60px; /* Para alinear tarjetas con descripciones de distinta longitud */
+            flex-grow: 1; /* Para que la descripción ocupe espacio y alinee botones */
         }
         .dashboard-card .btn {
             background-color: #e63946; /* Rojo */
@@ -68,6 +70,7 @@
             color: white;
             padding: 0.6rem 1.2rem;
             font-weight: 500;
+            margin-top: auto; /* Alinea el botón al final si la tarjeta crece */
         }
         .dashboard-card .btn:hover {
             background-color: #c0303c;
@@ -99,15 +102,23 @@
         </header>
 
         <div class="row">
-            <!-- Tarjeta para el Dashboard de Fidelización -->
+            <!-- Tarjeta para el Dashboard de Admin Fidelización -->
             <div class="col-md-6 col-lg-4">
                 <div class="dashboard-card">
                     <i class="bi bi-award-fill"></i>
-                    <h3>Programa de Fidelización</h3>
+                    <h3>Admin Fidelización</h3>
                     <p>Administra clientes, puntos, recompensas y pedidos de tu programa de lealtad.</p>
-                    <!-- El enlace debe apuntar al HTML de tu dashboard de fidelización -->
-                    <!-- Asegúrate de que 'dashboard-fidelizacion.html' sea el nombre correcto de tu archivo -->
-                    <a href="dashboard-fidelizacion.html" class="btn">Acceder al Panel</a>
+                    <a href="dashboard-fidelizacion.html" class="btn">Acceder al Panel Admin</a>
+                </div>
+            </div>
+
+            <!-- Tarjeta para el Portal de Clientes VIP -->
+            <div class="col-md-6 col-lg-4">
+                <div class="dashboard-card">
+                    <i class="bi bi-person-hearts"></i>
+                    <h3>Portal de Clientes VIP</h3>
+                    <p>Accede a tu cuenta, consulta puntos, canjea recompensas y revisa tu historial de pedidos.</p>
+                    <a href="portal-cliente.html" class="btn">Acceder al Portal VIP</a>
                 </div>
             </div>
 
@@ -121,24 +132,14 @@
                 </div>
             </div>
 
-            <!-- Ejemplo de Tarjeta para Otro Negocio/Herramienta (Próximamente) -->
+            <!-- Puedes añadir más tarjetas aquí para otros negocios/herramientas -->
+            <!--
             <div class="col-md-6 col-lg-4">
                 <div class="dashboard-card coming-soon">
                     <i class="bi bi-tools"></i>
                     <h3>Administración General</h3>
                     <p>Configuraciones generales, reportes consolidados y gestión de usuarios del grupo.</p>
                     <a href="#" class="btn disabled">Próximamente</a>
-                </div>
-            </div>
-
-            <!-- Puedes añadir más tarjetas aquí para otros negocios/herramientas -->
-            <!--
-            <div class="col-md-6 col-lg-4">
-                <div class="dashboard-card">
-                    <i class="bi bi-piggy-bank-fill"></i> // Icono de ejemplo
-                    <h3>Finanzas del Grupo</h3>
-                    <p>Reportes financieros, control de gastos e ingresos de todos los negocios.</p>
-                    <a href="enlace-a-finanzas.html" class="btn">Ver Finanzas</a>
                 </div>
             </div>
             -->
