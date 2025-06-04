@@ -1,0 +1,917 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gestión de Inventario y Gastos</title>
+<style>
+body {
+  font-family: 'Arial', sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f2f2f2;
+  color: #333;
+}
+
+.container {
+  padding: 5%;
+  background-color: #fff;
+  min-height: 100vh;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.header {
+  background: #333;
+  color: #fff;
+  padding: 20px 0;
+  text-align: center;
+}
+
+.header h1 {
+  margin: 0;
+  font-size: 2.5rem;
+}
+
+.logo {
+  width: 100px;
+  display: block;
+  margin: 0 auto 10px;
+}
+
+.date-input {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 20px 0;
+}
+
+.date-input label {
+  font-size: 18px;
+  color: #5D6473;
+  margin-right: 10px;
+}
+
+.date-input input[type="date"] {
+  font-size: 16px;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #D1D5DB;
+  background-color: #fff;
+  box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11), 0 1px 3px rgba(0, 0, 0, 0.08);
+  transition: box-shadow 0.15s ease, border-color 0.15s ease;
+}
+
+.date-input input[type="date"]:focus {
+  outline: none;
+  border-color: #6772E5;
+  box-shadow: 0 4px 14px rgba(50, 50, 93, 0.1), 0 1px 5px rgba(0, 0, 0, 0.1);
+}
+
+.responsive-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+.responsive-table th,
+.responsive-table td {
+  padding: 10px;
+  border: 1px solid #ddd;
+  text-align: left;
+  font-size: 13px;
+}
+
+.responsive-table th {
+  background-color: #4CAF50;
+  color: white;
+}
+
+.responsive-table td input[type="number"] {
+  width: 100%;
+  padding: 5px;
+  background-color: transparent;
+  color: #333;
+  border: none;
+}
+
+
+
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 2;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgb(0,0,0);
+  background-color: rgba(0,0,0,0.4);
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
+  background-color: #fefefe;
+  margin: auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%;
+  max-width: 500px;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+}
+
+.modal-content input[type="text"],
+.modal-content input[type="number"] {
+  width: 90%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  display: inline-block;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+.modal-content button {
+  width: 90%;
+  background-color: #4CAF50;
+  color: white;
+  padding: 14px 20px;
+  margin: 8px 0;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.modal-content button:hover {
+  background-color: #45a049;
+}
+
+@media screen and (max-width: 600px) {
+  .modal-content {
+    width: 95%;
+  }
+}
+
+#totales {
+  background: linear-gradient(135deg, #f6d365 0%, #fda085 100%);
+  color: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+  text-align: center;
+  margin-top: 20px;
+}
+
+#totales h2 {
+  font-size: 1.5em;
+  margin-bottom: 0.5em;
+}
+
+#totales p {
+  font-size: 1.2em;
+  margin: 0.5em 0;
+}
+
+.gastos-section {
+  padding: 20px;
+  background-color: #fff;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.gastos-section h2 {
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.gastos-list {
+  margin-bottom: 20px;
+}
+
+.add-gasto-button {
+  background-color: #4CAF50;
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+}
+
+.add-gasto-button:hover {
+  background-color: #45a049;
+}
+
+/* Estilos para el botón que activa la importación */
+button[onclick*="file-input"] {
+  background-color: #3498db;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+}
+
+button[onclick*="file-input"]:hover {
+  background-color: #2980b9;
+}
+
+/* Estilos para el botón de exportación */
+button[onclick*="exportarIPV"] {
+  background-color: #e74c3c;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+}
+
+button[onclick*="exportarIPV"]:hover {
+  background-color: #c0392b;
+}
+.modal-gastos {
+  display: none; /* Oculto por defecto */
+  position: fixed; /* Se queda en su lugar */
+  z-index: 2; /* Se sitúa sobre otros elementos */
+  left: 0;
+  top: 0;
+  width: 100%; /* Ancho completo */
+  height: 100%; /* Altura completa */
+  overflow: auto; /* Habilita el desplazamiento si es necesario */
+  background-color: rgb(0,0,0); /* Color de fondo */
+  background-color: rgba(0,0,0,0.4); /* Negro con opacidad */
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content-gastos {
+  background-color: #fefefe;
+  margin: auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%;
+  max-width: 450px;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+}
+
+.modal-content-gastos input[type="text"],
+.modal-content-gastos input[type="number"] {
+  width: calc(100% - 24px);
+  padding: 12px;
+  margin-top: 8px;
+  margin-bottom: 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+.modal-content-gastos button {
+  width: calc(100% - 24px);
+  background-color: #5cb85c;
+  color: white;
+  padding: 10px;
+  margin-top: 8px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 18px;
+  transition: background-color 0.3s ease;
+}
+
+.modal-content-gastos button:hover {
+  background-color: #4cae4c;
+}
+
+@media screen and (max-width: 600px) {
+  .modal-content-gastos {
+    width: 95%;
+  }
+}
+.floating-button {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 15px;
+  font-size: 24px;
+  cursor: pointer;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  width: 50px; /* Ancho fijo para hacerlo cuadrado */
+  height: 50px; /* Altura fija para hacerlo cuadrado */
+  border-radius: 4px; /* Esquinas ligeramente redondeadas */
+}
+
+.floating-button:hover {
+  background-color: #0056b3;
+}
+
+/* Estilo para el contenedor de los botones */
+.button-container {
+  text-align: center; /* Centra los botones horizontalmente */
+  margin-top: 20px; /* Margen superior para separar de la sección de totales */
+}
+
+/* Estilo para los botones Importar y Exportar */
+.import-export-button {
+  margin: 5px; /* Margen alrededor de los botones para separación */
+  padding: 10px 20px; /* Espaciado interno para los botones */
+  border: 1px solid #ddd; /* Borde ligero para los botones */
+  background-color: #f7f7f7; /* Color de fondo para los botones */
+  cursor: pointer; /* Cambia el cursor a una mano al pasar sobre los botones */
+  border-radius: 5px; /* Esquinas ligeramente redondeadas */
+}
+
+/* Aplica el estilo al pasar el cursor sobre los botones */
+.import-export-button:hover {
+  background-color: #e7e7e7;
+}
+
+
+
+
+/* Ocultar el costo y las ganancias en la tabla */
+
+
+
+
+/* Estilo para la tabla */
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+/* Estilo para las filas impares (oscuras) */
+.table tr:nth-child(odd) {
+  background-color: #ececec; /* Color oscuro */
+  color: rgb(0, 0, 0); /* Texto en blanco */
+}
+
+/* Estilo para las filas pares (blancas) */
+.table tr:nth-child(even) {
+  background-color: #fff; /* Color blanco */
+  color: #333; /* Texto en color oscuro */
+}
+
+/* Estilo para las celdas */
+.table td, .table th {
+  padding: 10px;
+  border: 1px solid #ccc;
+}
+
+/* Estilo específico para el botón con clase "PIN" */
+button.PIN, .import-export {
+  background-color: #3498db;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+}
+
+button.PIN, .import-export:hover {
+  background-color: #D35400; /* Cambio de color al pasar el mouse para retroalimentación visual */
+}
+
+button.PIN, .import-export:active {
+  background-color: #A93226; /* Color más oscuro al hacer clic */
+  box-shadow: 0 2px #922B21; /* Sombra más pequeña para efecto de presión */
+  transform: translateY(2px); /* Mueve el botón hacia abajo para simular un botón presionado */
+}
+
+/* Estilos para dispositivos móviles */
+@media only screen and (max-width: 600px) {
+  button.PIN {
+    padding: 12px 24px; /* Espaciado más pequeño para pantallas pequeñas */
+    font-size: 16px; /* Tamaño de texto más pequeño para pantallas pequeñas */
+  }
+}
+
+.hidden {
+  display: none;
+}
+
+/* Estilo del modal */
+/* Estilo del botón */
+/* Estilo del botón */
+#toggleVisibility {
+    background-color: #f39c12;
+    color: #ffffff;
+    border: none;
+    padding: 12px 24px;
+    font-size: 18px;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: background-color 0.3s ease;
+  }
+
+  #toggleVisibility:hover {
+    background-color: #e67e22;
+  }
+
+/* Estilo del modal */
+.modal {
+  display: none; /* Oculto por defecto */
+  position: fixed; /* Se queda fijo en su lugar */
+  z-index: 1; /* Se sitúa sobre el contenido de la página */
+  left: 0;
+  top: 0;
+  width: 100%; /* Ancho completo */
+  height: 100%; /* Alto completo */
+  overflow: auto; /* Habilita el scroll si es necesario */
+}
+
+/* Estilo del contenido del modal */
+.modal-content {
+  background-color: #fefefe;
+  margin: 15% auto; /* 15% desde la parte superior y centrado */
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%; /* Podrías usar más o menos dependiendo del tamaño deseado */
+  max-width: 500px; /* Un ancho máximo para dispositivos grandes */
+}
+
+/* El botón de cerrar (x) */
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+/* Estilo para dispositivos pequeños */
+@media screen and (max-width: 600px) {
+  .modal-content {
+    width: 95%; /* Los modales ocupan casi todo el ancho en dispositivos pequeños */
+    margin: 20% auto; /* Más margen desde la parte superior */
+  }
+}
+
+
+/* Estilo para ocultar elementos */
+.hidden {
+  display: none;
+}
+.import-export-button {
+  display: none;
+}
+.PIN {
+  display: none;
+}
+</style>
+</head>
+<body>
+<div class="header">
+  <img src="./img/Logo.png" alt="Logo" class="logo">
+  <h1>IPV Dependiente</h1>
+</div>
+
+<div class="container">
+  <div class="date-input">
+    <label for="date">Fecha:</label>
+    <input type="date" id="date">
+  </div>
+
+  <!--<div id="product-modal" class="modal">
+    <div class="modal-content">
+      <input type="text" id="modal-product-name" placeholder="Nombre del producto">
+      <input type="number" id="modal-product-start" placeholder="Inicio">
+      <input type="number" id="modal-product-cost" placeholder="Costo">
+      <input type="number" id="modal-product-price" placeholder="Precio">
+      <button onclick="addProduct()">Añadir Producto</button>
+    </div>
+  </div>-->
+
+  <div id="product-modal" class="modal">
+    <div class="modal-content">
+      <input type="text" id="modal-product-name" placeholder="Nombre del producto">
+      <input type="number" id="modal-product-start" placeholder="Inicio">
+      <input type="number" id="modal-product-cost" placeholder="Costo">
+      <input type="number" id="modal-product-price" placeholder="Precio">
+      <!-- Nuevo input para subir imagen -->
+      <input type="file" id="modal-product-image" accept="image/*" placeholder="Imagen del producto">
+      <button onclick="addProduct()">Añadir Producto</button>
+    </div>
+  </div>
+  
+  <input type="file" id="file-input" onchange="importarIPV(event)" style="display: none;">
+  <div class="button-container">
+    <button class="import-export-button" onclick="document.getElementById('file-input').click()">Importar IPV</button>
+    <button class="import-export-button" onclick="exportarIPV(document.getElementById('date').value)">Exportar IPV</button>
+    <button class="PIN" onclick="acceder()">Administrar</button>
+    <button class="import-export" onclick="window.location='./index_New1.html'">Calcular ganancia de Pizzas</button>
+
+<!-- Botón para activar el modal -->
+<button id="toggleVisibility">Administrar</button>
+
+<!-- Modal -->
+<div id="pinModal" class="modal">
+  <div class="modal-content">
+    <span class="close">×</span>
+    <p>Por favor, ingresa el PIN:</p>
+    <input type="password" id="pinInput" maxlength="4">
+    <button id="submitPin">Acceder</button>
+  </div>
+</div>
+
+</div>
+  <button class="floating-button" onclick="toggleModal()">+</button>
+
+  <table class="responsive-table table" id="product-table">
+    <thead>
+      <tr>
+        <th>Imagen</th>
+        <th>Productos</th>
+        <th>Inicio</th>
+        <th>Entrada</th>
+        <th>Finales</th>
+        <th>Vendido</th>
+        <th>Costo</th>
+        <th>Precio</th>
+        <th>Importe</th>
+        <th>Ganancias</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody id="product-list">
+      <!-- Los productos se mostrarán aquí -->
+    </tbody>
+  </table>
+
+  <div class="gastos-section">
+    <h2>Gastos</h2>
+    <div class="gastos-list" id="gastos-list">
+      <!-- Los gastos se mostrarán aquí -->
+    </div>
+    <button class="add-gasto-button" onclick="toggleGastosModal()">Añadir Gasto</button>
+  </div>
+
+  <div id="gastos-modal" class="modal-gastos">
+    <div class="modal-content-gastos">
+      <input type="text" id="gastos-description" placeholder="Descripción del gasto">
+      <input type="number" id="gastos-amount" placeholder="Monto del gasto">
+      <button onclick="addGasto()">Añadir Gasto</button>
+    </div>
+  </div>
+
+  <div id="totales">
+    <h2>Totales</h2>
+    <p>Total de Importe de Productos: <strong id="total-importe">0</strong></p>
+    <p>Total después de Gastos: <strong id="total-despues-gastos">0</strong></p>
+    <p>Total de Ganancias: <strong id="total-ganancias">0</strong></p>
+  </div>
+
+
+  
+</div>
+<script>
+  // Obtén el modal
+var modal = document.getElementById('pinModal');
+
+// Obtén el botón que abre el modal
+var btn = document.getElementById('toggleVisibility');
+
+// Obtén el elemento <span> que cierra el modal
+var span = document.getElementsByClassName('close')[0];
+
+// Cuando el usuario hace clic en el botón, abre el modal
+btn.onclick = function() {
+  modal.style.display = 'block';
+}
+
+// Cuando el usuario hace clic en <span> (x), cierra el modal
+span.onclick = function() {
+  modal.style.display = 'none';
+}
+
+// Función para cerrar el modal si el usuario hace clic fuera de él
+window.onclick = function(event) {
+  if (event.target == modal) {
+    modal.style.display = 'none';
+  }
+}
+
+// Función para verificar el PIN y mostrar/ocultar las columnas y el párrafo de totales
+document.getElementById('submitPin').addEventListener('click', function() {
+  var pin = document.getElementById('pinInput').value;
+  var pinCorrecto = '8608'; // Cambia esto por tu PIN real
+
+  if (pin === pinCorrecto) {
+    // Selecciona las columnas de Costo y Ganancias
+    var columnasCosto = document.querySelectorAll('th:nth-child(6), td:nth-child(6)');
+    var columnasGanancias = document.querySelectorAll('th:nth-child(9), td:nth-child(9)');
+    // Selecciona el párrafo del total de ganancias
+    var parrafoGanancias = document.querySelector('#totales p:last-of-type');
+
+    // Aplica o quita la clase 'hidden' para mostrar u ocultar
+    columnasCosto.forEach(function(celda) {
+      celda.classList.toggle('hidden');
+    });
+    columnasGanancias.forEach(function(celda) {
+      celda.classList.toggle('hidden');
+    });
+    // Aplica o quita la clase 'hidden' al párrafo del total de ganancias
+    parrafoGanancias.classList.toggle('hidden');
+
+    // Cierra el modal
+    modal.style.display = 'none';
+  } else {
+    alert('PIN incorrecto.');
+  }
+});
+
+
+
+ let products = [];
+let gastos = [];
+
+
+
+document.addEventListener('DOMContentLoaded', () => {
+  const fechaHoy = new Date().toISOString().split('T')[0];
+  document.getElementById('date').value = fechaHoy;
+  cargarIPV(fechaHoy);
+  cargarProductosPorDefecto();
+});
+
+window.onclick = function(event) {
+  if (event.target.matches('.modal')) {
+    event.target.style.display = 'none';
+  }
+  if (event.target.matches('.modal-gastos')) {
+    event.target.style.display = 'none';
+  }
+};
+
+document.getElementById('date').addEventListener('change', (event) => {
+  cargarIPV(event.target.value);
+});
+
+function guardarIPV(fecha) {
+  const ipv = { products, gastos };
+  localStorage.setItem('ipv_' + fecha, JSON.stringify(ipv));
+}
+
+function cargarIPV(fecha) {
+  const ipvData = localStorage.getItem('ipv_' + fecha);
+  if (ipvData) {
+    const ipv = JSON.parse(ipvData);
+    products = ipv.products || [];
+    gastos = ipv.gastos || [];
+  } else {
+    products = [];
+    gastos = [];
+    cargarProductosPorDefecto();
+  }
+  renderProducts();
+  renderGastos();
+  calculateTotals();
+}
+
+function cargarProductosPorDefecto() {
+  const productosPorDefecto = [
+    { name: 'Cig Criollo', cost: 100, price: 130, image: './img/user-192.png' },
+    { name: 'Cig Popular', cost: 100, price: 130, image: './img/cigarro-popular.jpg' },
+    { name: 'Cig. Popular Rojo', cost: 150, price: 250, image: './img/Popular rojo.webp' },
+    { name: 'Cig H Upman Selecto', cost: 130, price: 250, image: './img/Selecto.jpg' },
+    { name: 'Sorbeto Grande', cost: 200, price: 250, image: './img/Sorbetos Rancheiro Limon.jpg' },
+    { name: 'Sorbeto Chico', cost: 65, price: 100, image: './img/user-192.png' },
+    { name: 'Refresco de lata', cost: 157, price: 200, image: './img/Refrescos_Ciego_Montero_set_de_6_355_ml.jpg' },
+    { name: 'Cerveza de 200', cost: 177, price: 200, image: './img/Cerveza Almara.jpg' },
+    { name: 'Cerveza cristal', cost: 238, price: 260, image: './img/cerveza-cristal Bebidas.jpg' },
+    { name: 'Jabas', cost: 3, price: 5, image: './img/user-192.png' },
+    { name: 'Espaguetis', cost: 300, price: 360, image: './img/spagethis.webp' },
+    { name: 'Aceite', cost: 1100, price: 1300, image: './img/cuba-alimentos-restaurantes-viajes-envios-medicina-aceite-de-soya-PI.jpeg' },
+    { name: 'Malta', cost: 205, price: 250, image: './img/Malta-amarilla.jpg' },
+    { name: 'Café', cost: 0, price: 20, image: './img/user-192.png' },
+    { name: 'Dulce de Leche', cost: 100, price: 150, image: './img/Dulce de leche normal 1 Confitura.jpg' },
+    { name: 'Dulce de Leche-Guayaba', cost: 100, price: 150, image: './img/leche_guayaba.jpg' },
+    { name: 'Dulce de coco', cost: 100, price: 150, image: './img/user-192.png' },
+    { name: 'Refresco paquetico', cost: 43, price: 60, image: './img/user-192.png' },
+    { name: 'Chupa Chupa chico', cost: 33, price: 50, image: './img/user-192.png' },
+    { name: 'Chupa Chupa grande', cost: 40, price: 60, image: './img/user-192.png' },
+    { name: 'Galletas Biskiato', cost: 135, price: 150, image: './img/Biskiato.webp' },
+    { name: 'Porleo', cost: 150, price: 170, image: './img/unnamed.png' },
+    { name: 'Rellenitas', cost: 210, price: 250, image: './img/Rellenitas.jpg' },
+    { name: 'Galletas Maria', cost: 320, price: 350, image: './img/galletas_maria.png Confitura.webp' },
+    { name: 'Ron 1L', cost: 480, price: 480, image: './img/user-192.png' },
+    { name: 'Caneca', cost: 160, price: 160, image: './img/user-192.png' },
+    { name: 'Refresco de Vaso', cost: 20, price: 20, image: './img/Refresco de vaso.jpg' },
+    { name: 'Galletas de Chorizo', cost: 80, price: 130, image: './img/galletas de chorizo pauiqte lago Confitura.jpg' },
+    { name: 'Galletas de Sal', cost: 80, price: 80, image: './img/Galletas de Chorizo Confitura.jpg' },
+    { name: 'Galletas de Mantequilla', cost: 80, price: 130, image: './img/Galletas de Chorizo Confitura.jpg' },
+    { name: 'Lorenas', cost: 135, price: 180, image: './img/Lorena.jpg' },
+    { name: 'Sovio', cost: 50, price: 50, image: './img/user-192.png' },
+    { name: 'Jugos de cagita', cost: 150, price: 180, image: './img/Jugo Cajas Bevidas.jpeg' },
+    { name: 'Mines', cost: 80, price: 100, image: './img/Miness.jpg' },
+    { name: 'Botonetas', cost: 50, price: 40, image: './img/botonetasristra13g.png' },
+    { name: 'Pizzas', cost: 250, price: 250, image: './img/Pizza.jpg' },
+    { name: 'Pizzas de Salchicha', cost: 0, price: 40, image: './img/Chorizo pizza.webp' }
+  ];
+
+  productosPorDefecto.forEach(producto => {
+    if (!products.some(p => p.name === producto.name)) {
+      products.push({...producto, start: 0, entrada: 0, finales: 0, vendido: 0, importe: 0, ganancias: 0});
+    }
+  });
+
+  renderProducts();
+}
+
+
+function addProduct() {
+  const names = document.getElementById('modal-product-name').value.split(',');
+  const image = document.getElementById('modal-product-image').files[0];
+  const start = parseInt(document.getElementById('modal-product-start').value) || 0;
+  const cost = parseFloat(document.getElementById('modal-product-cost').value) || 0;
+  const price = parseFloat(document.getElementById('modal-product-price').value) || 0;
+
+  names.forEach(name => {
+    const trimmedName = name.trim();
+    if (trimmedName) {
+      const product = {
+        name: trimmedName,
+        image: image ? URL.createObjectURL(image) : '',
+        start,
+        entrada: 0,
+        finales: start,
+        vendido: 0,
+        cost,
+        price,
+        importe: 0,
+        ganancias: 0
+      };
+      products.push(product);
+    }
+  });
+
+  renderProducts();
+  guardarIPV(document.getElementById('date').value);
+  toggleModal();
+}
+
+
+function renderProducts() {
+  const productList = document.getElementById('product-list');
+  productList.innerHTML = '';
+  products.forEach((product, index) => {
+    productList.innerHTML += `
+      <tr>
+        <td><img src="${product.image}" alt="Imagen del producto" style="width:50px;height:50px;"></td>
+        <td>${product.name}</td>
+        <td><input type="number" value="${product.start}" onchange="updateProduct(${index}, 'start', this.value)"></td>
+        <td><input type="number" value="${product.entrada}" onchange="updateProduct(${index}, 'entrada', this.value)"></td>
+        <td><input type="number" value="${product.finales}" onchange="updateProduct(${index}, 'finales', this.value)"></td>
+        <td>${product.vendido}</td>
+        <td><input type="number" value="${product.cost.toFixed(2)}" onchange="updateProduct(${index}, 'cost', this.value)"></td>
+        <td><input type="number" value="${product.price.toFixed(2)}" onchange="updateProduct(${index}, 'price', this.value)"></td>
+        <td>${product.importe.toFixed(2)}</td>
+        <td>${product.ganancias.toFixed(2)}</td>
+        <td><button onclick="deleteProduct(${index})">Eliminar</button></td>
+      </tr>
+    `;
+  });
+  calculateTotals();
+}
+
+function updateProduct(index, field, value) {
+  const product = products[index];
+  product[field] = field === 'start' || field === 'entrada' || field === 'finales' ? parseInt(value) || 0 : parseFloat(value) || 0;
+  product.vendido = product.start + product.entrada - product.finales;
+  product.importe = product.vendido * product.price;
+  product.ganancias = product.importe - (product.vendido * product.cost);
+  renderProducts();
+  guardarIPV(document.getElementById('date').value);
+}
+
+function deleteProduct(index) {
+  products.splice(index, 1);
+  renderProducts();
+  guardarIPV(document.getElementById('date').value);
+}
+
+function addGasto() {
+  const description = document.getElementById('gastos-description').value;
+  const amount = parseFloat(document.getElementById('gastos-amount').value) || 0;
+  const gasto = { description, amount };
+  gastos.push(gasto);
+  renderGastos();
+  guardarIPV(document.getElementById('date').value);
+  toggleGastosModal();
+}
+
+function renderGastos() {
+  const gastosList = document.getElementById('gastos-list');
+  gastosList.innerHTML = '';
+  gastos.forEach((gasto, index) => {
+    gastosList.innerHTML += `
+      <div class="gasto-item">
+        <span>${gasto.description} - $${gasto.amount.toFixed(2)}</span>
+        <button onclick="editGasto(${index})">Editar</button>
+        <button onclick="deleteGasto(${index})">Eliminar</button>
+      </div>
+    `;
+  });
+  calculateTotals();
+}
+
+function editGasto(index) {
+  const gasto = gastos[index];
+  document.getElementById('gastos-description').value = gasto.description;
+  document.getElementById('gastos-amount').value = gasto.amount;
+  document.getElementById('gastos-index').value = index;
+  toggleGastosModal();
+}
+
+function updateGasto() {
+  const index = parseInt(document.getElementById('gastos-index').value);
+  const description = document.getElementById('gastos-description').value;
+  const amount = parseFloat(document.getElementById('gastos-amount').value) || 0;
+  gastos[index] = { description, amount };
+  renderGastos();
+  guardarIPV(document.getElementById('date').value);
+  toggleGastosModal();
+}
+
+function deleteGasto(index) {
+  gastos.splice(index, 1);
+  renderGastos();
+  guardarIPV(document.getElementById('date').value);
+}
+
+function calculateTotals() {
+  let totalImporte = 0;
+  let totalGastos = 0;
+  let totalGanancias = 0;
+  products.forEach(product => {
+    totalImporte += product.importe;
+    totalGanancias += product.ganancias;
+  });
+  gastos.forEach(gasto => {
+    totalGastos += gasto.amount;
+  });
+  document.getElementById('total-importe').textContent = totalImporte.toFixed(2);
+  document.getElementById('total-despues-gastos').textContent = (totalImporte - totalGastos).toFixed(2);
+  document.getElementById('total-ganancias').textContent = totalGanancias.toFixed(2);
+}
+
+function toggleModal() {
+  const modal = document.getElementById('product-modal');
+  modal.style.display = modal.style.display === "block" ? "none" : "block";
+}
+
+function toggleGastosModal() {
+  const modal = document.getElementById('gastos-modal');
+  modal.style.display = modal.style.display === "block" ? "none" : "block";
+}
+
+function exportarIPV() {
+  const ipvData = {
+    productos: products,
+    gastos: gastos
+  };
+  const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(ipvData));
+  const downloadAnchorNode = document.createElement('a');
+  downloadAnchorNode.setAttribute("href", dataStr);
+  downloadAnchorNode.setAttribute("download", "ipv_data.json");
+  document.body.appendChild(downloadAnchorNode);
+  downloadAnchorNode.click();
+  downloadAnchorNode.remove();
+}
+
+function importarIPV(event) {
+  const fileReader = new FileReader();
+  fileReader.onload = function(event) {
+    const data = JSON.parse(event.target.result);
+    products = data.productos;
+    gastos = data.gastos;
+    localStorage.setItem('ipv_data', JSON.stringify(data));
+    renderProducts();
+    renderGastos();
+    calculateTotals();
+  };
+  fileReader.readAsText(event.target.files[0]);
+}
+
+</script>
+
+</body>
+</html>

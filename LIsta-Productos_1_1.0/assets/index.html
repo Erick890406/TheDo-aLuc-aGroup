@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Productos</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <style>
+body {
+    background-color: #121212;
+    color: #e0e0e0;
+    font-family: 'Roboto', sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    height: 100vh;
+    overflow-x: hidden;
+}
+
+.container {
+    width: 90%;
+    max-width: 400px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #1e1e1e;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+    position: relative;
+}
+
+h1 {
+    text-align: center;
+    color: #ff4500;
+    margin-bottom: 20px;
+}
+
+input[type="text"], input[type="number"] {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: none;
+    border-radius: 5px;
+    background-color: #333;
+    color: #e0e0e0;
+    transition: background-color 0.3s, color 0.3s;
+    box-sizing: border-box;
+}
+
+input[type="text"]:focus, input[type="number"]:focus {
+    background-color: #444;
+    color: #ff4500;
+}
+
+ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+li {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 10px;
+    margin: 10px 0;
+    background-color: #333;
+    border-radius: 5px;
+    position: relative;
+    transition: background-color 0.3s;
+}
+
+li:hover {
+    background-color: #444;
+}
+
+.product-info {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.product-info label {
+    margin: 5px 0;
+    color: #ff4500;
+}
+
+.actions {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin-top: 10px;
+}
+
+.actions button {
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    background-color: #ff4500;
+    color: #fff;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.actions button:hover {
+    background-color: #ff3300;
+}
+
+.fixed-top-bar {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 10px;
+    background-color: #1e1e1e;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+    border-radius: 10px;
+    margin-top: 20px;
+    width: calc(100% - 40px);
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.fixed-top-bar i {
+    font-size: 24px;
+    color: #ff4500;
+    cursor: pointer;
+    transition: color 0.3s, transform 0.3s;
+    margin: 5px;
+}
+
+.fixed-top-bar i:hover {
+    color: #ff3300;
+    transform: scale(1.1);
+}
+
+.select-all-checkbox {
+    transform: scale(1.5);
+    cursor: pointer;
+}
+
+.select-checkbox {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    transform: scale(1.2);
+    cursor: pointer;
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.8);
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background-color: #1e1e1e;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    max-width: 400px;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.close {
+    color: #aaa;
+    align-self: flex-end;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close:hover,
+.close:focus {
+    color: #ff4500;
+}
+
+.modal-content input[type="text"], .modal-content input[type="number"] {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: none;
+    border-radius: 5px;
+    background-color: #333;
+    color: #e0e0e0;
+    transition: background-color 0.3s, color 0.3s;
+    box-sizing: border-box;
+}
+
+.modal-content input[type="text"]:focus, .modal-content input[type="number"]:focus {
+    background-color: #444;
+    color: #ff4500;
+}
+
+.modal-content button {
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    background-color: #ff4500;
+    color: #fff;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.modal-content button:hover {
+    background-color: #ff3300;
+}
+
+input[type="text"], input[type="number"], button {
+    transition: all 0.3s ease;
+}
+
+li {
+    transition: transform 0.3s ease;
+}
+
+li:hover {
+    transform: scale(1.02);
+}
+
+button:active {
+    transform: scale(0.98);
+}
+
+.alert {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 10px 20px;
+    background-color: #ff4500;
+    color: #fff;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.alert.show {
+    opacity: 1;
+}
+
+@media (max-width: 600px) {
+    .container {
+        width: 95%;
+        padding: 15px;
+    }
+
+    .fixed-top-bar {
+        flex-direction: row;
+        flex-wrap: nowrap;
+        justify-content: space-around;
+    }
+
+    .actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .actions button {
+        width: 100%;
+        margin: 5px 0;
+    }
+}
+
+  </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Lista de Productos</h1>
+        <input type="text" id="searchInput" placeholder="Buscar productos..." onkeyup="searchProducts()">
+        <div class="fixed-top-bar">
+            <i class="fas fa-plus-circle" onclick="openModal()"></i>
+            <i class="fas fa-copy" onclick="copySelectedProducts('price')"></i>
+            <i class="fas fa-copy" onclick="copySelectedProducts('priceAndCost')"></i>
+            <input type="checkbox" id="selectAllCheckbox" class="select-all-checkbox" onclick="toggleSelectAll()">
+        </div>
+        <ul id="productList">
+            <!-- Productos se agregarán aquí -->
+        </ul>
+    </div>
+    
+    <!-- Modal -->
+    <div id="productModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">×</span>
+            <h2>Agregar Productos</h2>
+            <label for="productNames">Nombres de los Productos (separados por comas)</label>
+            <input type="text" id="productNames">
+            <button onclick="addProducts()">Agregar</button>
+        </div>
+    </div>
+    
+    
+    
+    <script>
+       document.addEventListener('DOMContentLoaded', () => {
+    loadProducts();
+});
+
+function openModal() {
+    document.getElementById('productModal').style.display = 'flex';
+}
+
+function closeModal() {
+    document.getElementById('productModal').style.display = 'none';
+}
+
+function addProducts() {
+    const productNames = document.getElementById('productNames').value.split(',');
+    const productList = document.getElementById('productList');
+
+    productNames.forEach(name => {
+        const trimmedName = name.trim();
+        if (trimmedName) {
+            const li = createProductElement({
+                name: trimmedName,
+                cost: '',
+                price: '',
+                selected: false
+            });
+            productList.appendChild(li);
+        }
+    });
+
+    saveProducts();
+    closeModal();
+}
+
+function createProductElement(product) {
+    const li = document.createElement('li');
+
+    const selectCheckbox = document.createElement('input');
+    selectCheckbox.type = 'checkbox';
+    selectCheckbox.className = 'select-checkbox';
+    selectCheckbox.checked = product.selected;
+
+    const productInfo = document.createElement('div');
+    productInfo.className = 'product-info';
+    productInfo.innerHTML = `
+        <label>Nombre del Producto</label>
+        <input type="text" value="${product.name}" onfocus="this.select()">
+        <label>Costo</label>
+        <input type="number" value="${product.cost}" onfocus="this.select()">
+        <label>Precio</label>
+        <input type="number" value="${product.price}" onfocus="this.select()">
+    `;
+
+    const actions = document.createElement('div');
+    actions.className = 'actions';
+
+    const copyButton = document.createElement('button');
+    copyButton.textContent = 'Copiar';
+    copyButton.onclick = () => copyProductInfo(productInfo);
+
+    const deleteButton = document.createElement('button');
+    deleteButton.textContent = 'Eliminar';
+    deleteButton.onclick = () => {
+        productList.removeChild(li);
+        saveProducts();
+    };
+
+    actions.appendChild(copyButton);
+    actions.appendChild(deleteButton);
+
+    li.appendChild(productInfo);
+    li.appendChild(actions);
+    li.appendChild(selectCheckbox);
+
+    return li;
+}
+
+function copyProductInfo(productInfo) {
+    const productText = `${productInfo.children[1].value} Precio: ${productInfo.children[5].value}`;
+    navigator.clipboard.writeText(productText).then(() => {
+        showAlert('Datos copiados al portapapeles');
+    }).catch(err => {
+        console.error('Error al copiar al portapapeles: ', err);
+    });
+}
+
+function saveProducts() {
+    const productList = document.getElementById('productList');
+    const items = productList.children;
+    const products = [];
+
+    for (let i = 0; i < items.length; i++) {
+        const item = items[i];
+        const productInfo = item.querySelector('.product-info').children;
+        const product = {
+            selected: item.querySelector('.select-checkbox').checked,
+            name: productInfo[1].value,
+            cost: productInfo[3].value,
+            price: productInfo[5].value
+        };
+        products.push(product);
+    }
+
+    localStorage.setItem('products', JSON.stringify(products));
+}
+
+function loadProducts() {
+    const products = JSON.parse(localStorage.getItem('products')) || [];
+    const productList = document.getElementById('productList');
+
+    products.forEach(product => {
+        const li = createProductElement(product);
+        productList.appendChild(li);
+    });
+}
+
+function copySelectedProducts(type) {
+    const productList = document.getElementById('productList');
+    const items = productList.children;
+    let selectedText = '';
+
+    for (let i = 0; i < items.length; i++) {
+        const item = items[i];
+        const checkbox = item.querySelector('.select-checkbox');
+        if (checkbox.checked) {
+            const productInfo = item.querySelector('.product-info').children;
+            let productText = `${productInfo[1].value} Precio: ${productInfo[5].value}`;
+            if (type === 'priceAndCost') {
+                productText = `${productInfo[1].value} Costo: ${productInfo[3].value} Precio: ${productInfo[5].value}`;
+            }
+            selectedText += productText + '\n';
+        }
+    }
+
+    navigator.clipboard.writeText(selectedText.trim()).then(() => {
+        showAlert('Datos seleccionados copiados al portapapeles');
+    }).catch(err => {
+        console.error('Error al copiar al portapapeles: ', err);
+    });
+}
+
+function toggleSelectAll() {
+    const productList = document.getElementById('productList');
+    const items = productList.children;
+    const selectAllCheckbox = document.getElementById('selectAllCheckbox');
+    const isChecked = selectAllCheckbox.checked;
+
+    for (let i = 0; i < items.length; i++) {
+        const item = items[i];
+        const checkbox = item.querySelector('.select-checkbox');
+        checkbox.checked = isChecked;
+    }
+}
+
+function searchProducts() {
+    const input = document.getElementById('searchInput');
+    const filter = input.value.toLowerCase();
+    const productList = document.getElementById('productList');
+    const items = productList.getElementsByTagName('li');
+
+    for (let i = 0; i < items.length; i++) {
+        const productInfo = items[i].getElementsByClassName('product-info')[0];
+        const productName = productInfo.getElementsByTagName('input')[0].value;
+        if (productName.toLowerCase().indexOf(filter) > -1) {
+            items[i].style.display = '';
+        } else {
+            items[i].style.display = 'none';
+        }
+    }
+}
+
+function showAlert(message) {
+    const alert = document.createElement('div');
+    alert.className = 'alert';
+    alert.textContent = message;
+    document.body.appendChild(alert);
+    setTimeout(() => alert.classList.add('show'), 10);
+    setTimeout(() => {
+        alert.classList.remove('show');
+        setTimeout(() => document.body.removeChild(alert), 300);
+    }, 3000);
+}
+
+    </script>
+    
+</body>
+
+</html>

@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Productos Luxuosos</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #FF6B6B;
+            --secondary-color: #4ECDC4;
+            --accent-color: #FFA1F5;
+            --text-color: #333;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #f8f9fa;
+            color: var(--text-color);
+            transition: all 0.5s ease;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 2rem;
+            text-align: center;
+            color: var(--primary-color);
+            animation: fadeInUp 1s;
+        }
+
+        .menu-selections {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .btn {
+            padding: 0.8rem 1.5rem;
+            border-radius: 20px;
+            background: white;
+            color: var(--primary-color);
+            border: none;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            background: var(--secondary-color);
+        }
+
+        .card-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            position: relative;
+        }
+
+        .product-card {
+            position: relative;
+            overflow: hidden;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 45px 0 rgba(0, 0, 0, 0.2);
+        }
+
+        .product-image {
+            width: 90%;
+            height: 300px;
+            object-fit: cover;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+        }
+
+        .price {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin: 1rem 0;
+        }
+
+        .discount {
+            color: #FF6B6B;
+            font-size: 1.5rem;
+        }
+
+        .product-content {
+            padding: 0;
+            position: relative;
+        }
+
+        .short-description {
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+        }
+
+        .card-title {
+            font-size: 1.2rem;
+            color: var(--secondary-color);
+            margin-bottom: 1rem;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .floating-animation {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+            100% { transform: translateY(0px); }
+        }
+
+    </style>
+</head>
+<body>
+    <h1>Productos Luxuosos</h1>
+    
+    <!-- Botones de navegación -->
+    <div class="menu-selections">
+        <button class="btn" onclick="previousCard()">&larr;</button>
+        <button class="btn" onclick="nextCard()">&rarr;</button>
+    </div>
+
+    <div class="card-list" id="productCards"></div>
+
+    <script>
+        // Funcionalidad para浏览产品卡片
+        let currentCard = 0;
+        const cards = document.querySelectorAll('.product-card');
+
+        function nextCard() {
+            if (currentCard < cards.length - 1) {
+                currentCard++;
+                showProduct(currentCard);
+            }
+        }
+
+        function previousCard() {
+            if (currentCard > 0) {
+                currentCard--;
+                showProduct(currentCard);
+            }
+        }
+
+        function showProduct(index) {
+            const card = cards[index];
+            for (let i = 0; i < cards.length; i++) {
+                cards[i].classList.remove('product-card');
+            }
+            
+            card.className = 'product-card';
+            document.getElementById('productCards').appendChild(card);
+
+            // Simula clic en el botón
+            if (index % 2 === 1) {
+                cards[index].addEventListener('click', () => {
+                    const btn = document.querySelector('.btn');
+                    btn.style.backgroundColor = '#FFA1F5';
+                    setTimeout(() => {
+                        btn.style.backgroundColor = '';
+                    }, 300);
+                });
+            }
+        }
+
+        // Iniciar desde la primera tarjeta
+        nextCard();
+    </script>
+</body>
+</html>

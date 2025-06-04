@@ -1,0 +1,1090 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quantum Finance - Simulador Exclusivo (Offline)</title>
+    <style>
+        :root {
+            --bg-dark: #0f172a; --card-bg: #1e293b; --text-primary: #e2e8f0;
+            --text-secondary: #94a3b8; --accent-gold: #d4af37; --accent-blue: #38bdf8;
+            --accent-green: #34d399; --accent-red: #f87171; --border-color: #334155;
+            --shadow-color: rgba(0, 0, 0, 0.3);
+            --font-sans: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            --font-serif: Georgia, 'Times New Roman', Times, serif;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body { font-family: var(--font-sans); background-color: var(--bg-dark); color: var(--text-primary); line-height: 1.7; font-size: 16px; overflow-x: hidden; }
+        .container { max-width: 1300px; margin: 0 auto; padding: 0 1rem; } /* Max-width aumentado para layout de dashboard */
+        h1, h2, h3 { font-family: var(--font-serif); color: #ffffff; margin-bottom: 1rem; font-weight: 600; letter-spacing: 0.5px; }
+        h1 { font-size: clamp(1.8rem, 5vw, 2.5rem); }
+        h2 { font-size: clamp(1.5rem, 4vw, 2rem); }
+        h3 { font-size: clamp(1.1rem, 3vw, 1.35rem); }
+        p { margin-bottom: 1rem; color: var(--text-secondary); font-size: 0.95rem; }
+        a { color: var(--accent-blue); text-decoration: none; transition: color 0.3s ease; }
+        a:hover { color: #7dd3fc; }
+        button { cursor: pointer; border: none; padding: 0.8rem 1.5rem; border-radius: 8px; font-size: 0.9rem; font-weight: 600; letter-spacing: 0.5px; transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease; background-color: var(--accent-gold); color: #111; text-transform: uppercase; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
+        button:hover { background-color: #e6c35c; transform: translateY(-2px); box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
+        button:active { transform: translateY(0); }
+        button:disabled { background-color: #4b5563; color: var(--text-secondary); cursor: not-allowed; opacity: 0.7; transform: none; box-shadow: none; }
+        button.button-danger { background-color: var(--accent-red); color: #fff; }
+        button.button-danger:hover { background-color: #fb9292; }
+        button.button-success { background-color: var(--accent-green); color: #fff; }
+        button.button-success:hover { background-color: #6ee7b7; }
+        button.button-secondary { background-color: var(--card-bg); color: var(--text-primary); border: 1px solid var(--border-color); }
+        button.button-secondary:hover { background-color: #334155; }
+        input[type="number"] { width: 100%; padding: 0.9rem; background-color: #0f172a; color: var(--text-primary); border: 1px solid var(--border-color); border-radius: 8px; margin-bottom: 1rem; font-size: 1rem; transition: border-color 0.3s ease, box-shadow 0.3s ease; }
+        input:focus { outline: none; border-color: var(--accent-gold); box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.3); }
+        .hidden { display: none !important; }
+        .navbar { background-color: var(--card-bg); padding: 0.8rem 0; box-shadow: 0 3px 10px var(--shadow-color); position: fixed; top: 0; left: 0; width: 100%; z-index: 1000; border-bottom: 1px solid var(--border-color); }
+        .navbar .container { display: flex; justify-content: space-between; align-items: center; }
+        .navbar-logo { font-family: var(--font-serif); font-size: 1.5rem; font-weight: bold; color: #fff; letter-spacing: 1px; }
+        .navbar-logo::before { content: "⚜️ "; margin-right: 0.5rem; }
+        .navbar-menu-desktop { display: none; }
+        .navbar-menu-desktop a, .navbar-menu-desktop button { color: var(--text-secondary); margin-left: 1.8rem; background: none; padding: 0.3rem 0; font-size: 0.95rem; font-weight: 500; position: relative; transition: color 0.3s ease; }
+        .navbar-menu-desktop a::after, .navbar-menu-desktop button::after { content: ''; position: absolute; width: 0; height: 2px; bottom: -2px; left: 50%; transform: translateX(-50%); background-color: var(--accent-gold); transition: width 0.3s ease; }
+        .navbar-menu-desktop a:hover, .navbar-menu-desktop button:hover { color: var(--text-primary); }
+        .navbar-menu-desktop a:hover::after, .navbar-menu-desktop button:hover::after { width: 60%; }
+        .navbar-wallet-balance { color: var(--text-secondary); font-weight: 500; font-size: 0.95rem; margin-left: 2rem; }
+        .navbar-wallet-balance span { color: var(--accent-gold); font-weight: bold; }
+        .navbar-menu-toggle { display: block; font-size: 1.6rem; background: none; border: none; color: var(--text-primary); padding: 0.5rem; }
+        .navbar-menu-toggle span { display: block; width: 28px; height: 3px; background-color: var(--text-primary); margin: 5px 0; border-radius: 1px; transition: background-color 0.3s ease; }
+        .navbar-menu-toggle:hover span { background-color: var(--accent-gold); }
+        .navbar-menu-mobile {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(15, 23, 42, 0.98); z-index: 999;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            opacity: 0; visibility: hidden;
+            transform: translateX(-100%);
+            transition: opacity 0.4s ease, transform 0.4s ease, visibility 0s 0.4s;
+        }
+        .navbar-menu-mobile.visible {
+            opacity: 1; visibility: visible;
+            transform: translateX(0);
+            transition: opacity 0.4s ease, transform 0.4s ease;
+        }
+        .navbar-menu-mobile ul { list-style: none; text-align: center; }
+        .navbar-menu-mobile li { margin-bottom: 2rem; }
+        .navbar-menu-mobile a, .navbar-menu-mobile button { font-size: 1.3rem; font-weight: 500; color: var(--text-primary); background: none; padding: 0.5rem; transition: color 0.3s ease, letter-spacing 0.3s ease; }
+        .navbar-menu-mobile a:hover, .navbar-menu-mobile button:hover { color: var(--accent-gold); letter-spacing: 1px; }
+        .navbar-menu-mobile .close-btn { margin-top: 3rem; }
+        
+        main { padding-top: calc(80px + 1rem); padding-bottom: 3rem; } /* Aumentado padding-top */
+        section { margin-bottom: 2.5rem; scroll-margin-top: 90px; } /* Ajustado scroll-margin-top */
+        .card { background-color: var(--card-bg); padding: clamp(1.5rem, 5vw, 2rem); border-radius: 12px; box-shadow: 0 5px 15px var(--shadow-color); border: 1px solid var(--border-color); transition: transform 0.3s ease, box-shadow 0.3s ease; }
+        .card:hover { box-shadow: 0 8px 25px rgba(0,0,0,0.4); }
+        
+        /* Nuevo Layout de Dashboard */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 1fr; /* Columna única por defecto para móviles */
+            gap: 1.8rem;
+        }
+        .dashboard-main-content {
+            grid-column: 1 / -1;
+            display: flex;
+            flex-direction: column;
+            gap: 1.8rem; /* Espacio entre secciones dentro del contenido principal */
+        }
+        .dashboard-main-content > section { margin-bottom: 0; } /* Reset margin para secciones directas */
+
+        .dashboard-sidebar {
+            grid-column: 1 / -1;
+            display: flex;
+            flex-direction: column;
+            gap: 1.8rem;
+        }
+        .dashboard-sidebar section .card { margin-bottom: 0; }
+
+        .plans-grid { display: grid; grid-template-columns: 1fr; gap: 1.8rem; }
+        .plan-card { text-align: center; transition: transform 0.3s ease, box-shadow 0.3s ease; }
+        .plan-card:hover { transform: scale(1.03); z-index: 10; box-shadow: 0 8px 25px rgba(0,0,0,0.5); }
+        .plan-icon { width: 60px; height: 60px; background: linear-gradient(145deg, #2c3e50, #1a2531); border-radius: 50%; display: inline-flex; justify-content: center; align-items: center; margin-bottom: 1.2rem; font-size: 1.8rem; font-weight: bold; color: var(--accent-gold); box-shadow: inset 0 2px 4px rgba(0,0,0,0.3), 0 3px 5px rgba(0,0,0,0.2); }
+        .plan-price { font-family: var(--font-serif); font-size: clamp(1.8rem, 5vw, 2.2rem); font-weight: bold; margin-bottom: 0.5rem; color: #fff; }
+        .plan-name { color: var(--text-secondary); margin-bottom: 1.2rem; font-size: 1rem; font-weight: 500; }
+        .plan-features { font-size: 0.9rem; color: var(--text-primary); margin-bottom: 1.8rem; text-align: left; padding-left: 1.5rem; }
+        .plan-features li { margin-bottom: 0.5rem; list-style-type: none; position: relative; padding-left: 1.2rem; }
+        .plan-features li::before { content: '✓'; color: var(--accent-green); font-weight: bold; position: absolute; left: 0; }
+        
+        .stats-display-sidebar { /* Estilo para los stats en el sidebar */
+            display: flex;
+            flex-direction: column;
+            gap: 1.2rem; /* Reducido gap */
+        }
+        .stats-display-sidebar .stats-item p {
+            font-size: 0.85rem;
+            margin-bottom: 0.2rem;
+        }
+        .stats-display-sidebar .stats-item span.value {
+            font-size: clamp(1.5rem, 4vw, 1.8rem); /* Ligeramente más pequeño */
+            line-height: 1.1;
+        }
+        .stats-display { display: grid; grid-template-columns: 1fr; gap: 1.5rem; margin-top: 1.5rem; }
+        .stats-item p { color: var(--text-secondary); margin-bottom: 0.3rem; font-size: 0.9rem; font-weight: 500; }
+        .stats-item span.value { font-family: var(--font-serif); font-size: clamp(1.8rem, 5vw, 2.1rem); font-weight: 600; display: block; line-height: 1.2; transition: color 0.5s ease; }
+        .stats-item span.amount { color: var(--accent-blue); }
+        .stats-item span.gain { color: var(--accent-green); }
+        #walletBalanceDisplay { font-weight: bold; font-size: 1.2em; color: #fff; } /* ID cambiado para evitar conflicto */
+        
+        .icon::before { display: inline-block; margin-right: 0.6rem; font-style: normal; font-weight: normal; vertical-align: middle; font-size: 1.1em; }
+        .icon-wallet::before { content: "💳"; } .icon-stats::before { content: "📊"; } .icon-amount::before { content: "$"; color: var(--accent-blue); font-weight: bold;}
+        .icon-gain::before { content: "+"; color: var(--accent-green); font-weight: bold;} .icon-list::before { content: "📜"; } .icon-reset::before { content: "♻️"; }
+        .icon-history::before { content: "⏳"; } .icon-achievements::before { content: "🎯"; } .icon-pie-chart::before { content: "🥧"; } .icon-line-chart::before { content: "📈"; }
+        .icon-active-plans::before { content: "💼"; }
+
+        #investmentPlans li { background-color: #283548; padding: 1.2rem; border-radius: 8px; margin-bottom: 1.2rem; border-left: 4px solid var(--accent-gold); transition: background-color 0.3s ease; opacity: 0; animation: fadeIn 0.5s ease forwards; }
+        #investmentPlans li:nth-child(odd) { animation-delay: 0.1s; }
+        #investmentPlans li:nth-child(even) { animation-delay: 0.2s; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        #investmentPlans li:hover { background-color: #334155; }
+        #investmentPlans h3 { color: #fff; font-size: 1.15rem; margin-bottom: 0.6rem; }
+        #investmentPlans p { font-size: 0.9rem; margin-bottom: 0.4rem; color: var(--text-secondary); }
+        #investmentPlans p span.value { font-weight: 600; color: var(--text-primary); }
+        #investmentPlans p.gain { color: var(--accent-green); font-weight: 600; }
+        #investmentPlans p.status { font-weight: bold; text-transform: uppercase; font-size: 0.8rem; letter-spacing: 1px; }
+        #investmentPlans p.status-active { color: var(--accent-green); }
+        #investmentPlans p.status-finished { color: var(--accent-red); }
+        .plan-status-indicator { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 8px; vertical-align: middle; }
+        .plan-status-indicator.active { background-color: var(--accent-green); box-shadow: 0 0 8px var(--accent-green); }
+        .plan-status-indicator.finished { background-color: var(--accent-red); box-shadow: 0 0 8px var(--accent-red);}
+        
+        .table-container { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+        .table-container::-webkit-scrollbar { height: 8px; }
+        .table-container::-webkit-scrollbar-track { background: var(--bg-dark); }
+        .table-container::-webkit-scrollbar-thumb { background: #4b5563; border-radius: 4px; }
+        .table-container::-webkit-scrollbar-thumb:hover { background: #6b7280; }
+        table { width: 100%; border-collapse: collapse; margin-top: 1.5rem; background-color: var(--bg-dark); border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px var(--shadow-color); border: 1px solid var(--border-color); }
+        th, td { padding: 1rem 1.2rem; text-align: left; border-bottom: 1px solid var(--border-color); white-space: nowrap; }
+        th { background-color: #283548; color: var(--text-primary); font-weight: 600; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; position: sticky; top: 0; z-index: 1; }
+        tbody tr:last-child td { border-bottom: none; }
+        tbody tr { transition: background-color 0.2s ease; }
+        tbody tr:hover { background-color: #283548; }
+        td { color: var(--text-secondary); font-size: 0.9rem; }
+        td:nth-child(3) { font-weight: 500; }
+        
+        .modal {
+            position: fixed; inset: 0; background-color: rgba(15, 23, 42, 0.9);
+            z-index: 2000; display: flex; justify-content: center; align-items: center; padding: 1rem;
+            opacity: 0; visibility: hidden;
+            transition: opacity 0.4s ease, visibility 0s 0.4s;
+        }
+        .modal.visible { opacity: 1; visibility: visible; transition: opacity 0.4s ease; }
+        .modal-content {
+            background-color: var(--card-bg); padding: 2rem 2.5rem; border-radius: 12px;
+            width: 100%; max-width: 500px; text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5); border: 1px solid var(--border-color);
+            transform: scale(0.95);
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .modal.visible .modal-content { transform: scale(1); }
+        .modal-content h2 { color: var(--accent-gold); margin-bottom: 1.5rem; }
+        .modal-content p { color: var(--text-secondary); margin-bottom: 2rem; font-size: 1rem; }
+        .modal-actions { display: flex; justify-content: center; gap: 1.5rem; margin-top: 1rem; }
+        .modal-history .modal-content { max-width: 900px; }
+        .modal-history .table-container { max-height: 65vh; overflow-y: auto; border-radius: 6px; }
+        .modal-notification .modal-content { max-width: 450px; padding: 1.8rem; }
+        .modal-notification .modal-content h2 { margin-bottom: 1rem; font-size: 1.5rem; }
+        .modal-notification .modal-content p { margin-bottom: 1.5rem; font-size: 0.95rem; }
+        .modal-notification .modal-actions { margin-top: 0.5rem; }
+        .modal-notification.success .modal-content h2 { color: var(--accent-green); }
+        .modal-notification.error .modal-content h2 { color: var(--accent-red); }
+        .modal-notification.info .modal-content h2 { color: var(--accent-blue); }
+        
+        footer { background-color: var(--bg-dark); padding: 2rem 0; text-align: center; margin-top: 3rem; border-top: 1px solid var(--border-color); }
+        footer p { color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 0.3rem;}
+        footer p:last-child { font-size: 0.8rem; }
+
+        .achievements-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; margin-top: 1.5rem; }
+        .achievement-card {
+             background-color: var(--card-bg); padding: 1.5rem; border-radius: 12px; border: 1px solid var(--border-color);
+             display: flex; align-items: center; gap: 1.5rem; opacity: 0.6;
+             transition: opacity 0.4s ease, transform 0.3s ease, box-shadow 0.3s ease; position: relative; overflow: hidden;
+        }
+        .achievement-card.achieved { opacity: 1; border-left: 5px solid var(--accent-green); }
+        .achievement-card:hover { transform: translateY(-3px); box-shadow: 0 6px 15px var(--shadow-color); }
+        .achievement-icon { font-size: 2.8rem; flex-shrink: 0; line-height: 1; }
+        .achievement-details { flex-grow: 1; }
+        .achievement-details h3 { color: var(--text-primary); font-size: 1.1rem; margin-bottom: 0.4rem; font-family: var(--font-sans); font-weight: 600; }
+        .achievement-details p { font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 0.8rem; line-height: 1.5; }
+        .achievement-details p.achievement-desc { margin-bottom: 0.8rem; }
+        .progress-bar-container { background-color: #111827; border-radius: 4px; height: 8px; overflow: hidden; margin-bottom: 0.4rem; border: 1px solid #374151; }
+        .progress-bar { background-color: var(--accent-blue); height: 100%; border-radius: 4px 0 0 4px; transition: width 0.5s ease-out; box-shadow: inset 0 -1px 1px rgba(0,0,0,0.2); }
+        .progress-text { font-size: 0.75rem !important; color: var(--text-secondary) !important; text-align: right; margin-bottom: 0 !important; }
+        .achieved-mark { font-size: 0.8rem !important; color: var(--accent-green) !important; font-weight: bold; text-align: right; margin-bottom: 0 !important; }
+        .loading-placeholder { grid-column: 1 / -1; text-align:center; color: var(--text-secondary); padding: 1rem;}
+
+        .modal-achievement-unlocked .modal-content {
+             max-width: 480px; background: linear-gradient(145deg, #2c3e50, #1a2531);
+             border: 1px solid var(--accent-gold); box-shadow: 0 0 25px rgba(212, 175, 55, 0.4);
+             text-align: center; padding-top: 1rem;
+        }
+        .achievement-modal-icon { font-size: 5rem; line-height: 1; margin-bottom: 0.5rem; text-shadow: 0 0 15px rgba(255, 255, 255, 0.3); }
+        .modal-achievement-unlocked.visible .modal-content { animation: achievementPopIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+        @keyframes achievementPopIn { 0% { opacity: 0; transform: scale(0.7) translateY(20px); } 100% { opacity: 1; transform: scale(1) translateY(0); } }
+        
+        /* Chart styling */
+        .chart-container { position: relative; height:200px; width:100%; } /* Para Pie/Doughnut chart */
+        .chart-container-large { position: relative; height:280px; width:100%; } /* Para Line chart */
+
+
+        @media (min-width: 768px) {
+            .navbar-menu-toggle { display: none; }
+            .navbar-menu-desktop { display: flex; align-items: center; }
+            .navbar-menu-mobile { display: none !important; }
+            .plans-grid { grid-template-columns: repeat(2, 1fr); } /* 2 columnas para planes en tablet */
+            .stats-display { grid-template-columns: repeat(2, 1fr); }
+        }
+        @media (min-width: 992px) { /* Ajustes para layout de dashboard en pantallas más grandes */
+            .dashboard-grid { grid-template-columns: 2fr 1fr; /* Dos columnas: contenido principal y sidebar */ }
+            .dashboard-main-content { grid-column: 1 / 2; }
+            .dashboard-sidebar {
+                grid-column: 2 / 3;
+                position: sticky;
+                top: calc(80px + 1rem); /* navbar height + padding */
+                align-self: start;
+                max-height: calc(100vh - (80px + 2rem)); /* Evitar que sea más alto que la ventana */
+                overflow-y: auto;
+                padding-right: 0.5rem; /* Espacio para scrollbar si aparece */
+            }
+            .dashboard-sidebar::-webkit-scrollbar { width: 6px; }
+            .dashboard-sidebar::-webkit-scrollbar-track { background: transparent; }
+            .dashboard-sidebar::-webkit-scrollbar-thumb { background: #4b5563; border-radius: 3px; }
+            .plans-grid { grid-template-columns: repeat(3, 1fr); } /* 3 columnas para planes en desktop */
+        }
+
+        @media (max-width: 768px) {
+             .navbar-menu-desktop { display: none; }
+             .navbar-menu-toggle { display: block; }
+        }
+        @media (max-width: 480px) {
+            h1 { font-size: 1.6rem; } h2 { font-size: 1.4rem; } h3 { font-size: 1.05rem; }
+            button { padding: 0.7rem 1rem; font-size: 0.85rem; }
+            .container { padding: 0 0.8rem; } .card { padding: 1.2rem; }
+            .plan-features { padding-left: 0.5rem; } .plan-features li { padding-left: 1rem; }
+            th, td { padding: 0.7rem 0.8rem; font-size: 0.85rem; }
+            .modal-content { padding: 1.5rem; }
+            .modal-actions { flex-direction: column; gap: 0.8rem; }
+            .achievements-grid { grid-template-columns: 1fr; }
+            .achievement-card { flex-direction: column; text-align: center; gap: 1rem; }
+            .achievement-icon { margin-bottom: 0.5rem; }
+        }
+        ::-webkit-scrollbar { width: 10px; height: 10px; }
+        ::-webkit-scrollbar-track { background: var(--bg-dark); }
+        ::-webkit-scrollbar-thumb { background: #4b5563; border-radius: 5px; border: 2px solid var(--bg-dark); }
+        ::-webkit-scrollbar-thumb:hover { background: #6b7280; }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="container">
+            <a href="#home" class="navbar-logo">Quantum Finance</a>
+            <button id="menuBtn" class="navbar-menu-toggle"><span></span><span></span><span></span></button>
+            <div id="desktopMenu" class="navbar-menu-desktop">
+                <a href="#home">Inicio</a>
+                <a href="#plans">Planes</a>
+                <a href="#performance-chart-section">Rendimiento</a>
+                <a href="#achievements">Logros</a>
+                <button id="openFullScreenHistoryModalBtn">Historial</button>
+                <!-- Opcional: Wallet balance en navbar 
+                <div class="navbar-wallet-balance">
+                    Cartera: $<span id="navWalletBalanceValue">0.00</span>
+                </div>
+                -->
+            </div>
+        </div>
+    </nav>
+
+    <div id="mobileMenu" class="navbar-menu-mobile hidden">
+         <ul>
+            <li><a href="#home">Inicio</a></li>
+            <li><a href="#plans">Planes</a></li>
+            <li><a href="#performance-chart-section">Rendimiento</a></li>
+            <li><a href="#achievements">Logros</a></li>
+            <li><button id="mobileHistoryBtn">Historial</button></li>
+            <li><button id="closeMenuBtn" class="button-danger close-btn">Cerrar Menú</button></li>
+        </ul>
+    </div>
+
+    <main class="container">
+        <div class="dashboard-grid">
+            <div class="dashboard-main-content">
+                <div id="home" style="display:none;"></div> <!-- Placeholder para scroll -->
+
+                <section id="plans">
+                    <h2>Planes de Inversión Exclusivos</h2>
+                    <div class="plans-grid">
+                         <div class="card plan-card"> <div class="plan-icon">B</div> <div class="plan-price">$5000.00</div> <p class="plan-name">Plan Básico</p> <ul class="plan-features"> <li>Gana 1% fijo diario</li> <li>Ganancias directas a cartera</li> <li>Duración: 30 días</li> </ul> <button data-amount="5000" class="select-plan">Seleccionar</button> </div>
+                         <div class="card plan-card"> <div class="plan-icon">I</div> <div class="plan-price">$10000.00</div> <p class="plan-name">Plan Intermedio</p> <ul class="plan-features"> <li>Gana 1% fijo diario</li> <li>Ganancias directas a cartera</li> <li>Duración: 30 días</li> </ul> <button data-amount="10000" class="select-plan">Seleccionar</button> </div>
+                         <div class="card plan-card"> <div class="plan-icon">P</div> <div class="plan-price">$20000.00</div> <p class="plan-name">Plan Premium</p> <ul class="plan-features"> <li>Gana 1% fijo diario</li> <li>Ganancias directas a cartera</li> <li>Duración: 30 días</li> </ul> <button data-amount="20000" class="select-plan">Seleccionar</button> </div>
+                    </div>
+                </section>
+
+                <section id="performance-chart-section">
+                    <div class="card">
+                        <h2><span class="icon icon-line-chart"></span>Rendimiento General</h2>
+                        <div class="chart-container-large">
+                            <canvas id="performanceLineChart"></canvas>
+                        </div>
+                        <p id="noDataForLineChart" class="hidden" style="text-align:center; color: var(--text-secondary); padding: 1rem 0;">Datos insuficientes para mostrar gráfico de rendimiento.</p>
+                    </div>
+                </section>
+        
+                <section>
+                     <div class="card">
+                         <h2><span class="icon icon-list"></span>Gestión de Inversiones</h2>
+                         <ul id="investmentPlans">
+                            <li class="no-plans-message hidden" style="text-align: center; color: var(--text-secondary); padding: 1rem 0; animation: none; opacity: 1; background-color: transparent; border: none;">Aún no has iniciado ninguna inversión.</li>
+                         </ul>
+                     </div>
+                 </section>
+        
+                 <section id="transactionHistoryInline">
+                     <div class="card">
+                         <h2><span class="icon icon-history"></span>Actividad Reciente</h2>
+                         <div class="table-container">
+                             <table>
+                                 <thead><tr><th>Fecha</th><th>Acción</th><th>Monto</th></tr></thead>
+                                 <tbody id="transactionTable"></tbody>
+                             </table>
+                         </div>
+                         <button id="viewFullHistoryBtn" class="button-secondary" style="margin-top: 1.5rem;">Ver Historial Completo</button>
+                     </div>
+                 </section>
+        
+                 <section id="achievements">
+                     <div class="card">
+                         <h2><span class="icon icon-achievements"></span> Logros y Metas</h2>
+                         <p>Completa objetivos para desbloquear insignias y demostrar tu progreso.</p>
+                         <div id="achievementsList" class="achievements-grid">
+                             <div class="loading-placeholder" style="text-align:center; color: var(--text-secondary); padding: 1rem;">Cargando logros...</div>
+                         </div>
+                     </div>
+                 </section>
+        
+                 <section>
+                     <div class="card" style="text-align: center;">
+                         <h2><span class="icon">⚙️</span> Controles de Simulación</h2>
+                         <p>Avanza rápidamente el tiempo o reinicia toda la simulación.</p>
+                         <div style="display: flex; justify-content: center; gap: 1rem; margin-top: 1rem; flex-wrap: wrap;">
+                            <button class="button-secondary accelerate-btn" data-hours="24">Acelerar 24 Horas <span style="font-size: 1.2em; vertical-align: middle;">⏩</span></button>
+                            <button class="button-secondary accelerate-btn" data-hours="168">Acelerar 7 Días <span style="font-size: 1.2em; vertical-align: middle;">⏭️</span></button>
+                            <button class="button-secondary accelerate-btn" data-hours="360">Acelerar 15 Días <span style="font-size: 1.2em; vertical-align: middle;">🚀</span></button>
+                            <button class="button-secondary accelerate-btn" data-hours="672">Acelerar 28 Días <span style="font-size: 1.2em; vertical-align: middle;">⚡</span></button>
+                            <button id="resetLocalStorageBtn" class="button-danger"><span class="icon icon-reset"></span>Reiniciar Datos</button>
+                         </div>
+                     </div>
+                 </section>
+            </div>
+
+            <aside class="dashboard-sidebar">
+                <section id="wallet-section">
+                    <div class="card">
+                         <h2><span class="icon icon-wallet"></span>Cartera</h2>
+                         <p>Saldo disponible:</p>
+                         <p style="font-size: 1.8em; font-weight: bold; color: #fff; margin-top: -0.5rem; margin-bottom: 1.5rem;">
+                            $<span id="walletBalanceDisplay">0.00</span>
+                         </p>
+                         <button id="openAddFundsModalBtn" class="button-success">Añadir Fondos</button>
+                     </div>
+                </section>
+    
+                <section id="stats-sidebar">
+                    <div class="card">
+                        <h2><span class="icon icon-stats"></span>Resumen</h2>
+                        <div class="stats-display-sidebar">
+                             <div class="stats-item">
+                                 <p><span class="icon icon-amount"></span>Capital Activo Total</p>
+                                 <span class="value amount" id="totalCurrentAmount">0.00</span>
+                             </div>
+                             <div class="stats-item">
+                                 <p><span class="icon icon-gain"></span>Ganancia Total Histórica</p>
+                                 <span class="value gain" id="totalGain">0.00</span>
+                             </div>
+                             <div class="stats-item">
+                                 <p><span class="icon icon-active-plans"></span>Planes Activos</p>
+                                 <span class="value" id="activePlansCount" style="color:var(--text-primary);">0</span>
+                             </div>
+                         </div>
+                     </div>
+                </section>
+    
+                <section id="portfolio-overview-chart-section">
+                    <div class="card">
+                        <h2><span class="icon icon-pie-chart"></span>Distribución Cartera</h2>
+                        <div class="chart-container">
+                            <canvas id="portfolioPieChart"></canvas>
+                        </div>
+                         <p id="noActivePlansForChart" class="hidden" style="text-align:center; color: var(--text-secondary); padding: 1rem 0;">Sin planes activos para mostrar gráfico.</p>
+                    </div>
+                </section>
+            </aside>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>© 2024 Quantum Finance - Simulador Exclusivo</p>
+            <p>Diseñado para una experiencia premium sin conexión</p>
+        </div>
+    </footer>
+
+    <!-- Modals -->
+    <div id="confirmationModal" class="modal hidden">
+        <div class="modal-content">
+            <h2>Confirmar Inversión</h2>
+            <p>¿Proceder con la inversión de $<span id="confirmPlanAmount"></span> en el <span id="confirmPlanName"></span>?</p>
+            <div class="modal-actions"> <button id="confirmPlanBtn" class="button-success">Confirmar</button> <button id="cancelPlanBtn" class="button-danger">Cancelar</button> </div>
+        </div>
+    </div>
+    <div id="addFundsModal" class="modal hidden">
+        <div class="modal-content">
+            <h2>Añadir Fondos a Cartera</h2>
+            <p>Introduce la cantidad que deseas depositar en tu cartera virtual.</p>
+            <input id="addFundsInput" type="number" placeholder="Monto (ej: 500)" min="1" />
+            <div class="modal-actions"> <button id="confirmAddFundsBtn" class="button-success">Depositar Fondos</button> <button id="cancelAddFundsBtn" class="button-secondary">Cancelar</button> </div>
+        </div>
+    </div>
+    <div id="fullScreenHistoryModal" class="modal hidden modal-history">
+         <div class="modal-content">
+             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;"> <h2><span class="icon icon-history"></span>Historial Completo</h2> <button id="closeFullScreenHistoryModalBtn" class="button-secondary">Cerrar</button> </div>
+             <div class="table-container"> <table> <thead><tr><th>Fecha</th><th>Acción</th><th>Monto</th></tr></thead> <tbody id="fullScreenTransactionTable"></tbody> </table> </div>
+         </div>
+     </div>
+    <div id="notificationModal" class="modal hidden modal-notification">
+        <div class="modal-content">
+            <h2 id="notificationTitle">Notificación</h2> <p id="notificationMessage">Mensaje de notificación.</p>
+            <div class="modal-actions"> <button id="closeNotificationBtn" class="button-secondary">Cerrar</button> </div>
+        </div>
+    </div>
+    <div id="welcomeModal" class="modal hidden">
+        <div class="modal-content">
+            <h2 style="color: var(--accent-gold);">⚜️ Bienvenido a Quantum Finance ⚜️</h2>
+            <p style="text-align: left; margin-bottom: 1.5rem;"> Este es tu simulador de inversiones personal y <strong>100% offline</strong>. <br><br> <strong>Cómo empezar:</strong> <ol style="list-style-position: inside; text-align: left; margin-left: 1rem; color: var(--text-secondary); font-size: 0.95rem;"> <li><strong>Añade Fondos:</strong> Usa el botón "Añadir Fondos" para cargar tu cartera virtual.</li> <li><strong>Elige un Plan:</strong> Selecciona uno de los planes de inversión disponibles (¡ahora con 1% fijo diario!).</li> <li><strong>Observa Crecer:</strong> Tus inversiones generan ganancias diarias transferidas a tu cartera.</li> <li><strong>Completa Logros:</strong> Alcanza metas para ganar insignias y un bonus final.</li> <li><strong>Gestiona:</strong> Revisa tus estadísticas, historial y considera nuevas inversiones.</li> </ol> <br> ¡Explora y experimenta sin riesgos! </p>
+            <div class="modal-actions"> <button id="closeWelcomeModalBtn" class="button-success">Comenzar Simulación</button> </div>
+        </div>
+    </div>
+    <div id="achievementUnlockedModal" class="modal hidden modal-achievement-unlocked">
+        <div class="modal-content">
+             <div class="achievement-modal-icon" id="achievementModalIcon">🏆</div>
+            <h2 id="achievementModalTitle" style="color: var(--accent-gold);">¡Logro Desbloqueado!</h2>
+            <p id="achievementModalName" style="font-size: 1.2em; font-weight: bold; color: var(--text-primary); margin-top: -1rem; margin-bottom: 0.5rem;">Nombre del Logro</p>
+            <p id="achievementModalDescription" style="color: var(--text-secondary); margin-bottom: 2rem;">Descripción del logro va aquí.</p>
+            <div class="modal-actions"> <button id="closeAchievementModalBtn" class="button-success">¡Genial!</button> </div>
+        </div>
+    </div>
+
+    <!-- Incluir Chart.js ANTES de tu script principal -->
+    <script src="chart.min.js"></script> 
+    <script>
+        const UI_ELEMENTS = {};
+        // Chart instances and data
+        let portfolioPieChartInstance = null;
+        let performanceLineChartInstance = null;
+        let historicalData = { labels: [], walletBalances: [], totalGains: [] };
+        const MAX_HISTORICAL_POINTS = 60; // Max data points for line chart
+
+        function cacheElements() {
+            UI_ELEMENTS.walletBalanceDisplay = document.getElementById('walletBalanceDisplay'); // Changed ID
+            UI_ELEMENTS.totalCurrentAmount = document.getElementById('totalCurrentAmount');
+            UI_ELEMENTS.totalGain = document.getElementById('totalGain');
+            UI_ELEMENTS.investmentPlansList = document.getElementById('investmentPlans');
+            UI_ELEMENTS.transactionTable = document.getElementById('transactionTable');
+            UI_ELEMENTS.fullScreenTransactionTable = document.getElementById('fullScreenTransactionTable');
+            UI_ELEMENTS.noPlansMessage = document.querySelector('.no-plans-message');
+            UI_ELEMENTS.achievementsList = document.getElementById('achievementsList');
+            UI_ELEMENTS.achievementsSection = document.getElementById('achievements');
+            UI_ELEMENTS.confirmationModal = document.getElementById('confirmationModal');
+            UI_ELEMENTS.addFundsModal = document.getElementById('addFundsModal');
+            UI_ELEMENTS.fullScreenHistoryModal = document.getElementById('fullScreenHistoryModal');
+            UI_ELEMENTS.notificationModal = document.getElementById('notificationModal');
+            UI_ELEMENTS.welcomeModal = document.getElementById('welcomeModal');
+            UI_ELEMENTS.confirmPlanAmount = document.getElementById('confirmPlanAmount');
+            UI_ELEMENTS.confirmPlanName = document.getElementById('confirmPlanName');
+            UI_ELEMENTS.addFundsInput = document.getElementById('addFundsInput');
+            UI_ELEMENTS.notificationTitle = document.getElementById('notificationTitle');
+            UI_ELEMENTS.notificationMessage = document.getElementById('notificationMessage');
+            UI_ELEMENTS.confirmPlanBtn = document.getElementById('confirmPlanBtn');
+            UI_ELEMENTS.cancelPlanBtn = document.getElementById('cancelPlanBtn');
+            UI_ELEMENTS.achievementUnlockedModal = document.getElementById('achievementUnlockedModal');
+            UI_ELEMENTS.achievementModalIcon = document.getElementById('achievementModalIcon');
+            UI_ELEMENTS.achievementModalName = document.getElementById('achievementModalName');
+            UI_ELEMENTS.achievementModalDescription = document.getElementById('achievementModalDescription');
+            UI_ELEMENTS.closeAchievementModalBtn = document.getElementById('closeAchievementModalBtn');
+
+            // New Chart related elements
+            UI_ELEMENTS.portfolioPieChartCanvas = document.getElementById('portfolioPieChart');
+            UI_ELEMENTS.noActivePlansForChart = document.getElementById('noActivePlansForChart');
+            UI_ELEMENTS.performanceLineChartCanvas = document.getElementById('performanceLineChart');
+            UI_ELEMENTS.noDataForLineChart = document.getElementById('noDataForLineChart');
+            UI_ELEMENTS.activePlansCount = document.getElementById('activePlansCount');
+            // UI_ELEMENTS.navWalletBalanceValue = document.getElementById('navWalletBalanceValue'); // For navbar balance
+        }
+        function animateValue(element, start, end, duration = 800, prefix = '', suffix = '') {
+            if (!element) return;
+            start = Number(start) || 0; end = Number(end) || 0;
+            if (Math.abs(start - end) < 0.01) { const targetText = `${prefix}${end.toFixed(2)}${suffix}`; if (element.textContent !== targetText) element.textContent = targetText; if (element.animationFrameId) { cancelAnimationFrame(element.animationFrameId); element.animationFrameId = null; } return; }
+            let startTime = null; const cancelExistingAnimation = (el) => { if (el.animationFrameId) { cancelAnimationFrame(el.animationFrameId); el.animationFrameId = null; } }; cancelExistingAnimation(element);
+            const step = (timestamp) => {
+                if (!startTime) startTime = timestamp; const progress = Math.min((timestamp - startTime) / duration, 1); const currentValue = progress * (end - start) + start; element.textContent = `${prefix}${currentValue.toFixed(2)}${suffix}`;
+                if (progress < 1) { element.animationFrameId = requestAnimationFrame(step); } else { element.textContent = `${prefix}${end.toFixed(2)}${suffix}`; element.animationFrameId = null; }
+            }; element.animationFrameId = requestAnimationFrame(step);
+        }
+        function showNotification(message, type = 'info', titleOverride = null) {
+            const modal = UI_ELEMENTS.notificationModal; const titleEl = UI_ELEMENTS.notificationTitle; const messageEl = UI_ELEMENTS.notificationMessage; if (!modal || !titleEl || !messageEl) return;
+            let title = titleOverride || 'Información'; if (!titleOverride) { switch (type) { case 'success': title = 'Éxito'; break; case 'error': title = 'Error'; break; default: break; } }
+            modal.classList.remove('success', 'error', 'info'); switch (type) { case 'success': modal.classList.add('success'); break; case 'error': modal.classList.add('error'); break; default: modal.classList.add('info'); break; }
+            titleEl.textContent = title; messageEl.textContent = message; openModal(modal);
+        }
+        function showAchievementUnlockedModal(goal) {
+            const modal = UI_ELEMENTS.achievementUnlockedModal; const iconEl = UI_ELEMENTS.achievementModalIcon; const nameEl = UI_ELEMENTS.achievementModalName; const descEl = UI_ELEMENTS.achievementModalDescription;
+            if (!modal || !iconEl || !nameEl || !descEl) { console.error("Achievement modal elements not found!"); showNotification(`¡Logro desbloqueado: ${goal.name}! ${goal.description}`, 'success', `🏆 ${goal.name}`); return; }
+            iconEl.textContent = goal.icon; nameEl.textContent = goal.name; descEl.textContent = goal.description; openModal(modal);
+        }
+        function openModal(modalElement, setupAction = null) {
+            if (!modalElement) { console.error("Attempted to open a non-existent modal"); return; } if (setupAction) setupAction(); modalElement.classList.remove('hidden');
+            requestAnimationFrame(() => { setTimeout(() => { modalElement.classList.add('visible'); }, 10); });
+        }
+        function closeModal(modalElement) {
+            const MODAL_TRANSITION_DURATION = 400; if (!modalElement) { console.error("Attempted to close a non-existent modal"); return; } modalElement.classList.remove('visible');
+            setTimeout(() => { modalElement.classList.add('hidden'); }, MODAL_TRANSITION_DURATION);
+        }
+        function closeMobileMenu() {
+            const mobileMenu = document.getElementById('mobileMenu'); const MODAL_TRANSITION_DURATION = 400; if (!mobileMenu || !mobileMenu.classList.contains('visible')) return; mobileMenu.classList.remove('visible');
+            setTimeout(() => { mobileMenu.classList.add('hidden'); }, MODAL_TRANSITION_DURATION);
+        }
+        function toggleMobileMenu() {
+            const mobileMenu = document.getElementById('mobileMenu'); if (!mobileMenu) return; const isVisible = mobileMenu.classList.contains('visible');
+            if (isVisible) { closeMobileMenu(); } else { mobileMenu.classList.remove('hidden'); requestAnimationFrame(() => { mobileMenu.classList.add('visible'); }); }
+        }
+        function getPlanDetails(amount) {
+            switch (amount) { case 5000: return { name: 'Plan Básico', amount: 5000 }; case 10000: return { name: 'Plan Intermedio', amount: 10000 }; case 20000: return { name: 'Plan Premium', amount: 20000 }; default: return { name: 'Plan Personalizado', amount: amount }; }
+        }
+        
+        let investmentPlans = []; let transactionHistory = []; let totalCurrentAmount = 0; let totalGain = 0; let walletBalance = 0; let lastSimulationTime = null; let gainUpdateInterval = null; let lastTickTime = null; let achievementState = { unlocked: [], bonusGiven: false };
+        const STORAGE_KEY = 'investmentDataOffline_Luxury_v4_Dashboard'; // Updated key
+        const ACHIEVEMENTS_KEY = 'quantumFinanceAchievements_v2'; const WELCOME_SEEN_KEY = 'quantumFinanceWelcomeSeen_v2'; const FIXED_DAILY_RATE = 0.01; const GAIN_INTERVAL_MS = 250; const PLAN_DURATION_DAYS = 30; const ALL_GOALS_BONUS = 5000; const MILLISECONDS_IN_DAY = 24 * 60 * 60 * 1000;
+        const goals = [ { id: 'first_deposit', name: 'Primeros Pasos', description: 'Realiza tu primer depósito en la cartera.', icon: '💰', checkCondition: () => transactionHistory.some(tx => tx.action === 'Recarga de Cartera'), }, { id: 'first_investment', name: 'Inversor Novato', description: 'Realiza tu primera inversión en cualquier plan.', icon: '🌱', checkCondition: () => investmentPlans.length > 0, }, { id: 'wallet_10k', name: 'Ahorrador Consciente', description: 'Alcanza $10,000 en tu cartera personal.', icon: '🪙', checkCondition: () => walletBalance >= 10000, targetValue: 10000, getCurrentValue: () => walletBalance }, { id: 'invest_basic', name: 'Explorador Básico', description: 'Invierte en el Plan Básico.', icon: '🧭', checkCondition: () => investmentPlans.some(p => p.name === 'Plan Básico'), }, { id: 'invest_3_plans', name: 'Diversificador Inicial', description: 'Mantén 3 inversiones activas simultáneamente.', icon: '📊', checkCondition: () => investmentPlans.filter(p => p.active).length >= 3, targetValue: 3, getCurrentValue: () => investmentPlans.filter(p => p.active).length }, { id: 'total_gain_1k', name: 'Generador de Valor', description: 'Acumula una ganancia total de $1,000.', icon: '📈', checkCondition: () => totalGain >= 1000, targetValue: 1000, getCurrentValue: () => totalGain }, { id: 'plan_completed', name: 'Ciclo Completado', description: 'Completa tu primera inversión (llega a 0 días restantes).', icon: '🏁', checkCondition: () => investmentPlans.some(p => !p.active && p.daysRemaining <= 0), }, { id: 'wallet_50k', name: 'Cartera Robusta', description: 'Alcanza $50,000 en tu cartera personal.', icon: '🏆', checkCondition: () => walletBalance >= 50000, targetValue: 50000, getCurrentValue: () => walletBalance }, ];
+        
+        function loadAchievements() { try { const saved = localStorage.getItem(ACHIEVEMENTS_KEY); achievementState = saved ? JSON.parse(saved) : { unlocked: [], bonusGiven: false }; if (!Array.isArray(achievementState.unlocked)) achievementState.unlocked = []; if (typeof achievementState.bonusGiven !== 'boolean') achievementState.bonusGiven = false; } catch (e) { console.error("Error loading achievements:", e); achievementState = { unlocked: [], bonusGiven: false }; } }
+        function saveAchievements() { try { localStorage.setItem(ACHIEVEMENTS_KEY, JSON.stringify(achievementState)); } catch (e) { console.error("Error saving achievements:", e); } }
+        function checkAllGoals() {
+            let newAchievementUnlocked = false; let justUnlockedGoal = null;
+            goals.forEach(goal => { if (!achievementState.unlocked.includes(goal.id)) { if (goal.checkCondition()) { achievementState.unlocked.push(goal.id); newAchievementUnlocked = true; justUnlockedGoal = goal; } } });
+            if (newAchievementUnlocked && justUnlockedGoal) { saveAchievements(); showAchievementUnlockedModal(justUnlockedGoal); updateAchievementsDisplay(); }
+            if (!achievementState.bonusGiven && achievementState.unlocked.length === goals.length) { const oldWallet = walletBalance; walletBalance += ALL_GOALS_BONUS; achievementState.bonusGiven = true; saveAchievements(); addTransaction(`¡Bonus Maestro!`, ALL_GOALS_BONUS); showNotification(`¡Felicidades! Has completado todos los logros y recibido un bonus de $${ALL_GOALS_BONUS.toFixed(2)}!`, 'success', '🏆 ¡Maestro de Quantum Finance!'); if(UI_ELEMENTS.walletBalanceDisplay) { animateValue(UI_ELEMENTS.walletBalanceDisplay, oldWallet, walletBalance, 1200, '$'); } }
+        }
+        
+        function loadFromLocalStorage() {
+            try {
+                const savedData = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
+                investmentPlans = savedData.investmentPlans || [];
+                investmentPlans.forEach(plan => {
+                    plan.gainSinceLastTransfer = plan.gainSinceLastTransfer || 0;
+                    plan.lastTransferDayMark = plan.lastTransferDayMark ?? Math.ceil(plan.daysRemaining ?? PLAN_DURATION_DAYS);
+                    plan.currentAmount = plan.initialAmount;
+                });
+                transactionHistory = savedData.transactionHistory || [];
+                totalGain = savedData.totalGain || 0;
+                walletBalance = savedData.walletBalance || 0;
+                lastSimulationTime = savedData.lastSimulationTime ? new Date(savedData.lastSimulationTime) : new Date();
+                historicalData = savedData.historicalData || { labels: [], walletBalances: [], totalGains: [] }; // Load historical data
+                loadAchievements();
+                totalCurrentAmount = investmentPlans.reduce((sum, p) => sum + (p.active ? p.initialAmount : 0), 0);
+                simulateGainsSinceLastVisit();
+                // If no historical data but there's a balance, record an initial point
+                if (historicalData.labels.length === 0 && (walletBalance > 0 || totalGain > 0)) {
+                    recordHistoricalData(true); // Pass true for initial record
+                }
+            } catch (error) { console.error('Error loading data:', error); showNotification('No se pudieron cargar los datos guardados. Iniciando simulación nueva.', 'error'); resetState(false); }
+        }
+        function saveToLocalStorage() {
+            try {
+                lastSimulationTime = lastTickTime || lastSimulationTime || new Date();
+                totalCurrentAmount = investmentPlans.reduce((sum, p) => sum + (p.active ? p.initialAmount : 0), 0);
+                const dataToSave = {
+                    investmentPlans, transactionHistory,
+                    totalCurrentAmount: parseFloat(totalCurrentAmount.toFixed(2)),
+                    totalGain: parseFloat(totalGain.toFixed(2)),
+                    walletBalance: parseFloat(walletBalance.toFixed(2)),
+                    lastSimulationTime: lastSimulationTime.toISOString(),
+                    historicalData: historicalData // Save historical data
+                };
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(dataToSave));
+            } catch (error) { console.error('Error saving data:', error); }
+        }
+        function resetState(confirm = false) {
+             investmentPlans = []; transactionHistory = [];
+             totalCurrentAmount = 0; totalGain = 0; walletBalance = 0;
+             lastSimulationTime = new Date(); lastTickTime = new Date();
+             achievementState = { unlocked: [], bonusGiven: false };
+             historicalData = { labels: [], walletBalances: [], totalGains: [] }; // Reset historical data
+             if (gainUpdateInterval) { clearInterval(gainUpdateInterval); gainUpdateInterval = null; }
+             // Destroy chart instances if they exist
+             if (portfolioPieChartInstance) { portfolioPieChartInstance.destroy(); portfolioPieChartInstance = null; }
+             if (performanceLineChartInstance) { performanceLineChartInstance.destroy(); performanceLineChartInstance = null; }
+        }
+        function resetLocalStorage(confirmFirst = true) {
+             const confirmed = confirmFirst ? confirm('¿Confirmas que deseas reiniciar toda la simulación? Se perderán todos los datos guardados, incluido el historial y los logros.') : true;
+             if (confirmed) {
+                 resetState(false);
+                 localStorage.removeItem(STORAGE_KEY);
+                 localStorage.removeItem(ACHIEVEMENTS_KEY);
+                 localStorage.removeItem(WELCOME_SEEN_KEY);
+                 updateUI(0, 0, 0, true); 
+                 updateAchievementsDisplay(); 
+                 if (confirmFirst) showNotification('Simulación reiniciada correctamente.', 'success');
+                 recordHistoricalData(true); // Record an initial point for the new simulation
+                 startLiveGainUpdates(); 
+             }
+        }
+        
+        function calculateGainsForPeriod(elapsedMillis, isLiveUpdate = false, simulationEndTime = null) {
+             if (elapsedMillis <= 0 || investmentPlans.length === 0) { return { totalGainGenerated: 0, completedPlans: [], dailyTransfers: [], walletModified: false }; }
+             simulationEndTime = simulationEndTime || new Date(); 
+             const fixedGainPerMilli = FIXED_DAILY_RATE / MILLISECONDS_IN_DAY;
+             let totalGainThisPeriod = 0; let completedPlansInfo = []; let dailyTransfersInfo = [];
+             let didPlanComplete = false; let didWalletChange = false;
+
+             investmentPlans.forEach(plan => {
+                 if (plan.active && plan.daysRemaining > 0) {
+                     const maxPossibleDurationMillis = plan.daysRemaining * MILLISECONDS_IN_DAY;
+                     const timeToSimulateMillis = Math.min(elapsedMillis, maxPossibleDurationMillis);
+                     if (timeToSimulateMillis > 0) {
+                         const gainThisChunk = plan.initialAmount * fixedGainPerMilli * timeToSimulateMillis;
+                         plan.totalGain += gainThisChunk; plan.gainSinceLastTransfer += gainThisChunk; totalGainThisPeriod += gainThisChunk;
+                         const daysPassed = timeToSimulateMillis / MILLISECONDS_IN_DAY;
+                         plan.daysRemaining -= daysPassed;
+                         if (!isLiveUpdate) {
+                              const currentFloorDays = Math.floor(plan.daysRemaining);
+                              if (currentFloorDays < plan.lastTransferDayMark && plan.gainSinceLastTransfer > 0.005) {
+                                 const transferAmount = plan.gainSinceLastTransfer;
+                                 walletBalance += transferAmount; didWalletChange = true;
+                                 addTransaction(`Ganancia Diaria ${plan.name}`, transferAmount, simulationEndTime);
+                                 dailyTransfersInfo.push({ planName: plan.name, amount: transferAmount });
+                                 plan.gainSinceLastTransfer = 0; plan.lastTransferDayMark = currentFloorDays;
+                             }
+                         }
+                         if (isLiveUpdate && UI_ELEMENTS.investmentPlansList) {
+                             const planItem = UI_ELEMENTS.investmentPlansList.querySelector(`li[data-plan-id="${plan.id}"]`);
+                             if(planItem){ const planGainElement = planItem.querySelector(`.plan-item-gain .value`); if (planGainElement) planGainElement.textContent = `$${plan.totalGain.toFixed(2)}`; }
+                         }
+                         if (plan.daysRemaining <= 1e-9) {
+                             plan.daysRemaining = 0; plan.active = false; didPlanComplete = true;
+                             const finalReturnValue = plan.initialAmount;
+                             if (!isLiveUpdate) {
+                                 if(plan.gainSinceLastTransfer > 0.005) {
+                                     walletBalance += plan.gainSinceLastTransfer; didWalletChange = true;
+                                     addTransaction(`Ganancia Final ${plan.name}`, plan.gainSinceLastTransfer, simulationEndTime);
+                                     dailyTransfersInfo.push({ planName: plan.name, amount: plan.gainSinceLastTransfer });
+                                     plan.gainSinceLastTransfer = 0; 
+                                 }
+                                 walletBalance += finalReturnValue; didWalletChange = true;
+                                 addTransaction(`Retorno Final ${plan.name}`, finalReturnValue, simulationEndTime);
+                                 completedPlansInfo.push({ name: plan.name, amount: finalReturnValue });
+                             }
+                             else if (UI_ELEMENTS.investmentPlansList){
+                                 const planItem = UI_ELEMENTS.investmentPlansList.querySelector(`li[data-plan-id="${plan.id}"]`);
+                                 if(planItem){
+                                     const statusElement = planItem.querySelector(`.status`); const indicatorElement = planItem.querySelector(`.plan-status-indicator`);
+                                     const currentAmountP = planItem.querySelector(`.plan-item-current`); 
+                                     if(statusElement) { statusElement.textContent = 'Finalizado'; statusElement.className = 'status status-finished'; }
+                                     if(indicatorElement) { indicatorElement.className = 'plan-status-indicator finished'; }
+                                     if(currentAmountP) currentAmountP.style.display = 'none';
+                                 }
+                             }
+                         }
+                     }
+                 }
+             });
+             totalGain += totalGainThisPeriod;
+             if (!isLiveUpdate && (didPlanComplete || didWalletChange)) { checkAllGoals(); }
+             return { totalGainGenerated: totalGainThisPeriod, completedPlans: completedPlansInfo, dailyTransfers: dailyTransfersInfo, walletModified: didWalletChange };
+         }
+        function updateLiveGains() {
+             const now = new Date();
+             if (!lastTickTime) { lastTickTime = now; return; }
+             const elapsed = now.getTime() - lastTickTime.getTime();
+             if (elapsed < GAIN_INTERVAL_MS / 2) return; 
+             calculateGainsForPeriod(elapsed, true, now);
+             if(UI_ELEMENTS.totalGain) {
+                 const currentDisplayGain = parseFloat(UI_ELEMENTS.totalGain.textContent.replace(/[^0-9.-]/g, '')) || 0;
+                 animateValue(UI_ELEMENTS.totalGain, currentDisplayGain, totalGain, GAIN_INTERVAL_MS * 0.8);
+             }
+             updateAchievementsDisplay(); 
+             lastTickTime = now; 
+         }
+        function simulateGainsSinceLastVisit() {
+             const now = new Date();
+             if (!lastSimulationTime || !(lastSimulationTime instanceof Date) || isNaN(lastSimulationTime.getTime())) { lastSimulationTime = now; return; }
+             const elapsedTime = now.getTime() - lastSimulationTime.getTime();
+             if (elapsedTime <= 100) { lastSimulationTime = now; return; }
+             const oldWallet = walletBalance; const oldAmount = investmentPlans.reduce((sum, p) => sum + (p.active ? p.initialAmount : 0), 0); const oldGain = totalGain;
+             calculateGainsForPeriod(elapsedTime, false, now); 
+             lastSimulationTime = now; lastTickTime = now; 
+             updateUI(oldWallet, oldAmount, oldGain);
+         }
+        function accelerateSimulation(hours) {
+            const accelerationMillis = hours * 60 * 60 * 1000;
+             const simulationStartTime = lastSimulationTime || new Date(); 
+             const simulationEndTime = new Date(simulationStartTime.getTime() + accelerationMillis);
+             if (!lastSimulationTime || isNaN(lastSimulationTime?.getTime())) { lastSimulationTime = simulationStartTime; }
+             const oldWallet = walletBalance; const oldAmount = investmentPlans.reduce((sum, p) => sum + (p.active ? p.initialAmount : 0), 0); const oldGain = totalGain;
+             const results = calculateGainsForPeriod(accelerationMillis, false, simulationEndTime); 
+             lastSimulationTime = simulationEndTime; lastTickTime = lastSimulationTime; 
+             let message = `Simulación avanzada ${hours} horas (${(hours/24).toFixed(1)} días).`;
+             if (results.totalGainGenerated > 0.01) { message += ` Ganancia generada: $${results.totalGainGenerated.toFixed(2)}.`; }
+             if (results.dailyTransfers.length > 0) { message += ` ${results.dailyTransfers.length} transferencia(s) de ganancias a cartera.`; }
+             if (results.completedPlans.length > 0) { message += ` ${results.completedPlans.length} plan(es) completado(s) y capital retornado.`; }
+             if (results.totalGainGenerated < 0.01 && results.dailyTransfers.length === 0 && results.completedPlans.length === 0) { message += " No hubo cambios financieros significativos en los planes activos."; }
+             showNotification(message, 'info');
+             updateUI(oldWallet, oldAmount, oldGain);
+             saveToLocalStorage();
+         }
+        
+        function updateInvestmentPlansList() {
+            const listEl = UI_ELEMENTS.investmentPlansList; const messageEl = UI_ELEMENTS.noPlansMessage;
+            if (!listEl || !messageEl) return;
+            listEl.innerHTML = ''; 
+            const hasPlans = investmentPlans.length > 0;
+            messageEl.classList.toggle('hidden', hasPlans);
+            if (!hasPlans) { if (!listEl.contains(messageEl)) listEl.appendChild(messageEl); return; }
+            investmentPlans.sort((a, b) => b.active - a.active || b.id - a.id);
+            investmentPlans.forEach((plan, index) => {
+                const listItem = document.createElement('li'); listItem.dataset.planId = plan.id;
+                const statusClass = plan.active ? 'active' : 'finished';
+                listItem.style.animationDelay = `${index * 0.05}s`;
+                const totalExpectedGain = plan.initialAmount * FIXED_DAILY_RATE * PLAN_DURATION_DAYS;
+                const currentValDisplay = plan.active ? `<p class="plan-item-current">Capital Invertido: <span class="value">$${plan.initialAmount.toFixed(2)}</span></p>` : '';
+                 const displayDaysRemaining = plan.daysRemaining > 0 ? Math.ceil(plan.daysRemaining) : 0;
+                 const pendingTransferDisplay = (plan.active && plan.gainSinceLastTransfer > 0.01) ? `<p style="font-size: 0.8em; color: var(--text-secondary);">Ganancia pendiente de transf.: <span class="value">$${plan.gainSinceLastTransfer.toFixed(2)}</span></p>` : '';
+                listItem.innerHTML = `
+                    <h3><span class="plan-status-indicator ${statusClass}"></span>${plan.name}</h3>
+                    <p>Monto inicial: <span class="value">$${plan.initialAmount.toFixed(2)}</span></p>
+                    ${currentValDisplay}
+                    <p>Ganancia Meta (Total): <span class="value" style="color: var(--accent-green);">$${totalExpectedGain.toFixed(2)}</span></p>
+                    <p>Días restantes: <span class="value">${displayDaysRemaining}</span></p>
+                    <p class="status status-${statusClass}">${plan.active ? 'Activo' : 'Finalizado'}</p>
+                    <p class="gain plan-item-gain">Ganancia Acumulada (plan): <span class="value">$${plan.totalGain.toFixed(2)}</span></p>
+                    ${pendingTransferDisplay}`;
+                listEl.appendChild(listItem);
+            });
+        }
+        function addTransaction(action, amount, date = new Date()) {
+             const transactionDate = date instanceof Date && !isNaN(date) ? date.toLocaleString('es-ES', { dateStyle: 'short', timeStyle: 'medium' }) : new Date().toLocaleString('es-ES', { dateStyle: 'short', timeStyle: 'medium' });
+             transactionHistory.unshift({ date: transactionDate, action, amount: parseFloat(amount.toFixed(2)) });
+             updateTransactionHistory();
+             if (action === 'Recarga de Cartera' || action.includes('Bonus') || action.includes('Ganancia') || action.includes('Retorno Final')) { setTimeout(checkAllGoals, 50); }
+         }
+        function updateTransactionHistory() {
+            const recentTbody = UI_ELEMENTS.transactionTable; const fullTbody = UI_ELEMENTS.fullScreenTransactionTable;
+            if (!recentTbody || !fullTbody) return;
+            const renderTableBody = (tbodyElement, history, limit = Infinity, recent = false) => {
+                tbodyElement.innerHTML = ''; 
+                const historyToShow = history.slice(0, limit);
+                const placeholderText = recent ? 'No hay transacciones recientes.' : 'El historial está vacío.';
+                if (historyToShow.length === 0) { tbodyElement.innerHTML = `<tr><td colspan="3" style="text-align:center; color:var(--text-secondary); padding: 1rem;">${placeholderText}</td></tr>`;
+                } else {
+                    historyToShow.forEach(tx => {
+                        const row = document.createElement('tr');
+                        const isPositive = tx.action.toLowerCase().includes('retorno') || tx.action.toLowerCase().includes('recarga') || tx.action.toLowerCase().includes('ganancia') || tx.action.toLowerCase().includes('bonus') || (!tx.action.toLowerCase().includes('compra') && tx.amount > 0); 
+                        const isNegative = tx.action.toLowerCase().includes('compra') || tx.amount < 0;
+                        let amountColor = 'var(--text-primary)'; 
+                        if (isPositive) amountColor = 'var(--accent-green)'; else if (isNegative) amountColor = 'var(--accent-red)';
+                        const sign = isPositive && tx.amount > 0 ? '+' : (isNegative ? '-' : '');
+                        const displayAmount = Math.abs(tx.amount).toFixed(2);
+                        row.innerHTML = `<td>${tx.date}</td><td>${tx.action}</td><td style="color: ${amountColor}; font-weight: 500;">${sign}${displayAmount}</td>`;
+                        tbodyElement.appendChild(row);
+                    });
+                }
+            };
+            renderTableBody(recentTbody, transactionHistory, 5, true); 
+            renderTableBody(fullTbody, transactionHistory); 
+        }
+        function updateAchievementsDisplay() {
+            const listEl = UI_ELEMENTS.achievementsList; if (!listEl) return;
+            const placeholder = listEl.querySelector('.loading-placeholder'); if (placeholder) placeholder.remove();
+            goals.forEach(goal => {
+                 let card = listEl.querySelector(`.achievement-card[data-goal-id="${goal.id}"]`);
+                 const isAchieved = achievementState.unlocked.includes(goal.id);
+                 if (!card) {
+                     card = document.createElement('div'); card.className = `achievement-card card`; card.dataset.goalId = goal.id;
+                     card.innerHTML = `<div class="achievement-icon">${goal.icon}</div><div class="achievement-details"><h3>${goal.name}</h3><p class="achievement-desc">${goal.description}</p><div class="progress-container"></div></div>`;
+                     listEl.appendChild(card);
+                 }
+                 card.classList.toggle('achieved', isAchieved); card.style.opacity = isAchieved ? '1' : '0.6'; 
+                 const progressContainer = card.querySelector('.progress-container');
+                 if (progressContainer) {
+                      let progressHTML = '';
+                      if (goal.targetValue !== undefined && typeof goal.getCurrentValue === 'function' && !isAchieved) {
+                          let currentValue = 0; let targetValue = 0;
+                          try { currentValue = goal.getCurrentValue(); targetValue = goal.targetValue; currentValue = (typeof currentValue === 'number' && !isNaN(currentValue)) ? currentValue : 0; targetValue = (typeof targetValue === 'number' && !isNaN(targetValue) && targetValue > 0) ? targetValue : 0; } catch (err) { console.error(`Error getting value for goal ${goal.id}:`, err); }
+                          const progress = (targetValue > 0) ? Math.min((currentValue / targetValue) * 100, 100) : 0;
+                          const currentFormatted = (goal.id === 'invest_3_plans') ? Math.floor(currentValue).toFixed(0) : currentValue.toFixed(2);
+                          const targetFormatted = (goal.id === 'invest_3_plans') ? targetValue.toFixed(0) : targetValue.toFixed(2);
+                          progressHTML = `<div class="progress-bar-container"><div class="progress-bar" style="width: ${progress.toFixed(1)}%;"></div></div><p class="progress-text">${currentFormatted} / ${targetFormatted}</p>`;
+                      } else if (isAchieved) { progressHTML = `<p class="achieved-mark">✓ Completado</p>`; } else { progressHTML = '<p class="progress-text">-</p>'; }
+                      progressContainer.innerHTML = progressHTML;
+                 }
+            });
+        }
+        function confirmPlanSelection() {
+             const modal = UI_ELEMENTS.confirmationModal; const amountEl = UI_ELEMENTS.confirmPlanAmount; const nameEl = UI_ELEMENTS.confirmPlanName;
+             if(!modal || !amountEl || !nameEl) return;
+             const amount = parseFloat(amountEl.textContent); const planName = nameEl.textContent;
+             if (walletBalance >= amount && amount > 0) {
+                 const oldBalance = walletBalance; const oldTotalAmount = investmentPlans.reduce((sum, p) => sum + (p.active ? p.initialAmount : 0), 0);
+                 const currentTime = new Date();
+                 const newPlan = { id: Date.now(), name: planName, initialAmount: amount, currentAmount: amount, totalGain: 0, daysRemaining: PLAN_DURATION_DAYS, active: true, creationTime: currentTime.toISOString(), gainSinceLastTransfer: 0, lastTransferDayMark: PLAN_DURATION_DAYS };
+                 walletBalance -= amount; investmentPlans.push(newPlan);
+                 addTransaction(`Compra ${planName}`, -amount, currentTime); 
+                 updateUI(oldBalance, oldTotalAmount); 
+                 saveToLocalStorage(); closeModal(modal);
+                 showNotification(`Inversión de $${amount.toFixed(2)} en ${planName} realizada con éxito.`, 'success');
+             } else { showNotification('Fondos insuficientes en la cartera o monto de inversión inválido.', 'error'); closeModal(modal); }
+         }
+        function addFundsToWallet() {
+             const modal = UI_ELEMENTS.addFundsModal; const inputEl = UI_ELEMENTS.addFundsInput;
+             if(!modal || !inputEl) return;
+             const amount = parseFloat(inputEl.value);
+             if (isNaN(amount) || amount <= 0) { showNotification('Por favor, ingresa un monto positivo válido para añadir.', 'error'); return; }
+             const oldBalance = walletBalance; 
+             walletBalance += amount; addTransaction('Recarga de Cartera', amount); 
+             inputEl.value = ''; closeModal(modal); 
+             updateUI(oldBalance); saveToLocalStorage(); 
+             showNotification(`$${amount.toFixed(2)} añadidos correctamente a tu cartera. Saldo actual: $${walletBalance.toFixed(2)}`, 'success');
+         }
+        function updateMainStats(oldWalletBalance = null, oldTotalAmount = null, oldTotalGain = null, isInitialLoad = false) {
+             const walletEl = UI_ELEMENTS.walletBalanceDisplay; const amountEl = UI_ELEMENTS.totalCurrentAmount; const gainEl = UI_ELEMENTS.totalGain;
+             if (!walletEl || !amountEl || !gainEl) return;
+             totalCurrentAmount = investmentPlans.reduce((sum, p) => sum + (p.active ? p.initialAmount : 0), 0);
+             const startBalance = isInitialLoad ? 0 : (oldWalletBalance !== null ? oldWalletBalance : parseFloat(walletEl.textContent.replace(/[^0-9$.-]/g, '')) || 0);
+             const startAmount = isInitialLoad ? 0 : (oldTotalAmount !== null ? oldTotalAmount : parseFloat(amountEl.textContent.replace(/[^0-9.-]/g, '')) || 0);
+             const startGain = isInitialLoad ? 0 : (oldTotalGain !== null ? oldTotalGain : parseFloat(gainEl.textContent.replace(/[^0-9.-]/g, '')) || 0);
+             animateValue(walletEl, startBalance, walletBalance, 800, '$');
+             animateValue(amountEl, startAmount, totalCurrentAmount, 800); 
+             animateValue(gainEl, startGain, totalGain, 800); 
+             // if(UI_ELEMENTS.navWalletBalanceValue) UI_ELEMENTS.navWalletBalanceValue.textContent = walletBalance.toFixed(2); // Update navbar balance
+             if (UI_ELEMENTS.activePlansCount) UI_ELEMENTS.activePlansCount.textContent = investmentPlans.filter(p => p.active).length;
+             setTimeout(checkAllGoals, 100); 
+         }
+        function checkAndShowWelcome() {
+             const modal = UI_ELEMENTS.welcomeModal; if (!modal) return;
+             const welcomeSeen = localStorage.getItem(WELCOME_SEEN_KEY);
+             if (!welcomeSeen) { openModal(modal); }
+        }
+        
+        // --- Chart Functions ---
+        function updatePortfolioPieChart() {
+            if (!UI_ELEMENTS.portfolioPieChartCanvas || typeof Chart === 'undefined') return;
+            const activePlans = investmentPlans.filter(p => p.active && p.initialAmount > 0);
+            const noPlansMsg = UI_ELEMENTS.noActivePlansForChart;
+            const canvasEl = UI_ELEMENTS.portfolioPieChartCanvas;
+
+            noPlansMsg.classList.toggle('hidden', activePlans.length > 0);
+            canvasEl.parentElement.classList.toggle('hidden', activePlans.length === 0); // Hide chart-container if no data
+
+            if (activePlans.length === 0) {
+                if (portfolioPieChartInstance) { portfolioPieChartInstance.destroy(); portfolioPieChartInstance = null; }
+                return;
+            }
+            const labels = activePlans.map(p => p.name);
+            const data = activePlans.map(p => p.initialAmount);
+            const backgroundColors = ['rgba(212, 175, 55, 0.7)', 'rgba(56, 189, 248, 0.7)', 'rgba(52, 211, 153, 0.7)', 'rgba(248, 113, 113, 0.7)', 'rgba(148, 163, 184, 0.7)'];
+            const borderColors = ['#d4af37', '#38bdf8', '#34d399', '#f87171', '#94a3b8'];
+
+            if (portfolioPieChartInstance) {
+                portfolioPieChartInstance.data.labels = labels;
+                portfolioPieChartInstance.data.datasets[0].data = data;
+                portfolioPieChartInstance.data.datasets[0].backgroundColor = backgroundColors.slice(0, data.length);
+                portfolioPieChartInstance.data.datasets[0].borderColor = borderColors.slice(0, data.length);
+                portfolioPieChartInstance.update();
+            } else {
+                portfolioPieChartInstance = new Chart(canvasEl, {
+                    type: 'doughnut',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: 'Distribución de Cartera', data: data,
+                            backgroundColor: backgroundColors.slice(0, data.length),
+                            borderColor: borderColors.slice(0, data.length),
+                            borderWidth: 1.5, hoverOffset: 8
+                        }]
+                    },
+                    options: {
+                        responsive: true, maintainAspectRatio: false,
+                        plugins: {
+                            legend: { position: 'bottom', labels: { color: 'var(--text-secondary)', font: { family: 'var(--font-sans)', size: 10 }, padding: 10, boxWidth: 12, } },
+                            tooltip: {
+                                callbacks: { label: (context) => `${context.label || ''}: ${new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'USD' }).format(context.parsed)}` }
+                            }
+                        }
+                    }
+                });
+            }
+        }
+
+        function recordHistoricalData(isInitialRecord = false) {
+            const now = new Date();
+            const label = isInitialRecord ? "Inicio" : now.toLocaleTimeString('es-ES', {hour: '2-digit', minute: '2-digit'});
+
+            if (!isInitialRecord && historicalData.labels.length > 0 && historicalData.labels[historicalData.labels.length - 1] === label) {
+                 // If last label is same as current (e.g. multiple updates in same minute), update last data point
+                 historicalData.walletBalances[historicalData.walletBalances.length - 1] = walletBalance;
+                 historicalData.totalGains[historicalData.totalGains.length - 1] = totalGain;
+            } else {
+                // Add new data point
+                if (historicalData.labels.length >= MAX_HISTORICAL_POINTS) {
+                    historicalData.labels.shift();
+                    historicalData.walletBalances.shift();
+                    historicalData.totalGains.shift();
+                }
+                historicalData.labels.push(label);
+                historicalData.walletBalances.push(walletBalance);
+                historicalData.totalGains.push(totalGain);
+            }
+            updatePerformanceLineChart();
+        }
+
+        function updatePerformanceLineChart() {
+            if (!UI_ELEMENTS.performanceLineChartCanvas || typeof Chart === 'undefined') return;
+            const hasData = historicalData.labels.length > 1; // Need at least 2 points for a line
+            const noDataMsg = UI_ELEMENTS.noDataForLineChart;
+            const canvasEl = UI_ELEMENTS.performanceLineChartCanvas;
+
+            noDataMsg.classList.toggle('hidden', hasData);
+            canvasEl.parentElement.classList.toggle('hidden', !hasData); // Hide chart-container if no data
+
+            if (!hasData) {
+                 if (performanceLineChartInstance) { performanceLineChartInstance.destroy(); performanceLineChartInstance = null; }
+                return;
+            }
+            const dataConfig = {
+                labels: historicalData.labels,
+                datasets: [
+                    { label: 'Saldo Cartera', data: historicalData.walletBalances, borderColor: 'var(--accent-blue)', backgroundColor: 'rgba(56, 189, 248, 0.1)', tension: 0.3, fill: true, pointRadius: 2, pointHoverRadius: 5 },
+                    { label: 'Ganancia Total', data: historicalData.totalGains, borderColor: 'var(--accent-green)', backgroundColor: 'rgba(52, 211, 153, 0.1)', tension: 0.3, fill: true, pointRadius: 2, pointHoverRadius: 5 }
+                ]
+            };
+            if (performanceLineChartInstance) {
+                performanceLineChartInstance.data = dataConfig;
+                performanceLineChartInstance.update();
+            } else {
+                performanceLineChartInstance = new Chart(canvasEl, {
+                    type: 'line', data: dataConfig,
+                    options: {
+                        responsive: true, maintainAspectRatio: false,
+                        scales: {
+                            y: { beginAtZero: false, ticks: { color: 'var(--text-secondary)', font: {size: 10 } }, grid: { color: 'rgba(51, 65, 85, 0.5)' } },
+                            x: { ticks: { color: 'var(--text-secondary)', font: {size: 10 }, autoSkip: true, maxTicksLimit: 10 }, grid: { color: 'rgba(51, 65, 85, 0.2)' } }
+                        },
+                        plugins: {
+                            legend: { position: 'top', labels: { color: 'var(--text-secondary)', font: { family: 'var(--font-sans)', size: 11 }, boxWidth: 12, padding: 15 } },
+                            tooltip: { mode: 'index', intersect: false, callbacks: { label: (context) => `${context.dataset.label || ''}: ${new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'USD' }).format(context.parsed.y)}` } }
+                        },
+                        interaction: { mode: 'index', intersect: false },
+                    }
+                });
+            }
+        }
+        // --- End Chart Functions ---
+
+        function updateUI(oldWallet = null, oldAmount = null, oldGain = null, isInitialLoad = false) {
+            updateMainStats(oldWallet, oldAmount, oldGain, isInitialLoad);
+            updateInvestmentPlansList();
+            updateTransactionHistory();
+            updateAchievementsDisplay();
+            updatePortfolioPieChart(); 
+            
+            if (!isInitialLoad) {
+                recordHistoricalData(); // Record data on normal updates
+            } else if (historicalData.labels.length > 0) {
+                updatePerformanceLineChart(); // On initial load, if data exists, just update chart display
+            }
+        }
+        function startLiveGainUpdates() {
+            if (gainUpdateInterval) clearInterval(gainUpdateInterval);
+            lastTickTime = lastSimulationTime || new Date(); 
+            gainUpdateInterval = setInterval(updateLiveGains, GAIN_INTERVAL_MS);
+        }
+        function initializeApp() {
+            cacheElements(); 
+            loadFromLocalStorage(); 
+            updateUI(null, null, null, true); 
+            checkAndShowWelcome(); 
+            startLiveGainUpdates(); 
+
+            document.querySelectorAll('.select-plan').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    const amount = parseFloat(e.target.dataset.amount);
+                    const modal = UI_ELEMENTS.confirmationModal; if (!modal) return;
+                    openModal(modal, () => { 
+                        const details = getPlanDetails(amount);
+                        if(UI_ELEMENTS.confirmPlanAmount) UI_ELEMENTS.confirmPlanAmount.textContent = details.amount.toFixed(2);
+                        if(UI_ELEMENTS.confirmPlanName) UI_ELEMENTS.confirmPlanName.textContent = details.name;
+                    });
+                });
+            });
+            if (UI_ELEMENTS.confirmPlanBtn) UI_ELEMENTS.confirmPlanBtn.addEventListener('click', confirmPlanSelection);
+            if (UI_ELEMENTS.cancelPlanBtn) UI_ELEMENTS.cancelPlanBtn.addEventListener('click', () => closeModal(UI_ELEMENTS.confirmationModal));
+            const openAddFundsModalBtn = document.getElementById('openAddFundsModalBtn');
+            if (openAddFundsModalBtn) openAddFundsModalBtn.addEventListener('click', () => {
+                const modal = UI_ELEMENTS.addFundsModal; const inputEl = UI_ELEMENTS.addFundsInput;
+                if (!modal) return; if (inputEl) inputEl.value = ''; openModal(modal, () => inputEl?.focus()); 
+            });
+            const cancelAddFundsBtn = document.getElementById('cancelAddFundsBtn');
+            if (cancelAddFundsBtn) cancelAddFundsBtn.addEventListener('click', () => closeModal(UI_ELEMENTS.addFundsModal));
+            const confirmAddFundsBtn = document.getElementById('confirmAddFundsBtn');
+            if (confirmAddFundsBtn) confirmAddFundsBtn.addEventListener('click', addFundsToWallet);
+            const showHistory = () => { if(UI_ELEMENTS.fullScreenHistoryModal) openModal(UI_ELEMENTS.fullScreenHistoryModal); };
+            const viewFullHistoryBtn = document.getElementById('viewFullHistoryBtn'); 
+            if (viewFullHistoryBtn) viewFullHistoryBtn.addEventListener('click', showHistory);
+            const openFullScreenHistoryModalBtn = document.getElementById('openFullScreenHistoryModalBtn'); 
+            if (openFullScreenHistoryModalBtn) openFullScreenHistoryModalBtn.addEventListener('click', showHistory);
+            const mobileHistoryBtn = document.getElementById('mobileHistoryBtn'); 
+            if (mobileHistoryBtn) mobileHistoryBtn.addEventListener('click', () => { closeMobileMenu(); showHistory(); });
+            const closeFullScreenHistoryModalBtn = document.getElementById('closeFullScreenHistoryModalBtn'); 
+            if (closeFullScreenHistoryModalBtn) closeFullScreenHistoryModalBtn.addEventListener('click', () => closeModal(UI_ELEMENTS.fullScreenHistoryModal));
+            const resetLocalStorageBtn = document.getElementById('resetLocalStorageBtn');
+            if (resetLocalStorageBtn) resetLocalStorageBtn.addEventListener('click', () => resetLocalStorage(true)); 
+            document.querySelectorAll('.accelerate-btn').forEach(button => {
+                button.addEventListener('click', (event) => {
+                    const hours = parseInt(event.currentTarget.dataset.hours, 10);
+                    if (!isNaN(hours) && hours > 0) { accelerateSimulation(hours); } 
+                    else { console.error("Invalid hours data attribute on button:", event.currentTarget); }
+                });
+            });
+            const closeWelcomeModalBtn = document.getElementById('closeWelcomeModalBtn');
+            if (closeWelcomeModalBtn) closeWelcomeModalBtn.addEventListener('click', () => {
+                localStorage.setItem(WELCOME_SEEN_KEY, 'true'); closeModal(UI_ELEMENTS.welcomeModal);
+            });
+            const menuBtn = document.getElementById('menuBtn'); const closeMenuBtn = document.getElementById('closeMenuBtn'); const mobileMenu = document.getElementById('mobileMenu');
+            if (menuBtn) menuBtn.addEventListener('click', toggleMobileMenu);
+            if (closeMenuBtn) closeMenuBtn.addEventListener('click', closeMobileMenu);
+            if (mobileMenu) {
+                mobileMenu.querySelectorAll('a[href^="#"], button').forEach(el => {
+                    if (el.tagName === 'A' || (el.tagName === 'BUTTON' && el !== closeMenuBtn && el !== mobileHistoryBtn)) {
+                        el.addEventListener('click', closeMobileMenu);
+                    }
+                });
+            }
+             const closeNotificationBtn = document.getElementById('closeNotificationBtn');
+             if (closeNotificationBtn) closeNotificationBtn.addEventListener('click', () => closeModal(UI_ELEMENTS.notificationModal));
+             if (UI_ELEMENTS.closeAchievementModalBtn) { UI_ELEMENTS.closeAchievementModalBtn.addEventListener('click', () => closeModal(UI_ELEMENTS.achievementUnlockedModal)); }
+            window.addEventListener('beforeunload', () => {
+                 if (gainUpdateInterval) clearInterval(gainUpdateInterval); 
+                 const now = new Date(); const lastKnownTime = lastTickTime || lastSimulationTime || now;
+                 const elapsed = now.getTime() - lastKnownTime.getTime();
+                 if(elapsed > 0) { calculateGainsForPeriod(elapsed, false, now); }
+                 saveToLocalStorage(); saveAchievements(); 
+             });
+             // Initial chart rendering if data exists
+            if(investmentPlans.filter(p => p.active && p.initialAmount > 0).length > 0) updatePortfolioPieChart();
+            if(historicalData.labels.length > 1) updatePerformanceLineChart();
+        }
+        document.addEventListener('DOMContentLoaded', initializeApp);
+    </script>
+
+</body>
+</html>

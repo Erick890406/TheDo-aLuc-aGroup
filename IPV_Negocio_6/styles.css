@@ -1,0 +1,750 @@
+body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #1a1a1a;
+    color: #eaeaea;
+}
+
+.container {
+    padding: 5%;
+    background-color: #2c2c2c;
+    min-height: 100vh;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+.header {
+    background: #1f1f1f;
+    color: #fff;
+    padding: 20px 0;
+    text-align: center;
+}
+
+.header h1 {
+    margin: 0;
+    font-size: 2.5rem;
+}
+
+.logo {
+    width: 100px;
+    display: block;
+    margin: 0 auto 10px;
+}
+
+.date-input {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 20px 0;
+}
+
+.date-input label {
+    font-size: 18px;
+    color: #5D6473;
+    margin-right: 10px;
+}
+
+.date-input input[type="date"] {
+    font-size: 16px;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #D1D5DB;
+    background-color: #333;
+    color: #fff;
+    box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11), 0 1px 3px rgba(0, 0, 0, 0.08);
+    transition: box-shadow 0.15s ease, border-color 0.15s ease;
+}
+
+.date-input input[type="date"]:focus {
+    outline: none;
+    border-color: #6772E5;
+    box-shadow: 0 4px 14px rgba(50, 50, 93, 0.1), 0 1px 5px rgba(0, 0, 0, 0.1);
+}
+  
+.responsive-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+.responsive-table th, .responsive-table td {
+    padding: 10px;
+    border: 1px solid #333;
+    text-align: left;
+    font-size: 13px;
+}
+
+.responsive-table th {
+    background-color: #3d3d3d;
+    color: white;
+}
+
+.responsive-table td input[type="number"] {
+    width: 100%;
+    padding: 5px;
+    background-color: transparent;
+    color: #fff;
+    border: none;
+}
+  
+  
+  .modal {
+    display: none;
+    position: fixed;
+    z-index: 2;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgb(0,0,0);
+    background-color: rgba(0,0,0,0.4);
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .modal-content {
+    background-color: #fefefe;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    max-width: 500px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+  }
+  
+  .modal-content input[type="text"],
+  .modal-content input[type="number"] {
+    width: 90%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+  }
+  
+  .modal-content button {
+    width: 90%;
+    background-color: #4CAF50;
+    color: white;
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .modal-content button:hover {
+    background-color: #45a049;
+  }
+  
+  @media screen and (max-width: 600px) {
+    .modal-content {
+      width: 95%;
+    }
+  }
+  
+  #totales {
+    background: linear-gradient(135deg, #1e1e1e 0%, #3b3b3b 100%);
+    color: #d4af37;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.6);
+    text-align: center;
+    margin-top: 20px;
+    transition: transform 0.3s, box-shadow 0.3s;
+    font-family: 'Roboto', sans-serif;
+}
+
+#totales:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.8);
+}
+
+#totales h2 {
+    font-size: 2em;
+    margin-bottom: 0.5em;
+    text-transform: uppercase;
+    color: #ff8c00;
+    text-shadow: 0 0 5px #ff8c00, 0 0 10px #ff8c00;
+}
+
+#totales p {
+    font-size: 1.2em;
+    margin: 0.5em 0;
+    text-transform: uppercase;
+    color: #d4af37;
+    text-shadow: 0 0 5px #d4af37, 0 0 10px #d4af37;
+}
+
+  .gastos-section {
+    padding: 30px;
+    background-color: #f5f5f5;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+    border-radius: 10px;
+    transition: box-shadow .3s ease-in-out;
+  }
+  
+  .gastos-section:hover {
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.2);
+  }
+  
+  .gastos-section h2 {
+    color: #4CAF50; /* Color verde */
+    margin-bottom: 20px;
+    font-size: 24px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  
+  .gastos-list {
+    margin-bottom: 30px;
+  }
+  
+  .add-gasto-button {
+    background-color: #4CAF50; /* Color verde */
+    color: white;
+    padding: 15px 20px;
+    border: none;
+    cursor: pointer;
+    font-size: 18px;
+    border-radius: 5px;
+    transition: background-color 0.3s ease, transform .3s ease-in-out;
+  }
+  
+  .add-gasto-button:hover {
+    background-color: #45a049;
+    transform: scale(1.05);
+  }
+  /* Estilo para la lista de gastos */
+  .gastos-list {
+    list-style-type: none; /* Remueve los bullets de la lista */
+    padding: 0;
+    margin-bottom: 30px;
+  }
+  
+  /* Estilo para cada item de la lista de gastos */
+  .gastos-list .gasto-item {
+    background-color: #f9f9f9; /* Color de fondo claro */
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2); /* Sombra para darle profundidad */
+    margin: 10px 0; /* Margen para separar cada item */
+    padding: 20px; /* Espacio interno para el contenido del item */
+    border-radius: 10px; /* Bordes redondeados */
+    display: flex; /* Para alinear el contenido en una línea */
+    justify-content: space-between; /* Para separar el contenido a los extremos */
+    align-items: center; /* Para centrar el contenido verticalmente */
+  }
+  
+  /* Estilo para el texto de cada item de la lista de gastos */
+  .gastos-list .gasto-item span {
+    font-size: 18px; /* Tamaño de letra más grande */
+    color: #333; /* Color de letra oscuro */
+  }
+  
+  /* Estilo para los botones de cada item de la lista de gastos */
+  .gastos-list .gasto-item button {
+    background-color: #4CAF50; /* Color de fondo verde */
+    color: white; /* Color de letra blanco */
+    padding: 10px 20px; /* Espacio interno para el texto del botón */
+    border: none; /* Remueve el borde del botón */
+    border-radius: 5px; /* Bordes redondeados en el botón */
+    cursor: pointer; /* Cambia el cursor al pasar sobre el botón */
+    transition: background-color 0.3s ease-in-out; /* Transición suave al cambiar el color de fondo */
+  }
+  
+  /* Estilo para el hover de los botones de cada item de la lista de gastos */
+  .gastos-list .gasto-item button:hover {
+    background-color: #45a049; /* Cambia el color de fondo al pasar el cursor */
+  }
+  /* Estilo para los botones de cada item de la lista de gastos */
+  .gastos-list .gasto-item button {
+    background: linear-gradient(90deg, #ff9a9e 0%, #fad0c4 99%, #fad0c4 100%);
+    color: white; /* Color de letra blanco */
+    padding: 10px 20px; /* Espacio interno para el texto del botón */
+    border: none; /* Remueve el borde del botón */
+    border-radius: 50px; /* Bordes muy redondeados para un aspecto de botón "pill" */
+    cursor: pointer; /* Cambia el cursor al pasar sobre el botón */
+    transition: all 0.3s ease-in-out; /* Transición suave al cambiar el color de fondo y la escala */
+    text-transform: uppercase; /* Texto en mayúsculas */
+    font-weight: bold; /* Texto en negrita */
+    letter-spacing: 1px; /* Espaciado entre letras */
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+  }
+  
+  /* Estilo para el hover de los botones de cada item de la lista de gastos */
+  .gastos-list .gasto-item button:hover {
+    transform: scale(1.05); /* Aumenta un poco el tamaño al pasar el cursor */
+    box-shadow: 0 15px 25px rgba(0,0,0,0.1);
+    background: linear-gradient(90deg, #fad0c4 0%, #ff9a9e 100%);
+  }
+  
+  
+  /* Estilos para el botón que activa la importación */
+  button[onclick*="file-input"] {
+    background-color: #3498db;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+  }
+  
+  button[onclick*="file-input"]:hover {
+    background-color: #2980b9;
+  }
+  
+  /* Estilos para el botón de exportación */
+  button[onclick*="exportarIPV"] {
+    background-color: #e74c3c;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+  }
+  
+  button[onclick*="exportarIPV"]:hover {
+    background-color: #c0392b;
+  }
+  /* Estilo del modal */
+  .modal-gastos {
+    display: none; /* Oculto por defecto */
+    position: fixed; /* Se queda en su lugar */
+    z-index: 1000; /* Se sitúa sobre otros elementos */
+    left: 0;
+    top: 0;
+    width: 100%; /* Ancho completo */
+    height: 100%; /* Altura completa */
+    overflow: auto; /* Habilita el desplazamiento si es necesario */
+    background: rgba(0, 0, 0, 0.8); /* Fondo oscuro semitransparente */
+    justify-content: center;
+    align-items: center;
+  }
+  
+  /* Estilo del contenido del modal */
+  .modal-content-gastos {
+    background-color: #fff;
+    margin: 10% auto; /* 10% desde la parte superior y centrado */
+    padding: 40px;
+    border: 5px solid #555;
+    width: 60%; /* Ancho personalizado */
+    max-width: 600px; /* Un ancho máximo para dispositivos grandes */
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+    border-radius: 15px; /* Bordes redondeados */
+    animation: modal-open .5s ease-in-out;
+  }
+  
+  /* Animación de apertura del modal */
+  @keyframes modal-open {
+    from {top: -50%; opacity: 0;}
+    to {top: 10%; opacity: 1;}
+  }
+  
+  /* Estilo para los inputs */
+  .modal-content-gastos input[type="text"],
+  .modal-content-gastos input[type="number"] {
+    width: calc(100% - 24px);
+    padding: 12px;
+    margin-top: 8px;
+    margin-bottom: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+  }
+  
+  /* Estilo para el botón */
+  .modal-content-gastos button {
+    width: calc(100% - 24px);
+    background-color: #4CAF50; /* Color verde */
+    color: white; /* Texto en blanco */
+    padding: 10px;
+    margin-top: 8px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 18px;
+    transition: background-color .3s ease-in-out;
+  }
+  
+  /* Estilo para el hover del botón */
+  .modal-content-gastos button:hover {
+    background-color: #ddd; /* Cambia el color de fondo al pasar el cursor */
+    transition: background-color .3s ease-in-out;
+  }
+  
+  /* Estilo para dispositivos pequeños */
+  @media screen and (max-width: 600px) {
+    .modal-content-gastos {
+      width: 90%; /* Los modales ocupan más ancho en dispositivos pequeños */
+      margin: 15% auto; /* Ajuste del margen superior */
+    }
+  }
+  
+  .floating-button {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 15px;
+    font-size: 24px;
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    width: 50px; /* Ancho fijo para hacerlo cuadrado */
+    height: 50px; /* Altura fija para hacerlo cuadrado */
+    border-radius: 4px; /* Esquinas ligeramente redondeadas */
+  }
+  
+  .floating-button:hover {
+    background-color: #0056b3;
+  }
+  
+  /* Estilo para el contenedor de los botones */
+  .button-container {
+    text-align: center; /* Centra los botones horizontalmente */
+    margin-top: 20px; /* Margen superior para separar de la sección de totales */
+  }
+  
+  /* Estilo para los botones Importar y Exportar */
+  .import-export-button {
+    margin: 5px; /* Margen alrededor de los botones para separación */
+    padding: 10px 20px; /* Espaciado interno para los botones */
+    border: 1px solid #ddd; /* Borde ligero para los botones */
+    background-color: #f7f7f7; /* Color de fondo para los botones */
+    cursor: pointer; /* Cambia el cursor a una mano al pasar sobre los botones */
+    border-radius: 5px; /* Esquinas ligeramente redondeadas */
+  }
+  
+  /* Aplica el estilo al pasar el cursor sobre los botones */
+  .import-export-button:hover {
+    background-color: #e7e7e7;
+  }
+  
+  
+  
+  
+  /* Ocultar el costo y las ganancias en la tabla *
+  
+  
+  #totales p:last-of-type {
+    display: none;
+  }*/
+  
+  
+  /* Estilo para la tabla */
+  .table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 15px;
+    font-family: 'Arial', sans-serif;
+}
+
+.table tr:nth-child(odd) {
+    background-color: #333;
+    color: #eaeaea;
+    border-radius: 10px;
+}
+
+.table tr:nth-child(even) {
+    background-color: #2c2c2c;
+    color: #bbb;
+    border-radius: 10px;
+}
+
+.table td, .table th {
+    padding: 20px;
+    border: 1px solid #555;
+    text-align: left;
+}
+
+.table th {
+    background-color: #4CAF50;
+    color: white;
+    position: sticky;
+    top: 0;
+    border-radius: 10px;
+}
+
+.table tr:hover {
+    background-color: #555;
+    transition: background-color .3s ease-in-out;
+    cursor: pointer;
+}
+
+.table tr {
+    background: #1a1a1a;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.5);
+    border-radius: 10px;
+}
+  
+  
+  /* Estilo específico para el botón con clase "PIN" */
+  button.PIN, .import-export {
+    background-color: #3498db;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+  }
+  
+  button.PIN, .import-export:hover {
+    background-color: #D35400; /* Cambio de color al pasar el mouse para retroalimentación visual */
+  }
+  
+  button.PIN, .import-export:active {
+    background-color: #A93226; /* Color más oscuro al hacer clic */
+    box-shadow: 0 2px #922B21; /* Sombra más pequeña para efecto de presión */
+    transform: translateY(2px); /* Mueve el botón hacia abajo para simular un botón presionado */
+  }
+  
+  /* Estilos para dispositivos móviles */
+  @media only screen and (max-width: 600px) {
+    button.PIN {
+      padding: 12px 24px; /* Espaciado más pequeño para pantallas pequeñas */
+      font-size: 16px; /* Tamaño de texto más pequeño para pantallas pequeñas */
+    }
+  }
+  
+  .hidden {
+    display: none;
+  }
+  
+  /* Estilo del modal */
+  /* Estilo del botón */
+  /* Estilo del botón */
+  #toggleVisibility {
+      background-color: #f39c12;
+      color: #ffffff;
+      border: none;
+      padding: 12px 24px;
+      font-size: 18px;
+      cursor: pointer;
+      border-radius: 8px;
+      transition: background-color 0.3s ease;
+    }
+  
+    #toggleVisibility:hover {
+      background-color: #e67e22;
+    }
+  
+  /* Estilo del modal */
+  .modal {
+    display: none; /* Oculto por defecto */
+    position: fixed; /* Se queda fijo en su lugar */
+    z-index: 1000; /* Se sitúa sobre el contenido de la página */
+    left: 0;
+    top: 0;
+    width: 100%; /* Ancho completo */
+    height: 100%; /* Alto completo */
+    overflow: auto; /* Habilita el scroll si es necesario */
+    background: rgba(0, 0, 0, 0.8); /* Fondo oscuro semitransparente */
+  }
+  
+  /* Estilo del contenido del modal */
+  .modal-content {
+    background-color: #fff;
+    margin: 10% auto; /* 10% desde la parte superior y centrado */
+    padding: 40px;
+    border: 5px solid #555;
+    width: 60%; /* Ancho personalizado */
+    max-width: 600px; /* Un ancho máximo para dispositivos grandes */
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+    border-radius: 15px; /* Bordes redondeados */
+    animation: modal-open .5s ease-in-out;
+  }
+  
+  /* Animación de apertura del modal */
+  @keyframes modal-open {
+    from {top: -50%; opacity: 0;}
+    to {top: 10%; opacity: 1;}
+  }
+  
+  /* El botón de cerrar (x) */
+  .close {
+    color: #555;
+    float: right;
+    font-size: 35px;
+    font-weight: bold;
+  }
+  
+  .close:hover,
+  .close:focus {
+    color: #f44336; /* Rojo */
+    text-decoration: none;
+    cursor: pointer;
+  }
+  
+  /* Estilo para dispositivos pequeños */
+  @media screen and (max-width: 600px) {
+    .modal-content {
+      width: 90%; /* Los modales ocupan más ancho en dispositivos pequeños */
+      margin: 15% auto; /* Ajuste del margen superior */
+    }
+  }
+  
+  
+  
+  /* Estilo para ocultar elementos */
+  .hidden {
+    display: none;
+  }
+  /*.import-export-button {
+   display: none;
+  }*/
+  .PIN {
+    display: none;
+  }
+  
+  .date-input {
+    background: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    font-family: 'Arial', sans-serif;
+    margin: 20px auto;
+    max-width: 300px;
+  }
+  
+  .date-input label {
+    font-size: 1.2em;
+    color: #333;
+    margin-bottom: 10px;
+    display: block;
+  }
+  
+  .date-input input[type="date"] {
+    padding: 10px;
+    border: 2px solid #ddd;
+    border-radius: 5px;
+    font-size: 1em;
+    color: #333;
+    outline: none;
+    transition: border-color 0.3s, box-shadow 0.3s;
+    background: #f9f9f9;
+  }
+  
+  .date-input input[type="date"]:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+    background: #fff;
+  }
+  
+  .date-input input[type="date"]::-webkit-calendar-picker-indicator {
+    background-color: #007bff;
+    color: #fff;
+    padding: 5px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .date-input input[type="date"]::-webkit-inner-spin-button,
+  .date-input input[type="date"]::-webkit-clear-button {
+    display: none;
+  }
+  
+  .date-input input[type="date"]::-webkit-calendar-picker-indicator:hover {
+    background-color: #0056b3;
+  }
+  
+  #searchInput {
+    display: block;
+    margin: 20px auto;
+    padding: 10px 20px;
+    width: 80%;
+    max-width: 500px;
+    font-size: 16px;
+    border: 2px solid #ccc;
+    border-radius: 25px;
+    background: linear-gradient(145deg, #f0f0f0, #e0e0e0);
+    box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.1), -5px -5px 15px rgba(255, 255, 255, 0.7);
+    transition: all 0.3s ease;
+  }
+  
+  #searchInput:focus {
+    outline: none;
+    border-color: #a29bfe;
+    box-shadow: 0 0 10px rgba(162, 155, 254, 0.5);
+  }
+  
+  @media (max-width: 768px) {
+    #searchInput {
+      width: 80%;
+    }
+  }
+  /* Ocultar el borde y el fondo de los inputs de texto y número */
+  #product-list input[type="text"],
+  #product-list input[type="number"] {
+    border: none;
+    background: none;
+    outline: none;
+    width: 100%;
+    box-sizing: border-box;
+    font-size: inherit;
+    font-family: inherit;
+    color: inherit;
+    padding: 0;
+    margin: 0;
+  }
+  /* Estilo para las imágenes de los productos */
+  #product-list img {
+    display: block;
+    width: 50px;
+    height: 50px;
+  }
+  
+  /* Reemplazar el texto cuando no hay imagen con una imagen predeterminada */
+  #product-list img[src=""] {
+    content: url('./Logo.png');
+  }
+  
+  .fecha-style {
+    font-size: 26px;
+    font-weight: bold;
+    color: #FFD700;
+    text-shadow: 2px 2px 4px #8B4513;
+   
+    border: 2px solid #DAA520;
+    border-radius: 10px;
+    padding: 15px;
+    margin-bottom: 20px;
+    box-shadow: 0 0 10px #DAA520, 0 0 40px #DAA520, 0 0 80px #DAA520;
+    transition: 1s;
+  }
+  
+  .fecha-style:hover {
+    box-shadow: 0 0 20px #FFD700, 0 0 30px #FFD700, 0 0 40px #FFD700;
+  }
+  
+  table .delete-button {
+    background-color: #e74c3c; /* Rojo intenso */
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease, transform 0.2s ease-in-out;
+}
+
+table .delete-button:hover {
+    background-color: #c0392b; /* Rojo más oscuro al pasar el cursor */
+    transform: scale(1.05); /* Aumenta un poco el tamaño al pasar el cursor */
+}
+
+table .delete-button:active {
+    background-color: #a93226; /* Rojo más oscuro al hacer clic */
+    transform: scale(0.95); /* Disminuye el tamaño al hacer clic */
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2); /* Efecto de presión */
+}

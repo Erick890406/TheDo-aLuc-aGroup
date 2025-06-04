@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#8B4513">
+    <title>Calculadora Pro Pizzas</title>
+    <link rel="stylesheet" href="fontawesome/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1><i class="fas fa-pizza-slice"></i> Calculadora Pro Pizzas</h1>
+
+        <div class="neumorphic-inset">
+            <h2><i class="fas fa-cheese"></i> Ingredientes Base y Costos</h2>
+            <div class="input-grid">
+                <div class="form-group">
+                    <label for="jarrosHarina"><i class="fas fa-bread-slice"></i> Jarros Harina:</label>
+                    <input type="number" id="jarrosHarina" placeholder="Ej: 5">
+                </div>
+                <div class="form-group">
+                    <label for="costoJarro"><i class="fas fa-dollar-sign"></i> Costo / Jarro:</label>
+                    <input type="number" step="0.01" id="costoJarro" placeholder="Ej: 1.50">
+                </div>
+                <div class="form-group">
+                    <label for="librasQueso"><i class="fas fa-weight-hanging"></i> Lbs Queso:</label>
+                    <input type="number" step="0.1" id="librasQueso" placeholder="Ej: 10">
+                </div>
+                <div class="form-group">
+                    <label for="costoQueso"><i class="fas fa-dollar-sign"></i> Costo / Lb Queso:</label>
+                    <input type="number" step="0.01" id="costoQueso" placeholder="Ej: 2.80">
+                </div>
+                <div class="form-group">
+                    <label for="manoObra"><i class="fas fa-hard-hat"></i> Mano de Obra:</label>
+                    <input type="number" step="0.01" id="manoObra" placeholder="Ej: 20.00">
+                </div>
+            </div>
+        </div>
+
+        <div class="neumorphic">
+            <h2><i class="fas fa-receipt"></i> Otros Gastos Variables</h2>
+            <div class="form-group add-expense-group">
+                <input type="text" id="otrosGastosDesc" placeholder="Descripción (Ej: Gas, Leña)">
+                <input type="number" step="0.01" id="otrosGastos" placeholder="Costo">
+                <button class="btn btn-secondary btn-sm" onclick="agregarGasto()"><i class="fas fa-plus"></i> Añadir</button>
+            </div>
+            <ul id="listaGastos"></ul>
+            <div id="totalGastos" class="total-box expense small">
+                 <h3><i class="fas fa-cash-register"></i> Total Otros Gastos</h3>
+                 <p>$0.00</p>
+            </div>
+        </div>
+
+        <div class="neumorphic-inset">
+             <h2><i class="fas fa-cash-register"></i> Ventas (Pizza Base)</h2>
+             <div class="input-grid">
+                <div class="form-group">
+                    <label for="precioVenta"><i class="fas fa-tag"></i> Precio Venta / Pizza:</label>
+                    <input type="number" step="0.01" id="precioVenta" placeholder="Ej: 8.00">
+                </div>
+                <div class="form-group">
+                    <label for="cantidadPizzas"><i class="fas fa-clipboard-list"></i> Cant. Pizzas Vendidas:</label>
+                    <input type="number" id="cantidadPizzas" placeholder="Ej: 25">
+                </div>
+             </div>
+        </div>
+
+        <div class="optional-sections">
+            <button class="btn btn-secondary toggle-button" onclick="toggleSection('jamonSection')">
+                <i class="fas fa-plus-circle"></i> Jamón <i class="fas fa-chevron-down"></i>
+            </button>
+            <div id="jamonSection" class="neumorphic optional-content" style="display: none;">
+                <h2><i class="fas fa-drumstick-bite"></i> Cálculos de Jamón</h2>
+                <div class="input-grid">
+                    <div class="form-group"><label for="librasJamon"><i class="fas fa-weight-hanging"></i> Lbs Jamón:</label><input type="number" step="0.1" id="librasJamon"></div>
+                    <div class="form-group"><label for="costoJamon"><i class="fas fa-dollar-sign"></i> Costo / Lb Jamón:</label><input type="number" step="0.01" id="costoJamon"></div>
+                    <div class="form-group"><label for="cantidadPizzasJamon"><i class="fas fa-clipboard-list"></i> Cant. Pizzas Jamón:</label><input type="number" id="cantidadPizzasJamon"></div>
+                    <div class="form-group"><label for="precioVentaJamon"><i class="fas fa-tag"></i> Precio Venta Jamón:</label><input type="number" step="0.01" id="precioVentaJamon"></div>
+                </div>
+            </div>
+
+            <button class="btn btn-secondary toggle-button" onclick="toggleSection('salchichaSection')">
+                <i class="fas fa-plus-circle"></i> Salchicha <i class="fas fa-chevron-down"></i>
+            </button>
+            <div id="salchichaSection" class="neumorphic optional-content" style="display: none;">
+                 <h2><i class="fas fa-hotdog"></i> Cálculos de Salchicha</h2>
+                 <div class="input-grid">
+                    <div class="form-group"><label for="librasSalchicha"><i class="fas fa-weight-hanging"></i> Lbs Salchicha:</label><input type="number" step="0.1" id="librasSalchicha"></div>
+                    <div class="form-group"><label for="costoSalchicha"><i class="fas fa-dollar-sign"></i> Costo / Lb Salchicha:</label><input type="number" step="0.01" id="costoSalchicha"></div>
+                    <div class="form-group"><label for="cantidadPizzasSalchicha"><i class="fas fa-clipboard-list"></i> Cant. Pizzas Salchicha:</label><input type="number" id="cantidadPizzasSalchicha"></div>
+                    <div class="form-group"><label for="precioVentaSalchicha"><i class="fas fa-tag"></i> Precio Venta Salchicha:</label><input type="number" step="0.01" id="precioVentaSalchicha"></div>
+                 </div>
+            </div>
+        </div>
+
+        <div class="main-buttons neumorphic">
+            <button class="btn btn-primary" onclick="calcular()"><i class="fas fa-calculator"></i> Calcular Totales</button>
+            <button class="btn btn-danger" onclick="limpiarYReiniciar()"><i class="fas fa-trash-restore"></i> Limpiar Todo</button>
+        </div>
+
+        <div id="resultados" class="neumorphic">
+             <h2><i class="fas fa-poll"></i> Resultados del Día</h2>
+             <div id="totales" class="total-section"></div>
+        </div>
+
+        <div class="neumorphic">
+            <h2><i class="fas fa-history"></i> Ver Registros Anteriores</h2>
+            <div class="date-button-container form-group">
+                 <label for="fechaVisualizacion"><i class="fas fa-calendar-day"></i> Seleccionar Fecha:</label>
+                <input type="date" id="fechaVisualizacion">
+                <div class="record-buttons">
+                    <button class="btn btn-secondary btn-sm" onclick="mostrarRegistro()"><i class="fas fa-eye"></i> Mostrar</button>
+                    <button class="btn btn-secondary btn-sm" onclick="copiarAlPortapapeles()"><i class="fas fa-copy"></i> Copiar</button>
+                </div>
+            </div>
+            <div id="registroTotales" class="total-section">
+                 <p class="hint-text"><i class="fas fa-info-circle"></i> Seleccione una fecha y presione Mostrar.</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/service-worker.js')
+                    .then(registration => console.log('ServiceWorker registrado:', registration.scope))
+                    .catch(error => console.log('Fallo registro ServiceWorker:', error));
+            });
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Calculadora de Pizzas</title>
+<style>
+ body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #eaeaea;
+  color: #333;
+  line-height: 1.6;
+  padding: 20px;
+}
+
+.container {
+  max-width: 800px;
+  margin: auto;
+  overflow: hidden;
+  padding: 0 20px;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+h1, h2, h3, h4, h5, h6 {
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.input-group {
+  margin-bottom: 20px;
+}
+
+.input-group label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+input[type="number"],
+input[type="text"] {
+  width: calc(100% - 22px);
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+button, .btn {
+  display: inline-block;
+  background: #333;
+  color: #fff;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: opacity 0.3s ease;
+}
+
+button:hover, .btn:hover {
+  opacity: 0.7;
+}
+
+#botones {
+  text-align: center;
+  margin-top: 20px;
+}
+
+#listaGastos {
+  list-style: none;
+  padding: 0;
+  margin-top: 20px;
+}
+
+#listaGastos li {
+  background: #f9f9f9;
+  border: 1px solid #e1e1e1;
+  padding: 10px;
+  position: relative;
+  margin-bottom: 10px;
+  border-radius: 4px;
+}
+
+.btn-eliminar {
+  font-size: 12px;
+  line-height: 12px;
+  padding: 5px 8px;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background-color: #ff4d4d;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.btn-eliminar:hover {
+  background-color: #ff3333;
+}
+
+#totalGastos {
+  font-size: 18px;
+  font-weight: bold;
+  margin-top: 20px;
+  padding: 10px;
+  background-color: #333;
+  color: #fff;
+  text-align: center;
+  border-radius: 4px;
+}
+
+#totales {
+  margin-top: 20px;
+}
+
+.total-item {
+  background: #333;
+  color: #fff;
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 20px;
+  }
+}
+#totales {
+  margin-top: 20px;
+  padding: 20px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 15px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+  color: #fff;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+#totales div {
+  margin-bottom: 15px;
+  padding: 15px;
+  
+  border-radius: 10px;
+  font-size: 20px;
+  font-weight: bold;
+  text-align: center;
+  transition: background 0.3s ease;
+}
+
+#totales div:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+#totales div:last-child {
+  margin-bottom: 0;
+}
+
+.toggle-button {
+      display: block;
+      margin: 20px auto;
+      padding: 10px 20px;
+      background: #333;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: opacity 0.3s ease;
+      text-align: center;
+    }
+
+    .toggle-button:hover {
+      opacity: 0.7;
+    }
+
+
+    #ganancias {
+  margin-top: 20px;
+  padding: 20px;
+  background: linear-gradient(135deg, #8B4513 0.8, #A0522D 0.8); /* Color marrón con transparencia */
+  border-radius: 15px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+  color: #581919;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+#ganancias::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0));
+  animation: rotate 6s linear infinite;
+}
+
+@keyframes rotate {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+#ganancias:hover {
+  background: linear-gradient(135deg, #A0522D 0.8, #8B4513 0.8); /* Color marrón con transparencia */
+  transform: scale(1.05);
+  transition: background 0.3s ease, transform 0.3s ease;
+}
+
+
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div id="inputs">
+    <div class="input-group"><label for="jarrosHarina">Jarros de Harina:</label><input type="number" id="jarrosHarina" placeholder="Jarros de Harina"></div>
+    <div class="input-group"><label for="costoJarro">Costo por Jarro:</label><input type="number" id="costoJarro" placeholder="Costo por Jarro"></div>
+    <div class="input-group"><label for="librasQueso">Libras de Queso:</label><input type="number" id="librasQueso" placeholder="Libras de Queso"></div>
+    <div class="input-group"><label for="costoQueso">Costo por libra de queso:</label><input type="number" id="costoQueso" placeholder="Costo por libra de queso"></div>
+    <div class="input-group"><label for="librasQueso2">Libras de queso Tipo 2:</label><input type="number" id="librasQueso2" placeholder="Libras de queso Tipo 2"></div>
+    <div class="input-group"><label for="costoQueso2">Costo de libra de queso tipo 2:</label><input type="number" id="costoQueso2" placeholder="Costo de libra de queso tipo 2"></div>
+    <div class="input-group"><label for="manoObra">Mano de obra:</label><input type="number" id="manoObra" placeholder="Mano de obra"></div>
+    <div class="input-group">
+      <label for="otrosGastosDesc">Descripción de otros gastos:</label>
+      <input type="text" id="otrosGastosDesc" placeholder="Descripción">
+      <input type="number" id="otrosGastos" placeholder="Costo">
+      <button onclick="agregarGasto()">Añadir Gasto</button>
+    </div>
+    <ul id="listaGastos">
+      <!-- Los gastos añadidos aparecerán aquí -->
+    </ul>
+  </div>
+    <div class="input-group"><label for="precioVenta">Precio de venta por pizza:</label><input type="number" id="precioVenta" placeholder="Precio de venta por pizza"></div>
+    <div class="input-group"><label for="cantidadPizzas">Cantidad de pizzas vendidas:</label><input type="number" id="cantidadPizzas" placeholder="Cantidad de pizzas vendidas"></div>
+  </div>
+
+  
+
+  <!-- Botón para desplegar la sección de Jamón -->
+  <button class="toggle-button" onclick="toggleSection('jamonSection')">Mostrar/Ocultar Jamón</button>
+  
+    
+  <!-- Nueva sección para Jamón -->
+  <div id="jamonSection" style="display: none;">
+    <h2>Cálculos de Jamón</h2>
+    <div class="input-group">
+      <label for="librasJamon">Libras de Jamón:</label>
+      <input type="number" id="librasJamon" placeholder="Libras de Jamón">
+    </div>
+    <div class="input-group">
+      <label for="costoJamon">Costo por libra de Jamón:</label>
+      <input type="number" id="costoJamon" placeholder="Costo por libra de Jamón">
+    </div>
+    <div class="input-group">
+      <label for="cantidadPizzasJamon">Cantidad de pizzas vendidas con Jamón:</label>
+      <input type="number" id="cantidadPizzasJamon" placeholder="Cantidad de pizzas vendidas con Jamón">
+    </div>
+    <div class="input-group">
+      <label for="precioVentaJamon">Precio de venta por pizza con Jamón:</label>
+      <input type="number" id="precioVentaJamon" placeholder="Precio de venta por pizza con Jamón">
+    </div>
+  </div>
+
+  <!-- Botón para desplegar la sección de Salchicha -->
+  <button class="toggle-button" onclick="toggleSection('salchichaSection')">Mostrar/Ocultar Salchicha</button>
+  
+  <!-- Nueva sección para Salchicha -->
+  <div id="salchichaSection" style="display: none;">
+    <h2>Cálculos de Salchicha</h2>
+    <div class="input-group">
+      <label for="librasSalchicha">Libras de Salchicha:</label>
+      <input type="number" id="librasSalchicha" placeholder="Libras de Salchicha">
+    </div>
+    <div class="input-group">
+      <label for="costoSalchicha">Costo por libra de Salchicha:</label>
+      <input type="number" id="costoSalchicha" placeholder="Costo por libra de Salchicha">
+    </div>
+    <div class="input-group">
+      <label for="cantidadPizzasSalchicha">Cantidad de pizzas vendidas con Salchicha:</label>
+      <input type="number" id="cantidadPizzasSalchicha" placeholder="Cantidad de pizzas vendidas con Salchicha">
+    </div>
+    <div class="input-group">
+      <label for="precioVentaSalchicha">Precio de venta por pizza con Salchicha:</label>
+      <input type="number" id="precioVentaSalchicha" placeholder="Precio de venta por pizza con Salchicha">
+    </div>
+  </div>
+</div>
+
+<div id="botones" class="center">
+  <button onclick="calcular()">Calcular</button>
+  <button onclick="limpiarYReiniciar()">Limpiar y Reiniciar</button>
+</div>
+
+<div id="totales">
+  <!-- Los totales se mostrarán aquí -->
+</div>
+</div>
+
+<script>
+  var gastos = [];
+
+function agregarGasto() {
+  var desc = document.getElementById('otrosGastosDesc').value;
+  var costo = parseFloat(document.getElementById('otrosGastos').value);
+  if (desc && !isNaN(costo)) {
+    gastos.push({ desc: desc, costo: costo });
+    mostrarGastos();
+    guardarDatos();
+  }
+}
+
+function eliminarGasto(index) {
+  gastos.splice(index, 1);
+  mostrarGastos();
+  guardarDatos();
+}
+
+function mostrarGastos() {
+  var lista = document.getElementById('listaGastos');
+  lista.innerHTML = '';
+  var totalGastos = 0;
+  gastos.forEach((gasto, index) => {
+    totalGastos += gasto.costo;
+    lista.innerHTML += `<li>${gasto.desc}: $${gasto.costo.toFixed(2)}
+                        <button class="btn-eliminar" onclick="eliminarGasto(${index})">x</button></li>`;
+  });
+  document.getElementById('totalGastos').textContent = `Total Gastos: $${totalGastos.toFixed(2)}`;
+}
+
+function toggleSection(sectionId) {
+      var section = document.getElementById(sectionId);
+      section.style.display = (section.style.display === 'none' || section.style.display === '') ? 'block' : 'none';
+    }
+
+function calcular() {
+  var jarrosHarina = parseFloat(document.getElementById('jarrosHarina').value) || 0;
+  var costoJarro = parseFloat(document.getElementById('costoJarro').value) || 0;
+  var librasQueso = parseFloat(document.getElementById('librasQueso').value) || 0;
+  var costoQueso = parseFloat(document.getElementById('costoQueso').value) || 0;
+  var librasQueso2 = parseFloat(document.getElementById('librasQueso2').value) || 0;
+  var costoQueso2 = parseFloat(document.getElementById('costoQueso2').value) || 0;
+  var manoObra = parseFloat(document.getElementById('manoObra').value) || 0;
+  var precioVenta = parseFloat(document.getElementById('precioVenta').value) || 0;
+  var cantidadPizzas = parseFloat(document.getElementById('cantidadPizzas').value) || 0;
+
+  var totalGastos = gastos.reduce((sum, gasto) => sum + (gasto.costo || 0), 0);
+  var inversion = (jarrosHarina * costoJarro) + (librasQueso * costoQueso) + (librasQueso2 * costoQueso2) + manoObra + totalGastos;
+  var totalVentas = precioVenta * cantidadPizzas;
+  var costoPorPizza = cantidadPizzas ? inversion / cantidadPizzas : 0;
+  var ganancias = totalVentas - inversion;
+  var quesoPorPizza = librasQueso ? cantidadPizzas / librasQueso : 0;
+  var pizzasPorJarro = jarrosHarina ? cantidadPizzas / jarrosHarina : 0;
+
+  var librasJamon = parseFloat(document.getElementById('librasJamon').value) || 0;
+  var costoJamon = parseFloat(document.getElementById('costoJamon').value) || 0;
+  var cantidadPizzasJamon = parseFloat(document.getElementById('cantidadPizzasJamon').value) || 0;
+  var precioVentaJamon = parseFloat(document.getElementById('precioVentaJamon').value) || 0;
+
+  var inversionJamon = librasJamon * costoJamon;
+  var totalVentasJamon = precioVentaJamon * cantidadPizzasJamon;
+  var gananciasJamon = totalVentasJamon - inversionJamon;
+
+  var librasSalchicha = parseFloat(document.getElementById('librasSalchicha').value) || 0;
+  var costoSalchicha = parseFloat(document.getElementById('costoSalchicha').value) || 0;
+  var cantidadPizzasSalchicha = parseFloat(document.getElementById('cantidadPizzasSalchicha').value) || 0;
+  var precioVentaSalchicha = parseFloat(document.getElementById('precioVentaSalchicha').value) || 0;
+
+  var inversionSalchicha = librasSalchicha * costoSalchicha;
+  var totalVentasSalchicha = precioVentaSalchicha * cantidadPizzasSalchicha;
+  var gananciasSalchicha = totalVentasSalchicha - inversionSalchicha;
+
+  document.getElementById('totales').innerHTML = `<div id="ganancias">Ganancias: ${ganancias.toFixed(2)}</div>
+                                                  <div>Total en efectivo de ventas: ${totalVentas.toFixed(2)}</div>
+                                                  <div>Inversión: ${inversion.toFixed(2)}</div>
+                                                  <div>Costo por Pizza: ${costoPorPizza.toFixed(2)}</div>
+                                                  
+                                                  <div>Se Hicieron: ${quesoPorPizza.toFixed(2)} pizzas por libra de queso</div>
+                                                  <div>Pizzas por Jarro de Harina: ${pizzasPorJarro.toFixed(2)}</div>
+                                                  <div>Ganancias (Jamón): ${gananciasJamon.toFixed(2)}</div>
+                                                  <div>Ganancias (Salchicha): ${gananciasSalchicha.toFixed(2)}</div>`;
+  guardarDatos();
+}
+
+function limpiarYReiniciar() {
+  document.getElementById('inputs').reset();
+  document.getElementById('totales').innerHTML = '';
+  gastos = [];
+  guardarDatos();
+}
+
+function guardarDatos() {
+  localStorage.setItem('datosCalculadora', JSON.stringify({
+    jarrosHarina: document.getElementById('jarrosHarina').value,
+    costoJarro: document.getElementById('costoJarro').value,
+    librasQueso: document.getElementById('librasQueso').value,
+    costoQueso: document.getElementById('costoQueso').value,
+    librasQueso2: document.getElementById('librasQueso2').value,
+    costoQueso2: document.getElementById('costoQueso2').value,
+    manoObra: document.getElementById('manoObra').value,
+    otrosGastos: gastos,
+    precioVenta: document.getElementById('precioVenta').value,
+    cantidadPizzas: document.getElementById('cantidadPizzas').value,
+    librasJamon: document.getElementById('librasJamon').value,
+    costoJamon: document.getElementById('costoJamon').value,
+    cantidadPizzasJamon: document.getElementById('cantidadPizzasJamon').value,
+    precioVentaJamon: document.getElementById('precioVentaJamon').value,
+    librasSalchicha: document.getElementById('librasSalchicha').value,
+    costoSalchicha: document.getElementById('costoSalchicha').value,
+    cantidadPizzasSalchicha: document.getElementById('cantidadPizzasSalchicha').value,
+    precioVentaSalchicha: document.getElementById('precioVentaSalchicha').value
+  }));
+}
+
+function cargarDatos() {
+  var datosGuardados = JSON.parse(localStorage.getItem('datosCalculadora'));
+  if(datosGuardados) {
+    document.getElementById('jarrosHarina').value = datosGuardados.jarrosHarina;
+    document.getElementById('costoJarro').value = datosGuardados.costoJarro;
+    document.getElementById('librasQueso').value = datosGuardados.librasQueso;
+    document.getElementById('costoQueso').value = datosGuardados.costoQueso;
+    document.getElementById('librasQueso2').value = datosGuardados.librasQueso2;
+    document.getElementById('costoQueso2').value = datosGuardados.costoQueso2;
+    document.getElementById('manoObra').value = datosGuardados.manoObra;
+    document.getElementById('precioVenta').value = datosGuardados.precioVenta;
+    document.getElementById('cantidadPizzas').value = datosGuardados.cantidadPizzas;
+    document.getElementById('librasJamon').value = datosGuardados.librasJamon;
+    document.getElementById('costoJamon').value = datosGuardados.costoJamon;
+    document.getElementById('cantidadPizzasJamon').value = datosGuardados.cantidadPizzasJamon;
+    document.getElementById('precioVentaJamon').value = datosGuardados.precioVentaJamon;
+    document.getElementById('librasSalchicha').value = datosGuardados.librasSalchicha;
+    document.getElementById('costoSalchicha').value = datosGuardados.costoSalchicha;
+    document.getElementById('cantidadPizzasSalchicha').value = datosGuardados.cantidadPizzasSalchicha;
+    document.getElementById('precioVentaSalchicha').value = datosGuardados.precioVentaSalchicha;
+    gastos = datosGuardados.otrosGastos || [];
+    mostrarGastos();
+  }
+}
+
+window.onload = cargarDatos;
+
+</script>
+
+</body>
+</html>

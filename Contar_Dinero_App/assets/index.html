@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contador de Billetes</title>
+    <style>
+        :root {
+            --primary-bg: #121212;
+            --secondary-bg: #1f1f1f;
+            --accent-color: #76ff03;
+            --text-color: #e0e0e0;
+            --shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Reset básico */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--primary-bg);
+            color: var(--text-color);
+            transition: background-color 0.3s ease;
+            line-height: 1.6;
+        }
+
+        .header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: var(--secondary-bg);
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            box-shadow: var(--shadow);
+            transition: background-color 0.3s ease;
+        }
+
+        .total {
+            font-size: 1.8em;
+            color: var(--accent-color);
+            font-weight: bold;
+            text-align: center;
+            flex-grow: 1;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .clear-btn {
+            padding: 8px 15px;
+            background: #d32f2f;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 0.9em;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+
+        .clear-btn:hover {
+            background: #b71c1c;
+            transform: scale(1.05);
+        }
+
+        .container {
+            background: var(--secondary-bg);
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: var(--shadow);
+            max-width: 800px;
+            width: 100%;
+            margin: 80px auto 0;
+            transition: background-color 0.3s ease;
+        }
+
+        h1 {
+            text-align: center;
+            color: var(--accent-color);
+            font-size: 2em;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .bill-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 15px;
+            background: var(--primary-bg);
+            border-radius: 10px;
+            margin-bottom: 15px;
+            box-shadow: var(--shadow);
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+
+        .bill-row:hover {
+            transform: translateY(-5px);
+        }
+
+        .bill-row > * {
+            text-align: center;
+        }
+
+        .bill-row label {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: var(--accent-color);
+            flex: 1;
+        }
+
+        .bill-row input[type="number"] {
+            width: 80px;
+            padding: 10px;
+            border: none;
+            border-bottom: 2px solid var(--accent-color);
+            text-align: center;
+            font-size: 1.2em;
+            background: transparent;
+            color: var(--text-color);
+            transition: border-color 0.3s ease;
+            flex: 1;
+        }
+
+        .bill-row input[type="number"]:focus {
+            border-color: #64dd17;
+        }
+
+        .individual-total {
+            font-size: 1.2em;
+            color: var(--accent-color);
+            font-weight: bold;
+            flex: 1;
+        }
+
+        input[type="checkbox"] {
+            appearance: none;
+            width: 24px;
+            height: 24px;
+            border: 2px solid var(--accent-color);
+            border-radius: 4px;
+            cursor: pointer;
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex: 0.5;
+        }
+
+        input[type="checkbox"]:checked {
+            background: var(--accent-color);
+        }
+
+        input[type="checkbox"]:checked::after {
+            content: '✓';
+            color: var(--secondary-bg);
+            font-size: 1.2rem;
+        }
+
+        .bill-row.inactive {
+            background: #552c2c; /* Fondo más oscuro para filas inactivas */
+            color: #888; /* Texto más tenue */
+        }
+
+        .bill-row.inactive input[type="number"] {
+            color: #888; /* Inputs también más tenues */
+        }
+
+        .bill-row.inactive .individual-total {
+            color: #888; /* Totales individuales más tenues */
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1001;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background: rgba(0, 0, 0, 0.8);
+            padding-top: 60px;
+            transition: background-color 0.3s ease;
+        }
+
+        .modal-content {
+            background: var(--secondary-bg);
+            margin: 5% auto;
+            padding: 20px;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 400px;
+            text-align: center;
+            box-shadow: var(--shadow);
+            transition: background-color 0.3s ease;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            transition: color 0.3s ease;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: #fff;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .modal-content p {
+            font-size: 1.2em;
+            color: var(--text-color);
+            margin-bottom: 20px;
+        }
+
+        .modal-content button {
+            padding: 15px 30px;
+            margin: 10px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.2em;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+
+        #confirmClear {
+            background: #388e3c;
+            color: white;
+        }
+
+        #confirmClear:hover {
+            background: #2e7d32;
+            transform: scale(1.05);
+        }
+
+        #cancelClear {
+            background: #d32f2f;
+            color: white;
+        }
+
+        #cancelClear:hover {
+            background: #b71c1c;
+            transform: scale(1.05);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 600px) {
+            .header {
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+                padding: 10px;
+            }
+
+            .total {
+                font-size: 1.2em;
+                margin-left: auto;
+                margin-right: auto;
+            }
+
+            .clear-btn {
+                padding: 8px 15px;
+                font-size: 0.9em;
+                width: auto;
+                margin-left: 10px;
+            }
+
+            .container {
+                padding: 15px;
+            }
+
+            h1 {
+                font-size: 1.5em;
+            }
+
+            .bill-row {
+                flex-direction: row;
+                gap: 5px;
+                padding: 10px;
+            }
+
+            .bill-row label {
+                font-size: 1em;
+                flex: 1;
+            }
+
+            .bill-row input[type="number"] {
+                width: 60px;
+                font-size: 1em;
+                flex: 1;
+            }
+
+            .individual-total {
+                font-size: 1em;
+                flex: 1;
+            }
+
+            input[type="checkbox"] {
+                width: 20px;
+                height: 20px;
+                flex: 0.5;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <div class="total" id="total">Total: $0</div>
+        <div class="total" id="inactiveTotal">Inactivos: $0</div>
+        <button class="clear-btn" id="clearBtn">Limpiar</button>
+    </div>
+
+    <!-- Contenedor principal -->
+    <div class="container">
+        <h1>Contador de Billetes</h1>
+
+        <!-- Fila para billete de 1000 -->
+        <div class="bill-row" id="row1000">
+            <label>1000 x</label>
+            <input type="number" id="bill1000" value="0">
+            <div class="individual-total" id="total1000">$0</div>
+            <input type="checkbox" class="bill-toggle" id="toggle1000" checked>
+        </div>
+
+        <!-- Fila para billete de 500 -->
+        <div class="bill-row" id="row500">
+            <label>500 x</label>
+            <input type="number" id="bill500" value="0">
+            <div class="individual-total" id="total500">$0</div>
+            <input type="checkbox" class="bill-toggle" id="toggle500" checked>
+        </div>
+
+        <!-- Fila para billete de 200 -->
+        <div class="bill-row" id="row200">
+            <label>200 x</label>
+            <input type="number" id="bill200" value="0">
+            <div class="individual-total" id="total200">$0</div>
+            <input type="checkbox" class="bill-toggle" id="toggle200" checked>
+        </div>
+
+        <!-- Fila para billete de 100 -->
+        <div class="bill-row" id="row100">
+            <label>100 x</label>
+            <input type="number" id="bill100" value="0">
+            <div class="individual-total" id="total100">$0</div>
+            <input type="checkbox" class="bill-toggle" id="toggle100" checked>
+        </div>
+
+        <!-- Fila para billete de 50 -->
+        <div class="bill-row" id="row50">
+            <label>50 x</label>
+            <input type="number" id="bill50" value="0">
+            <div class="individual-total" id="total50">$0</div>
+            <input type="checkbox" class="bill-toggle" id="toggle50" checked>
+        </div>
+
+        <!-- Fila para billete de 20 -->
+        <div class="bill-row" id="row20">
+            <label>20 x</label>
+            <input type="number" id="bill20" value="0">
+            <div class="individual-total" id="total20">$0</div>
+            <input type="checkbox" class="bill-toggle" id="toggle20" checked>
+        </div>
+
+        <!-- Fila para billete de 10 -->
+        <div class="bill-row" id="row10">
+            <label>10 x</label>
+            <input type="number" id="bill10" value="0">
+            <div class="individual-total" id="total10">$0</div>
+            <input type="checkbox" class="bill-toggle" id="toggle10" checked>
+        </div>
+
+        <!-- Fila para billete de 5 -->
+        <div class="bill-row" id="row5">
+            <label>5 x</label>
+            <input type="number" id="bill5" value="0">
+            <div class="individual-total" id="total5">$0</div>
+            <input type="checkbox" class="bill-toggle" id="toggle5" checked>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div id="confirmModal" class="modal">
+        <div class="modal-content">
+            <span class="close">×</span>
+            <p>¿Estás seguro de que deseas limpiar todos los valores?</p>
+            <button id="confirmClear">Sí</button>
+            <button id="cancelClear">No</button>
+        </div>
+    </div>
+
+    <!-- Aquí empieza el script -->
+    <script>
+        const billInputs = document.querySelectorAll('input[type="number"]');
+        const totalDisplay = document.getElementById('total');
+        const clearBtn = document.getElementById('clearBtn');
+    
+        // Función para calcular el total general
+        function calculateTotal() {
+        let total = 0;
+        let inactiveTotal = 0; // Nuevo total para filas inactivas
+        
+        billInputs.forEach(input => {
+            const billValue = parseInt(input.id.replace('bill', '')) || 0;
+            const count = parseInt(input.value) || 0;
+            const toggleId = `toggle${input.id.replace('bill', '')}`;
+            const toggle = document.getElementById(toggleId);
+            
+            if (toggle.checked) {
+                total += billValue * count;
+            } else {
+                inactiveTotal += billValue * count; // Sumar al total inactivo
+            }
+        });
+        
+        // Actualizar ambos totales
+        totalDisplay.textContent = `Total: $${total}`;
+        document.getElementById('inactiveTotal').textContent = `Inactivos: $${inactiveTotal}`;
+    }
+    
+        // Inicialización
+        window.onload = () => {
+            billInputs.forEach(input => {
+                const savedValue = localStorage.getItem(input.id);
+                if (savedValue) {
+                    input.value = savedValue;
+                }
+    
+                const toggleId = `toggle${input.id.replace('bill', '')}`;
+                const toggle = document.getElementById(toggleId);
+                const toggleState = localStorage.getItem(toggleId);
+                if (toggleState !== null) {
+                    toggle.checked = toggleState === 'true';
+                }
+    
+                // Aplicar estilo inicial según el estado del checkbox
+                const rowId = `row${input.id.replace('bill', '')}`;
+                const row = document.getElementById(rowId);
+                toggle.checked ? row.classList.remove('inactive') : row.classList.add('inactive');
+    
+                // Calcular el total individual al cargar la página
+                const billValue = parseInt(input.id.replace('bill', '')) || 0;
+                const count = parseInt(input.value) || 0;
+                const totalElementId = `total${billValue}`;
+                const totalElement = document.getElementById(totalElementId);
+                if (totalElement) {
+                    totalElement.textContent = `$${billValue * count}`;
+                }
+            });
+    
+            // Recalcular el total general al cargar la página
+            calculateTotal();
+        };
+    
+        // Evento para inputs de cantidad
+        billInputs.forEach(input => {
+            input.addEventListener('input', () => {
+                const billValue = parseInt(input.id.replace('bill', '')) || 0;
+                const count = parseInt(input.value) || 0;
+                const totalElementId = `total${billValue}`;
+                const totalElement = document.getElementById(totalElementId);
+    
+                // Actualizar el total individual
+                if (totalElement) {
+                    totalElement.textContent = `$${billValue * count}`;
+                }
+    
+                // Guardar el valor en localStorage
+                localStorage.setItem(input.id, input.value);
+    
+                // Recalcular el total general
+                calculateTotal();
+            });
+    
+            input.addEventListener('click', () => {
+                input.select();
+            });
+        });
+    
+        // Evento para checkboxes
+        document.querySelectorAll('.bill-toggle').forEach(toggle => {
+            toggle.addEventListener('change', () => {
+                const inputId = `bill${toggle.id.replace('toggle', '')}`;
+                const rowId = `row${toggle.id.replace('toggle', '')}`;
+                const row = document.getElementById(rowId);
+    
+                // Cambiar el estilo de la fila
+                if (toggle.checked) {
+                    row.classList.remove('inactive');
+                } else {
+                    row.classList.add('inactive');
+                }
+    
+                // Guardar el estado del checkbox en localStorage
+                localStorage.setItem(toggle.id, toggle.checked);
+    
+                // Recalcular el total general
+                calculateTotal();
+            });
+        });
+    
+        // Modal para confirmar limpieza
+        const modal = document.getElementById('confirmModal');
+        const span = document.getElementsByClassName('close')[0];
+        const confirmClear = document.getElementById('confirmClear');
+        const cancelClear = document.getElementById('cancelClear');
+    
+        clearBtn.addEventListener('click', () => {
+            modal.style.display = 'block';
+        });
+    
+        span.addEventListener('click', () => {
+            modal.style.display = 'none';
+        });
+    
+        cancelClear.addEventListener('click', () => {
+            modal.style.display = 'none';
+        });
+    
+        confirmClear.addEventListener('click', () => {
+            billInputs.forEach(input => {
+                input.value = 0;
+                localStorage.setItem(input.id, 0);
+    
+                // Actualizar los totales individuales
+                const billValue = parseInt(input.id.replace('bill', '')) || 0;
+                const totalElementId = `total${billValue}`;
+                const totalElement = document.getElementById(totalElementId);
+                if (totalElement) {
+                    totalElement.textContent = `$0`;
+                }
+    
+                // Restaurar el estilo de la fila
+                const rowId = `row${input.id.replace('bill', '')}`;
+                const row = document.getElementById(rowId);
+                row.classList.remove('inactive');
+            });
+    
+            document.querySelectorAll('.bill-toggle').forEach(toggle => {
+                toggle.checked = true;
+                localStorage.setItem(toggle.id, true);
+            });
+    
+            calculateTotal();
+            modal.style.display = 'none'; // Cerrar el modal después de confirmar
+        });
+    
+        window.addEventListener('click', (event) => {
+            if (event.target == modal) {
+                modal.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>

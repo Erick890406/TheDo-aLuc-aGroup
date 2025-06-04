@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#00aaff">
+    <title>Contador Pro Billetes</title>
+    <link rel="stylesheet" href="fontawesome/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header class="header neumorphic">
+        <div class="header-totals">
+            <div class="total-box small balance">
+                <h3><i class="fas fa-check-circle"></i> Activo</h3>
+                <p id="total">$0.00</p>
+            </div>
+            <div class="total-box small expense">
+                <h3><i class="fas fa-pause-circle"></i> Inactivo</h3>
+                <p id="inactiveTotal">$0.00</p>
+            </div>
+        </div>
+        <button class="btn btn-danger btn-sm" id="clearBtn" title="Limpiar Todo">
+            <i class="fas fa-trash-alt"></i> Limpiar
+        </button>
+    </header>
+
+    <div class="container">
+        <h1><i class="fas fa-money-bill-wave"></i> Contador Pro Billetes</h1>
+
+        <div class="bills-container neumorphic-inset">
+            <div class="bill-row" id="row1000">
+                <label><i class="fas fa-money-bill-alt"></i> 1000 x</label>
+                <input type="number" id="bill1000" value="0" inputmode="numeric" pattern="[0-9]*">
+                <div class="individual-total" id="total1000">$0.00</div>
+                <div class="checkbox-wrapper">
+                    <input type="checkbox" class="bill-toggle" id="toggle1000" checked title="Incluir/Excluir del total activo">
+                </div>
+            </div>
+             <div class="bill-row" id="row500">
+                <label><i class="fas fa-money-bill-alt"></i> 500 x</label>
+                <input type="number" id="bill500" value="0" inputmode="numeric" pattern="[0-9]*">
+                <div class="individual-total" id="total500">$0.00</div>
+                 <div class="checkbox-wrapper">
+                    <input type="checkbox" class="bill-toggle" id="toggle500" checked title="Incluir/Excluir del total activo">
+                 </div>
+            </div>
+            <div class="bill-row" id="row200">
+                <label><i class="fas fa-money-bill-alt"></i> 200 x</label>
+                <input type="number" id="bill200" value="0" inputmode="numeric" pattern="[0-9]*">
+                <div class="individual-total" id="total200">$0.00</div>
+                 <div class="checkbox-wrapper">
+                     <input type="checkbox" class="bill-toggle" id="toggle200" checked title="Incluir/Excluir del total activo">
+                 </div>
+            </div>
+             <div class="bill-row" id="row100">
+                <label><i class="fas fa-money-bill-alt"></i> 100 x</label>
+                <input type="number" id="bill100" value="0" inputmode="numeric" pattern="[0-9]*">
+                <div class="individual-total" id="total100">$0.00</div>
+                 <div class="checkbox-wrapper">
+                     <input type="checkbox" class="bill-toggle" id="toggle100" checked title="Incluir/Excluir del total activo">
+                 </div>
+            </div>
+            <div class="bill-row" id="row50">
+                <label><i class="fas fa-money-bill-alt"></i> 50 x</label>
+                <input type="number" id="bill50" value="0" inputmode="numeric" pattern="[0-9]*">
+                <div class="individual-total" id="total50">$0.00</div>
+                 <div class="checkbox-wrapper">
+                    <input type="checkbox" class="bill-toggle" id="toggle50" checked title="Incluir/Excluir del total activo">
+                 </div>
+            </div>
+            <div class="bill-row" id="row20">
+                <label><i class="fas fa-money-bill-alt"></i> 20 x</label>
+                <input type="number" id="bill20" value="0" inputmode="numeric" pattern="[0-9]*">
+                <div class="individual-total" id="total20">$0.00</div>
+                 <div class="checkbox-wrapper">
+                    <input type="checkbox" class="bill-toggle" id="toggle20" checked title="Incluir/Excluir del total activo">
+                 </div>
+            </div>
+             <div class="bill-row" id="row10">
+                <label><i class="fas fa-coins"></i> 10 x</label>
+                <input type="number" id="bill10" value="0" inputmode="numeric" pattern="[0-9]*">
+                <div class="individual-total" id="total10">$0.00</div>
+                 <div class="checkbox-wrapper">
+                     <input type="checkbox" class="bill-toggle" id="toggle10" checked title="Incluir/Excluir del total activo">
+                 </div>
+            </div>
+            <div class="bill-row" id="row5">
+                <label><i class="fas fa-coins"></i> 5 x</label>
+                <input type="number" id="bill5" value="0" inputmode="numeric" pattern="[0-9]*">
+                <div class="individual-total" id="total5">$0.00</div>
+                 <div class="checkbox-wrapper">
+                    <input type="checkbox" class="bill-toggle" id="toggle5" checked title="Incluir/Excluir del total activo">
+                 </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="confirmModal" class="modal">
+        <div class="modal-content neumorphic">
+             <div class="modal-header">
+                 <h2><i class="fas fa-exclamation-triangle"></i> Confirmar Limpieza</h2>
+                 <span class="close"><i class="fas fa-times-circle"></i></span>
+             </div>
+            <p>¿Estás seguro de que deseas limpiar todos los contadores?</p>
+            <div class="modal-buttons">
+                <button id="confirmClear" class="btn btn-success"><i class="fas fa-check"></i> Sí, Limpiar</button>
+                <button id="cancelClear" class="btn btn-danger"><i class="fas fa-times"></i> No</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/service-worker.js')
+                    .then(registration => console.log('ServiceWorker registrado:', registration.scope))
+                    .catch(error => console.log('Fallo registro ServiceWorker:', error));
+            });
+        }
+    </script>
+</body>
+</html>

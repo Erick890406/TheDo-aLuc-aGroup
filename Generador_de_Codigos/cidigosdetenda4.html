@@ -1,0 +1,815 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generador de Código HTML y JSON</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        /* Estilos generales */
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #1a1a1a;
+            color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+        }
+
+        .button-container {
+            text-align: center;
+            margin-bottom: 20px;
+            padding: 0 10px; /* Padding lateral para botones en pantallas pequeñas */
+            flex-wrap: wrap; /* Permite que los botones pasen a la siguiente línea */
+             display: flex; /* Usa flexbox para centrar y envolver */
+             justify-content: center; /* Centra los botones */
+        }
+
+        h1 {
+            text-align: center;
+            color: #ff6600;
+            margin-top: 20px;
+            margin-bottom: 15px; /* Menos espacio debajo */
+             font-size: 2em; /* Tamaño responsivo */
+        }
+
+        textarea#imageUrls, #searchInput {
+            width: calc(80% - 22px); /* Ajuste para padding y border */
+            max-width: 600px; /* Ancho máximo para inputs */
+            margin: 10px auto;
+            display: block;
+            padding: 10px;
+            border: 1px solid #333;
+            border-radius: 5px;
+            font-size: 16px;
+            background-color: #333;
+            color: #f5f5f5;
+            box-sizing: border-box; /* Incluye padding y border en el width */
+        }
+
+        #searchInput {
+             margin-top: 20px;
+             transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+         #searchInput:focus {
+            border-color: #ff6600;
+            box-shadow: 0 0 10px rgba(255, 102, 0, 0.5);
+            outline: none;
+        }
+
+
+        button {
+            display: inline-block;
+            margin: 5px; /* Reducido margen */
+            padding: 10px 15px; /* Ajustado padding */
+            background-color: #ff6600;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px; /* Ligeramente más pequeño */
+            transition: background-color 0.3s ease;
+            vertical-align: middle; /* Alinea botones */
+            line-height: 1.2; /* Mejora lectura en botones multilínea */
+        }
+
+
+        button:hover {
+            background-color: #cc5200;
+        }
+
+        pre {
+            background-color: #333;
+            border: 1px solid #444;
+            border-radius: 5px;
+            padding: 15px; /* Aumentado padding */
+            width: calc(80% - 32px); /* Ajuste para padding y border */
+            max-width: 1000px; /* Ancho máximo para el código */
+            margin: 20px auto;
+            overflow: auto;
+            color: #f5f5f5;
+            display: none; /* Oculto por defecto */
+            box-sizing: border-box;
+            white-space: pre-wrap; /* Permite que el texto se ajuste */
+            word-wrap: break-word; /* Rompe palabras largas */
+            font-size: 14px; /* Tamaño de fuente para código */
+        }
+
+        /* Estilos para los productos */
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); /* Aumentado minmax ligeramente */
+            gap: 25px; /* Aumentado gap */
+            padding: 25px; /* Aumentado padding */
+            max-width: 1600px; /* Ancho máximo para el grid */
+            margin: 0 auto; /* Centrar grid */
+        }
+
+        .product-item.card {
+            background-color: #2a2a2a;
+            border: 1px solid #444;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            display: flex; /* Usa flexbox para mejor control interno */
+            flex-direction: column; /* Apila elementos verticalmente */
+        }
+
+        .product-item.card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
+        }
+
+        .p-portada {
+            position: relative;
+            width: 100%;
+            padding-top: 75%; /* Aspect ratio 4:3 para la imagen */
+            overflow: hidden;
+             background-color: #444; /* Placeholder color */
+        }
+
+        .p-portada img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* Cubre el espacio sin distorsionar */
+            border-bottom: 1px solid #444;
+             display: block; /* Evita espacio extra debajo */
+        }
+
+
+        .icon-link {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: rgba(0, 0, 0, 0.7);
+            color: #ff6600;
+            padding: 8px; /* Aumentado padding */
+            border-radius: 50%;
+            cursor: pointer;
+            z-index: 2;
+            line-height: 0; /* Centra el ícono si usas font icon */
+             transition: background-color 0.2s ease;
+        }
+         .icon-link:hover {
+             background-color: rgba(255, 102, 0, 0.8); /* Naranja al hover */
+             color: #fff;
+         }
+
+        .p-info {
+            padding: 15px; /* Reducido padding */
+            text-align: left; /* Alineación a la izquierda */
+            flex-grow: 1; /* Permite que esta sección crezca */
+            display: flex;
+            flex-direction: column;
+        }
+
+        .hm-btn {
+            display: none; /* Oculta el botón de "Agregar al carrito" */
+        }
+
+        .action-buttons {
+             margin-top: auto; /* Empuja los botones hacia abajo */
+             padding-top: 10px; /* Espacio antes de los botones */
+             text-align: center; /* Centra los botones dentro del contenedor */
+              border-top: 1px solid #444; /* Línea divisoria */
+              padding: 10px 5px 5px 5px; /* Padding arriba/lados/abajo */
+               background-color: #303030; /* Fondo ligero para botones */
+        }
+
+        .copy-btn, .delete-btn {
+            background-color: #ff6600;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            padding: 6px 10px; /* Ajustado padding */
+            cursor: pointer;
+            font-size: 11px; /* Ligeramente más pequeño */
+            transition: background-color 0.3s ease;
+            margin: 3px; /* Reducido margen */
+             line-height: 1.3; /* Espacio entre líneas */
+        }
+         .delete-btn {
+             background-color: #dc3545; /* Rojo para eliminar */
+         }
+         .delete-btn:hover {
+             background-color: #c82333;
+         }
+
+
+        .copy-btn:hover {
+            background-color: #cc5200;
+        }
+
+
+        .edit-input, textarea.edit-input {
+            width: calc(100% - 12px); /* Ajuste para padding */
+            padding: 8px 6px; /* Ajustado padding vertical */
+            margin-bottom: 10px; /* Ajustado margen */
+            border: 1px solid #444;
+            border-radius: 4px; /* Bordes más suaves */
+            background-color: #333;
+            color: #f5f5f5;
+            font-size: 14px; /* Tamaño de fuente para inputs */
+            box-sizing: border-box;
+            font-family: inherit; /* Hereda fuente del body */
+             line-height: 1.4; /* Espacio entre líneas en textarea */
+        }
+         textarea.edit-input {
+             resize: vertical; /* Permite redimensionar solo verticalmente */
+             min-height: 60px; /* Altura mínima */
+         }
+
+         /* Placeholder color */
+        .edit-input::placeholder, textarea.edit-input::placeholder {
+            color: #888; /* Placeholder más claro */
+            opacity: 1; /* Firefox */
+        }
+
+        .edit-input:-ms-input-placeholder, textarea.edit-input:-ms-input-placeholder { /* Internet Explorer 10-11 */
+           color: #888;
+        }
+
+        .edit-input::-ms-input-placeholder, textarea.edit-input::-ms-input-placeholder { /* Microsoft Edge */
+           color: #888;
+        }
+
+
+        /* Estilo para el botón flotante */
+        #scrollToTopBtn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #ff000d;
+            color: #fff;
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            transition: background-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease, opacity 0.3s ease;
+            display: flex; /* Usar flexbox para centrar */
+            align-items: center; /* Centrar verticalmente */
+            justify-content: center; /* Centrar horizontalmente */
+            opacity: 0;
+            visibility: hidden; /* Oculto y sin interacción */
+            z-index: 1000; /* Asegura que el botón esté por encima de otros elementos */
+        }
+         #scrollToTopBtn.show {
+            opacity: 1;
+             visibility: visible; /* Visible y con interacción */
+        }
+
+
+        #scrollToTopBtn:hover {
+            background-color: #f13343;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
+            transform: scale(1.1); /* Efecto de lujo al pasar el ratón */
+        }
+
+        /* Media Queries */
+        @media (max-width: 1200px) {
+             .product-grid {
+                 grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+                 max-width: 1100px;
+             }
+        }
+
+        @media (max-width: 992px) {
+             .product-grid {
+                 grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+                 max-width: 900px;
+                  gap: 20px;
+                  padding: 20px;
+             }
+             textarea#imageUrls, #searchInput, pre {
+                 width: calc(90% - 22px);
+             }
+        }
+
+
+        @media (max-width: 768px) {
+             h1 { font-size: 1.8em; }
+             .product-grid {
+                grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+                gap: 15px;
+                padding: 15px;
+             }
+             .copy-btn, .delete-btn {
+                padding: 5px 8px;
+                font-size: 10px;
+             }
+             .edit-input, textarea.edit-input {
+                 font-size: 13px;
+                  padding: 6px 5px;
+             }
+              button { /* Botones generales */
+                 font-size: 13px;
+                 padding: 8px 12px;
+             }
+        }
+
+        @media (max-width: 480px) {
+             h1 { font-size: 1.6em; }
+             .button-container { padding: 0 5px;}
+             .product-grid {
+                grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); /* Aún más pequeño */
+                gap: 10px;
+                 padding: 10px;
+            }
+            textarea#imageUrls, #searchInput, pre {
+                 width: calc(95% - 22px);
+            }
+             .copy-btn, .delete-btn {
+                padding: 4px 6px;
+                font-size: 9px; /* Muy pequeño */
+             }
+             .edit-input, textarea.edit-input {
+                 font-size: 12px;
+             }
+              button { /* Botones generales */
+                 font-size: 12px;
+                 padding: 7px 10px;
+             }
+             #scrollToTopBtn {
+                 width: 40px;
+                 height: 40px;
+                 font-size: 20px;
+                 bottom: 15px;
+                 right: 15px;
+             }
+        }
+         @media (max-width: 380px) {
+             .product-grid {
+                 /* Considerar 1 columna en pantallas muy pequeñas si es necesario */
+                 grid-template-columns: 1fr;
+             }
+         }
+    </style>
+    <!-- Bootstrap Icons (opcional, si quieres usar el ícono de compartir) -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"> <!-- Versión actualizada -->
+</head>
+<body>
+    <h1>Generador de Código HTML y JSON</h1>
+    <textarea id="imageUrls" rows="5" placeholder="Inserta una URL de imagen por línea..."></textarea>
+
+    <div class="button-container">
+        <button onclick="generateHtml()">Añadir Productos desde URLs</button>
+        <button onclick="toggleCode()">Mostrar/Ocultar Código HTML</button>
+        <button onclick="copyAllToClipboard(1)">Copiar HTML (Formato 1)</button>
+        <button onclick="copyAllToClipboard(2)">Copiar HTML (Formato 2)</button>
+        <button onclick="copyAllToJson()">Copiar Array JS Completo</button>
+        <button onclick="clearLocalStorage()" style="background-color: #dc3545;">Eliminar Todo</button>
+    </div>
+
+     <input type="text" id="searchInput" placeholder="Buscar por nombre, URL, descripción..." oninput="searchProducts()">
+
+    <div id="generatedCodeContainer" class="product-grid">
+        <!-- Los productos se insertarán aquí -->
+    </div>
+
+    <pre id="generatedCode"><!-- El código HTML generado (Formato 1) se mostrará aquí --></pre>
+
+    <button id="scrollToTopBtn" onclick="scrollToTop()" title="Volver arriba">
+        <i class="bi bi-arrow-up"></i> <!-- Icono flecha arriba -->
+    </button>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            loadFromLocalStorage();
+            // Listener para mostrar/ocultar botón de scroll
+            window.addEventListener('scroll', handleScrollButton);
+            handleScrollButton(); // Llama una vez al inicio por si la página ya está scrolleada
+        });
+
+        function generateHtml() {
+            const urlsInput = document.getElementById('imageUrls');
+            const urls = urlsInput.value.split('\n');
+            let products = JSON.parse(localStorage.getItem('products')) || [];
+            let currentMaxIndex = products.reduce((max, p) => Math.max(max, p.index), -1);
+            let addedCount = 0;
+
+            urls.forEach((url) => {
+                const trimmedUrl = url.trim();
+                if (trimmedUrl && !products.some(p => p.imgSrc === trimmedUrl)) {
+                     currentMaxIndex++;
+                     products.push({
+                        index: currentMaxIndex,
+                        imgSrc: trimmedUrl,
+                        productName: 'Producto Nuevo',
+                        productPrice: '0.00',
+                        productDescription: '',
+                        productSpecifications: []
+                     });
+                     addedCount++;
+                }
+            });
+
+            if (addedCount > 0) {
+                localStorage.setItem('products', JSON.stringify(products));
+                renderProducts(getCurrentProductView());
+                updateGeneratedCode();
+                alert(`${addedCount} producto(s) nuevo(s) añadido(s).`);
+            } else {
+                alert('No se añadieron productos nuevos (URLs vacías o ya existentes).');
+            }
+            urlsInput.value = '';
+        }
+
+        function renderProducts(productsToRender) {
+            const container = document.getElementById('generatedCodeContainer');
+            container.innerHTML = '';
+
+            productsToRender.sort((a, b) => a.index - b.index);
+
+            if (productsToRender.length === 0) {
+                container.innerHTML = '<p style="text-align: center; grid-column: 1 / -1; color: #aaa;">No hay productos que coincidan con la búsqueda.</p>';
+                return;
+            }
+
+
+            productsToRender.forEach(product => {
+                const description = product.productDescription || '';
+                const specificationsString = (product.productSpecifications || []).join(', ');
+
+                const productHtml = `
+                <div class="product-item card" data-index="${product.index}">
+                    <div class="p-portada">
+                        <a href="${product.imgSrc}" target="_blank" title="Ver imagen completa">
+                            <img src="${product.imgSrc}" alt="${product.productName || 'Producto'}" loading="lazy"> <!-- Lazy loading -->
+                        </a>
+                        <a href="#" class="icon-link" onclick="shareProduct(event, ${product.index})" title="Compartir (simulado)">
+                            <i class="bi bi-share-fill"></i>
+                        </a>
+                    </div>
+                    <div class="p-info">
+                        <input type="text" class="edit-input" placeholder="Nombre del Producto" value="${product.productName || ''}" onchange="updateProductField(${product.index}, 'productName', this.value)" title="Nombre del Producto">
+                        <input type="text" class="edit-input" placeholder="Precio (ej: 5.50)" value="${product.productPrice || '0.00'}" onchange="updateProductField(${product.index}, 'productPrice', this.value)" title="Precio">
+                        <textarea class="edit-input" placeholder="Descripción..." rows="3" onchange="updateProductField(${product.index}, 'productDescription', this.value)" title="Descripción">${description}</textarea>
+                        <input type="text" class="edit-input" placeholder="Especificaciones (separadas por coma)" value="${specificationsString}" onchange="updateProductSpecifications(${product.index}, this.value)" title="Especificaciones (separadas por coma)">
+                        <a href="#" class="hm-btn btn-primary uppercase add-to-cart">AGREGAR AL CARRITO</a>
+                    </div>
+                     <div class="action-buttons">
+                        <button class="copy-btn" onclick="copyProductCode(${product.index}, 1)">Copiar HTML 1</button>
+                        <button class="copy-btn" onclick="copyProductCode(${product.index}, 2)">Copiar HTML 2</button>
+                        <button class="copy-btn" onclick="copyImageUrl(${product.index})">Copiar URL</button>
+                        <button class="copy-btn" onclick="copyProductAsJson(${product.index})">Copiar Objeto JS</button> <!-- **NUEVO BOTÓN** -->
+                        <button class="delete-btn" onclick="deleteProduct(${product.index})">Eliminar</button>
+                    </div>
+                </div>`;
+                container.innerHTML += productHtml;
+            });
+        }
+
+        // --- Funciones de Actualización de Datos ---
+
+        function updateProductField(index, field, value) {
+            let products = JSON.parse(localStorage.getItem('products')) || [];
+            const productIndex = products.findIndex(p => p.index === index);
+            if (productIndex !== -1) {
+                products[productIndex][field] = value;
+                localStorage.setItem('products', JSON.stringify(products));
+                updateGeneratedCode();
+            }
+        }
+
+         function updateProductSpecifications(index, specString) {
+            let products = JSON.parse(localStorage.getItem('products')) || [];
+            const productIndex = products.findIndex(p => p.index === index);
+            if (productIndex !== -1) {
+                products[productIndex].productSpecifications = specString
+                    .split(',')
+                    .map(s => s.trim())
+                    .filter(s => s !== '');
+                localStorage.setItem('products', JSON.stringify(products));
+                updateGeneratedCode();
+            }
+        }
+
+        // --- Funciones de Copiado ---
+
+        function copyAllToClipboard(format) {
+            const products = JSON.parse(localStorage.getItem('products')) || [];
+            if (products.length === 0) {
+                showToast("No hay productos para copiar.");
+                return;
+            }
+            let html = '';
+            products.forEach(product => {
+                html += getProductHtmlFormatted(product, format) + '\n\n';
+            });
+            copyToClipboard(html, `Código HTML (Formato ${format}) de ${products.length} productos copiado.`);
+        }
+
+        function copyProductCode(index, format) {
+            const products = JSON.parse(localStorage.getItem('products')) || [];
+            const product = products.find(p => p.index === index);
+            if (product) {
+                const productHtml = getProductHtmlFormatted(product, format);
+                 copyToClipboard(productHtml, `Código HTML del producto (Formato ${format}) copiado.`);
+            }
+        }
+
+        function copyImageUrl(index) {
+            const products = JSON.parse(localStorage.getItem('products')) || [];
+            const product = products.find(p => p.index === index);
+            if (product && product.imgSrc) {
+                 copyToClipboard(product.imgSrc, `URL de la imagen copiada.`);
+            }
+        }
+
+        function copyAllToJson() {
+            const products = JSON.parse(localStorage.getItem('products')) || [];
+            if (products.length === 0) {
+                showToast("No hay productos para copiar.");
+                return;
+            }
+
+            const formattedProducts = products.map(product => formatProductAsObjectData(product)); // Usa la función auxiliar
+
+            let outputString = "const productsData = [\n";
+            outputString += formattedProducts.map(p => {
+                const specsString = JSON.stringify(p.specifications);
+                // Asegura que el precio siempre tenga .00 si es entero
+                const priceString = Number.isInteger(p.price) ? `${p.price}.00` : p.price.toFixed(2);
+                return `  { id: ${p.id}, name: "${p.name.replace(/"/g, '\\"')}", price: ${priceString}, image: "${p.image}", description: "${p.description.replace(/"/g, '\\"')}", specifications: ${specsString} }`;
+            }).join(",\n");
+            outputString += "\n];";
+
+            copyToClipboard(outputString, `Array JS con ${products.length} productos copiado.`);
+        }
+
+               // --- **NUEVA FUNCIÓN para copiar un solo objeto JS** ---
+               function copyProductAsJson(index) {
+            const products = JSON.parse(localStorage.getItem('products')) || [];
+            const product = products.find(p => p.index === index);
+
+            if (product) {
+                const productData = formatProductAsObjectData(product); // Usa la función auxiliar
+
+                // Construir el string del objeto literal
+                 const specsString = JSON.stringify(productData.specifications);
+                 // Asegura que el precio siempre tenga .00 si es entero
+                 const priceString = Number.isInteger(productData.price) ? `${productData.price}.00` : productData.price.toFixed(2);
+
+                 // **AQUÍ ESTÁ EL CAMBIO: Se añade una coma al final del string**
+                 const objectString = `{ id: ${productData.id}, name: "${productData.name.replace(/"/g, '\\"')}", price: ${priceString}, image: "${productData.image}", description: "${productData.description.replace(/"/g, '\\"')}", specifications: ${specsString} },`; // <-- Coma añadida aquí
+
+                copyToClipboard(objectString, 'Objeto JS del producto (con coma final) copiado.'); // Mensaje actualizado ligeramente
+            } else {
+                showToast('Error: No se pudo encontrar el producto.', 'error');
+            }
+        }
+        // --- Fin Nueva Función ---
+        // --- Fin Nueva Función ---
+
+        // --- Función Auxiliar para Formatear Objeto ---
+        function formatProductAsObjectData(product) {
+            let price = 0.00;
+             if (typeof product.productPrice === 'string') {
+                const cleanedPrice = product.productPrice.replace(/[$,\s]|us/gi, '');
+                price = parseFloat(cleanedPrice) || 0.00;
+            } else if (typeof product.productPrice === 'number') {
+                price = product.productPrice;
+            }
+
+            return {
+                id: product.index + 1, // ID basado en índice + 1
+                name: product.productName || "Sin Nombre",
+                price: parseFloat(price.toFixed(2)),
+                image: product.imgSrc || "",
+                description: product.productDescription || "",
+                specifications: product.productSpecifications || []
+            };
+        }
+        // --- Fin Función Auxiliar ---
+
+
+        function getProductHtmlFormatted(product, format) {
+            const productData = formatProductAsObjectData(product); // Obtiene datos formateados
+            const productName = productData.name;
+            const productPriceDisplay = product.productPrice || '0.00'; // Muestra el precio tal como está en el input
+            const priceNumber = productData.price; // Precio numérico para funciones
+            const imgSrc = productData.image;
+
+            if (format === 1) {
+                 return `<div class="product-item card" data-index="${product.index}">
+                            <div class="p-portada">
+                                <a href="${imgSrc}" target="_blank">
+                                    <img src="${imgSrc}" class="card-img-top" alt="${productName}" loading="lazy">
+                                </a>
+                                <a href="#" class="icon-link position-absolute top-0 end-0" onclick="shareProduct(event, ${product.index}); return false;">
+                                    <i class="bi bi-share-fill"></i>
+                                </a>
+                            </div>
+                            <div class="p-info" style="text-align:center;"> <!-- Centrado para este formato -->
+                                <a href="#"><h3>${productName}</h3></a>
+                                <div class="precio">
+                                    <span>${productPriceDisplay}</span>
+                                </div>
+                                <a href="#" class="hm-btn btn-primary uppercase add-to-cart">AGREGAR AL CARRITO</a>
+                            </div>
+                         </div>`;
+            } else if (format === 2) {
+                return `<div class="product-card" data-index="${product.index}">
+                            <div class="product-image">
+                                <img src="${imgSrc}" alt="${productName}" loading="lazy">
+                            </div>
+                            <div class="product-info">
+                                <h2 class="product-title">${productName}</h2>
+                                <p class="product-price">${productPriceDisplay}</p>
+                                <button class="buy-button" onclick="addToCart('${productName.replace(/'/g, "\\'")}', ${priceNumber.toFixed(2)}, '${imgSrc}')">Agregar al Carrito</button>
+                            </div>
+                        </div>`;
+            }
+            return '';
+        }
+
+        // --- Función Auxiliar para Copiar ---
+        function copyToClipboard(text, message) {
+             navigator.clipboard.writeText(text).then(() => {
+                showToast(message || 'Texto copiado al portapapeles.');
+            }).catch(err => {
+                console.error('Error al copiar: ', err);
+                showToast('Error al copiar. Verifica los permisos del navegador.', 'error');
+            });
+        }
+
+
+        // --- Funciones de Gestión y UI ---
+
+        function deleteProduct(index) {
+            if (!confirm('¿Estás seguro de que quieres eliminar este producto?')) {
+                 return;
+             }
+            let products = JSON.parse(localStorage.getItem('products')) || [];
+            const initialLength = products.length;
+            products = products.filter(p => p.index !== index);
+
+            if (products.length < initialLength) {
+                 localStorage.setItem('products', JSON.stringify(products));
+                 renderProducts(getCurrentProductView());
+                 updateGeneratedCode();
+                 showToast('Producto eliminado.');
+             } else {
+                 showToast('Error: No se encontró el producto a eliminar.', 'error');
+             }
+        }
+
+
+        function toggleCode() {
+            const codeContainer = document.getElementById('generatedCode');
+            const isHidden = codeContainer.style.display === 'none' || codeContainer.style.display === '';
+            codeContainer.style.display = isHidden ? 'block' : 'none';
+             if(isHidden) {
+                 updateGeneratedCode();
+             }
+        }
+
+        function updateGeneratedCode() {
+            const codeContainer = document.getElementById('generatedCode');
+            if (codeContainer.style.display === 'block') {
+                 const products = getCurrentProductView();
+                 let html = '';
+                 products.forEach(product => {
+                    html += getProductHtmlFormatted(product, 1) + '\n\n';
+                 });
+                 codeContainer.textContent = html || 'No hay productos para mostrar.';
+            }
+        }
+
+        function loadFromLocalStorage() {
+            const products = JSON.parse(localStorage.getItem('products')) || [];
+             renderProducts(products);
+             updateGeneratedCode(); // Actualiza <pre> si está visible al cargar
+        }
+
+        function clearLocalStorage() {
+             const products = JSON.parse(localStorage.getItem('products')) || [];
+             if (products.length === 0) {
+                 showToast("No hay productos para eliminar.");
+                 return;
+             }
+             if (confirm(`¿Estás seguro de que quieres eliminar TODOS (${products.length}) los productos? Esta acción no se puede deshacer.`)) {
+                 localStorage.removeItem('products');
+                 document.getElementById('generatedCodeContainer').innerHTML = '';
+                 document.getElementById('generatedCode').textContent = '';
+                 document.getElementById('imageUrls').value = '';
+                 document.getElementById('searchInput').value = '';
+                 showToast('Todos los productos han sido eliminados.');
+             }
+        }
+
+         function getCurrentProductView() {
+            const searchInput = document.getElementById('searchInput').value.toLowerCase().trim();
+            const allProducts = JSON.parse(localStorage.getItem('products')) || [];
+            if (!searchInput) {
+                return allProducts;
+            }
+            return allProducts.filter(product =>
+                 (product.productName && product.productName.toLowerCase().includes(searchInput)) ||
+                 (product.imgSrc && product.imgSrc.toLowerCase().includes(searchInput)) ||
+                 (product.productDescription && product.productDescription.toLowerCase().includes(searchInput)) ||
+                 (product.productSpecifications && product.productSpecifications.join(' ').toLowerCase().includes(searchInput)) // Busca en especificaciones
+            );
+        }
+
+
+        function searchProducts() {
+             const filteredProducts = getCurrentProductView();
+             renderProducts(filteredProducts);
+             updateGeneratedCode();
+        }
+
+        function shareProduct(event, index) {
+            event.preventDefault();
+             const products = JSON.parse(localStorage.getItem('products')) || [];
+             const product = products.find(p => p.index === index);
+             if (product) {
+                 const productData = formatProductAsObjectData(product);
+                 const shareText = `¡Mira este producto!: ${productData.name} - ${productData.image}`;
+                 if (navigator.share) {
+                     navigator.share({
+                         title: productData.name,
+                         text: shareText,
+                         url: productData.image
+                     }).then(() => console.log('Compartido con éxito'))
+                       .catch((error) => console.log('Error al compartir:', error));
+                 } else {
+                     copyToClipboard(shareText, 'Información del producto copiada para compartir (API Share no disponible).');
+                 }
+             } else {
+                 showToast('Error: No se encontró el producto para compartir.', 'error');
+             }
+        }
+
+        // --- Scroll Button Logic ---
+         function handleScrollButton() {
+            const scrollToTopBtn = document.getElementById('scrollToTopBtn');
+             // Añadido chequeo extra por si el elemento no existe
+             if (!scrollToTopBtn) return;
+
+            if (document.body.scrollTop > 100 || document.documentElement.scrollTop > 100) {
+                scrollToTopBtn.classList.add('show');
+            } else {
+                scrollToTopBtn.classList.remove('show');
+            }
+        }
+
+        function scrollToTop() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        }
+
+         // --- Placeholder for addToCart ---
+         function addToCart(name, price, image) {
+             console.log(`Simulación: Añadido al carrito: ${name}, Precio: ${price}, Imagen: ${image}`);
+             showToast(`"${name}" añadido al carrito (simulación).`);
+         }
+
+         // --- Toast Notification ---
+         function showToast(message, type = 'success') {
+             const toast = document.createElement('div');
+             toast.className = `toast ${type}`;
+             toast.textContent = message;
+
+             // Estilos básicos para el toast
+             toast.style.position = 'fixed';
+             toast.style.bottom = '20px';
+             toast.style.left = '50%';
+             toast.style.transform = 'translateX(-50%)';
+             toast.style.padding = '10px 20px';
+             toast.style.borderRadius = '5px';
+             toast.style.backgroundColor = type === 'error' ? '#dc3545' : '#28a745'; // Rojo para error, verde para éxito
+             toast.style.color = 'white';
+             toast.style.zIndex = '1001';
+             toast.style.opacity = '0';
+             toast.style.transition = 'opacity 0.5s ease';
+
+             document.body.appendChild(toast);
+
+             // Animar entrada
+             setTimeout(() => {
+                 toast.style.opacity = '1';
+             }, 10); // Pequeño delay para asegurar que la transición ocurra
+
+             // Ocultar y eliminar después de 3 segundos
+             setTimeout(() => {
+                 toast.style.opacity = '0';
+                 setTimeout(() => {
+                     document.body.removeChild(toast);
+                 }, 500); // Espera a que termine la transición de salida
+             }, 3000);
+         }
+
+    </script>
+</body>
+</html>

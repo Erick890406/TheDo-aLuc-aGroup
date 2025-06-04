@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quantum Finance - Simulador Exclusivo (Offline)</title>
+    <style>
+        :root {
+            --bg-dark: #0f172a; --card-bg: #1e293b; --text-primary: #e2e8f0;
+            --text-secondary: #94a3b8; --accent-gold: #d4af37; --accent-blue: #38bdf8;
+            --accent-green: #34d399; --accent-red: #f87171; --border-color: #334155;
+            --shadow-color: rgba(0, 0, 0, 0.3);
+            --font-sans: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            --font-serif: Georgia, 'Times New Roman', Times, serif;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: var(--font-sans); background-color: var(--bg-dark); color: var(--text-primary); line-height: 1.7; font-size: 16px; overflow-x: hidden; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 1rem; }
+        h1, h2, h3 { font-family: var(--font-serif); color: #ffffff; margin-bottom: 1rem; font-weight: 600; letter-spacing: 0.5px; }
+        h1 { font-size: clamp(1.8rem, 5vw, 2.5rem); }
+        h2 { font-size: clamp(1.5rem, 4vw, 2rem); }
+        h3 { font-size: clamp(1.1rem, 3vw, 1.35rem); }
+        p { margin-bottom: 1rem; color: var(--text-secondary); font-size: 0.95rem; }
+        a { color: var(--accent-blue); text-decoration: none; transition: color 0.3s ease; }
+        a:hover { color: #7dd3fc; }
+        button { cursor: pointer; border: none; padding: 0.8rem 1.5rem; border-radius: 8px; font-size: 0.9rem; font-weight: 600; letter-spacing: 0.5px; transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease; background-color: var(--accent-gold); color: #111; text-transform: uppercase; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
+        button:hover { background-color: #e6c35c; transform: translateY(-2px); box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
+        button:active { transform: translateY(0); }
+        button:disabled { background-color: #4b5563; color: var(--text-secondary); cursor: not-allowed; opacity: 0.7; transform: none; box-shadow: none; }
+        button.button-danger { background-color: var(--accent-red); color: #fff; }
+        button.button-danger:hover { background-color: #fb9292; }
+        button.button-success { background-color: var(--accent-green); color: #fff; }
+        button.button-success:hover { background-color: #6ee7b7; }
+        button.button-secondary { background-color: var(--card-bg); color: var(--text-primary); border: 1px solid var(--border-color); }
+        button.button-secondary:hover { background-color: #334155; }
+        input[type="number"] { width: 100%; padding: 0.9rem; background-color: #0f172a; color: var(--text-primary); border: 1px solid var(--border-color); border-radius: 8px; margin-bottom: 1rem; font-size: 1rem; transition: border-color 0.3s ease, box-shadow 0.3s ease; }
+        input:focus { outline: none; border-color: var(--accent-gold); box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.3); }
+        .hidden { display: none !important; }
+        .navbar { background-color: var(--card-bg); padding: 0.8rem 0; box-shadow: 0 3px 10px var(--shadow-color); position: fixed; top: 0; left: 0; width: 100%; z-index: 1000; border-bottom: 1px solid var(--border-color); }
+        .navbar .container { display: flex; justify-content: space-between; align-items: center; }
+        .navbar-logo { font-family: var(--font-serif); font-size: 1.5rem; font-weight: bold; color: #fff; letter-spacing: 1px; }
+        .navbar-logo::before { content: "⚜️ "; margin-right: 0.5rem; }
+        .navbar-menu-desktop { display: none; }
+        .navbar-menu-desktop a, .navbar-menu-desktop button { color: var(--text-secondary); margin-left: 1.8rem; background: none; padding: 0.3rem 0; font-size: 0.95rem; font-weight: 500; position: relative; transition: color 0.3s ease; }
+        .navbar-menu-desktop a::after, .navbar-menu-desktop button::after { content: ''; position: absolute; width: 0; height: 2px; bottom: -2px; left: 50%; transform: translateX(-50%); background-color: var(--accent-gold); transition: width 0.3s ease; }
+        .navbar-menu-desktop a:hover, .navbar-menu-desktop button:hover { color: var(--text-primary); }
+        .navbar-menu-desktop a:hover::after, .navbar-menu-desktop button:hover::after { width: 60%; }
+        .navbar-menu-toggle { display: block; font-size: 1.6rem; background: none; border: none; color: var(--text-primary); padding: 0.5rem; }
+        .navbar-menu-toggle span { display: block; width: 28px; height: 3px; background-color: var(--text-primary); margin: 5px 0; border-radius: 1px; transition: background-color 0.3s ease; }
+        .navbar-menu-toggle:hover span { background-color: var(--accent-gold); }
+        .navbar-menu-mobile { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(15, 23, 42, 0.98); z-index: 999; display: flex; flex-direction: column; justify-content: center; align-items: center; opacity: 0; visibility: hidden; transition: opacity 0.4s ease, visibility 0.4s ease; }
+        .navbar-menu-mobile.visible { opacity: 1; visibility: visible; }
+        .navbar-menu-mobile ul { list-style: none; text-align: center; }
+        .navbar-menu-mobile li { margin-bottom: 2rem; }
+        .navbar-menu-mobile a, .navbar-menu-mobile button { font-size: 1.3rem; font-weight: 500; color: var(--text-primary); background: none; padding: 0.5rem; transition: color 0.3s ease, letter-spacing 0.3s ease; }
+        .navbar-menu-mobile a:hover, .navbar-menu-mobile button:hover { color: var(--accent-gold); letter-spacing: 1px; }
+        .navbar-menu-mobile .close-btn { margin-top: 3rem; }
+        main { padding-top: 80px; padding-bottom: 3rem; }
+        section { margin-bottom: 2.5rem; }
+        .card { background-color: var(--card-bg); padding: clamp(1.5rem, 5vw, 2rem); border-radius: 12px; box-shadow: 0 5px 15px var(--shadow-color); border: 1px solid var(--border-color); transition: transform 0.3s ease, box-shadow 0.3s ease; }
+        .card:hover { box-shadow: 0 8px 25px rgba(0,0,0,0.4); }
+        .plans-grid { display: grid; grid-template-columns: 1fr; gap: 1.8rem; }
+        .plan-card { text-align: center; }
+        .plan-card:hover { transform: scale(1.03); z-index: 10; }
+        .plan-icon { width: 60px; height: 60px; background: linear-gradient(145deg, #2c3e50, #1a2531); border-radius: 50%; display: inline-flex; justify-content: center; align-items: center; margin-bottom: 1.2rem; font-size: 1.8rem; font-weight: bold; color: var(--accent-gold); box-shadow: inset 0 2px 4px rgba(0,0,0,0.3), 0 3px 5px rgba(0,0,0,0.2); }
+        .plan-price { font-family: var(--font-serif); font-size: clamp(1.8rem, 5vw, 2.2rem); font-weight: bold; margin-bottom: 0.5rem; color: #fff; }
+        .plan-name { color: var(--text-secondary); margin-bottom: 1.2rem; font-size: 1rem; font-weight: 500; }
+        .plan-features { font-size: 0.9rem; color: var(--text-primary); margin-bottom: 1.8rem; text-align: left; padding-left: 1.5rem; }
+        .plan-features li { margin-bottom: 0.5rem; list-style-type: none; position: relative; padding-left: 1.2rem; }
+        .plan-features li::before { content: '✓'; color: var(--accent-green); font-weight: bold; position: absolute; left: 0; }
+        .stats-display { display: grid; grid-template-columns: 1fr; gap: 1.5rem; margin-top: 1.5rem; }
+        .stats-item p { color: var(--text-secondary); margin-bottom: 0.3rem; font-size: 0.9rem; font-weight: 500; }
+        .stats-item span.value { font-family: var(--font-serif); font-size: clamp(1.8rem, 5vw, 2.1rem); font-weight: 600; display: block; line-height: 1.2; }
+        .stats-item span.amount { color: var(--accent-blue); }
+        .stats-item span.gain { color: var(--accent-green); }
+        #walletBalance { font-weight: bold; font-size: 1.2em; color: #fff; }
+        .icon::before { display: inline-block; margin-right: 0.6rem; font-style: normal; font-weight: normal; vertical-align: middle; font-size: 1.1em; }
+        .icon-wallet::before { content: "💳"; }
+        .icon-stats::before { content: "📊"; }
+        .icon-amount::before { content: "$"; color: var(--accent-blue); font-weight: bold;}
+        .icon-gain::before { content: "+"; color: var(--accent-green); font-weight: bold;}
+        .icon-list::before { content: "📜"; }
+        .icon-reset::before { content: "♻️"; }
+        .icon-history::before { content: "⏳"; }
+        #investmentPlans li { background-color: #283548; padding: 1.2rem; border-radius: 8px; margin-bottom: 1.2rem; border-left: 4px solid var(--accent-gold); transition: background-color 0.3s ease; }
+        #investmentPlans li:hover { background-color: #334155; }
+        #investmentPlans h3 { color: #fff; font-size: 1.15rem; margin-bottom: 0.6rem; }
+        #investmentPlans p { font-size: 0.9rem; margin-bottom: 0.4rem; color: var(--text-secondary); }
+        #investmentPlans p span.value { font-weight: 600; color: var(--text-primary); }
+        #investmentPlans p.gain { color: var(--accent-green); font-weight: 600; }
+        #investmentPlans p.status { font-weight: bold; text-transform: uppercase; font-size: 0.8rem; letter-spacing: 1px; }
+        #investmentPlans p.status-active { color: var(--accent-green); }
+        #investmentPlans p.status-finished { color: var(--accent-red); }
+        .plan-status-indicator { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 8px; vertical-align: middle; }
+        .plan-status-indicator.active { background-color: var(--accent-green); box-shadow: 0 0 8px var(--accent-green); }
+        .plan-status-indicator.finished { background-color: var(--accent-red); box-shadow: 0 0 8px var(--accent-red);}
+        .table-container { overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; margin-top: 1.5rem; background-color: var(--bg-dark); border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px var(--shadow-color); border: 1px solid var(--border-color); }
+        th, td { padding: 1rem 1.2rem; text-align: left; border-bottom: 1px solid var(--border-color); white-space: nowrap; }
+        th { background-color: #283548; color: var(--text-primary); font-weight: 600; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; }
+        tbody tr:last-child td { border-bottom: none; }
+        tbody tr { transition: background-color 0.2s ease; }
+        tbody tr:hover { background-color: #283548; }
+        td { color: var(--text-secondary); font-size: 0.9rem; }
+        td:nth-child(3) { font-weight: 500; }
+        .modal { position: fixed; inset: 0; background-color: rgba(15, 23, 42, 0.9); z-index: 2000; display: flex; justify-content: center; align-items: center; padding: 1rem; opacity: 0; visibility: hidden; transition: opacity 0.4s ease, visibility 0.4s ease; }
+        .modal.visible { opacity: 1; visibility: visible; }
+        .modal-content { background-color: var(--card-bg); padding: 2rem 2.5rem; border-radius: 12px; width: 100%; max-width: 500px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.5); border: 1px solid var(--border-color); transform: scale(0.95); transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        .modal.visible .modal-content { transform: scale(1); }
+        .modal-content h2 { color: var(--accent-gold); margin-bottom: 1.5rem; }
+        .modal-content p { color: var(--text-secondary); margin-bottom: 2rem; font-size: 1rem; }
+        .modal-actions { display: flex; justify-content: center; gap: 1.5rem; margin-top: 1rem; }
+        .modal-history .modal-content { max-width: 900px; }
+        .modal-history .table-container { max-height: 65vh; overflow-y: auto; border-radius: 6px; }
+        .modal-notification .modal-content { max-width: 450px; padding: 1.8rem; }
+        .modal-notification .modal-content h2 { margin-bottom: 1rem; font-size: 1.5rem; }
+        .modal-notification .modal-content p { margin-bottom: 1.5rem; font-size: 0.95rem; }
+        .modal-notification .modal-actions { margin-top: 0.5rem; }
+        .modal-notification.success .modal-content h2 { color: var(--accent-green); }
+        .modal-notification.error .modal-content h2 { color: var(--accent-red); }
+        .modal-notification.info .modal-content h2 { color: var(--accent-blue); }
+        footer { background-color: var(--bg-dark); padding: 2rem 0; text-align: center; margin-top: 3rem; border-top: 1px solid var(--border-color); }
+        footer p { color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 0.3rem;}
+        footer p:last-child { font-size: 0.8rem; }
+        @media (min-width: 768px) {
+            .navbar-menu-toggle { display: none; }
+            .navbar-menu-desktop { display: flex; align-items: center; }
+            .navbar-menu-mobile { display: none !important; }
+            .plans-grid { grid-template-columns: repeat(3, 1fr); }
+            .stats-display { grid-template-columns: repeat(2, 1fr); }
+            main { padding-top: 90px; }
+        }
+        @media (max-width: 480px) {
+            h1 { font-size: 1.6rem; } h2 { font-size: 1.4rem; } h3 { font-size: 1.05rem; }
+            button { padding: 0.7rem 1rem; font-size: 0.85rem; }
+            .container { padding: 0 0.8rem; } .card { padding: 1.2rem; }
+            .plan-features { padding-left: 0.5rem; } .plan-features li { padding-left: 1rem; }
+            th, td { padding: 0.7rem 0.8rem; } .modal-content { padding: 1.5rem; }
+            .modal-actions { flex-direction: column; gap: 0.8rem; }
+        }
+        ::-webkit-scrollbar { width: 10px; }
+        ::-webkit-scrollbar-track { background: var(--bg-dark); }
+        ::-webkit-scrollbar-thumb { background: #4b5563; border-radius: 5px; border: 2px solid var(--bg-dark); }
+        ::-webkit-scrollbar-thumb:hover { background: #6b7280; }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="container">
+            <a href="#" class="navbar-logo">Quantum Finance</a>
+            <button id="menuBtn" class="navbar-menu-toggle"><span></span><span></span><span></span></button>
+            <div id="desktopMenu" class="navbar-menu-desktop">
+                <a href="#home">Inicio</a>
+                <a href="#plans">Planes</a>
+                <a href="#stats">Estadísticas</a>
+                <button id="openFullScreenHistoryModalBtn">Historial</button>
+            </div>
+        </div>
+    </nav>
+
+    <div id="mobileMenu" class="navbar-menu-mobile">
+         <ul>
+            <li><a href="#home">Inicio</a></li>
+            <li><a href="#plans">Planes</a></li>
+            <li><a href="#stats">Estadísticas</a></li>
+            <li><button id="mobileHistoryBtn">Historial</button></li>
+            <li><button id="closeMenuBtn" class="button-danger close-btn">Cerrar Menú</button></li>
+        </ul>
+    </div>
+
+    <main class="container">
+         <div id="home"></div>
+         <section id="plans">
+            <h2>Planes de Inversión Exclusivos</h2>
+            <div class="plans-grid">
+                <div class="card plan-card">
+                     <div class="plan-icon">B</div>
+                     <div class="plan-price">$5000.00</div>
+                     <p class="plan-name">Plan Básico</p>
+                     <ul class="plan-features">
+                       <li>Acceso a mercados emergentes</li>
+                       <li>Potencial de rentabilidad moderada</li>
+                       <li>Soporte prioritario 24/7</li>
+                     </ul>
+                    <button data-amount="5000" class="select-plan">Seleccionar Plan</button>
+                </div>
+                 <div class="card plan-card">
+                     <div class="plan-icon">I</div>
+                     <div class="plan-price">$10000.00</div>
+                     <p class="plan-name">Plan Intermedio</p>
+                     <ul class="plan-features">
+                       <li>Acceso a acciones y bonos premium</li>
+                       <li>Gestión activa de riesgos avanzada</li>
+                       <li>Analista personal dedicado</li>
+                     </ul>
+                    <button data-amount="10000" class="select-plan">Seleccionar Plan</button>
+                </div>
+                 <div class="card plan-card">
+                    <div class="plan-icon">P</div>
+                    <div class="plan-price">$20000.00</div>
+                    <p class="plan-name">Plan Premium</p>
+                    <ul class="plan-features">
+                      <li>Diversificación global completa</li>
+                      <li>Estrategias de inversión exclusivas</li>
+                      <li>Consultoría estratégica trimestral</li>
+                     </ul>
+                    <button data-amount="20000" class="select-plan">Seleccionar Plan</button>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <div class="card">
+                 <h2><span class="icon icon-wallet"></span>Cartera Personal</h2>
+                 <p>Saldo disponible actual:</p>
+                 <p style="font-size: 1.8em; font-weight: bold; color: #fff; margin-top: -0.5rem; margin-bottom: 1.5rem;">
+                    $<span id="walletBalance">0.00</span>
+                 </p>
+                 <button id="openAddFundsModalBtn" class="button-success">Añadir Fondos</button>
+             </div>
+         </section>
+
+        <section id="stats">
+            <div class="card">
+                <h2><span class="icon icon-stats"></span>Resumen Financiero</h2>
+                <div class="stats-display">
+                     <div class="stats-item">
+                         <p><span class="icon icon-amount"></span>Monto Total Invertido</p>
+                         <span class="value amount" id="totalCurrentAmount">0.00</span>
+                     </div>
+                     <div class="stats-item">
+                         <p><span class="icon icon-gain"></span>Ganancia Total Acumulada</p>
+                         <span class="value gain" id="totalGain">0.00</span>
+                     </div>
+                 </div>
+             </div>
+         </section>
+
+        <section>
+             <div class="card">
+                 <h2><span class="icon icon-list"></span>Gestión de Inversiones</h2>
+                 <ul id="investmentPlans">
+                    <li class="no-plans-message" style="text-align: center; color: var(--text-secondary); padding: 1rem 0;">Aún no has iniciado ninguna inversión.</li>
+                 </ul>
+             </div>
+         </section>
+
+         <section id="transactionHistoryInline">
+             <div class="card">
+                 <h2><span class="icon icon-history"></span>Actividad Reciente</h2>
+                 <div class="table-container">
+                     <table>
+                         <thead><tr><th>Fecha</th><th>Acción</th><th>Monto</th></tr></thead>
+                         <tbody id="transactionTable">
+                           <tr><td colspan="3" style="text-align:center; color:var(--text-secondary);">No hay transacciones recientes.</td></tr>
+                         </tbody>
+                     </table>
+                 </div>
+                 <button id="viewFullHistoryBtn" class="button-secondary" style="margin-top: 1.5rem;">Ver Historial Completo</button>
+             </div>
+         </section>
+
+        <section>
+            <div class="card" style="text-align: center;">
+                <h2><span class="icon icon-reset"></span>Reiniciar Simulación</h2>
+                <p>Esta acción eliminará permanentemente todos los datos de la simulación actual.</p>
+                <button id="resetLocalStorageBtn" class="button-danger">Reiniciar Datos</button>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>© 2024 Quantum Finance - Simulador Exclusivo</p>
+            <p>Diseñado para una experiencia premium sin conexión</p>
+        </div>
+    </footer>
+
+    <div id="confirmationModal" class="modal hidden">
+        <div class="modal-content">
+            <h2>Confirmar Inversión</h2>
+            <p>¿Proceder con la inversión de $<span id="confirmPlanAmount"></span> en el <span id="confirmPlanName"></span>?</p>
+            <div class="modal-actions">
+                <button id="confirmPlanBtn" class="button-success">Confirmar</button>
+                <button id="cancelPlanBtn" class="button-danger">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="addFundsModal" class="modal hidden">
+        <div class="modal-content">
+            <h2>Añadir Fondos a Cartera</h2>
+            <p>Introduce la cantidad que deseas depositar en tu cartera virtual.</p>
+            <input id="addFundsInput" type="number" placeholder="Monto (ej: 500)" min="1" />
+            <div class="modal-actions">
+                <button id="confirmAddFundsBtn" class="button-success">Depositar Fondos</button>
+                <button id="cancelAddFundsBtn" class="button-secondary">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+     <div id="fullScreenHistoryModal" class="modal hidden modal-history">
+         <div class="modal-content">
+             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                 <h2><span class="icon icon-history"></span>Historial Completo</h2>
+                 <button id="closeFullScreenHistoryModalBtn" class="button-secondary">Cerrar</button>
+             </div>
+             <div class="table-container">
+                 <table>
+                     <thead><tr><th>Fecha</th><th>Acción</th><th>Monto</th></tr></thead>
+                     <tbody id="fullScreenTransactionTable">
+                       <tr><td colspan="3" style="text-align:center; color:var(--text-secondary);">El historial de transacciones está vacío.</td></tr>
+                     </tbody>
+                 </table>
+             </div>
+         </div>
+     </div>
+
+    <div id="notificationModal" class="modal hidden modal-notification">
+        <div class="modal-content">
+            <h2 id="notificationTitle">Notificación</h2>
+            <p id="notificationMessage">Mensaje de notificación.</p>
+            <div class="modal-actions">
+                <button id="closeNotificationBtn" class="button-secondary">Cerrar</button>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        let investmentPlans = [];
+        let transactionHistory = [];
+        let totalCurrentAmount = 0;
+        let totalGain = 0;
+        let walletBalance = 0;
+        let lastSimulationTime = null;
+
+        const totalCurrentAmountElement = document.getElementById('totalCurrentAmount');
+        const totalGainElement = document.getElementById('totalGain');
+        const walletBalanceElement = document.getElementById('walletBalance');
+        const investmentPlansList = document.getElementById('investmentPlans');
+        const transactionTable = document.getElementById('transactionTable');
+        const fullScreenTransactionTable = document.getElementById('fullScreenTransactionTable');
+        const noPlansMessage = document.querySelector('.no-plans-message');
+
+        const confirmationModal = document.getElementById('confirmationModal');
+        const confirmPlanAmountElement = document.getElementById('confirmPlanAmount');
+        const confirmPlanNameElement = document.getElementById('confirmPlanName');
+        const addFundsModal = document.getElementById('addFundsModal');
+        const fullScreenHistoryModal = document.getElementById('fullScreenHistoryModal');
+        const notificationModal = document.getElementById('notificationModal');
+        const notificationTitle = document.getElementById('notificationTitle');
+        const notificationMessage = document.getElementById('notificationMessage');
+
+        const confirmPlanBtn = document.getElementById('confirmPlanBtn');
+        const cancelPlanBtn = document.getElementById('cancelPlanBtn');
+        const cancelAddFundsBtn = document.getElementById('cancelAddFundsBtn');
+        const confirmAddFundsBtn = document.getElementById('confirmAddFundsBtn');
+        const openAddFundsModalBtn = document.getElementById('openAddFundsModalBtn');
+        const closeFullScreenHistoryModalBtn = document.getElementById('closeFullScreenHistoryModalBtn');
+        const openFullScreenHistoryModalBtn = document.getElementById('openFullScreenHistoryModalBtn');
+        const mobileHistoryBtn = document.getElementById('mobileHistoryBtn');
+        const viewFullHistoryBtn = document.getElementById('viewFullHistoryBtn');
+        const closeNotificationBtn = document.getElementById('closeNotificationBtn');
+
+        const addFundsInput = document.getElementById('addFundsInput');
+
+        const menuBtn = document.getElementById('menuBtn');
+        const closeMenuBtn = document.getElementById('closeMenuBtn');
+        const mobileMenu = document.getElementById('mobileMenu');
+
+        const resetLocalStorageBtn = document.getElementById('resetLocalStorageBtn');
+
+        const STORAGE_KEY = 'investmentDataOffline_Luxury_v2';
+
+        function showNotification(message, type = 'info') {
+            let title = 'Información';
+            notificationModal.classList.remove('success', 'error', 'info');
+
+            switch(type) {
+                case 'success':
+                    title = 'Éxito';
+                    notificationModal.classList.add('success');
+                    break;
+                case 'error':
+                    title = 'Error';
+                    notificationModal.classList.add('error');
+                    break;
+                default:
+                    notificationModal.classList.add('info');
+                    break;
+            }
+
+            notificationTitle.textContent = title;
+            notificationMessage.textContent = message;
+            openModal(notificationModal);
+            console[type === 'error' ? 'error' : 'log'](`[${title}] ${message}`);
+        }
+
+        function loadFromLocalStorage() {
+            try {
+                const savedData = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
+                investmentPlans = savedData.investmentPlans || [];
+                transactionHistory = savedData.transactionHistory || [];
+                totalCurrentAmount = savedData.totalCurrentAmount || 0;
+                totalGain = savedData.totalGain || 0;
+                walletBalance = savedData.walletBalance || 0;
+                lastSimulationTime = savedData.lastSimulationTime ? new Date(savedData.lastSimulationTime) : new Date();
+                simulateRealTimeGains();
+                updateUI();
+            } catch (error) {
+                console.error('Error loading data:', error);
+                showNotification('No se pudieron cargar los datos guardados. Iniciando simulación nueva.', 'error');
+                resetState();
+                updateUI();
+            }
+        }
+
+        function saveToLocalStorage() {
+            try {
+                const dataToSave = {
+                    investmentPlans, transactionHistory,
+                    totalCurrentAmount: parseFloat(totalCurrentAmount.toFixed(2)),
+                    totalGain: parseFloat(totalGain.toFixed(2)),
+                    walletBalance: parseFloat(walletBalance.toFixed(2)),
+                    lastSimulationTime: lastSimulationTime ? lastSimulationTime.toISOString() : new Date().toISOString()
+                };
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(dataToSave));
+            } catch (error) {
+                console.error('Error saving data:', error);
+            }
+        }
+
+        function simulateRealTimeGains() {
+            const now = new Date();
+            if (!lastSimulationTime || !(lastSimulationTime instanceof Date) || isNaN(lastSimulationTime.getTime())) {
+                 lastSimulationTime = now; return;
+            }
+            const elapsedTime = now.getTime() - lastSimulationTime.getTime();
+            if (elapsedTime <= 1000) return;
+            const dailyRate = 0.02;
+            const gainPerMillisecond = dailyRate / (24 * 60 * 60 * 1000);
+            let simulationApplied = false;
+
+            investmentPlans.forEach(plan => {
+                if (plan.active && plan.daysRemaining > 0) {
+                    const maxPossibleDuration = plan.daysRemaining * 24 * 60 * 60 * 1000;
+                    const timeToSimulate = Math.min(elapsedTime, maxPossibleDuration);
+                    if (timeToSimulate > 0) {
+                        const gain = plan.currentAmount * gainPerMillisecond * timeToSimulate;
+                        plan.currentAmount += gain; plan.totalGain += gain; totalGain += gain;
+                        const daysPassed = timeToSimulate / (24 * 60 * 60 * 1000);
+                        plan.daysRemaining -= daysPassed;
+                        simulationApplied = true;
+                        if (plan.daysRemaining <= 0.0001) {
+                            plan.daysRemaining = 0; plan.active = false;
+                            const finalReturn = plan.currentAmount;
+                            walletBalance += finalReturn; totalCurrentAmount -= plan.initialAmount;
+                            addTransaction(`Retorno Final ${plan.name}`, finalReturn, now);
+                        }
+                    }
+                }
+            });
+            lastSimulationTime = now;
+            if (simulationApplied) console.log(`Simulation applied for ${Math.round(elapsedTime / 1000)}s`);
+        }
+
+        function updateInvestmentPlansList() {
+             investmentPlansList.innerHTML = '';
+             const hasPlans = investmentPlans.length > 0;
+             noPlansMessage.classList.toggle('hidden', hasPlans);
+             if (!hasPlans) return;
+             investmentPlans.sort((a, b) => b.active - a.active || b.id - a.id);
+             investmentPlans.forEach(plan => {
+                 const listItem = document.createElement('li');
+                 const statusClass = plan.active ? 'active' : 'finished';
+                 listItem.innerHTML = `
+                     <h3><span class="plan-status-indicator ${statusClass}"></span>${plan.name}</h3>
+                     <p>Monto inicial: <span class="value">$${plan.initialAmount.toFixed(2)}</span></p>
+                     <p>Monto actual: <span class="value">$${plan.currentAmount.toFixed(2)}</span></p>
+                     <p>Días restantes: <span class="value">${plan.daysRemaining > 0 ? Math.ceil(plan.daysRemaining) : 0}</span></p>
+                     <p class="status status-${statusClass}">${plan.active ? 'Activo' : 'Finalizado'}</p>
+                     <p class="gain">Ganancia (este plan): $${plan.totalGain.toFixed(2)}</p>
+                 `;
+                 investmentPlansList.appendChild(listItem);
+             });
+        }
+
+        function addTransaction(action, amount, date = new Date()) {
+             transactionHistory.unshift({
+                 date: date.toLocaleString('es-ES', { dateStyle: 'short', timeStyle: 'medium' }),
+                 action, amount: parseFloat(amount.toFixed(2))
+             });
+             updateTransactionHistory();
+        }
+
+        function updateTransactionHistory() {
+             const renderTableBody = (tbodyElement, history, limit = Infinity, recent = false) => {
+                 tbodyElement.innerHTML = '';
+                 const historyToShow = history.slice(0, limit);
+                 const placeholderText = recent ? 'No hay transacciones recientes.' : 'El historial de transacciones está vacío.';
+                 if (historyToShow.length === 0) {
+                     tbodyElement.innerHTML = `<tr><td colspan="3" style="text-align:center; color:var(--text-secondary); padding: 1rem;">${placeholderText}</td></tr>`;
+                 } else {
+                     historyToShow.forEach(tx => {
+                         const row = document.createElement('tr');
+                         const isGain = tx.action.toLowerCase().includes('retorno') || tx.action.toLowerCase().includes('recarga');
+                         const isCost = tx.action.toLowerCase().includes('compra');
+                         const amountColor = isGain ? 'var(--accent-green)' : isCost ? 'var(--accent-red)' : 'var(--text-primary)';
+                         const sign = isGain ? '+' : isCost ? '-' : '';
+                         row.innerHTML = `
+                             <td>${tx.date}</td> <td>${tx.action}</td>
+                             <td style="color: ${amountColor}; font-weight: 500;">${sign}$${Math.abs(tx.amount).toFixed(2)}</td>
+                         `;
+                         tbodyElement.appendChild(row);
+                     });
+                 }
+             };
+             renderTableBody(transactionTable, transactionHistory, 5, true);
+             renderTableBody(fullScreenTransactionTable, transactionHistory);
+        }
+
+        function confirmPlanSelection() {
+             const amount = parseFloat(confirmPlanAmountElement.textContent);
+             const planName = confirmPlanNameElement.textContent;
+             if (walletBalance >= amount && amount > 0) {
+                 const newPlan = { id: Date.now(), name: planName, initialAmount: amount, currentAmount: amount, totalGain: 0, daysRemaining: 30, active: true };
+                 walletBalance -= amount; totalCurrentAmount += amount;
+                 investmentPlans.push(newPlan);
+                 addTransaction(`Compra ${newPlan.name}`, -amount);
+                 lastSimulationTime = new Date();
+                 updateUI(); saveToLocalStorage(); closeModal(confirmationModal);
+                 showNotification(`Inversión de $${amount.toFixed(2)} en ${planName} realizada.`, 'success');
+             } else {
+                 showNotification('Fondos insuficientes o monto inválido.', 'error');
+                 closeModal(confirmationModal);
+             }
+        }
+
+        function addFundsToWallet() {
+             const amount = parseFloat(addFundsInput.value);
+             if (isNaN(amount) || amount <= 0) {
+                 showNotification('Por favor, ingresa un monto positivo válido.', 'error'); return;
+             }
+             walletBalance += amount;
+             addTransaction('Recarga de Cartera', amount);
+             addFundsInput.value = ''; closeModal(addFundsModal);
+             updateUI(); saveToLocalStorage();
+             showNotification(`$${amount.toFixed(2)} añadidos. Saldo: $${walletBalance.toFixed(2)}`, 'success');
+        }
+
+        function updateMainStats() {
+             walletBalanceElement.textContent = walletBalance.toFixed(2);
+             totalCurrentAmountElement.textContent = totalCurrentAmount.toFixed(2);
+             totalGainElement.textContent = totalGain.toFixed(2);
+        }
+
+        function getPlanDetails(amount) {
+              switch (amount) {
+                 case 5000: return { name: 'Plan Básico', amount: 5000 };
+                 case 10000: return { name: 'Plan Intermedio', amount: 10000 };
+                 case 20000: return { name: 'Plan Premium', amount: 20000 };
+                 default: return { name: 'Plan Personalizado', amount: amount };
+              }
+         }
+
+        function openModal(modalElement, setupAction = null) {
+            if (setupAction) setupAction();
+            modalElement.classList.remove('hidden');
+            setTimeout(() => modalElement.classList.add('visible'), 10);
+        }
+
+        function closeModal(modalElement) {
+            modalElement.classList.remove('visible');
+            setTimeout(() => modalElement.classList.add('hidden'), 400);
+        }
+
+        function resetState() {
+             investmentPlans = []; transactionHistory = [];
+             totalCurrentAmount = 0; totalGain = 0; walletBalance = 0;
+             lastSimulationTime = new Date();
+        }
+
+        function resetLocalStorage(confirmFirst = true) {
+              const confirmed = confirmFirst ? confirm('¿Confirmas que deseas reiniciar toda la simulación? Se perderán todos los datos guardados.') : true;
+             if (confirmed) {
+                 resetState(); localStorage.removeItem(STORAGE_KEY); updateUI();
+                 if (confirmFirst) showNotification('Simulación reiniciada correctamente.', 'success');
+                 console.log("Local storage and state reset.");
+             }
+        }
+
+        function updateUI() {
+              updateMainStats(); updateInvestmentPlansList(); updateTransactionHistory();
+        }
+
+        function toggleMobileMenu() {
+             const isVisible = !mobileMenu.classList.contains('hidden');
+             if (isVisible) {
+                 mobileMenu.classList.remove('visible'); setTimeout(() => mobileMenu.classList.add('hidden'), 400);
+             } else {
+                 mobileMenu.classList.remove('hidden'); setTimeout(() => mobileMenu.classList.add('visible'), 10);
+             }
+        }
+
+        function closeMobileMenu() {
+             mobileMenu.classList.remove('visible'); setTimeout(() => mobileMenu.classList.add('hidden'), 400);
+        }
+
+        function initializeApp() {
+             loadFromLocalStorage();
+             document.querySelectorAll('.select-plan').forEach(button => {
+                 button.addEventListener('click', (e) => {
+                     const amount = parseFloat(e.target.dataset.amount);
+                     openModal(confirmationModal, () => {
+                         const details = getPlanDetails(amount);
+                         confirmPlanAmountElement.textContent = details.amount.toFixed(2);
+                         confirmPlanNameElement.textContent = details.name;
+                     });
+                 });
+             });
+             confirmPlanBtn.addEventListener('click', confirmPlanSelection);
+             cancelPlanBtn.addEventListener('click', () => closeModal(confirmationModal));
+             openAddFundsModalBtn.addEventListener('click', () => openModal(addFundsModal, () => addFundsInput.focus()));
+             cancelAddFundsBtn.addEventListener('click', () => closeModal(addFundsModal));
+             confirmAddFundsBtn.addEventListener('click', addFundsToWallet);
+             const showHistory = () => openModal(fullScreenHistoryModal);
+             viewFullHistoryBtn.addEventListener('click', showHistory);
+             openFullScreenHistoryModalBtn.addEventListener('click', showHistory);
+             mobileHistoryBtn.addEventListener('click', () => { closeMobileMenu(); showHistory(); });
+             closeFullScreenHistoryModalBtn.addEventListener('click', () => closeModal(fullScreenHistoryModal));
+             resetLocalStorageBtn.addEventListener('click', () => resetLocalStorage(true));
+             menuBtn.addEventListener('click', toggleMobileMenu);
+             closeMenuBtn.addEventListener('click', closeMobileMenu);
+             mobileMenu.querySelectorAll('a, button').forEach(item => {
+                  if (item !== closeMenuBtn) item.addEventListener('click', closeMobileMenu);
+             });
+             closeNotificationBtn.addEventListener('click', () => closeModal(notificationModal));
+             window.addEventListener('beforeunload', saveToLocalStorage);
+             updateUI();
+             console.log("Quantum Finance Exclusive Simulator Initialized.");
+        }
+        document.addEventListener('DOMContentLoaded', initializeApp);
+    </script>
+</body>
+</html>

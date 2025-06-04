@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generador de Código HTML</title>
+    <style>
+        /* Estilos generales */
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #1a1a1a;
+            color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1 {
+            text-align: center;
+            color: #ff6600;
+            margin-top: 20px;
+        }
+
+        textarea {
+            width: 80%;
+            margin: 20px auto;
+            display: block;
+            padding: 10px;
+            border: 1px solid #333;
+            border-radius: 5px;
+            font-size: 16px;
+            background-color: #333;
+            color: #f5f5f5;
+        }
+
+        button {
+            display: inline-block;
+            margin: 10px;
+            padding: 10px 20px;
+            background-color: #ff6600;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #cc5200;
+        }
+
+        button.centered {
+            text-align: center;
+        }
+
+        pre {
+            background-color: #333;
+            border: 1px solid #444;
+            border-radius: 5px;
+            padding: 10px;
+            width: 80%;
+            margin: 20px auto;
+            overflow: auto;
+            color: #f5f5f5;
+            display: none;
+        }
+
+        /* Estilos para los productos */
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            padding: 20px;
+        }
+
+        .product-item.card {
+            background-color: #2a2a2a;
+            border: 1px solid #444;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+        }
+
+        .product-item.card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
+        }
+
+        .p-portada {
+            position: relative;
+        }
+
+        .p-portada img {
+            width: 100%;
+            height: 200px; /* Ajusta la altura según tus necesidades */
+            object-fit: cover;
+            border-bottom: 1px solid #444;
+        }
+
+        .icon-link {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: rgba(0, 0, 0, 0.7);
+            color: #ff6600;
+            padding: 5px;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        .p-info {
+            padding: 20px;
+            text-align: center;
+        }
+
+        .p-info h3 {
+            margin: 10px 0;
+            font-size: 18px;
+            color: #ff6600;
+        }
+
+        .precio span {
+            font-size: 16px;
+            font-weight: bold;
+            color: #ff6600;
+        }
+
+        .hm-btn {
+            display: none; /* Oculta el botón de "Agregar al carrito" */
+        }
+
+        .copy-btn, .delete-btn {
+            background-color: #ff6600;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            padding: 5px 10px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: background-color 0.3s ease;
+            margin: 5px;
+        }
+
+        .copy-btn:hover, .delete-btn:hover {
+            background-color: #cc5200;
+        }
+
+        .edit-input {
+            width: 100%;
+            padding: 5px;
+            margin: 5px 0;
+            border: 1px solid #444;
+            border-radius: 5px;
+            background-color: #333;
+            color: #f5f5f5;
+        }
+
+        /* Estilo para el campo de búsqueda */
+        #searchInput {
+            width: 80%;
+            margin: 20px auto;
+            display: block;
+            padding: 10px;
+            border: 1px solid #333;
+            border-radius: 5px;
+            font-size: 16px;
+            background-color: #333;
+            color: #f5f5f5;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        #searchInput:focus {
+            border-color: #ff6600;
+            box-shadow: 0 0 10px rgba(255, 102, 0, 0.5);
+            outline: none;
+        }
+
+        /* Estilo para el botón flotante */
+        #scrollToTopBtn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #ff000d;
+            color: #fff;
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            transition: background-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
+            display: none; /* Oculto por defecto */
+            z-index: 1000; /* Asegura que el botón esté por encima de otros elementos */
+        }
+
+        #scrollToTopBtn:hover {
+            background-color: #f13343;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
+            transform: scale(1.1); /* Efecto de lujo al pasar el ratón */
+        }
+
+        /* Media Queries */
+        @media (max-width: 768px) {
+            .product-grid {
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            }
+
+            .p-info h3 {
+                font-size: 16px;
+            }
+
+            .precio span {
+                font-size: 14px;
+            }
+
+            .copy-btn, .delete-btn {
+                padding: 3px 6px;
+                font-size: 10px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .product-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .p-info h3 {
+                font-size: 14px;
+            }
+
+            .precio span {
+                font-size: 12px;
+            }
+
+            .copy-btn, .delete-btn {
+                padding: 3px 6px;
+                font-size: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Generador de Código HTML</h1>
+    <textarea id="imageUrls" rows="5" cols="50" placeholder="Inserta las URLs de las imágenes aquí..."></textarea>
+    <br>
+    <button class="centered" onclick="generateHtml()">Generar Código HTML</button>
+    <button class="centered" onclick="toggleCode()">Mostrar/Ocultar Código</button>
+    <button class="centered" onclick="copyAllToClipboard(1)">Copiar Formato 1</button>
+    <button class="centered" onclick="copyAllToClipboard(2)">Copiar Formato 2</button>
+    <button class="centered" onclick="clearLocalStorage()">Eliminar Todo</button>
+    <button id="scrollToTopBtn" onclick="scrollToTop()">↑</button>
+    <input type="text" id="searchInput" placeholder="Buscar..." oninput="searchProducts()" class="centered">
+    <div id="generatedCodeContainer" class="product-grid"></div>
+    <pre id="generatedCode"></pre>
+
+    <script>
+       document.addEventListener('DOMContentLoaded', () => {
+    loadFromLocalStorage();
+});
+
+function generateHtml() {
+    const urls = document.getElementById('imageUrls').value.split('\n');
+    let products = JSON.parse(localStorage.getItem('products')) || [];
+    urls.forEach((url) => {
+        const trimmedUrl = url.trim();
+        if (trimmedUrl) {
+            products.push({
+                index: products.length,
+                imgSrc: trimmedUrl,
+                productName: 'Producto',
+                productPrice: '$0.00us'
+            });
+        }
+    });
+    localStorage.setItem('products', JSON.stringify(products));
+    renderProducts(products);
+}
+
+function renderProducts(products) {
+    let html = '';
+    products.forEach(product => {
+        const productHtml = `<div class="product-item card" data-index="${product.index}">
+                                <div class="p-portada">
+                                    <a href="" class="add-to-modal">
+                                        <img src="${product.imgSrc}" class="card-img-top" alt="Producto">
+                                    </a>
+                                    <a href="#" class="icon-link position-absolute top-0 end-0" onclick="shareProduct(event)">
+                                        <i class="bi bi-share"></i>
+                                    </a>
+                                </div>
+                                <div class="p-info">
+                                    <input type="text" class="edit-input" value="${product.productName}" onchange="updateProductName(${product.index}, this.value)">
+                                    <div class="precio">
+                                        <input type="text" class="edit-input" value="${product.productPrice}" onchange="updateProductPrice(${product.index}, this.value)">
+                                    </div>
+                                    <a href="#" class="hm-btn btn-primary uppercase add-to-cart">AGREGAR AL CARRITO</a>
+                                </div>
+                                <button class="copy-btn" onclick="copyProductCode(${product.index}, 1)">Copiar Formato 1</button>
+                                <button class="copy-btn" onclick="copyProductCode(${product.index}, 2)">Copiar Formato 2</button>
+                                <button class="copy-btn" onclick="copyImageUrl(${product.index})">Copiar URL</button>
+                                <button class="delete-btn" onclick="deleteProduct(${product.index})">Eliminar</button>
+                            </div>`;
+        html += productHtml + '\n';
+    });
+    document.getElementById('generatedCodeContainer').innerHTML = html;
+    updateGeneratedCode();
+}
+
+function copyAllToClipboard(format) {
+    const products = JSON.parse(localStorage.getItem('products')) || [];
+    let html = '';
+    products.forEach(product => {
+        html += getProductHtmlFormatted(product, format) + '\n';
+    });
+    navigator.clipboard.writeText(html).then(() => {
+        alert(`Código copiado al portapapeles en Formato ${format}`);
+    }).catch(err => {
+        console.error('Error al copiar al portapapeles: ', err);
+    });
+}
+
+function copyProductCode(index, format) {
+    const products = JSON.parse(localStorage.getItem('products'));
+    const product = products.find(p => p.index === index);
+    const productHtml = getProductHtmlFormatted(product, format);
+    navigator.clipboard.writeText(productHtml).then(() => {
+        alert(`Código del producto copiado al portapapeles en Formato ${format}`);
+    }).catch(err => {
+        console.error('Error al copiar al portapapeles: ', err);
+    });
+}
+
+function copyImageUrl(index) {
+    const products = JSON.parse(localStorage.getItem('products'));
+    const product = products.find(p => p.index === index);
+    
+    navigator.clipboard.writeText(product.imgSrc).then(() => {
+        alert(`URL de la imagen copiada al portapapeles: ${product.imgSrc}`);
+    }).catch(err => {
+        console.error('Error al copiar al portapapeles: ', err);
+    });
+}
+
+function getProductHtmlFormatted(product, format) {
+    if (format === 1) {
+        return `<div class="product-card" data-index="${product.index}">
+                    <div class="product-image">
+                        <a href="" class="add-to-modal">
+                            <img src="${product.imgSrc}" class="card-img-top" alt="Producto">
+                        </a>
+                        <a href="#" class="icon-link position-absolute top-0 end-0" onclick="shareProduct(event)">
+                            <i class="bi bi-share"></i>
+                        </a>
+                    </div>
+                    <div class="product-info">
+                        <a href=""> <h3>${product.productName}</h3></a>
+                        <div class="product-price">
+                            <span>${product.productPrice}</span>
+                        </div>
+                        <a href="#" class="hm-btn btn-primary uppercase add-to-cart">AGREGAR AL CARRITO</a>
+                    </div>
+                </div>`;
+    } else if (format === 2) {
+        return `<div class="product-card">
+                    <div class="product-image">
+                        <img src="${product.imgSrc}" alt="${product.productName}">
+                    </div>
+                    <div class="product-info">
+                        <h2 class="product-title">${product.productName}</h2>
+                        <p class="product-price">${product.productPrice}</p>
+                        <button class="buy-button" onclick="addToCart('${product.productName}', ${product.productPrice.replace('$','').replace('us','')}, '${product.imgSrc}')">Agregar al Carrito</button>
+                    </div>
+                </div>`;
+    }
+    return '';
+}
+
+function deleteProduct(index) {
+    let products = JSON.parse(localStorage.getItem('products'));
+    products = products.filter(p => p.index !== index);
+    products.forEach((product, i) => product.index = i); // Reindex products
+    localStorage.setItem('products', JSON.stringify(products));
+    renderProducts(products);
+}
+
+function updateProductName(index, newName) {
+    const products = JSON.parse(localStorage.getItem('products'));
+    const product = products.find(p => p.index === index);
+    product.productName = newName;
+    localStorage.setItem('products', JSON.stringify(products));
+    updateGeneratedCode();
+}
+
+function updateProductPrice(index, newPrice) {
+    const products = JSON.parse(localStorage.getItem('products'));
+    const product = products.find(p => p.index === index);
+    product.productPrice = newPrice;
+    localStorage.setItem('products', JSON.stringify(products));
+    updateGeneratedCode();
+}
+
+function toggleCode() {
+    const codeContainer = document.getElementById('generatedCode');
+    if (codeContainer.style.display === 'none' || codeContainer.style.display === '') {
+        codeContainer.style.display = 'block';
+    } else {
+        codeContainer.style.display = 'none';
+    }
+}
+
+function updateGeneratedCode() {
+    const products = JSON.parse(localStorage.getItem('products')) || [];
+    let html = '';
+    products.forEach(product => {
+        html += getProductHtmlFormatted(product, 1) + '\n';
+    });
+    document.getElementById('generatedCode').textContent = html;
+}
+
+function loadFromLocalStorage() {
+    const products = JSON.parse(localStorage.getItem('products'));
+    if (products) {
+        renderProducts(products);
+    }
+}
+
+function clearLocalStorage() {
+    localStorage.removeItem('products');
+    document.getElementById('generatedCodeContainer').innerHTML = '';
+    document.getElementById('generatedCode').textContent = '';
+    document.getElementById('imageUrls').value = '';
+}
+
+function searchProducts() {
+    const searchInput = document.getElementById('searchInput').value.toLowerCase();
+    const products = JSON.parse(localStorage.getItem('products')) || [];
+    const filteredProducts = products.filter(product => 
+        product.productName.toLowerCase().includes(searchInput) || 
+        product.imgSrc.toLowerCase().includes(searchInput)
+    );
+    renderProducts(filteredProducts);
+}
+
+function shareProduct(event) {
+    event.preventDefault();
+    alert('Compartir producto');
+}
+
+// Mostrar el botón cuando se hace scroll hacia abajo
+window.onscroll = function() {
+    const scrollToTopBtn = document.getElementById('scrollToTopBtn');
+    if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+        scrollToTopBtn.style.display = 'block';
+    } else {
+        scrollToTopBtn.style.display = 'none';
+    }
+};
+
+// Función para llevar al inicio de la página con desplazamiento suave
+function scrollToTop() {
+    window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+    });
+}
+    </script>
+</body>
+</html>

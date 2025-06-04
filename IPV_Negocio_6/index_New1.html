@@ -1,0 +1,2394 @@
+
+<!DOCTYPE html>
+<html lang="es" class="dark"> <!-- Habilitar modo oscuro globalmente -->
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gestión de Inventario y Gastos v1.3 - Tailwind Dark</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.13/jspdf.plugin.autotable.min.js"></script>
+<!-- Aquí normalmente enlazarías tu CSS compilado por Tailwind -->
+<!-- <link rel="stylesheet" href="tu-archivo-tailwind-output.css"> -->
+<!-- Para este ejemplo, usaré el CDN de Tailwind (NO para producción) y un <style> para lo mínimo -->
+<script src="https://cdn.tailwindcss.com?plugins=forms"></script>
+<style>
+    /* Mínimos estilos globales o animaciones no cubiertas por Tailwind aquí */
+    @keyframes modal-open-scale {
+      from { transform: scale(0.95); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+    .animate-modal-open {
+      animation: modal-open-scale 0.2s ease-out forwards;
+    }
+    /* Scrollbar personalizado */
+    .custom-scrollbar::-webkit-scrollbar { width: 8px; height: 8px; }
+    .custom-scrollbar::-webkit-scrollbar-track { @apply bg-gray-700 rounded-md; }
+    .custom-scrollbar::-webkit-scrollbar-thumb { @apply bg-yellow-500 rounded-md; }
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover { @apply bg-yellow-600; }
+
+    /* Para asegurar que los elementos hidden por JS tengan !important */
+    .js-hidden { display: none !important; }
+
+    /* Estilos para filas de error y stock cero */
+    .fila-error { @apply bg-red-800/50 hover:bg-red-700/60 !important; }
+    .fila-error input { @apply text-red-200 !important; }
+
+    .fila-stock-cero { @apply bg-yellow-700/40 !important; }
+    .fila-stock-cero:not(.fila-error):hover { @apply bg-yellow-600/50 !important; }
+    .fila-stock-cero input { @apply text-yellow-200 !important; }
+    
+    .fila-error.fila-stock-cero { @apply bg-red-800/50 hover:bg-red-700/60 !important; } /* Prioridad al error */
+    .fila-error.fila-stock-cero input { @apply text-red-200 !important; }
+
+    /* Sticky header height (necesario para el top de la tabla) */
+    :root { --header-height: 0px; /* Default para móvil */ }
+    @media (min-width: 1024px) { /* lg breakpoint de Tailwind por defecto */
+      :root { --header-height: 76px; } /* Ajusta según tu header */
+    }
+
+    /* --- ESTILOS SECCIÓN DE NOTAS Y MODAL DE NOTAS ANTERIORES --- */
+
+    /* Sección Notas (Estilo de Lujo Actualizado) */
+    .notas-section {
+        padding: 25px;
+        background: linear-gradient(145deg, #3a3a3e, #2a2a2e); /* Gradiente sutil */
+        box-shadow: 0 8px 20px rgba(0,0,0,0.6), inset 0 2px 4px rgba(255,255,255,0.05); /* Sombra más profunda e interna */
+        border-radius: 12px; /* Bordes más redondeados */
+        margin-top: 30px;
+        margin-bottom: 30px;
+        border-top: 2px solid #f39c12; /* Borde superior dorado */
+    }
+    .notas-section h2 {
+        color: #f39c12;
+        margin-top: 0;
+        margin-bottom: 20px;
+        font-size: 1.6em;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        text-align: center;
+        border-bottom: 1px solid rgba(243,156,18,0.3); /* Borde inferior más sutil */
+        padding-bottom: 15px;
+        text-shadow: 0 0 5px rgba(243,156,18,0.5); /* Sombra de texto */
+    }
+    .notas-section textarea { /* Ya se usan clases de Tailwind para esto, pero podemos refinar */
+        width: calc(100% - 24px); /* Tailwind: w-full y p-3 (o similar) */
+        min-height: 120px;
+        padding: 15px;
+        margin-bottom: 20px; /* Tailwind: mb-5 */
+        border: 1px solid #555; /* Tailwind: border border-gray-500 */
+        border-radius: 6px; /* Tailwind: rounded-md */
+        box-sizing: border-box;
+        background-color: #212121; /* Tailwind: bg-gray-850 o bg-gray-900 */
+        color: #e0e0e0; /* Tailwind: text-gray-200 */
+        font-size: 15px; /* Tailwind: text-base o text-sm */
+        font-family: 'Georgia', serif; /* Tailwind: font-serif */
+        resize: vertical;
+        box-shadow: inset 0 2px 5px rgba(0,0,0,0.4); /* Tailwind: shadow-inner */
+        transition: border-color 0.3s ease, box-shadow 0.3s ease; /* Tailwind: transition-all duration-300 */
+    }
+    .notas-section textarea:focus {
+        outline: none; /* Tailwind: focus:outline-none */
+        border-color: #f39c12; /* Tailwind: focus:border-brand-gold */
+        box-shadow: inset 0 2px 5px rgba(0,0,0,0.4), 0 0 8px rgba(243,156,18,0.6); /* Tailwind: focus:ring-2 focus:ring-brand-gold/50 */
+        background-color: #282828; /* Tailwind: focus:bg-gray-800 */
+    }
+    .notas-section textarea::placeholder {
+        color: #777; /* Tailwind: placeholder-gray-500 */
+        font-style: italic;
+    }
+    .notas-guardar-button { /* Ya se usan clases de Tailwind para esto, pero podemos refinar */
+        background: linear-gradient(to bottom, #f39c12, #e67e22); /* Tailwind: bg-gradient-to-b from-brand-gold to-brand-gold-dark */
+        color: #fff; /* Tailwind: text-white */
+        padding: 12px 25px; /* Tailwind: py-3 px-6 */
+        border: none;
+        cursor: pointer;
+        font-size: 1.1em; /* Tailwind: text-lg */
+        border-radius: 6px; /* Tailwind: rounded-md */
+        transition: all 0.3s ease; /* Tailwind: transition-all duration-300 */
+        display: block; /* Tailwind: block */
+        width: 100%; /* Tailwind: w-full */
+        box-sizing: border-box;
+        font-weight: bold; /* Tailwind: font-bold */
+        text-transform: uppercase; /* Tailwind: uppercase */
+        letter-spacing: 1px; /* Tailwind: tracking-wider */
+        box-shadow: 0 4px 8px rgba(0,0,0,0.3), inset 0 -2px 2px rgba(0,0,0,0.2); /* Tailwind: shadow-lg */
+    }
+    .notas-guardar-button:hover {
+        background: linear-gradient(to bottom, #e67e22, #d35400); /* Tailwind: hover:from-brand-gold-dark hover:to-orange-700 */
+        transform: translateY(-2px); /* Tailwind: hover:-translate-y-0.5 */
+        box-shadow: 0 6px 12px rgba(0,0,0,0.4), inset 0 -1px 1px rgba(0,0,0,0.1); /* Tailwind: hover:shadow-xl */
+    }
+    .notas-guardar-button:active {
+        transform: translateY(1px); /* Tailwind: active:translate-y-px */
+        box-shadow: 0 2px 4px rgba(0,0,0,0.3), inset 0 1px 2px rgba(0,0,0,0.2); /* Tailwind: active:shadow-md */
+    }
+
+    /* Estilos para el Modal de Notas del Día Anterior (Lujo) */
+    /* La clase .modal-content-lujo se aplica al div con ID #previousDayNotesModal > .modal-content */
+    #previousDayNotesModal .modal-content-lujo {
+        background: radial-gradient(circle, #4a4a4e 0%, #2a2a2e 100%); /* Difícil con Tailwind puro, se mantiene */
+        color: #f0f0f0; /* Tailwind: text-gray-100 */
+        max-width: 600px; /* Tailwind: max-w-xl o max-w-2xl */
+        border-radius: 15px; /* Tailwind: rounded-2xl */
+        border: 1px solid #f39c12; /* Tailwind: border border-brand-gold */
+        box-shadow: 0 10px 30px rgba(0,0,0,0.7), 0 0 15px rgba(243,156,18,0.3); /* Tailwind: shadow-2xl */
+        padding: 35px; /* Tailwind: p-8 o p-9 */
+    }
+    #previousDayNotesModal .modal-content-lujo h2 {
+        color: #f39c12; /* Tailwind: text-brand-gold */
+        text-align: center; /* Tailwind: text-center */
+        font-size: 1.8em; /* Tailwind: text-2xl o text-3xl */
+        margin-bottom: 25px; /* Tailwind: mb-6 */
+        text-shadow: 0 0 8px rgba(243,156,18,0.7); /* No directo en Tailwind, se mantiene o se omite */
+        border-bottom: 1px dashed rgba(243,156,18,0.5); /* Tailwind: border-b border-dashed border-brand-gold/50 */
+        padding-bottom: 15px; /* Tailwind: pb-4 */
+    }
+    .notas-contenido-lujo { /* Aplicado a #previousDayNotesContent */
+        background-color: rgba(0,0,0,0.2); /* Tailwind: bg-black/20 */
+        padding: 20px; /* Tailwind: p-5 */
+        border-radius: 8px; /* Tailwind: rounded-lg */
+        margin-bottom: 25px; /* Tailwind: mb-6 */
+        max-height: 300px; /* Tailwind: max-h-[300px] o max-h-72/80/96 */
+        overflow-y: auto; /* Tailwind: overflow-y-auto */
+        font-family: 'Georgia', serif; /* Tailwind: font-serif */
+        font-size: 1.1em; /* Tailwind: text-lg (ajustar) */
+        line-height: 1.6; /* Tailwind: leading-relaxed */
+        border: 1px solid rgba(255,255,255,0.1); /* Tailwind: border border-white/10 */
+        white-space: pre-wrap; /* Se mantiene, no hay clase directa en Tailwind para esto */
+    }
+    .notas-contenido-lujo p {
+        margin: 0;
+    }
+    /* Scrollbar para el contenido de notas del día anterior (se mantiene en CSS por pseudo-elementos) */
+    .notas-contenido-lujo::-webkit-scrollbar {
+        width: 10px;
+    }
+    .notas-contenido-lujo::-webkit-scrollbar-track {
+        background: rgba(0,0,0,0.1); /* Tailwind: bg-black/10 */
+        border-radius: 5px; /* Tailwind: rounded-md */
+    }
+    .notas-contenido-lujo::-webkit-scrollbar-thumb {
+        background-color: #f39c12; /* Tailwind: bg-brand-gold */
+        border-radius: 5px; /* Tailwind: rounded-md */
+        border: 2px solid rgba(0,0,0,0.1); /* Difícil con Tailwind puro, se mantiene */
+    }
+    .notas-contenido-lujo::-webkit-scrollbar-thumb:hover {
+        background-color: #e67e22; /* Tailwind: hover:bg-brand-gold-dark */
+    }
+
+    #previousDayNotesModal .modal-boton-lujo { /* Botón específico para este modal */
+        background: linear-gradient(to bottom, #f39c12, #e67e22); /* Tailwind: bg-gradient-to-b from-brand-gold to-brand-gold-dark */
+        color: white; /* Tailwind: text-white */
+        padding: 12px 30px; /* Tailwind: py-3 px-8 */
+        font-size: 1.1em; /* Tailwind: text-lg */
+        border-radius: 8px; /* Tailwind: rounded-lg */
+        text-transform: uppercase; /* Tailwind: uppercase */
+        letter-spacing: 1px; /* Tailwind: tracking-wider */
+        font-weight: bold; /* Tailwind: font-bold */
+        box-shadow: 0 4px 8px rgba(0,0,0,0.3); /* Tailwind: shadow-lg */
+        margin-top: 10px; /* Tailwind: mt-2.5 (o similar) */
+        float: none; /* Para centrar, se usarían clases de flexbox en el contenedor del botón */
+        display: block; /* Tailwind: block */
+        margin-left: auto; /* Tailwind: mx-auto (si es el único elemento para centrar) */
+        margin-right: auto;
+        width: fit-content; /* Tailwind: w-fit */
+    }
+    #previousDayNotesModal .modal-boton-lujo:hover {
+        background: linear-gradient(to bottom, #e67e22, #d35400); /* Tailwind: hover:from-brand-gold-dark hover:to-orange-700 */
+        transform: translateY(-2px); /* Tailwind: hover:-translate-y-0.5 */
+        box-shadow: 0 6px 12px rgba(0,0,0,0.4); /* Tailwind: hover:shadow-xl */
+    }
+    #previousDayNotesModal .close {
+        color: #f39c12; /* Tailwind: text-brand-gold */
+        opacity: 0.8; /* Tailwind: opacity-80 */
+        font-size: 35px; /* Tailwind: text-4xl */
+        transition: opacity 0.3s ease, transform 0.3s ease; /* Tailwind: transition-all duration-300 ease-out */
+    }
+    #previousDayNotesModal .close:hover {
+        opacity: 1; /* Tailwind: hover:opacity-100 */
+        transform: rotate(90deg); /* Tailwind: hover:rotate-90 */
+    }
+
+    /* Media Queries (ejemplos para notas) */
+    @media screen and (max-width: 768px) {
+        .notas-section h2 { font-size: 1.3em; }
+        .notas-section textarea { font-size: 13px; min-height: 80px;}
+        .notas-guardar-button { font-size: 0.9em; padding: 8px 15px;}
+
+        #previousDayNotesModal .modal-content-lujo { padding: 20px; }
+        #previousDayNotesModal .modal-content-lujo h2 { font-size: 1.5em; margin-bottom: 15px; padding-bottom: 10px;}
+        .notas-contenido-lujo { font-size: 1em; padding: 15px; }
+        #previousDayNotesModal .modal-boton-lujo { font-size: 1em; padding: 10px 20px; }
+    }
+</style>
+<script>
+  // Configuración de Tailwind para este ejemplo
+  tailwind.config = {
+    darkMode: 'class',
+    theme: {
+      extend: {
+        colors: {
+          'brand-gold': '#f39c12',
+          'brand-gold-dark': '#e67e22',
+          'gray-850': '#1f2328',
+          'gray-950': '#0d1117',
+        },
+        fontFamily: {
+          sans: ['Inter', 'ui-sans-serif', 'system-ui', '-apple-system', 'BlinkMacSystemFont', "Segoe UI", 'Roboto', "Helvetica Neue", 'Arial', "Noto Sans", 'sans-serif', "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"],
+          serif: ['Georgia', 'Cambria', "Times New Roman", 'Times', 'serif'],
+        }
+      }
+    }
+  }
+</script>
+</head>
+<body class="bg-gray-900 text-gray-200 font-sans">
+
+    <!-- Overlay de Carga -->
+    <div id="loadingOverlay" class="fixed inset-0 z-[2000] bg-black/70 flex-col items-center justify-center text-white text-lg hidden">
+        <div class="mb-4 w-10 h-10 border-4 border-gray-300 border-t-blue-500 rounded-full animate-spin"></div>
+        <p>Procesando...</p>
+        <p id="loadingMessage" class="mt-2 text-sm"></p>
+    </div>
+
+    <header class="bg-gray-850 text-gray-300 shadow-xl sticky top-0 z-[1001] min-h-[60px] px-3 lg:px-[3%]">
+        <div class="container mx-auto flex flex-wrap items-center justify-between gap-y-2 py-2 lg:gap-x-4">
+            <div class="flex items-center flex-shrink-0">
+                <img src="./img/Logo.png" alt="Logo" class="h-9 mr-3"> <!-- Ajusta altura -->
+                <h1 class="text-xl lg:text-2xl font-medium text-gray-100 whitespace-nowrap">IPV Dependiente</h1>
+            </div>
+
+            <div class="flex items-center gap-1 lg:gap-2 order-3 lg:order-none w-full lg:w-auto justify-center">
+                 <button id="prevDayBtn" title="Día Anterior" class="bg-gray-700 hover:bg-gray-600 text-gray-300 font-bold p-2 rounded-md transition-colors text-sm">◀</button>
+                 <label for="date" class="sr-only">Fecha:</label>
+                 <input type="date" id="date" class="bg-gray-900 border border-gray-700 text-gray-300 text-sm rounded-md focus:ring-blue-500 focus:border-blue-500 p-2 max-w-[150px] cursor-pointer">
+                 <button id="nextDayBtn" title="Día Siguiente" class="bg-gray-700 hover:bg-gray-600 text-gray-300 font-bold p-2 rounded-md transition-colors text-sm">▶</button>
+            </div>
+
+            <div class="flex-grow lg:max-w-md order-2 lg:order-none w-full lg:w-auto">
+                <input type="text" id="searchInput" placeholder="Buscar productos..." onkeyup="searchProducts()" class="w-full bg-gray-900 border border-gray-700 text-gray-300 placeholder-gray-500 text-sm rounded-full focus:ring-blue-500 focus:border-blue-500 py-2 px-5 shadow-inner">
+            </div>
+
+            <div class="flex items-center flex-wrap gap-x-1 gap-y-1 lg:gap-x-2 justify-center lg:justify-end order-4 lg:order-none w-full lg:w-auto">
+                <button class="bg-transparent hover:bg-gray-700/50 text-gray-400 hover:text-white text-xs font-medium uppercase px-3 py-2 rounded-md transition-colors border-b-2 border-transparent hover:border-blue-500 whitespace-nowrap" onclick="toggleModal()">Añadir Producto</button>
+                <button class="bg-transparent hover:bg-gray-700/50 text-gray-400 hover:text-white text-xs font-medium uppercase px-2 py-2 rounded-md transition-colors border-b-2 border-transparent hover:border-blue-500 whitespace-nowrap" onclick="document.getElementById('file-input').click()" title="Importar TODO el Historial IPV">Imp. Todo</button>
+                <button class="bg-transparent hover:bg-gray-700/50 text-gray-400 hover:text-white text-xs font-medium uppercase px-2 py-2 rounded-md transition-colors border-b-2 border-transparent hover:border-blue-500 whitespace-nowrap" onclick="exportCurrentDayData()" title="Exportar SOLO los datos del día visible">Exp. Día</button>
+                <button class="bg-transparent hover:bg-gray-700/50 text-gray-400 hover:text-white text-xs font-medium uppercase px-2 py-2 rounded-md transition-colors border-b-2 border-transparent hover:border-blue-500 whitespace-nowrap" onclick="promptExportMonthData()" title="Exportar los datos de un mes específico">Exp. Mes</button>
+                <button class="bg-transparent hover:bg-gray-700/50 text-gray-400 hover:text-white text-xs font-medium uppercase px-2 py-2 rounded-md transition-colors border-b-2 border-transparent hover:border-blue-500 whitespace-nowrap" onclick="exportAllData()" title="Exportar TODO el Historial IPV guardado">Exp. Todo</button>
+                <button class="bg-transparent hover:bg-gray-700/50 text-gray-400 hover:text-white text-xs font-medium uppercase px-2 py-2 rounded-md transition-colors border-b-2 border-transparent hover:border-blue-500 whitespace-nowrap" onclick="reloadFromPreviousDay()" title="Reiniciar el día actual basado en los finales del día anterior">Reiniciar</button>
+                <button class="bg-transparent hover:bg-gray-700/50 text-gray-400 hover:text-white text-xs font-medium uppercase px-2 py-2 rounded-md transition-colors border-b-2 border-transparent hover:border-blue-500 whitespace-nowrap" onclick="generarPDF()" title="Generar PDF">PDF</button>
+                <button class="bg-transparent hover:bg-gray-700/50 text-gray-400 hover:text-white text-xs font-medium uppercase px-2 py-2 rounded-md transition-colors border-b-2 border-transparent hover:border-blue-500 whitespace-nowrap" id="endOfDayBtn" onclick="checkEndOfDay()" title="Realizar comprobaciones de fin de día">Cierre</button>
+                <button class="bg-transparent hover:bg-gray-700/50 text-gray-400 hover:text-white text-xs font-medium uppercase px-2 py-2 rounded-md transition-colors border-b-2 border-transparent hover:border-blue-500 whitespace-nowrap" id="performanceReportBtn" onclick="showPerformanceReportModal()" title="Ver Informe de Rendimiento de Productos">Rendimiento</button>
+                <button class="bg-transparent hover:bg-gray-700/50 text-gray-400 hover:text-white text-xs font-medium uppercase px-2 py-2 rounded-md transition-colors border-b-2 border-transparent hover:border-blue-500 whitespace-nowrap" id="comparisonReportBtn" onclick="showComparisonModal()" title="Comparar Métricas Entre Períodos">Comparar</button>
+                <button class="bg-purple-600 hover:bg-purple-700 text-white text-xs font-medium uppercase px-2 py-2 rounded-md transition-colors border-b-2 border-transparent hover:border-white whitespace-nowrap" id="toggleVisibility" title="Administrar (PIN)">Admin</button>
+                <button class="bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-medium uppercase px-2 py-2 rounded-md transition-colors border-b-2 border-transparent hover:border-white whitespace-nowrap admin-feature-button hidden" id="manageCategoriesBtn" onclick="showCategoryManagementModal()" title="Gestionar Categorías (PIN)">Cat.</button>
+
+                <div class="relative">
+                    <span id="worker-display" class="inline-flex items-center bg-gray-800 hover:bg-gray-700 text-gray-400 hover:text-white border border-gray-700 text-xs font-medium px-3 py-2 rounded-full cursor-pointer transition-colors shadow-inner whitespace-nowrap min-w-[100px]">
+                        <span class="mr-1.5">👤</span>Seleccionar...<span class="ml-auto pl-1 text-xs opacity-70">▼</span>
+                    </span>
+                    <select id="userSelector" title="Seleccionar Trabajador" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer text-sm">
+                        <option value="">Seleccionar...</option>
+                        <option value="Luneiby">Luneiby</option>
+                        <option value="Jose">Jose</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="container mx-auto px-2 sm:px-4 py-3 lg:py-5">
+
+        <div id="product-modal" class="fixed inset-0 z-[1050] bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 hidden animate-modal-open">
+            <div class="bg-gray-800 text-gray-200 p-6 md:p-8 rounded-xl shadow-2xl w-full max-w-lg border border-gray-700 relative">
+                 <span class="close absolute top-3 right-4 text-gray-400 hover:text-white text-3xl font-bold cursor-pointer transition-colors" onclick="toggleModal()">×</span>
+                 <h3 class="text-xl font-semibold mb-6 text-blue-400">Añadir Nuevo Producto</h3>
+                 <label for="modal-product-category" class="block text-sm font-medium text-gray-400 mb-1">Categoría:</label>
+                 <select id="modal-product-category" class="form-select bg-gray-700 border-gray-600 text-gray-200 w-full rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 mb-4">
+                    <option value="otros">Otros</option>
+                 </select>
+                 <input type="text" id="modal-product-name" placeholder="Nombre (separados por coma si son varios)" class="form-input bg-gray-700 border-gray-600 text-gray-200 w-full rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 mb-4">
+                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                    <input type="number" id="modal-product-start" placeholder="Inicio" class="form-input bg-gray-700 border-gray-600 text-gray-200 w-full rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                    <input type="number" id="modal-product-cost" placeholder="Costo" class="form-input bg-gray-700 border-gray-600 text-gray-200 w-full rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                    <input type="number" id="modal-product-price" placeholder="Precio" class="form-input bg-gray-700 border-gray-600 text-gray-200 w-full rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                 </div>
+                 <label for="modal-product-unit" class="block text-sm font-medium text-gray-400 mb-1">Unidad de Medida:</label>
+                 <select id="modal-product-unit" class="form-select bg-gray-700 border-gray-600 text-gray-200 w-full rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 mb-6">
+                    <option value="unidad">Unidad</option> <option value="paquete">Paquete</option> <option value="caja">Caja</option> <option value="kg">Kg</option> <option value="g">g</option> <option value="L">L</option> <option value="mL">mL</option> <option value="otro">Otro (especificar en nombre)</option>
+                 </select>
+                 <button onclick="addProduct()" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-4 rounded-md transition-colors shadow-md hover:shadow-lg">Añadir Producto(s)</button>
+            </div>
+        </div>
+
+        <input type="file" id="file-input" onchange="importAllData(event)" class="hidden">
+
+        <div class="my-6 lg:my-8 p-4 bg-gray-800 rounded-lg shadow-lg flex flex-col sm:flex-row justify-center items-center gap-3">
+            <button id="toggleAllBtn" onclick="toggleAllCategories()" class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-6 rounded-md transition-transform hover:scale-105 shadow-md w-full sm:w-auto">Expandir Todo</button>
+            <button id="showSelectionSummaryBtn" onclick="showProductSummaryModal()" title="Ver resumen histórico de productos seleccionados" disabled class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-md transition-transform hover:scale-105 shadow-md w-full sm:w-auto disabled:opacity-50 disabled:cursor-not-allowed hidden">Ver Resumen Selección</button>
+        </div>
+
+         <div id="pinModal" class="fixed inset-0 z-[1050] bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 hidden animate-modal-open">
+             <div class="bg-gray-800 text-gray-200 p-6 md:p-8 rounded-xl shadow-2xl w-full max-w-sm border border-gray-700 relative">
+                 <span class="close absolute top-3 right-4 text-gray-400 hover:text-white text-3xl font-bold cursor-pointer transition-colors">×</span>
+                 <p class="text-lg font-medium mb-4 text-center text-yellow-400">PIN de Administrador:</p>
+                 <input type="password" id="pinInput" maxlength="4" inputmode="numeric" class="form-input bg-gray-700 border-gray-600 text-gray-100 w-full rounded-md shadow-sm text-center text-2xl tracking-[0.5em] py-2 mb-4 focus:ring-yellow-500 focus:border-yellow-500">
+                 <button id="submitPin" class="w-full bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold py-2.5 px-4 rounded-md transition-colors shadow-md">Acceder</button>
+             </div>
+         </div>
+
+         <div class="bg-gray-800 rounded-lg shadow-xl overflow-hidden mb-8">
+            <div class="overflow-x-auto custom-scrollbar">
+                <table class="w-full min-w-[800px] responsive-table" id="product-table">
+                    <thead class="sticky z-[100]" style="top: var(--header-height);">
+                        <tr class="bg-gray-700">
+                            <th class="p-3 w-12 text-center"><input type="checkbox" id="selectAllCheckbox" onchange="toggleSelectAll(this)" title="Seleccionar/Deseleccionar Todo" class="form-checkbox h-5 w-5 text-green-500 bg-gray-600 border-gray-500 rounded focus:ring-green-500"></th>
+                            <th class="p-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-300 min-w-[150px]">Productos</th>
+                            <th class="p-3 text-center text-xs font-semibold uppercase tracking-wider text-gray-300">Inicio</th>
+                            <th class="p-3 text-center text-xs font-semibold uppercase tracking-wider text-gray-300">Entrada</th>
+                            <th class="p-3 text-center text-xs font-semibold uppercase tracking-wider text-gray-300">Finales</th>
+                            <th class="p-3 text-center text-xs font-semibold uppercase tracking-wider text-gray-300">Vendido</th>
+                            <th class="p-3 text-center text-xs font-semibold uppercase tracking-wider text-gray-300 js-hidden">Costo</th>
+                            <th class="p-3 text-center text-xs font-semibold uppercase tracking-wider text-gray-300">Precio</th>
+                            <th class="p-3 text-center text-xs font-semibold uppercase tracking-wider text-gray-300">Importe</th>
+                            <th class="p-3 text-center text-xs font-semibold uppercase tracking-wider text-gray-300 js-hidden">Ganancias</th>
+                            <th class="p-3 text-center text-xs font-semibold uppercase tracking-wider text-gray-300">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="product-list" class="divide-y divide-gray-700">
+                        <!-- Filas generadas por JS -->
+                    </tbody>
+                </table>
+            </div>
+         </div>
+
+        <div class="p-5 lg:p-6 bg-gray-800 shadow-xl rounded-lg mb-8 border-t-2 border-green-500">
+            <h2 class="text-xl lg:text-2xl font-semibold text-green-400 mb-5 text-center uppercase tracking-wider pb-3 border-b border-gray-700">Gastos y Recogidas</h2>
+            <div class="gastos-list max-h-64 overflow-y-auto mb-5 custom-scrollbar pr-2" id="gastos-list">
+                <!-- Items generados por JS -->
+            </div>
+            <button class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-2.5 px-4 rounded-md transition-colors shadow-md hover:shadow-lg" onclick="toggleGastosModal()">Añadir Gasto / Recogida</button>
+            <div class="mt-6 bg-gradient-to-br from-gray-700 to-gray-850 text-yellow-400 p-4 rounded-lg shadow-inner text-center">
+                <h3 class="text-lg font-semibold uppercase text-orange-400 mb-1">Total Movimientos (Día)</h3>
+                <p class="text-sm uppercase text-gray-300">Monto Total: <strong id="total-gastos" class="text-xl text-white ml-2">0.00</strong></p>
+            </div>
+        </div>
+
+        <div class="notas-section"> <!-- Ya tiene los estilos de lujo de la respuesta anterior -->
+            <h2>Notas del Día</h2>
+            <textarea id="notas-dia" placeholder="Escribe aquí notas importantes para el día (ej: sobró/faltó dinero, revisar producto X, etc.). Estas notas se guardarán con los datos del día."></textarea>
+            <button id="guardarNotasBtn" class="notas-guardar-button" onclick="guardarNotasManualmente()">Guardar Notas</button>
+        </div>
+
+        <div id="gastos-modal" class="fixed inset-0 z-[1050] bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 hidden animate-modal-open">
+            <div class="bg-gray-800 text-gray-200 p-6 md:p-8 rounded-xl shadow-2xl w-full max-w-md border border-gray-700 relative">
+                <span class="close absolute top-3 right-4 text-gray-400 hover:text-white text-3xl font-bold cursor-pointer transition-colors">×</span>
+                <h3 class="text-lg font-semibold mb-4 text-green-400">Añadir Gasto / Recogida</h3>
+                <input type="text" id="gastos-description" placeholder="Descripción del gasto/recogida" class="form-input bg-gray-700 border-gray-600 text-gray-200 w-full rounded-md shadow-sm focus:ring-green-500 focus:border-green-500 mb-3">
+                <input type="number" id="gastos-amount" placeholder="Monto" class="form-input bg-gray-700 border-gray-600 text-gray-200 w-full rounded-md shadow-sm focus:ring-green-500 focus:border-green-500 mb-4">
+                <div class="mb-5">
+                    <label class="flex items-center text-sm text-gray-300 cursor-pointer">
+                        <input type="checkbox" id="gasto-is-cash-collection" class="form-checkbox h-5 w-5 text-yellow-500 bg-gray-600 border-gray-500 rounded focus:ring-yellow-500 mr-2">
+                        ¿Es Recogida de Efectivo? (No afecta rentabilidad)
+                    </label>
+                </div>
+                <button onclick="addGasto()" class="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-2.5 px-4 rounded-md transition-colors shadow-md">Añadir</button>
+            </div>
+        </div>
+
+        <div id="totales" class="bg-gradient-to-br from-gray-850 to-gray-950 text-yellow-300 p-6 lg:p-8 rounded-xl shadow-2xl text-center mt-8 border-t-2 border-yellow-500">
+            <p id="fecha" class="text-2xl font-bold text-yellow-400 border border-yellow-600 rounded-lg py-2 px-4 mb-6 inline-block bg-black/20 shadow-md">--/--/----</p>
+            <h2 class="text-2xl lg:text-3xl font-bold uppercase text-orange-400 mb-3 lg:mb-4 text-shadow">Totales del Día</h2>
+            <div class="space-y-2 text-sm lg:text-base">
+                <p class="uppercase text-gray-300 js-hidden">Margen Bruto (Día): <strong id="total-ganancias" class="text-lg lg:text-xl text-white ml-2">0.00</strong></p>
+                <p class="uppercase text-gray-300">Ingresos Brutos (Día): <strong id="total-importe" class="text-lg lg:text-xl text-white ml-2">0.00</strong></p>
+                <p class="uppercase text-gray-300">Total Neto Caja (Día): <strong id="total-despues-gastos" class="text-lg lg:text-xl text-white ml-2">0.00</strong></p>
+                <p class="uppercase text-gray-300">Gastos/Recogidas (Día): <strong id="total-gastos-display" class="text-lg lg:text-xl text-white ml-2">0.00</strong></p>
+                <hr class="border-gray-700 my-3">
+                <p class="uppercase text-gray-300 js-hidden">Valor Stock (Venta): <strong id="total-stock-value" class="text-lg lg:text-xl text-white ml-2">0.00</strong></p>
+                <p class="uppercase text-gray-300 js-hidden">Costo Stock: <strong id="total-stock-cost" class="text-lg lg:text-xl text-white ml-2">0.00</strong></p>
+            </div>
+        </div>
+
+        <div id="general-summary" class="bg-gray-800 text-gray-300 p-6 lg:p-8 rounded-xl shadow-xl text-center mt-8 border-t-2 border-blue-500 hidden">
+            <h2 class="text-xl lg:text-2xl font-semibold uppercase text-blue-400 mb-4">Resumen Financiero General</h2>
+            <div class="space-y-1.5 text-sm lg:text-base">
+                <p class="uppercase text-gray-400 js-hidden">Margen Bruto Acumulado: <strong id="total-ganancia-acumulada" class="text-lg text-white ml-2">0.00</strong></p>
+                <p class="uppercase text-gray-400">Ingresos Brutos Acumulados: <strong id="total-ingresos-acumulados" class="text-lg text-white ml-2">0.00</strong></p>
+                <p class="uppercase text-gray-400">Gastos Operativos Acumulados: <strong id="total-gastos-acumulados" class="text-lg text-white ml-2">0.00</strong></p>
+                <p class="uppercase text-gray-400">Balance Neto Acumulado: <strong id="total-balance-neto-acumulado" class="text-lg text-white ml-2">0.00</strong></p>
+            </div>
+            <p id="periodo-analizado" class="text-xs text-gray-500 mt-5">Calculando...</p>
+        </div>
+
+        <div id="confirmModal" class="fixed inset-0 z-[1050] bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 hidden animate-modal-open">
+            <div class="bg-gray-800 text-gray-200 p-6 rounded-lg shadow-xl w-full max-w-md text-center border border-gray-700">
+                <p class="text-lg mb-6">¿Estás seguro de que deseas eliminar este elemento?</p>
+                <div class="flex justify-center gap-4">
+                    <button id="confirmYes" class="bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-6 rounded-md transition-colors">Sí, Eliminar</button>
+                    <button id="confirmNo" class="bg-gray-600 hover:bg-gray-500 text-white font-semibold py-2 px-6 rounded-md transition-colors">No, Cancelar</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="productSummaryModal" class="fixed inset-0 z-[1050] bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 hidden animate-modal-open">
+            <div class="bg-gray-800 text-gray-200 p-6 md:p-8 rounded-xl shadow-2xl w-full max-w-2xl border border-gray-700 relative">
+                <span class="close absolute top-3 right-4 text-gray-400 hover:text-white text-3xl font-bold cursor-pointer transition-colors" onclick="closeProductSummaryModal()">×</span>
+                <h2 class="text-xl font-semibold mb-6 text-blue-400 border-b border-gray-700 pb-3">Resumen Histórico de Productos</h2>
+                <div class="mb-4">
+                    <h3 class="text-sm font-medium text-gray-400 uppercase mb-1">Productos Seleccionados:</h3>
+                    <ul id="selected-products-list" class="text-sm bg-gray-700/50 p-3 rounded-md max-h-24 overflow-y-auto custom-scrollbar border border-gray-600">
+                        <li>Cargando...</li>
+                    </ul>
+                </div>
+                 <div class="mb-6">
+                    <label for="summaryPeriodSelector" class="text-sm font-medium text-gray-400 mr-2">Periodo:</label>
+                    <select id="summaryPeriodSelector" onchange="updateProductSummaryDisplay()" class="form-select bg-gray-700 border-gray-600 text-gray-200 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 text-sm py-1.5">
+                         <option value="Total">Total Histórico</option>
+                    </select>
+                     <div id="summary-details" class="mt-4 space-y-1 text-sm">
+                         <p>Total Unidades Vendidas: <strong id="summary-total-sold" class="text-base text-white ml-1">0</strong></p>
+                         <p>Total Ingresos Brutos: <strong id="summary-total-income" class="text-base text-white ml-1">0.00</strong></p>
+                         <p class="js-hidden">Margen Bruto de Ganancia: <strong id="summary-total-profit" class="text-base text-white ml-1">0.00</strong></p>
+                     </div>
+                     <p id="summary-period" class="text-xs text-gray-500 mt-3 text-right">Periodo: Calculando...</p>
+                 </div>
+                <button onclick="closeProductSummaryModal()" class="float-right bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-5 rounded-md transition-colors text-sm">Cerrar</button>
+            </div>
+        </div>
+
+        <div id="performanceReportModal" class="fixed inset-0 z-[1050] bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 hidden animate-modal-open">
+            <div class="bg-gray-800 text-gray-200 p-6 md:p-8 rounded-xl shadow-2xl w-full max-w-3xl border border-gray-700 relative">
+                <span class="close absolute top-3 right-4 text-gray-400 hover:text-white text-3xl font-bold cursor-pointer transition-colors" onclick="closePerformanceReportModal()">×</span>
+                <h2 class="text-xl font-semibold mb-6 text-purple-400 border-b border-gray-700 pb-3">Informe de Rendimiento de Productos</h2>
+                <div class="flex flex-col sm:flex-row gap-4 mb-4 items-center">
+                    <div>
+                        <label for="performancePeriodSelector" class="text-sm font-medium text-gray-400 mr-2">Periodo:</label>
+                        <select id="performancePeriodSelector" onchange="generatePerformanceReport()" class="form-select bg-gray-700 border-gray-600 text-gray-200 rounded-md shadow-sm focus:ring-purple-500 focus:border-purple-500 text-sm py-1.5">
+                            <option value="Total">Total Histórico</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="performanceCriteriaSelector" class="text-sm font-medium text-gray-400 mr-2">Ordenar por:</label>
+                        <select id="performanceCriteriaSelector" onchange="generatePerformanceReport()" class="form-select bg-gray-700 border-gray-600 text-gray-200 rounded-md shadow-sm focus:ring-purple-500 focus:border-purple-500 text-sm py-1.5">
+                            <option value="units">Más Vendidos (Unidades)</option> <option value="income">Más Vendidos (Importe)</option> <option value="profit" class="js-hidden">Más Rentables (Ganancia)</option>
+                        </select>
+                    </div>
+                </div>
+                <h3 id="reportPeriodDisplay" class="text-sm text-gray-500 mb-4"></h3>
+                <div class="overflow-y-auto custom-scrollbar max-h-[45vh]">
+                    <h4 class="text-md font-semibold text-gray-300 mb-2">Top 10 Productos</h4>
+                    <table id="topProductsTable" class="w-full text-sm text-left text-gray-400">
+                        <thead class="text-xs text-gray-300 uppercase bg-gray-700"><tr><th scope="col" class="px-4 py-2">Rank</th><th scope="col" class="px-4 py-2">Producto (Categoría)</th><th scope="col" class="px-4 py-2 text-right">Unidades</th><th scope="col" class="px-4 py-2 text-right">Importe</th><th scope="col" class="px-4 py-2 text-right profit-col js-hidden">Ganancia</th></tr></thead>
+                        <tbody class="bg-gray-800 divide-y divide-gray-700"></tbody>
+                    </table>
+                 </div>
+                <button onclick="closePerformanceReportModal()" class="mt-6 float-right bg-purple-600 hover:bg-purple-700 text-white font-semibold py-2 px-5 rounded-md transition-colors text-sm">Cerrar</button>
+            </div>
+        </div>
+
+        <div id="comparisonModal" class="fixed inset-0 z-[1050] bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 hidden animate-modal-open">
+            <div class="bg-gray-800 text-gray-200 p-6 md:p-8 rounded-xl shadow-2xl w-full max-w-3xl border border-gray-700 relative">
+                <span class="close absolute top-3 right-4 text-gray-400 hover:text-white text-3xl font-bold cursor-pointer transition-colors" onclick="closeComparisonModal()">×</span>
+                <h2 class="text-xl font-semibold mb-6 text-teal-400 border-b border-gray-700 pb-3">Comparación de Períodos</h2>
+                <div class="flex flex-col sm:flex-row gap-4 mb-4 items-center">
+                    <div>
+                        <label for="comparisonPeriod1Selector" class="text-sm font-medium text-gray-400 mr-2">Período 1:</label>
+                        <select id="comparisonPeriod1Selector" onchange="generateComparisonReport()" class="form-select bg-gray-700 border-gray-600 text-gray-200 rounded-md shadow-sm focus:ring-teal-500 focus:border-teal-500 text-sm py-1.5"> <option value="Total">Total Histórico</option> </select>
+                    </div>
+                    <div>
+                        <label for="comparisonPeriod2Selector" class="text-sm font-medium text-gray-400 mr-2">Período 2:</label>
+                        <select id="comparisonPeriod2Selector" onchange="generateComparisonReport()" class="form-select bg-gray-700 border-gray-600 text-gray-200 rounded-md shadow-sm focus:ring-teal-500 focus:border-teal-500 text-sm py-1.5"> <option value="Total">Total Histórico</option> </select>
+                    </div>
+                </div>
+                <h3 id="comparisonPeriodDisplay" class="text-sm text-gray-500 mb-4"></h3>
+                 <div class="overflow-y-auto custom-scrollbar max-h-[45vh]">
+                     <table id="comparisonTable" class="w-full text-sm text-left text-gray-400">
+                         <thead class="text-xs text-gray-300 uppercase bg-gray-700"><tr><th scope="col" class="px-4 py-2">Métrica</th><th scope="col" class="px-4 py-2 text-right">Período 1</th><th scope="col" class="px-4 py-2 text-right">Período 2</th><th scope="col" class="px-4 py-2 text-right">Diferencia</th><th scope="col" class="px-4 py-2 text-right">Diferencia (%)</th></tr></thead>
+                         <tbody class="bg-gray-800 divide-y divide-gray-700"></tbody>
+                     </table>
+                 </div>
+                <button onclick="closeComparisonModal()" class="mt-6 float-right bg-teal-600 hover:bg-teal-700 text-white font-semibold py-2 px-5 rounded-md transition-colors text-sm">Cerrar</button>
+            </div>
+        </div>
+
+        <div id="categoryManagementModal" class="fixed inset-0 z-[1050] bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 hidden animate-modal-open">
+             <div class="bg-gray-800 text-gray-200 p-6 md:p-8 rounded-xl shadow-2xl w-full max-w-lg border border-gray-700 relative">
+                 <span class="close absolute top-3 right-4 text-gray-400 hover:text-white text-3xl font-bold cursor-pointer transition-colors" onclick="closeCategoryManagementModal()">×</span>
+                 <h2 class="text-xl font-semibold mb-2 text-indigo-400">Gestión de Categorías</h2>
+                 <p class="text-xs text-gray-500 mb-4">Renombrar/Eliminar afectará TODOS los registros históricos (puede tardar).</p>
+                 <h3 class="text-md font-medium text-gray-300 mb-2">Categorías Actuales:</h3>
+                 <ul id="categoryList" class="bg-gray-700/50 p-3 rounded-md max-h-48 overflow-y-auto custom-scrollbar border border-gray-600 mb-4 text-sm"></ul>
+                 <h3 class="text-md font-medium text-gray-300 mb-2">Añadir Nueva Categoría:</h3>
+                 <input type="text" id="modal-category-name" placeholder="Nombre de la nueva categoría" class="form-input bg-gray-700 border-gray-600 text-gray-200 w-full rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 mb-1">
+                 <div class="mt-3 mb-4"> <button onclick="addCategory()" class="bg-indigo-500 hover:bg-indigo-600 text-white font-semibold py-2 px-4 rounded-md text-sm transition-colors">Añadir Categoría</button> </div>
+                 <div id="categoryActionPrompt" class="p-3 bg-gray-700/30 border border-dashed border-gray-600 rounded-md text-sm"></div>
+                 <button onclick="closeCategoryManagementModal()" class="mt-6 float-right bg-gray-600 hover:bg-gray-500 text-white font-semibold py-2 px-5 rounded-md transition-colors text-sm">Cerrar</button>
+             </div>
+         </div>
+
+        <div id="previousDayNotesModal" class="fixed inset-0 z-[1050] bg-black/70 backdrop-blur-md flex items-center justify-center p-4 hidden animate-modal-open">
+            <div class="modal-content-lujo bg-gray-850 shadow-2xl border-brand-gold relative w-full max-w-xl animate-modal-open"> <!-- Clase modal-content-lujo aplicada -->
+                <span class="close absolute top-4 right-5 text-brand-gold hover:text-brand-gold-dark text-4xl font-bold cursor-pointer transition-all hover:rotate-90">×</span>
+                <h2 class="text-2xl font-bold text-brand-gold text-center mb-6 pb-3 border-b border-brand-gold/30">📝 Notas Importantes del Día Anterior</h2>
+                <div id="previousDayNotesContent" class="notas-contenido-lujo custom-scrollbar bg-gray-900/50 p-5 rounded-lg border border-gray-700 max-h-[50vh] text-gray-300">
+                    <p>Cargando notas...</p>
+                </div>
+                <button class="modal-boton-lujo mt-6" onclick="closePreviousDayNotesModal()">Entendido</button>
+            </div>
+        </div>
+
+
+    </div> <!-- Fin Container -->
+
+    <script>
+        // --- Variables Globales y Constantes ---
+        const pinModal = document.getElementById('pinModal');
+        const productModal = document.getElementById('product-modal');
+        const gastosModal = document.getElementById('gastos-modal');
+        const confirmModal = document.getElementById('confirmModal');
+        const productSummaryModal = document.getElementById('productSummaryModal');
+        const performanceReportModal = document.getElementById('performanceReportModal');
+        const comparisonModal = document.getElementById('comparisonModal');
+        const categoryManagementModal = document.getElementById('categoryManagementModal');
+        const previousDayNotesModal = document.getElementById('previousDayNotesModal');
+        const previousDayNotesContent = document.getElementById('previousDayNotesContent');
+        const loadingOverlay = document.getElementById('loadingOverlay');
+        const loadingMessage = document.getElementById('loadingMessage');
+
+        const pinModalCloseButton = pinModal.querySelector('.close');
+        const gastosModalCloseButton = gastosModal.querySelector('.close');
+        const productSummaryModalCloseButton = productSummaryModal.querySelector('.close');
+
+        const toggleVisibilityBtn = document.getElementById('toggleVisibility');
+        const manageCategoriesBtn = document.getElementById('manageCategoriesBtn');
+
+        const pinInput = document.getElementById('pinInput');
+        const submitPinBtn = document.getElementById('submitPin');
+        const searchInput = document.getElementById('searchInput');
+        const dateInput = document.getElementById('date');
+        const prevDayBtn = document.getElementById('prevDayBtn');
+        const nextDayBtn = document.getElementById('nextDayBtn');
+        const productListTbody = document.getElementById('product-list');
+        const gastosListDiv = document.getElementById('gastos-list');
+        const userSelector = document.getElementById('userSelector');
+        const workerDisplay = document.getElementById('worker-display');
+        const generalSummarySection = document.getElementById('general-summary');
+        const showSelectionSummaryBtn = document.getElementById('showSelectionSummaryBtn');
+        const selectAllCheckbox = document.getElementById('selectAllCheckbox');
+        const summaryPeriodSelector = document.getElementById('summaryPeriodSelector');
+
+        let products = [];
+        let gastos = [];
+        let notasDiaActual = '';
+        let itemToDelete = null;
+        let deleteType = '';
+        let isPinActive = false;
+        let cachedHistoricalData = null;
+        let currentSelectedProductKeys = new Set();
+        let managedCategories = [];
+
+        const IPV_STORAGE_PREFIX = 'ipv_';
+        const APP_EXPORT_VERSION = 'IPV_App_FullExport_1.3';
+        const CATEGORIES_STORAGE_KEY = 'ipv_categories_list_v1';
+        const DEFAULT_CATEGORIES = ["Galletas", "Nevera", "Dulces", "Peter", "Sorbetos", "Confituras Variadas", "Rones", "Sazones", "Aseo Personal", "Otros"];
+        const DEFAULT_PRODUCT_UNIT = 'unidad';
+        let notasTimeout;
+
+        // --- Inicialización y Event Listeners ---
+        document.addEventListener('DOMContentLoaded', () => {
+            managedCategories = loadCategories();
+            populateCategoryDropdown(document.getElementById('modal-product-category'));
+
+            const now = new Date();
+            const fechaHoy = now.toISOString().split('T')[0];
+            if (dateInput) dateInput.value = fechaHoy;
+
+            cargarIPV(fechaHoy);
+            calculateAndDisplayGeneralSummary();
+            updateSelectionState();
+            updateToggleAllButtonState();
+
+            const handleFocusSelect = (event) => { if (event.target.matches('input[type="text"], input[type="number"], input[type="password"], textarea')) { setTimeout(() => { event.target.select(); }, 0); } };
+            if (productListTbody) productListTbody.addEventListener('focus', handleFocusSelect, true);
+            if (productModal) productModal.addEventListener('focus', handleFocusSelect, true);
+            if (gastosModal) gastosModal.addEventListener('focus', handleFocusSelect, true);
+            if (pinModal) pinModal.addEventListener('focus', handleFocusSelect, true);
+            if (categoryManagementModal) categoryManagementModal.addEventListener('focus', handleFocusSelect, true);
+            const notasTextarea = document.getElementById('notas-dia');
+            if (notasTextarea) {
+                notasTextarea.addEventListener('focus', handleFocusSelect, true);
+                notasTextarea.addEventListener('input', () => {
+                    clearTimeout(notasTimeout);
+                    notasTimeout = setTimeout(() => {
+                        notasDiaActual = notasTextarea.value;
+                        const currentDate = dateInput ? dateInput.value : new Date().toISOString().split('T')[0];
+                        guardarIPV(currentDate);
+                        console.log("Notas autoguardadas.");
+                    }, 1500);
+                });
+            }
+
+            if (toggleVisibilityBtn) toggleVisibilityBtn.onclick = () => { pinModal.style.display = 'flex'; pinInput.focus(); };
+            if (submitPinBtn) submitPinBtn.addEventListener('click', verifyPin);
+            if (pinInput) pinInput.addEventListener('keyup', (event) => { if (event.key === "Enter") verifyPin(); });
+            if (pinModalCloseButton) pinModalCloseButton.onclick = () => pinModal.style.display = 'none';
+            if (gastosModalCloseButton) gastosModalCloseButton.onclick = () => gastosModal.style.display = 'none';
+            if (productSummaryModalCloseButton) productSummaryModalCloseButton.onclick = closeProductSummaryModal;
+            const previousDayNotesModalCloseButton = previousDayNotesModal?.querySelector('.close');
+            if (previousDayNotesModalCloseButton) previousDayNotesModalCloseButton.onclick = closePreviousDayNotesModal;
+
+            window.onclick = function (event) {
+                if (event.target == pinModal) pinModal.style.display = "none";
+                if (event.target == productModal) productModal.style.display = "none";
+                if (event.target == gastosModal) gastosModal.style.display = "none";
+                if (event.target == confirmModal) hideConfirmModal();
+                if (event.target == productSummaryModal) closeProductSummaryModal();
+                if (event.target == performanceReportModal) closePerformanceReportModal();
+                if (event.target == comparisonModal) closeComparisonModal();
+                if (event.target == categoryManagementModal) closeCategoryManagementModal();
+                if (event.target == previousDayNotesModal) closePreviousDayNotesModal();
+            };
+
+            document.getElementById('confirmYes').addEventListener('click', handleConfirmYes);
+            document.getElementById('confirmNo').addEventListener('click', hideConfirmModal);
+
+            if (dateInput) dateInput.addEventListener('change', (event) => {
+                cargarIPV(event.target.value);
+            });
+
+            if (searchInput) searchInput.addEventListener('keyup', searchProducts);
+            if (prevDayBtn) prevDayBtn.addEventListener('click', () => changeDay(-1));
+            if (nextDayBtn) nextDayBtn.addEventListener('click', () => changeDay(1));
+
+            if (userSelector && workerDisplay) {
+                userSelector.addEventListener('change', () => {
+                    const selectedUser = userSelector.value; workerDisplay.textContent = selectedUser || 'Seleccionar...';
+                    const currentDate = dateInput ? dateInput.value : new Date().toISOString().split('T')[0]; guardarIPV(currentDate);
+                });
+            }
+
+            const performanceModalCloseBtn = performanceReportModal?.querySelector('button:last-of-type');
+            const comparisonModalCloseBtn = comparisonModal?.querySelector('button:last-of-type');
+            const categoryModalCloseBtn = categoryManagementModal?.querySelector('button:last-of-type');
+
+            if (performanceModalCloseBtn && performanceModalCloseBtn.textContent.toLowerCase() === 'cerrar') performanceModalCloseBtn.onclick = closePerformanceReportModal;
+            if (comparisonModalCloseBtn && comparisonModalCloseBtn.textContent.toLowerCase() === 'cerrar') comparisonModalCloseBtn.onclick = closeComparisonModal;
+            if (categoryModalCloseBtn && categoryModalCloseBtn.textContent.toLowerCase() === 'cerrar') categoryModalCloseBtn.onclick = closeCategoryManagementModal;
+
+            applyVisibility(isPinActive);
+        });
+
+        // --- Funciones Overlay de Carga ---
+        function showLoading(message = "Procesando...") {
+            if (loadingOverlay) {
+                loadingMessage.textContent = message;
+                loadingOverlay.style.display = 'flex'; // Tailwind: usa 'flex' en lugar de 'block' para centrar
+            }
+        }
+        function hideLoading() {
+            if (loadingOverlay) {
+                loadingOverlay.style.display = 'none';
+                loadingMessage.textContent = '';
+            }
+        }
+
+        // --- Funciones Gestión de Categorías ---
+        function loadCategories() {
+            try {
+                const storedCategories = localStorage.getItem(CATEGORIES_STORAGE_KEY);
+                if (storedCategories) {
+                    const parsed = JSON.parse(storedCategories);
+                    if (Array.isArray(parsed) && parsed.length > 0 && parsed.every(item => typeof item === 'string' && item.trim() !== '')) {
+                        console.log("Categorías cargadas desde localStorage:", parsed);
+                        if (!parsed.some(c => c.toLowerCase() === 'otros')) {
+                            parsed.push('Otros');
+                        }
+                        return parsed.sort((a, b) => a.localeCompare(b));
+                    } else {
+                        console.warn("Datos de categorías en localStorage inválidos o vacíos, usando predeterminadas.");
+                        saveCategories(DEFAULT_CATEGORIES);
+                        return [...DEFAULT_CATEGORIES].sort((a, b) => a.localeCompare(b));
+                    }
+                }
+                console.log("No hay categorías en localStorage, usando y guardando predeterminadas.");
+                saveCategories(DEFAULT_CATEGORIES);
+                return [...DEFAULT_CATEGORIES].sort((a, b) => a.localeCompare(b));
+            } catch (e) {
+                console.error("Error crítico cargando categorías:", e);
+                alert("Error al cargar la lista de categorías. Se usarán las predeterminadas.");
+                return [...DEFAULT_CATEGORIES].sort((a, b) => a.localeCompare(b));
+            }
+        }
+
+        function saveCategories(categoriesArray) {
+            try {
+                const cleanedCategories = categoriesArray
+                    .map(c => String(c || '').trim())
+                    .filter(c => c !== '');
+                let uniqueCategories = [...new Set(cleanedCategories)];
+                if (!uniqueCategories.some(c => c.toLowerCase() === 'otros')) {
+                    uniqueCategories.push('Otros');
+                }
+                uniqueCategories.sort((a, b) => a.localeCompare(b));
+
+                localStorage.setItem(CATEGORIES_STORAGE_KEY, JSON.stringify(uniqueCategories));
+                managedCategories = uniqueCategories;
+                console.log("Categorías guardadas:", uniqueCategories);
+            } catch (e) {
+                console.error("Error guardando categorías:", e);
+                alert("Error al guardar la lista de categorías. Es posible que el almacenamiento esté lleno.");
+            }
+        }
+
+        function populateCategoryDropdown(selectElement) {
+            if (!selectElement) return;
+            const currentSelectionText = selectElement.options[selectElement.selectedIndex]?.textContent;
+            selectElement.innerHTML = '';
+            managedCategories.forEach(category => {
+                const option = document.createElement('option');
+                option.value = category;
+                option.textContent = category;
+                selectElement.appendChild(option);
+            });
+            let found = false;
+            for (let i = 0; i < selectElement.options.length; i++) {
+                if (selectElement.options[i].textContent === currentSelectionText) {
+                    selectElement.selectedIndex = i;
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) {
+                const otrosIndex = managedCategories.findIndex(c => c.toLowerCase() === 'otros');
+                if (otrosIndex !== -1) {
+                    selectElement.selectedIndex = otrosIndex;
+                } else if (selectElement.options.length > 0) {
+                    selectElement.selectedIndex = selectElement.options.length - 1;
+                }
+            }
+        }
+
+        function showCategoryManagementModal() {
+            if (!isPinActive) {
+                alert("Acceso restringido. Por favor, ingresa el PIN de administrador.");
+                pinModal.style.display = 'flex'; pinInput.focus();
+                return;
+            }
+            renderCategoryList();
+            if(categoryManagementModal) categoryManagementModal.style.display = 'flex';
+            document.getElementById('modal-category-name').value = '';
+            document.getElementById('categoryActionPrompt').innerHTML = '';
+        }
+
+        function closeCategoryManagementModal() {
+            if(categoryManagementModal) categoryManagementModal.style.display = 'none';
+            document.getElementById('categoryActionPrompt').innerHTML = '';
+            populateCategoryDropdown(document.getElementById('modal-product-category'));
+        }
+
+        function renderCategoryList() {
+            const listElement = document.getElementById('categoryList');
+            if (!listElement) return;
+            listElement.innerHTML = '';
+            if (managedCategories.length === 0) {
+                listElement.innerHTML = '<li>No hay categorías definidas. Añade una.</li>';
+                return;
+            }
+            managedCategories.forEach(category => {
+                const li = document.createElement('li');
+                li.className = "flex justify-between items-center py-2 border-b border-gray-700 last:border-b-0"; // Tailwind
+                const isOtros = category.toLowerCase() === 'otros';
+                li.innerHTML = `
+                    <span class="flex-grow mr-2">${category}</span>
+                    <div class="flex-shrink-0">
+                        <button class="bg-gray-600 hover:bg-gray-500 text-xs text-white py-1 px-2 rounded-md disabled:opacity-50 disabled:cursor-not-allowed" onclick="promptRenameCategory('${category}')" ${isOtros ? 'disabled title="No se puede renombrar la categoría Otros"' : ''}>Renombrar</button>
+                        <button class="bg-red-600 hover:bg-red-500 text-xs text-white py-1 px-2 rounded-md ml-1 disabled:opacity-50 disabled:cursor-not-allowed" onclick="promptDeleteCategory('${category}')" ${isOtros ? 'disabled title="No se puede eliminar la categoría Otros"' : ''}>Eliminar</button>
+                    </div>
+                `;
+                listElement.appendChild(li);
+            });
+        }
+
+        function addCategory() {
+            const input = document.getElementById('modal-category-name');
+            const newCategoryName = input.value.trim();
+            if (!newCategoryName) {
+                alert("Por favor, introduce un nombre para la categoría.");
+                return;
+            }
+            if (managedCategories.some(c => c.toLowerCase() === newCategoryName.toLowerCase())) {
+                alert(`La categoría "${newCategoryName}" ya existe (insensible a mayúsculas).`);
+                return;
+            }
+            managedCategories.push(newCategoryName);
+            saveCategories(managedCategories);
+            renderCategoryList();
+            input.value = '';
+            input.focus();
+        }
+
+        function promptRenameCategory(oldName) {
+            if (oldName.toLowerCase() === 'otros') return;
+            const promptDiv = document.getElementById('categoryActionPrompt');
+            if (!promptDiv) return;
+            promptDiv.innerHTML = `
+                <h4 class="font-semibold text-gray-300 mb-2">Renombrar Categoría</h4>
+                <p class="mb-1">Renombrar "<strong>${oldName}</strong>" a:</p>
+                <input type="text" id="renameCategoryInput" value="${oldName}" class="form-input bg-gray-700 border-gray-600 text-gray-200 w-full rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 mb-3">
+                <div class="flex gap-2">
+                <button onclick="executeRenameCategory('${oldName}')" class="bg-indigo-500 hover:bg-indigo-600 text-white font-semibold py-1.5 px-3 rounded-md text-sm">Confirmar</button>
+                <button onclick="cancelCategoryAction()" class="bg-gray-500 hover:bg-gray-400 text-white font-semibold py-1.5 px-3 rounded-md text-sm">Cancelar</button>
+                </div>
+                <p class="text-xs text-yellow-500 mt-3">Advertencia: Esto actualizará la categoría en TODOS los registros históricos. Puede tardar.</p>
+            `;
+            const renameInput = document.getElementById('renameCategoryInput');
+            if(renameInput) { renameInput.focus(); renameInput.select(); }
+        }
+
+        async function executeRenameCategory(oldName) {
+            const input = document.getElementById('renameCategoryInput');
+            const newName = input.value.trim();
+
+            if (!newName) { alert("El nuevo nombre no puede estar vacío."); return; }
+            if (newName.toLowerCase() === oldName.toLowerCase()) { cancelCategoryAction(); return; }
+            if (managedCategories.some(c => c.toLowerCase() === newName.toLowerCase() && c.toLowerCase() !== oldName.toLowerCase())) {
+                alert(`La categoría "${newName}" ya existe.`); return;
+            }
+            showLoading(`Renombrando "${oldName}" a "${newName}" y actualizando historial...`);
+            try {
+                managedCategories = managedCategories.map(c => c === oldName ? newName : c);
+                saveCategories(managedCategories);
+                let updatedDaysCount = 0;
+                const allData = loadAllHistoricalData(true);
+                const keysToUpdate = [];
+                allData.forEach(day => {
+                    if (day.products.some(product => String(product.category || '').trim() === oldName)) {
+                        keysToUpdate.push(day.date);
+                    }
+                });
+                console.log(`Se necesita actualizar ${keysToUpdate.length} días por renombre de categoría.`);
+                if (keysToUpdate.length > 0) {
+                    loadingMessage.textContent = `Actualizando ${keysToUpdate.length} días... (0%)`;
+                }
+                for (let i = 0; i < keysToUpdate.length; i++) {
+                    const date = keysToUpdate[i];
+                    const dayData = allData.find(d => d.date === date);
+                    if (dayData) {
+                        const updatedProducts = dayData.products.map(p => {
+                            if (String(p.category || '').trim() === oldName) {
+                                return { ...p, category: newName };
+                            }
+                            return p;
+                        });
+                        const productsToSave = updatedProducts.map(p => ({
+                            id: p.id, name: p.name, category: p.category, unit: p.unit || DEFAULT_PRODUCT_UNIT,
+                            start: p.start, entrada: p.entrada, finales: p.finales,
+                            cost: p.cost, price: p.price
+                        }));
+                        const gastosToSave = dayData.gastos.map(g => ({
+                            id: g.id, description: g.description, amount: g.amount, isCashCollection: !!g.isCashCollection
+                        }));
+                        const dataToSave = { products: productsToSave, gastos: gastosToSave, user: dayData.user, notas: dayData.notas || '' };
+                        try {
+                            localStorage.setItem(IPV_STORAGE_PREFIX + date, JSON.stringify(dataToSave));
+                            updatedDaysCount++;
+                        } catch (storageError) {
+                            console.error(`Error guardando día ${date} durante renombre:`, storageError);
+                            if (storageError.name === 'QuotaExceededError') {
+                                throw new Error("Espacio de almacenamiento insuficiente para completar la actualización.");
+                            }
+                            throw new Error(`Error al guardar día ${date}: ${storageError.message}`);
+                        }
+                        if (i % Math.max(1, Math.floor(keysToUpdate.length / 20)) === 0 || i === keysToUpdate.length - 1) {
+                            const progress = Math.round(((i + 1) / keysToUpdate.length) * 100);
+                            loadingMessage.textContent = `Actualizando ${keysToUpdate.length} días... (${progress}%)`;
+                            await new Promise(resolve => setTimeout(resolve, 0));
+                        }
+                    }
+                }
+                renderCategoryList();
+                cancelCategoryAction();
+                cachedHistoricalData = null;
+                alert(`Categoría renombrada a "${newName}". Se actualizaron ${updatedDaysCount} registros históricos.`);
+                const currentDate = dateInput ? dateInput.value : null;
+                if (currentDate && keysToUpdate.includes(currentDate)) {
+                    console.log("Recargando vista del día actual después de renombrar categoría.");
+                    cargarIPV(currentDate);
+                } else if (products.some(p => p.category === oldName)) {
+                    console.log("Actualizando productos en memoria del día actual tras renombrar categoría.");
+                    products = products.map(p => p.category === oldName ? {...p, category: newName} : p);
+                    renderProducts();
+                }
+            } catch (e) {
+                console.error("Error renombrando categoría:", e);
+                alert(`Error al renombrar: ${e.message}`);
+                managedCategories = loadCategories();
+                renderCategoryList();
+            } finally {
+                hideLoading();
+            }
+        }
+
+        function promptDeleteCategory(nameToDelete) {
+            if (nameToDelete.toLowerCase() === 'otros') return;
+            const promptDiv = document.getElementById('categoryActionPrompt');
+            if (!promptDiv) return;
+            let replacementOptions = managedCategories
+                .filter(c => c !== nameToDelete)
+                .map(c => `<option value="${c}" ${c.toLowerCase() === 'otros' ? 'selected' : ''}>${c}</option>`)
+                .join('');
+            promptDiv.innerHTML = `
+                <h4 class="font-semibold text-gray-300 mb-2">Eliminar Categoría</h4>
+                <p class="mb-1">¿Seguro que quieres eliminar la categoría "<strong>${nameToDelete}</strong>"?</p>
+                <p class="text-xs text-gray-400 mb-1">Los productos existentes en esta categoría se moverán a:</p>
+                <select id="deleteCategoryReplacement" class="form-select bg-gray-700 border-gray-600 text-gray-200 w-full rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 mb-3 text-sm py-1.5">
+                    ${replacementOptions}
+                </select>
+                <div class="flex gap-2">
+                <button onclick="executeDeleteCategory('${nameToDelete}')" class="bg-red-600 hover:bg-red-700 text-white font-semibold py-1.5 px-3 rounded-md text-sm">Confirmar Eliminar</button>
+                <button onclick="cancelCategoryAction()" class="bg-gray-500 hover:bg-gray-400 text-white font-semibold py-1.5 px-3 rounded-md text-sm">Cancelar</button>
+                </div>
+                <p class="text-xs text-yellow-500 mt-3">Advertencia: Esta acción es irreversible y actualizará TODOS los registros históricos. Puede tardar.</p>
+            `;
+        }
+
+        async function executeDeleteCategory(nameToDelete) {
+            const replacementSelect = document.getElementById('deleteCategoryReplacement');
+            const replacementCategory = replacementSelect.value;
+
+            if (!replacementCategory || !managedCategories.includes(replacementCategory)) {
+                alert("Error: Categoría de reemplazo inválida."); return;
+            }
+            showLoading(`Eliminando "${nameToDelete}", moviendo productos a "${replacementCategory}" y actualizando historial...`);
+            try {
+                managedCategories = managedCategories.filter(c => c !== nameToDelete);
+                saveCategories(managedCategories);
+                let updatedDaysCount = 0;
+                const allData = loadAllHistoricalData(true);
+                const keysToUpdate = [];
+                allData.forEach(day => {
+                    if (day.products.some(product => String(product.category || '').trim() === nameToDelete)) {
+                        keysToUpdate.push(day.date);
+                    }
+                });
+                console.log(`Se necesita actualizar ${keysToUpdate.length} días por eliminación de categoría.`);
+                if (keysToUpdate.length > 0) {
+                    loadingMessage.textContent = `Actualizando ${keysToUpdate.length} días... (0%)`;
+                }
+                for (let i = 0; i < keysToUpdate.length; i++) {
+                    const date = keysToUpdate[i];
+                    const dayData = allData.find(d => d.date === date);
+                    if (dayData) {
+                        const updatedProducts = dayData.products.map(p => {
+                            if (String(p.category || '').trim() === nameToDelete) {
+                                return { ...p, category: replacementCategory };
+                            }
+                            return p;
+                        });
+                        const productsToSave = updatedProducts.map(p => ({
+                            id: p.id, name: p.name, category: p.category, unit: p.unit || DEFAULT_PRODUCT_UNIT,
+                            start: p.start, entrada: p.entrada, finales: p.finales,
+                            cost: p.cost, price: p.price
+                        }));
+                        const gastosToSave = dayData.gastos.map(g => ({
+                            id: g.id, description: g.description, amount: g.amount, isCashCollection: !!g.isCashCollection
+                        }));
+                        const dataToSave = { products: productsToSave, gastos: gastosToSave, user: dayData.user, notas: dayData.notas || '' };
+                        try {
+                            localStorage.setItem(IPV_STORAGE_PREFIX + date, JSON.stringify(dataToSave));
+                            updatedDaysCount++;
+                        } catch (storageError) {
+                            console.error(`Error guardando día ${date} durante eliminación:`, storageError);
+                            if (storageError.name === 'QuotaExceededError') {
+                                throw new Error("Espacio de almacenamiento insuficiente para completar la actualización.");
+                            }
+                            throw new Error(`Error al guardar día ${date}: ${storageError.message}`);
+                        }
+                        if (i % Math.max(1, Math.floor(keysToUpdate.length / 20)) === 0 || i === keysToUpdate.length - 1) {
+                            const progress = Math.round(((i + 1) / keysToUpdate.length) * 100);
+                            loadingMessage.textContent = `Actualizando ${keysToUpdate.length} días... (${progress}%)`;
+                            await new Promise(resolve => setTimeout(resolve, 0));
+                        }
+                    }
+                }
+                renderCategoryList();
+                cancelCategoryAction();
+                cachedHistoricalData = null;
+                alert(`Categoría "${nameToDelete}" eliminada. Productos movidos a "${replacementCategory}". Se actualizaron ${updatedDaysCount} registros históricos.`);
+                const currentDate = dateInput ? dateInput.value : null;
+                if (currentDate && keysToUpdate.includes(currentDate)) {
+                    console.log("Recargando vista del día actual después de eliminar categoría.");
+                    cargarIPV(currentDate);
+                } else if (products.some(p => p.category === nameToDelete)) {
+                    console.log("Actualizando productos en memoria del día actual tras eliminar categoría.");
+                    products = products.map(p => p.category === nameToDelete ? {...p, category: replacementCategory} : p);
+                    renderProducts();
+                }
+            } catch (e) {
+                console.error("Error eliminando categoría:", e);
+                alert(`Error al eliminar: ${e.message}`);
+                managedCategories = loadCategories();
+                renderCategoryList();
+            } finally {
+                hideLoading();
+            }
+        }
+
+        function cancelCategoryAction() {
+            const promptDiv = document.getElementById('categoryActionPrompt');
+            if(promptDiv) promptDiv.innerHTML = '';
+        }
+
+        // --- Funciones Core Modificadas ---
+        function verifyPin() {
+            const pinCorrecto = '8608';
+            if (pinInput.value === pinCorrecto) {
+                isPinActive = !isPinActive;
+                applyVisibility(isPinActive);
+                pinModal.style.display = 'none';
+                pinInput.value = '';
+                alert(`Acceso de Administrador ${isPinActive ? 'ACTIVADO' : 'DESACTIVADO'}.`);
+            } else {
+                alert('PIN incorrecto.');
+                pinInput.select();
+            }
+        }
+
+        function applyVisibility(showSensitive) {
+            console.log("Aplicando visibilidad sensible:", showSensitive);
+            // Usar clase 'js-hidden' en lugar de 'hidden' para que !important de JS tenga precedencia sobre Tailwind
+            document.querySelectorAll('#product-table th:nth-child(7), #product-list td:nth-child(7)').forEach(el => el.classList.toggle('js-hidden', !showSensitive));
+            document.querySelectorAll('#product-table th:nth-child(10), #product-list td:nth-child(10)').forEach(el => el.classList.toggle('js-hidden', !showSensitive));
+            document.querySelector('#total-ganancias')?.parentElement.classList.toggle('js-hidden', !showSensitive);
+            document.querySelector('#total-stock-cost')?.parentElement.classList.toggle('js-hidden', !showSensitive);
+            document.querySelector('#total-stock-value')?.parentElement.classList.toggle('js-hidden', !showSensitive);
+            document.querySelector('#totales hr:last-of-type')?.classList.toggle('js-hidden', !showSensitive); // Este puede ser un hr simple
+            generalSummarySection?.classList.toggle('hidden', !showSensitive); // Tailwind 'hidden' está bien aquí
+            document.getElementById('total-ganancia-acumulada')?.parentElement.classList.toggle('js-hidden', !showSensitive);
+            document.getElementById('summary-total-profit')?.parentElement.classList.toggle('js-hidden', !showSensitive);
+            document.querySelectorAll('#performanceCriteriaSelector option[value="profit"]').forEach(el => el.classList.toggle('js-hidden', !showSensitive));
+            document.querySelectorAll('#performanceReportModal th.profit-col, #performanceReportModal td.profit-col').forEach(el => el.classList.toggle('js-hidden', !showSensitive));
+            document.querySelectorAll('#comparisonTable tr.profit-row').forEach(el => el.style.display = showSensitive ? '' : 'none'); // display none para filas enteras es más simple
+            if (manageCategoriesBtn) manageCategoriesBtn.style.display = showSensitive ? 'inline-block' : 'none';
+            calculateTotals();
+            if (performanceReportModal && performanceReportModal.style.display === 'flex') {
+                generatePerformanceReport();
+            }
+            if (comparisonModal && comparisonModal.style.display === 'flex') {
+                generateComparisonReport();
+            }
+            if (productSummaryModal && productSummaryModal.style.display === 'flex') {
+                updateProductSummaryDisplay();
+            }
+            renderProducts();
+        }
+
+        function guardarIPV(fecha) {
+            try {
+                const notasTextarea = document.getElementById('notas-dia');
+                if (notasTextarea) {
+                    notasDiaActual = notasTextarea.value;
+                }
+
+                const selectedUser = userSelector ? userSelector.value : '';
+                const productsToSave = products.map(p => ({
+                    id: p.id, name: String(p.name || '').trim(), category: String(p.category || 'Otros').trim(), unit: String(p.unit || DEFAULT_PRODUCT_UNIT).trim(),
+                    start: Number(p.start) || 0, entrada: Number(p.entrada) || 0, finales: (p.finales === '' || p.finales === null || p.finales === undefined) ? '' : (Number(p.finales) || 0),
+                    cost: Number(p.cost) || 0, price: Number(p.price) || 0
+                }));
+                const gastosToSave = gastos.map(g => ({
+                    id: g.id, description: String(g.description || '').trim(), amount: Number(g.amount) || 0, isCashCollection: !!g.isCashCollection
+                }));
+                const ipv = {
+                    products: productsToSave,
+                    gastos: gastosToSave,
+                    user: selectedUser,
+                    notas: notasDiaActual
+                };
+                localStorage.setItem(IPV_STORAGE_PREFIX + fecha, JSON.stringify(ipv));
+                cachedHistoricalData = null;
+            } catch (e) {
+                console.error("Error guardando datos:", e);
+                if (e.name === 'QuotaExceededError') {
+                    alert("¡Error Crítico! No se pudieron guardar los datos. El almacenamiento local está lleno. Por favor, exporta tus datos inmediatamente y considera limpiar historial antiguo si es posible.");
+                } else {
+                    alert("Error al guardar los datos. Revisa la consola para más detalles.");
+                }
+            }
+        }
+
+        function cargarIPV(fecha) {
+            console.log("Cargando datos para la fecha:", fecha);
+            let loadedUser = '';
+            notasDiaActual = '';
+
+            const fechaObjActual = new Date(fecha + 'T00:00:00Z');
+            const fechaAnteriorObj = new Date(fechaObjActual.getTime() - 86400000);
+            const fechaAnteriorStr = fechaAnteriorObj.toISOString().split('T')[0];
+            const ipvDataDiaAnterior = localStorage.getItem(IPV_STORAGE_PREFIX + fechaAnteriorStr);
+
+            if (ipvDataDiaAnterior) {
+                try {
+                    const datosDiaAnterior = JSON.parse(ipvDataDiaAnterior);
+                    if (datosDiaAnterior.notas && datosDiaAnterior.notas.trim() !== '') {
+                        if (dateInput && dateInput.value === fecha) {
+                             mostrarNotasDiaAnterior(datosDiaAnterior.notas, fechaAnteriorStr);
+                        }
+                    }
+                } catch (e) {
+                    console.warn("Error al procesar notas del día anterior:", e);
+                }
+            }
+
+            const ipvData = localStorage.getItem(IPV_STORAGE_PREFIX + fecha);
+            if (ipvData) {
+                try {
+                    const ipv = JSON.parse(ipvData);
+                    const loadedProductCategories = new Set((ipv.products || []).map(p => String(p.category || 'Otros').trim()).filter(Boolean));
+                    let categoriesChanged = false;
+                    loadedProductCategories.forEach(cat => {
+                        if (cat && !managedCategories.some(mc => mc === cat)) {
+                            console.warn(`La categoría "${cat}" encontrada en los datos del día ${fecha} no está en la lista gestionada. Añadiéndola.`);
+                            managedCategories.push(cat);
+                            categoriesChanged = true;
+                        }
+                    });
+                    if (categoriesChanged) {
+                        saveCategories(managedCategories);
+                        populateCategoryDropdown(document.getElementById('modal-product-category'));
+                    }
+                    products = (ipv.products || []).map((p, idx) => {
+                        const start = Number(p.start) || 0;
+                        const entrada = Number(p.entrada) || 0;
+                        const finalesRaw = p.finales;
+                        const finales = (finalesRaw === null || finalesRaw === undefined || finalesRaw === '') ? finalesRaw : (Number(finalesRaw) || 0);
+                        const cost = Number(p.cost) || 0;
+                        const price = Number(p.price || 0);
+                        const vendido = (typeof finales === 'number') ? Math.max(0, start + entrada - finales) : 0;
+                        const importe = vendido * price;
+                        const ganancias = importe - (vendido * cost);
+                        return {
+                            id: p.id || Date.now().toString(36) + Math.random().toString(36).substr(2) + idx, name: String(p.name || `Producto Desconocido ${idx + 1}`),
+                            category: String(p.category || 'Otros'), unit: String(p.unit || DEFAULT_PRODUCT_UNIT), image: '', start, entrada, finales,
+                            cost, price, vendido, importe, ganancias
+                        };
+                    });
+                    gastos = (ipv.gastos || []).map((g, idx) => ({
+                        id: g.id || Date.now().toString(36) + Math.random().toString(36).substr(2) + 'g' + idx, description: String(g.description || `Gasto Desconocido ${idx + 1}`),
+                        amount: Number(g.amount) || 0, isCashCollection: !!g.isCashCollection
+                    }));
+                    loadedUser = ipv.user || '';
+                    notasDiaActual = ipv.notas || '';
+                } catch (e) {
+                    console.error("Error parseando datos guardados para "+fecha+":", e);
+                    alert("Error al cargar los datos guardados para hoy. Se iniciará vacío.");
+                    products = []; gastos = []; loadedUser = ''; notasDiaActual = '';
+                }
+            } else {
+                console.log("No hay datos guardados para hoy, buscando día anterior (para productos)...");
+                const ipvDataAnteriorProductos = localStorage.getItem(IPV_STORAGE_PREFIX + fechaAnteriorStr);
+                if (ipvDataAnteriorProductos) {
+                    try {
+                        const ipvAnterior = JSON.parse(ipvDataAnteriorProductos);
+                         const prevProductCategories = new Set((ipvAnterior.products || []).map(p => String(p.category || 'Otros').trim()).filter(Boolean));
+                         let categoriesChangedPrev = false;
+                         prevProductCategories.forEach(cat => {
+                             if (cat && !managedCategories.some(mc => mc === cat)) {
+                                  console.warn(`La categoría "${cat}" encontrada en los datos del día anterior ${fechaAnteriorStr} no está en la lista gestionada. Añadiéndola.`);
+                                  managedCategories.push(cat);
+                                  categoriesChangedPrev = true;
+                             }
+                         });
+                         if (categoriesChangedPrev) {
+                             saveCategories(managedCategories);
+                             populateCategoryDropdown(document.getElementById('modal-product-category'));
+                         }
+                         products = (ipvAnterior.products || []).map((p, idx) => {
+                            const startValue = Number(p.finales) || 0;
+                            const cost = Number(p.cost) || 0;
+                            const price = Number(p.price || 0);
+                            return {
+                                id: Date.now().toString(36) + Math.random().toString(36).substr(2) + idx, name: String(p.name || `Producto Desconocido ${idx + 1}`),
+                                category: String(p.category || 'Otros'), unit: String(p.unit || DEFAULT_PRODUCT_UNIT), start: startValue, entrada: 0,
+                                finales: startValue, vendido: 0, cost: cost, price: price, importe: 0, ganancias: 0, image: ''
+                            };
+                        });
+                        gastos = [];
+                        loadedUser = '';
+                        notasDiaActual = '';
+                        console.log(`Productos inicializados desde el día anterior (${fechaAnteriorStr}): ${products.length} productos. Notas del día actual vacías.`);
+                    } catch(e) {
+                         console.error("Error parseando datos del día anterior ("+fechaAnteriorStr+"): ", e);
+                         products = []; gastos = []; loadedUser = ''; notasDiaActual = '';
+                         alert("Error al cargar datos del día anterior. Se iniciará vacío.");
+                    }
+                } else {
+                     console.log("Tampoco hay datos del día anterior para productos. Empezando día vacío.");
+                     products = []; gastos = []; loadedUser = ''; notasDiaActual = '';
+                }
+            }
+
+            const notasTextarea = document.getElementById('notas-dia');
+            if (notasTextarea) {
+                notasTextarea.value = notasDiaActual;
+            }
+
+            if (searchInput) searchInput.value = '';
+            if (userSelector) userSelector.value = loadedUser;
+            if (workerDisplay) workerDisplay.textContent = loadedUser || 'Seleccionar...';
+            renderProducts();
+            renderGastos();
+            updateDateDisplay(fecha);
+            updateSelectionState();
+            updateToggleAllButtonState();
+        }
+
+        function mostrarNotasDiaAnterior(notas, fechaDiaAnterior) {
+            if (previousDayNotesModal && previousDayNotesContent) {
+                let fechaFormateadaAnterior = fechaDiaAnterior;
+                try {
+                    const [y, m, d] = fechaDiaAnterior.split('-');
+                    fechaFormateadaAnterior = `${d}/${m}/${y}`;
+                } catch (e) {}
+
+                previousDayNotesModal.querySelector('h2').innerHTML = `📝 Notas Importantes del Día Anterior (${fechaFormateadaAnterior})`;
+                previousDayNotesContent.textContent = notas;
+                previousDayNotesModal.style.display = 'flex';
+            }
+        }
+
+        function closePreviousDayNotesModal() {
+            if (previousDayNotesModal) {
+                previousDayNotesModal.style.display = 'none';
+            }
+        }
+
+        function guardarNotasManualmente() {
+            const notasTextarea = document.getElementById('notas-dia');
+            if (notasTextarea) {
+                notasDiaActual = notasTextarea.value;
+                const currentDate = dateInput ? dateInput.value : new Date().toISOString().split('T')[0];
+                guardarIPV(currentDate);
+                alert("Notas guardadas para el día actual.");
+            }
+        }
+
+        function addProduct() {
+            const namesInput = document.getElementById('modal-product-name');
+            const startInput = document.getElementById('modal-product-start');
+            const costInput = document.getElementById('modal-product-cost');
+            const priceInput = document.getElementById('modal-product-price');
+            const categorySelect = document.getElementById('modal-product-category');
+            const unitSelect = document.getElementById('modal-product-unit');
+
+            if (!namesInput || !startInput || !costInput || !priceInput || !categorySelect || !unitSelect) {
+                console.error("Error: Elementos del modal de producto no encontrados.");
+                return;
+            }
+            const names = namesInput.value.split(',').map(n => n.trim()).filter(n => n);
+            const start = parseInt(startInput.value, 10) || 0;
+            const cost = parseFloat(costInput.value) || 0;
+            const price = parseFloat(priceInput.value) || 0;
+            const category = categorySelect.value;
+            const unit = unitSelect.value || DEFAULT_PRODUCT_UNIT;
+            let addedCount = 0;
+            let skippedCount = 0;
+
+            if (names.length === 0) {
+                alert("Por favor, introduce al menos un nombre de producto válido.");
+                return;
+            }
+            names.forEach(trimmedName => {
+                const exists = products.some(p =>
+                    p.name.toLowerCase() === trimmedName.toLowerCase() &&
+                    p.category.toLowerCase() === category.toLowerCase()
+                );
+                if (exists) {
+                    console.warn(`Producto "${trimmedName}" en categoría "${category}" ya existe hoy. Omitiendo.`);
+                    skippedCount++;
+                } else {
+                    const product = {
+                        id: Date.now().toString(36) + Math.random().toString(36).substr(2) + addedCount, name: trimmedName, image: '', category, unit,
+                        start, entrada: 0, finales: start, cost, price
+                    };
+                    product.vendido = Math.max(0, product.start + product.entrada - product.finales);
+                    product.importe = product.vendido * product.price;
+                    product.ganancias = product.importe - (product.vendido * product.cost);
+                    products.push(product);
+                    addedCount++;
+                }
+            });
+            if (addedCount > 0) {
+                if (searchInput) searchInput.value = '';
+                namesInput.value = ''; startInput.value = ''; costInput.value = ''; priceInput.value = '';
+                unitSelect.value = DEFAULT_PRODUCT_UNIT;
+                const otrosIndex = managedCategories.findIndex(c => c.toLowerCase() === 'otros');
+                categorySelect.selectedIndex = (otrosIndex !== -1) ? otrosIndex : (categorySelect.options.length > 0 ? categorySelect.options.length - 1 : 0);
+                renderProducts();
+                guardarIPV(dateInput.value);
+                toggleModal();
+                updateSelectionState();
+                alert(`${addedCount} producto(s) añadido(s).` + (skippedCount > 0 ? ` ${skippedCount} omitido(s) por duplicado.` : ''));
+            } else if (skippedCount > 0) {
+                alert(`No se añadieron nuevos productos. ${skippedCount} ya existían en la categoría "${category}" para este día.`);
+            }
+        }
+
+        function renderProducts() {
+            if (!productListTbody) return;
+            const categoryStates = {};
+            document.querySelectorAll('.category-header').forEach(header => {
+                const catId = header.dataset.categoryId;
+                const icon = header.querySelector('.toggle-icon');
+                if (catId && icon) { categoryStates[catId] = icon.textContent === '-'; }
+            });
+            const previouslySelectedIds = getSelectedProductIds();
+            productListTbody.innerHTML = '';
+
+            const groupedProducts = products.reduce((acc, product) => {
+                const category = product.category || 'Otros';
+                if (!acc[category]) acc[category] = [];
+                acc[category].push(product);
+                return acc;
+            }, {});
+
+            const sortedCategoryNames = [...managedCategories];
+            Object.keys(groupedProducts).forEach(cat => {
+                if (!sortedCategoryNames.includes(cat)) {
+                    sortedCategoryNames.push(cat);
+                }
+            });
+            const categoriesWithProductsToday = sortedCategoryNames.filter(cat => groupedProducts[cat] && groupedProducts[cat].length > 0);
+
+            if (products.length === 0) {
+                productListTbody.innerHTML = `<tr class="bg-gray-800"><td colspan="11" class="text-center text-gray-500 py-10 px-4">No hay productos registrados para hoy. Añade uno o reinicia desde ayer.</td></tr>`;
+                calculateTotals();
+                updateSelectionState();
+                updateToggleAllButtonState();
+                return;
+            }
+
+            const isSensitiveVisible = isPinActive;
+            // La clase 'js-hidden' se usará para controlar visibilidad desde JS y asegurar !important si es necesario
+            const hiddenClassAttr = isSensitiveVisible ? '' : ' class="js-hidden"';
+
+
+            categoriesWithProductsToday.forEach(category => {
+                const categoryProducts = groupedProducts[category].sort((a, b) => a.name.localeCompare(b.name));
+                const categoryId = 'category-' + category.replace(/[^a-zA-Z0-9]/g, '-').toLowerCase();
+                const isExpanded = categoryStates[categoryId] === undefined ? true : categoryStates[categoryId];
+
+                const categoryHeaderRow = document.createElement('tr');
+                categoryHeaderRow.className = 'bg-green-600 text-white font-bold cursor-pointer hover:bg-green-700 transition-colors category-header'; // Tailwind
+                categoryHeaderRow.dataset.categoryId = categoryId;
+                categoryHeaderRow.innerHTML = `<td colspan="11" class="p-4 text-sm uppercase tracking-wider" onclick="toggleCategory('${categoryId}')">${category}<span class="toggle-icon float-right font-mono" id="icon-${categoryId}">${isExpanded ? '-' : '+'}</span></td>`;
+                productListTbody.appendChild(categoryHeaderRow);
+
+                categoryProducts.forEach((product) => {
+                    const globalIndex = products.findIndex(p => p.id === product.id);
+                    if (globalIndex !== -1) {
+                        const isChecked = previouslySelectedIds.includes(product.id);
+                        const productRow = document.createElement('tr');
+                        // Clases base de Tailwind para la fila, y las clases dinámicas
+                        productRow.className = `bg-gray-800 hover:bg-gray-700/70 product-row ${categoryId} even:bg-gray-850`;
+                        productRow.dataset.productId = product.id;
+
+                        let hasError = false;
+                        let errorTitle = `Nombre: ${product.name}\nCategoría: ${product.category}\nUnidad: ${product.unit || DEFAULT_PRODUCT_UNIT}`;
+                        const inicio = Number(product.start) || 0;
+                        const entrada = Number(product.entrada) || 0;
+                        
+                        if (typeof product.finales === 'number') {
+                            if (product.finales > (inicio + entrada)) {
+                                hasError = true;
+                                errorTitle = `Error: Finales (${product.finales}) > Inicio (${inicio}) + Entrada (${entrada}). Total=${inicio + entrada}`;
+                            }
+                        }
+                         // Aplicar/quitar clases de error/stock cero directamente
+                        productRow.classList.toggle('fila-error', hasError);
+
+                        const isStockZero = (typeof product.finales === 'number' && product.finales === 0);
+                        productRow.classList.toggle('fila-stock-cero', isStockZero);
+
+                        if (isStockZero && !hasError) {
+                           errorTitle = `¡STOCK CERO!\nNombre: ${product.name}\nCategoría: ${product.category}\nUnidad: ${product.unit || DEFAULT_PRODUCT_UNIT}`;
+                        }
+
+                        const finalesDisplayValue = (product.finales === null || product.finales === undefined || product.finales === '') ? '' : product.finales;
+
+                        // Aplicar clases de Tailwind a los inputs y celdas
+                        productRow.innerHTML = `
+                            <td class="p-3 text-center align-middle"><input type="checkbox" class="form-checkbox h-5 w-5 text-green-500 bg-gray-700 border-gray-600 rounded focus:ring-green-500 product-select-checkbox" data-product-id="${product.id}" onchange="updateSelectionState()" ${isChecked ? 'checked' : ''}></td>
+                            <td class="p-3 align-top">
+                                <input type="text" value="${product.name || ''}" onchange="updateProduct(${globalIndex}, 'name', this.value)" class="form-input bg-transparent border-none text-gray-200 w-full p-1 focus:ring-1 focus:ring-blue-500 focus:bg-gray-700 rounded text-sm">
+                                <span class='text-xs text-gray-500 block mt-0.5'>${product.unit && product.unit !== DEFAULT_PRODUCT_UNIT ? product.unit : ''}</span>
+                            </td>
+                            <td class="p-3 text-center align-middle"><input type="number" value="${product.start}" onchange="updateProduct(${globalIndex}, 'start', this.value)" class="form-input bg-transparent border-none text-gray-200 w-16 p-1 text-center focus:ring-1 focus:ring-blue-500 focus:bg-gray-700 rounded text-sm"></td>
+                            <td class="p-3 text-center align-middle"><input type="number" value="${product.entrada}" onchange="updateProduct(${globalIndex}, 'entrada', this.value)" class="form-input bg-transparent border-none text-gray-200 w-16 p-1 text-center focus:ring-1 focus:ring-blue-500 focus:bg-gray-700 rounded text-sm"></td>
+                            <td class="p-3 text-center align-middle"><input type="number" value="${finalesDisplayValue}" onchange="updateProduct(${globalIndex}, 'finales', this.value)" placeholder="N/A" class="form-input bg-transparent border-none text-gray-200 w-16 p-1 text-center focus:ring-1 focus:ring-blue-500 focus:bg-gray-700 rounded text-sm"></td>
+                            <td class="p-3 text-center align-middle text-sm">${product.vendido}</td>
+                            <td class="p-3 text-center align-middle ${!isSensitiveVisible ? 'js-hidden' : ''}"><input type="number" step="0.01" value="${product.cost.toFixed(2)}" onchange="updateProduct(${globalIndex}, 'cost', this.value)" class="form-input bg-transparent border-none text-gray-200 w-20 p-1 text-center focus:ring-1 focus:ring-blue-500 focus:bg-gray-700 rounded text-sm"></td>
+                            <td class="p-3 text-center align-middle"><input type="number" step="0.01" value="${product.price.toFixed(2)}" onchange="updateProduct(${globalIndex}, 'price', this.value)" class="form-input bg-transparent border-none text-gray-200 w-20 p-1 text-center focus:ring-1 focus:ring-blue-500 focus:bg-gray-700 rounded text-sm"></td>
+                            <td class="p-3 text-center align-middle text-sm">${product.importe.toFixed(2)}</td>
+                            <td class="p-3 text-center align-middle text-sm ${!isSensitiveVisible ? 'js-hidden' : ''}">${isSensitiveVisible ? product.ganancias.toFixed(2) : ''}</td>
+                            <td class="p-3 text-center align-middle"><button class="bg-red-600 hover:bg-red-700 text-white text-xs font-semibold py-1 px-2.5 rounded-md transition-colors" onclick="requestDeleteProduct(${globalIndex})">Eliminar</button></td>
+                        `;
+                        
+                        if (!isExpanded) { productRow.classList.add('hidden'); } // Tailwind hidden
+                        productListTbody.appendChild(productRow);
+
+                         const finalRowElement = productListTbody.querySelector(`tr[data-product-id="${product.id}"]`);
+                         if (finalRowElement) {
+                               finalRowElement.title = errorTitle;
+                         }
+                    }
+                });
+            });
+            searchProducts();
+            calculateTotals();
+            updateSelectionState();
+            updateToggleAllButtonState();
+        }
+
+       // --- Funciones de Tabla ---
+        function searchProducts() {
+             if (!searchInput || !productListTbody) return;
+             const searchTerm = searchInput.value.trim().toLowerCase();
+             const allProductRows = productListTbody.querySelectorAll('tr.product-row');
+             const allCategoryHeaders = productListTbody.querySelectorAll('tr.category-header');
+
+             allProductRows.forEach(row => {
+                 const productNameCell = row.querySelector('td:nth-child(2) input[type="text"]');
+                 const productName = productNameCell ? productNameCell.value.toLowerCase() : '';
+                 const productId = row.dataset.productId;
+                 const productData = products.find(p => p.id === productId);
+                 const categoryName = productData ? productData.category.toLowerCase() : '';
+                 const matches = productName.includes(searchTerm) || categoryName.includes(searchTerm);
+                 const categoryId = productData ? 'category-' + productData.category.replace(/[^a-zA-Z0-9]/g, '-').toLowerCase() : null;
+                 const header = categoryId ? productListTbody.querySelector(`tr.category-header[data-category-id="${categoryId}"]`) : null;
+                 const icon = header ? header.querySelector('.toggle-icon') : null;
+                 const isCategoryExpanded = icon ? icon.textContent === '-' : true;
+                 row.style.display = (matches && isCategoryExpanded) ? '' : 'none'; // Direct style for immediate effect
+                 row.classList.toggle('search-hidden', !matches); // js-hidden for persistence if needed
+             });
+
+             allCategoryHeaders.forEach(header => {
+                  const categoryId = header.dataset.categoryId;
+                  const categoryNameElement = header.querySelector('td');
+                  const categoryName = categoryNameElement ? categoryNameElement.firstChild.textContent.trim().toLowerCase() : '';
+                  const hasVisibleProducts = !!productListTbody.querySelector(`tr.product-row.${categoryId}:not(.search-hidden)[style*="display: table-row"], tr.product-row.${categoryId}:not(.search-hidden)[style*="display: block"], tr.product-row.${categoryId}:not(.search-hidden)[style*="display: flex"], tr.product-row.${categoryId}:not(.search-hidden)[style=""]`);
+                  const categoryMatchesSearch = categoryName.includes(searchTerm);
+                  header.style.display = (hasVisibleProducts || categoryMatchesSearch) ? '' : 'none';
+                  if (header.style.display !== 'none' && categoryMatchesSearch) {
+                      const icon = header.querySelector('.toggle-icon');
+                      if (icon && icon.textContent === '+') {
+                          toggleCategory(categoryId, true);
+                      }
+                  }
+             });
+             updateSelectionState();
+             calculateTotals();
+             updateToggleAllButtonState();
+         }
+
+       function calculateTotals() {
+            let totalImporteDia = 0, totalGananciasDia = 0, totalGastosDirecto = 0;
+            let totalStockCost = 0, totalStockValue = 0;
+            products.forEach(p => {
+                totalImporteDia += Number(p.importe) || 0;
+                totalGananciasDia += Number(p.ganancias) || 0;
+                 const finalesNum = (typeof p.finales === 'number') ? p.finales : 0;
+                 totalStockCost += finalesNum * (Number(p.cost) || 0);
+                 totalStockValue += finalesNum * (Number(p.price) || 0);
+            });
+            gastos.forEach(g => { totalGastosDirecto += g.amount || 0; });
+            const totalNetoDia = totalImporteDia - totalGastosDirecto;
+            const totalImporteSpan = document.getElementById('total-importe');
+            const totalGananciasSpan = document.getElementById('total-ganancias');
+            const totalStockCostSpan = document.getElementById('total-stock-cost');
+            const totalStockValueSpan = document.getElementById('total-stock-value');
+            const totalGastosDisplaySpan = document.getElementById('total-gastos-display');
+            const totalGastosInSectionSpan = document.getElementById('total-gastos');
+            const totalDespuesGastosSpan = document.getElementById('total-despues-gastos');
+            if (totalImporteSpan) totalImporteSpan.textContent = totalImporteDia.toFixed(2);
+            if (totalGananciasSpan) totalGananciasSpan.textContent = totalGananciasDia.toFixed(2);
+            if (totalStockCostSpan) totalStockCostSpan.textContent = totalStockCost.toFixed(2);
+            if (totalStockValueSpan) totalStockValueSpan.textContent = totalStockValue.toFixed(2);
+            if (totalGastosDisplaySpan) totalGastosDisplaySpan.textContent = totalGastosDirecto.toFixed(2);
+            if (totalGastosInSectionSpan) totalGastosInSectionSpan.textContent = totalGastosDirecto.toFixed(2);
+            if (totalDespuesGastosSpan) totalDespuesGastosSpan.textContent = totalNetoDia.toFixed(2);
+            const isCurrentlySensitiveVisible = isPinActive;
+            document.querySelector('#total-ganancias')?.parentElement.classList.toggle('js-hidden', !isCurrentlySensitiveVisible);
+            document.querySelector('#total-stock-cost')?.parentElement.classList.toggle('js-hidden', !isCurrentlySensitiveVisible);
+            document.querySelector('#total-stock-value')?.parentElement.classList.toggle('js-hidden', !isCurrentlySensitiveVisible);
+             document.querySelector('#totales hr:last-of-type')?.classList.toggle('js-hidden', !isCurrentlySensitiveVisible);
+            updateDateDisplay(dateInput ? dateInput.value : new Date().toISOString().split('T')[0]);
+       }
+
+       function updateProduct(index, field, value) {
+            if (index < 0 || index >= products.length) return;
+            const product = products[index];
+            switch (field) {
+                case 'name': product[field] = value.trim(); break;
+                case 'cost': case 'price':
+                     product[field] = Math.max(0, parseFloat(value) || 0); break;
+                case 'start': case 'entrada':
+                     product[field] = Math.max(0, parseInt(value, 10) || 0); break;
+                case 'finales':
+                     product[field] = (value === null || value === undefined || value === '') ? '' : Math.max(0, parseInt(value, 10) || 0);
+                     break;
+                default: console.warn(`Intento de actualizar campo desconocido: ${field}`); return;
+            }
+            const { start = 0, entrada = 0, cost = 0, price = 0 } = product;
+            const finalesNum = (typeof product.finales === 'number') ? product.finales : 0;
+            product.vendido = (typeof product.finales === 'number') ? Math.max(0, start + entrada - finalesNum) : 0;
+            product.importe = product.vendido * price;
+            product.ganancias = product.importe - (product.vendido * cost);
+            const row = productListTbody.querySelector(`tr[data-product-id="${product.id}"]`);
+            if (row) {
+                 const inputElement = row.querySelector(`td:nth-child(${getFieldColumnIndex(field)}) input`);
+                 const stringValue = String(value);
+                 if (inputElement && inputElement.value !== stringValue) {
+                      if (field === 'cost' || field === 'price') {
+                          inputElement.value = product[field].toFixed(2);
+                      } else if (field === 'finales' && value === '') {
+                           inputElement.value = '';
+                      } else {
+                          inputElement.value = value;
+                      }
+                 }
+                const vendidoCell = row.querySelector('td:nth-child(6)');
+                const importeCell = row.querySelector('td:nth-child(9)');
+                const gananciasCell = row.querySelector('td:nth-child(10)');
+                if (vendidoCell) vendidoCell.textContent = product.vendido;
+                if (importeCell) importeCell.textContent = product.importe.toFixed(2);
+                if (gananciasCell && !gananciasCell.classList.contains('js-hidden')) { // Usar js-hidden
+                     gananciasCell.textContent = product.ganancias.toFixed(2);
+                } else if (gananciasCell) {
+                     gananciasCell.textContent = '';
+                }
+                 let hasError = false;
+                 let errorTitle = `Nombre: ${product.name}\nCategoría: ${product.category}\nUnidad: ${product.unit || DEFAULT_PRODUCT_UNIT}`;
+                 if (['start', 'entrada', 'finales'].includes(field) || field === 'finales') {
+                      const inicioCheck = Number(product.start) || 0;
+                      const entradaCheck = Number(product.entrada) || 0;
+                      if (typeof product.finales === 'number' && product.finales > (inicioCheck + entradaCheck)) {
+                          hasError = true;
+                          errorTitle = `Error: Finales (${product.finales}) > Inicio (${inicioCheck}) + Entrada (${entradaCheck}). Total=${inicioCheck + entradaCheck}`;
+                      }
+                 }
+                 row.classList.toggle('fila-error', hasError);
+
+                 const isStockZero = (typeof product.finales === 'number' && product.finales === 0);
+                 row.classList.toggle('fila-stock-cero', isStockZero);
+                 if (hasError) {
+                     // errorTitle ya está seteado
+                 } else if (isStockZero) {
+                     errorTitle = `¡STOCK CERO!\nNombre: ${product.name}\nCategoría: ${product.category}\nUnidad: ${product.unit || DEFAULT_PRODUCT_UNIT}`;
+                 }
+                 row.title = errorTitle;
+            } else {
+                console.warn("Fila del producto no encontrada en el DOM para actualizar:", product.id);
+            }
+            calculateTotals();
+            guardarIPV(dateInput.value);
+        }
+
+       function getFieldColumnIndex(field) {
+           switch (field) {
+               case 'name': return 2; case 'start': return 3; case 'entrada': return 4; case 'finales': return 5;
+               case 'cost': return 7; case 'price': return 8; default: return -1;
+           }
+       }
+
+       function deleteProduct(index) {
+           if (index >= 0 && index < products.length) {
+               const productName = products[index].name;
+               products.splice(index, 1);
+               console.log(`Producto "${productName}" eliminado.`);
+               if (searchInput) searchInput.value = '';
+               renderProducts();
+               guardarIPV(dateInput.value);
+               calculateAndDisplayGeneralSummary();
+               updateSelectionState();
+           }
+       }
+
+       // --- Funciones Gastos ---
+       function addGasto() {
+           const descriptionInput = document.getElementById('gastos-description');
+           const amountInput = document.getElementById('gastos-amount');
+           const isCashCollectionCheckbox = document.getElementById('gasto-is-cash-collection');
+           const description = descriptionInput.value.trim();
+           const amount = parseFloat(amountInput.value) || 0;
+           const isCashCollection = isCashCollectionCheckbox.checked;
+           if (description && amount > 0) {
+               const gasto = { id: Date.now().toString(36) + Math.random().toString(36).substr(2) + 'g', description, amount, isCashCollection };
+               gastos.push(gasto);
+               descriptionInput.value = ''; amountInput.value = ''; isCashCollectionCheckbox.checked = false;
+               renderGastos();
+               guardarIPV(dateInput.value);
+               toggleGastosModal();
+               calculateAndDisplayGeneralSummary();
+           } else {
+               alert("Por favor, ingresa una descripción válida y un monto mayor que cero.");
+           }
+       }
+
+       function renderGastos() {
+           if (!gastosListDiv) return;
+           gastosListDiv.innerHTML = '';
+           let totalGastosDiarios = 0;
+           if (gastos.length === 0) {
+               gastosListDiv.innerHTML = '<p class="text-center text-gray-500 py-3">No hay gastos ni recogidas registradas hoy.</p>';
+           } else {
+                const sortedGastos = [...gastos].sort((a, b) => a.description.localeCompare(b.description));
+                sortedGastos.forEach((gasto) => {
+                   totalGastosDiarios += gasto.amount;
+                   const gastoItem = document.createElement('div');
+                   gastoItem.className = `bg-gray-700/70 shadow-md p-3 rounded-lg flex justify-between items-center mb-2 transition-colors hover:bg-gray-600/80 ${gasto.isCashCollection ? 'border-l-4 border-yellow-500 pl-4' : ''}`; // Tailwind
+                   gastoItem.dataset.isCollection = gasto.isCashCollection;
+                   const displayDescription = gasto.isCashCollection ? `${gasto.description} <em class="text-xs text-yellow-400">(Recogida Efec.)</em>` : gasto.description;
+                   const globalIndex = gastos.findIndex(g => g.id === gasto.id);
+                   if (globalIndex !== -1) {
+                       gastoItem.innerHTML = `<span class="text-sm text-gray-300 flex-grow mr-2 break-words">${displayDescription} - $${gasto.amount.toFixed(2)}</span> <button class="bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white text-xs font-bold py-1 px-2.5 rounded-full shadow transition-transform hover:scale-105" onclick="requestDeleteGasto(${globalIndex})">Eliminar</button>`;
+                       gastosListDiv.appendChild(gastoItem);
+                   }
+               });
+           }
+           const totalGastosSpan = document.getElementById('total-gastos');
+           if (totalGastosSpan) totalGastosSpan.textContent = totalGastosDiarios.toFixed(2);
+           calculateTotals();
+       }
+
+       function deleteGasto(index) {
+           if (index >= 0 && index < gastos.length) {
+               const gastoDesc = gastos[index].description;
+               gastos.splice(index, 1);
+               console.log(`Gasto/Recogida "${gastoDesc}" eliminado.`);
+               renderGastos();
+               guardarIPV(dateInput.value);
+               calculateAndDisplayGeneralSummary();
+           }
+       }
+
+       // --- Funciones Modales ---
+       function toggleModal() {
+           const isVisible = productModal.style.display === "flex";
+           if (!isVisible) {
+               populateCategoryDropdown(document.getElementById('modal-product-category'));
+                document.getElementById('modal-product-name').value = ''; document.getElementById('modal-product-start').value = '';
+                document.getElementById('modal-product-cost').value = ''; document.getElementById('modal-product-price').value = '';
+                document.getElementById('modal-product-unit').value = DEFAULT_PRODUCT_UNIT;
+                const categorySelect = document.getElementById('modal-product-category');
+                const otrosIndex = managedCategories.findIndex(c => c.toLowerCase() === 'otros');
+                categorySelect.selectedIndex = (otrosIndex !== -1) ? otrosIndex : (categorySelect.options.length > 0 ? categorySelect.options.length - 1 : 0);
+               productModal.style.display = "flex";
+               const firstInput = document.getElementById('modal-product-category');
+               if (firstInput) setTimeout(() => firstInput.focus(), 50);
+           } else {
+               productModal.style.display = "none";
+           }
+       }
+       function toggleGastosModal() {
+            const isVisible = gastosModal.style.display === "flex";
+            gastosModal.style.display = isVisible ? "none" : "flex";
+            if (!isVisible) {
+                document.getElementById('gastos-description').value = ''; document.getElementById('gastos-amount').value = '';
+                document.getElementById('gasto-is-cash-collection').checked = false;
+                const firstInput = document.getElementById('gastos-description');
+                if (firstInput) setTimeout(() => firstInput.focus(), 50);
+            }
+        }
+       function showConfirmModal(type, index) {
+           itemToDelete = index; deleteType = type;
+           const confirmMessage = confirmModal.querySelector('p');
+           if (confirmMessage) {
+               let itemName = '';
+               if (type === 'producto' && index >= 0 && index < products.length) { itemName = `"${products[index].name}"`; }
+               else if (type === 'gasto' && index >= 0 && index < gastos.length) { itemName = `"${gastos[index].description}"`; }
+               confirmMessage.textContent = `¿Estás seguro de que deseas eliminar ${type === 'producto' ? 'el producto' : 'el gasto/recogida'} ${itemName}? Esta acción no se puede deshacer.`;
+           }
+           confirmModal.style.display = 'flex';
+           document.getElementById('confirmNo').focus();
+       }
+       function hideConfirmModal() { confirmModal.style.display = 'none'; itemToDelete = null; deleteType = ''; }
+       function handleConfirmYes() {
+           if (deleteType === 'producto') { deleteProduct(itemToDelete); }
+           else if (deleteType === 'gasto') { deleteGasto(itemToDelete); }
+           hideConfirmModal();
+       }
+       function requestDeleteProduct(index) { showConfirmModal('producto', index); }
+       function requestDeleteGasto(index) { showConfirmModal('gasto', index); }
+
+       // --- Funciones Importar/Exportar ---
+       function triggerJsonDownload(dataObject, filename) {
+           try {
+               const jsonData = JSON.stringify(dataObject, null, 2);
+               const blob = new Blob([jsonData], { type: 'application/json;charset=utf-8' });
+               const url = URL.createObjectURL(blob);
+               const a = document.createElement('a'); a.href = url; a.download = filename;
+               document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
+               console.log(`Archivo ${filename} listo para descargar.`);
+           } catch (error) { console.error("Error al generar el archivo de descarga JSON:", error); alert(`Error al crear el archivo JSON: ${error.message}`); }
+       }
+
+       function exportCurrentDayData() {
+           if (!dateInput || !dateInput.value) { alert("Por favor, selecciona una fecha válida."); return; }
+           const currentDateStr = dateInput.value;
+           if (!/^\d{4}-\d{2}-\d{2}$/.test(currentDateStr)) { alert(`La fecha seleccionada '${currentDateStr}' no es válida.`); return; }
+           if (products.length === 0 && gastos.length === 0 && notasDiaActual.trim() === '') { alert(`No hay datos (productos, gastos o notas) para exportar en el día ${currentDateStr}.`); return; }
+           try {
+                const notasTextarea = document.getElementById('notas-dia');
+                const currentNotes = notasTextarea ? notasTextarea.value : notasDiaActual;
+
+                const validatedData = {
+                    products: products.map(p => ({ name:String(p.name||''), category:String(p.category||'Otros'), unit: String(p.unit || DEFAULT_PRODUCT_UNIT), start:Number(p.start||0), entrada:Number(p.entrada||0), finales: (p.finales === '' || p.finales === null || p.finales === undefined) ? '' : Number(p.finales||0), cost:Number(p.cost||0), price:Number(p.price||0) })),
+                    gastos: gastos.map(g => ({ description: String(g.description || ''), amount: Number(g.amount || 0), isCashCollection: !!g.isCashCollection })),
+                    user: String(userSelector ? userSelector.value : ''),
+                    notas: currentNotes
+                };
+               const dataToExport = { appVersion: APP_EXPORT_VERSION, exportTimestamp: new Date().toISOString(), dataType: 'singleDay', date: currentDateStr, managedCategories: managedCategories, data: validatedData };
+               const filename = `IPV_Backup_Dia_${currentDateStr.replace(/-/g, '')}.json`;
+               triggerJsonDownload(dataToExport, filename);
+               alert(`Exportación del día ${currentDateStr} iniciada.`);
+           } catch (error) { console.error(`Error al procesar o exportar datos para ${currentDateStr}:`, error); alert(`Error al exportar los datos del día ${currentDateStr}: ${error.message}`); }
+       }
+
+       function promptExportMonthData() {
+           const yearInput = prompt("Ingresa el año (4 dígitos) a exportar (ej: 2024):", new Date().getFullYear());
+           if (yearInput === null || yearInput.trim() === '') { alert("Exportación cancelada."); return; }
+           const year = parseInt(yearInput, 10);
+           if (isNaN(year) || year < 2000 || year > 2100) { alert("Año inválido."); return; }
+           const monthInput = prompt(`Ingresa el mes para ${year} (1=Ene, 12=Dic):`, new Date().getMonth() + 1);
+           if (monthInput === null || monthInput.trim() === '') { alert("Exportación cancelada."); return; }
+           const month = parseInt(monthInput, 10);
+           if (isNaN(month) || month < 1 || month > 12) { alert("Mes inválido."); return; }
+           exportMonthData(year, month);
+       }
+
+       function exportMonthData(year, month) {
+           const monthString = String(month).padStart(2, '0');
+           const targetMonthPrefix = `${year}-${monthString}-`;
+           console.log(`Buscando datos para exportar del mes: ${year}-${monthString}`);
+           const monthHistoricalData = {}; let daysFound = 0; const keys = Object.keys(localStorage);
+           for (const key of keys) {
+               if (key.startsWith(IPV_STORAGE_PREFIX)) {
+                   const date = key.substring(IPV_STORAGE_PREFIX.length);
+                   if (/^\d{4}-\d{2}-\d{2}$/.test(date) && date.startsWith(targetMonthPrefix)) {
+                       try {
+                           const dayDataString = localStorage.getItem(key);
+                           if (dayDataString) {
+                               const dayData = JSON.parse(dayDataString);
+                               const validatedData = {
+                                    products: (dayData.products || []).map(p => ({ name:String(p.name||''), category:String(p.category||'Otros'), unit: String(p.unit || DEFAULT_PRODUCT_UNIT), start:Number(p.start||0), entrada:Number(p.entrada||0), finales: (p.finales === '' || p.finales === null || p.finales === undefined) ? '' : Number(p.finales||0), cost:Number(p.cost||0), price:Number(p.price||0) })),
+                                    gastos: (dayData.gastos || []).map(g => ({ description: String(g.description || ''), amount: Number(g.amount || 0), isCashCollection: !!g.isCashCollection })),
+                                    user: String(dayData.user || ''),
+                                    notas: String(dayData.notas || '')
+                                };
+                               monthHistoricalData[date] = validatedData; daysFound++;
+                           }
+                       } catch (e) { console.warn(`Error procesando datos del día ${date} para exportación mensual:`, e); }
+                   }
+               }
+           }
+           if (daysFound === 0) { alert(`No se encontraron datos para el mes ${monthString}/${year}.`); return; }
+           const dataToExport = { appVersion: APP_EXPORT_VERSION, exportTimestamp: new Date().toISOString(), dataType: 'monthly', month: `${year}-${monthString}`, managedCategories: managedCategories, historicalData: monthHistoricalData };
+           const filename = `IPV_Backup_Mes_${year}${monthString}.json`;
+           triggerJsonDownload(dataToExport, filename);
+           alert(`Exportación del mes ${monthString}/${year} (${daysFound} día/s) iniciada.`);
+       }
+
+       function exportAllData() {
+           console.log("Iniciando exportación completa...");
+            if (!confirm("Esto exportará TODO el historial. Puede generar un archivo grande. ¿Continuar?")) { alert("Exportación cancelada."); return; }
+            showLoading("Exportando todo el historial...");
+            setTimeout(() => {
+                try {
+                    const historicalData = {}; let daysExported = 0; const keys = Object.keys(localStorage);
+                    for (const key of keys) {
+                        if (key.startsWith(IPV_STORAGE_PREFIX)) {
+                            const date = key.substring(IPV_STORAGE_PREFIX.length);
+                            if (/^\d{4}-\d{2}-\d{2}$/.test(date)) {
+                                try {
+                                    const dayDataString = localStorage.getItem(key);
+                                    if (dayDataString) {
+                                        const dayData = JSON.parse(dayDataString);
+                                         historicalData[date] = {
+                                             products: (dayData.products || []).map(p => ({ name:String(p.name||''), category:String(p.category||'Otros'), unit: String(p.unit || DEFAULT_PRODUCT_UNIT), start:Number(p.start||0), entrada:Number(p.entrada||0), finales: (p.finales === '' || p.finales === null || p.finales === undefined) ? '' : Number(p.finales||0), cost:Number(p.cost||0), price:Number(p.price||0) })),
+                                             gastos: (dayData.gastos || []).map(g => ({ description: String(g.description || ''), amount: Number(g.amount || 0), isCashCollection: !!g.isCashCollection })),
+                                             user: String(dayData.user || ''),
+                                             notas: String(dayData.notas || '')
+                                         };
+                                        daysExported++;
+                                    }
+                                } catch (e) { console.warn(`Error procesando ${date} para exportación completa:`, e); }
+                            }
+                        }
+                    }
+                    if (daysExported === 0) { alert("No hay datos históricos para exportar."); hideLoading(); return; }
+                    const dataToExport = { appVersion: APP_EXPORT_VERSION, exportTimestamp: new Date().toISOString(), dataType: 'full', managedCategories: managedCategories, historicalData };
+                    const timestamp = new Date().toISOString().slice(0, 10).replace(/-/g, '');
+                    const filename = `IPV_Backup_Full_${timestamp}.json`;
+                    triggerJsonDownload(dataToExport, filename);
+                    hideLoading();
+                    alert(`Exportación completa: ${daysExported} días y categorías.`);
+                } catch (error) { hideLoading(); console.error("Error exportando todo:", error); alert(`Error al exportar todo: ${error.message}`); }
+            }, 50);
+       }
+
+        function importAllData(event) {
+            const fileInput = event.target;
+            const file = fileInput.files[0];
+            if (!file || file.type !== 'application/json') {
+                alert(`Archivo no válido. Selecciona un archivo .json.`);
+                fileInput.value = null;
+                return;
+            }
+
+            console.log(`Importando desde: ${file.name}`);
+            const reader = new FileReader();
+
+            reader.onload = function (e) {
+                showLoading("Procesando archivo importado...");
+                setTimeout(() => {
+                    try {
+                        const importedWrapper = JSON.parse(e.target.result);
+
+                        if (!importedWrapper || typeof importedWrapper !== 'object' || (!importedWrapper.historicalData && !(importedWrapper.dataType === 'singleDay' && importedWrapper.data && importedWrapper.date))) {
+                            throw new Error("Formato JSON inválido o tipo de dato no reconocido. Falta 'historicalData' o estructura de día único.");
+                        }
+
+                        let categoriesImportedFromFile = false;
+                        if (importedWrapper.managedCategories && Array.isArray(importedWrapper.managedCategories)) {
+                            if (confirm("El archivo contiene una lista de categorías gestionadas. ¿Deseas reemplazar tu lista actual con la del archivo? \n\n(Cancelar usará tu lista actual y añadirá las nuevas que encuentre en los productos del archivo)")) {
+                                const validImportedCategories = importedWrapper.managedCategories
+                                    .map(c => String(c || '').trim())
+                                    .filter(c => c !== '');
+                                if (validImportedCategories.length > 0) {
+                                    saveCategories(validImportedCategories);
+                                    populateCategoryDropdown(document.getElementById('modal-product-category'));
+                                    console.log("Lista de categorías gestionadas actualizada desde el archivo.");
+                                    categoriesImportedFromFile = true;
+                                } else {
+                                    console.warn("Lista de categorías gestionadas en archivo vacía/inválida. No se reemplazó.");
+                                }
+                            } else {
+                                console.log("Importación de lista de categorías gestionadas omitida por el usuario. Se intentará añadir categorías de los productos.");
+                            }
+                        }
+
+                        let historicalDataFromFile;
+                        let datesToImport;
+                        if (importedWrapper.dataType === 'singleDay' && importedWrapper.date && importedWrapper.data) {
+                            historicalDataFromFile = { [importedWrapper.date]: importedWrapper.data };
+                            datesToImport = [importedWrapper.date];
+                        } else if (importedWrapper.historicalData) {
+                            historicalDataFromFile = importedWrapper.historicalData;
+                            datesToImport = Object.keys(historicalDataFromFile);
+                        } else {
+                            throw new Error("No se pudieron determinar los datos históricos a importar.");
+                        }
+
+                        if (datesToImport.length === 0) {
+                            throw new Error("El archivo no contiene datos históricos válidos.");
+                        }
+
+                        if (!confirm(`⚠️ Se importarán/sobrescribirán datos para ${datesToImport.length} día(s). ¿Continuar?`)) {
+                            throw new Error("Importación cancelada por el usuario.");
+                        }
+
+                        showLoading(`Importando ${datesToImport.length} día(s)...`);
+                        let importedCount = 0, errorCount = 0, skippedInvalidDate = 0, skippedInvalidData = 0;
+                        let categoriesFoundInData = new Set();
+
+                        for (const date of datesToImport) {
+                            loadingMessage.textContent = `Procesando ${date}... (${importedCount}/${datesToImport.length})`;
+                            if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) {
+                                skippedInvalidDate++;
+                                errorCount++;
+                                console.warn(`Fecha inválida omitida: ${date}`);
+                                continue;
+                            }
+                            const dayData = historicalDataFromFile[date];
+
+                            if (dayData && typeof dayData === 'object' && Array.isArray(dayData.products) && Array.isArray(dayData.gastos) && typeof dayData.user !== 'undefined') {
+                                try {
+                                    const validatedProducts = (dayData.products || []).map(p => {
+                                        let categoryName = String(p.category || 'Otros').trim();
+                                        if (categoryName.toLowerCase() === "nevera") categoryName = "Nevera";
+                                        if (categoryName.toLowerCase() === "aseo_personal") categoryName = "Aseo Personal";
+                                        if (categoryName.toLowerCase() === "galletas") categoryName = "Galletas";
+                                        if (categoryName.toLowerCase() === "sazones") categoryName = "Sazones";
+                                        if (categoryName.toLowerCase() === "otros") categoryName = "Otros";
+                                        if (categoryName.toLowerCase() === "rones") categoryName = "Rones";
+                                        if (categoryName.toLowerCase() === "sorbetos") categoryName = "Sorbetos";
+                                        if (categoryName.toLowerCase() === "confituras_variadas") categoryName = "Confituras Variadas";
+                                        if (categoryName.toLowerCase() === "peter") categoryName = "Peter";
+                                        if (categoryName.toLowerCase() === "dulces") categoryName = "Dulces";
+
+                                        if (categoryName && !managedCategories.some(mc => mc === categoryName)) {
+                                            categoriesFoundInData.add(categoryName);
+                                        }
+                                        return {
+                                            id: Date.now().toString(36) + Math.random().toString(36).substr(2) + 'p' + importedCount + String(p.name || '').slice(0,2),
+                                            name: String(p.name || 'Importado').trim(),
+                                            category: categoryName,
+                                            unit: String(p.unit || DEFAULT_PRODUCT_UNIT).trim(),
+                                            start: Number(p.start || 0),
+                                            entrada: Number(p.entrada || 0),
+                                            finales: (p.finales === '' || p.finales === null || p.finales === undefined) ? '' : Number(p.finales || 0),
+                                            cost: Number(p.cost || 0),
+                                            price: Number(p.price || 0)
+                                        };
+                                    });
+
+                                    const validatedGastos = (dayData.gastos || []).map(g => ({
+                                        id: Date.now().toString(36) + Math.random().toString(36).substr(2) + 'g' + importedCount + String(g.description || '').slice(0,2),
+                                        description: String(g.description || 'Gasto Imp.').trim(),
+                                        amount: Number(g.amount || 0),
+                                        isCashCollection: !!g.isCashCollection
+                                    }));
+
+                                    const validatedDayData = {
+                                        products: validatedProducts,
+                                        gastos: validatedGastos,
+                                        user: String(dayData.user || ''),
+                                        notas: String(dayData.notas || '')
+                                    };
+                                    localStorage.setItem(IPV_STORAGE_PREFIX + date, JSON.stringify(validatedDayData));
+                                    importedCount++;
+                                } catch (storageError) {
+                                    console.error(`Error guardando ${date} importado:`, storageError);
+                                    errorCount++;
+                                    if (storageError.name === 'QuotaExceededError') {
+                                        throw new Error("¡Error Crítico! Espacio de almacenamiento lleno durante importación.");
+                                    }
+                                }
+                            } else {
+                                skippedInvalidData++;
+                                errorCount++;
+                                console.warn(`Datos inválidos/incompletos omitidos para ${date}`);
+                            }
+                        }
+
+                        let newCategoriesAddedMessage = "";
+                        if (categoriesFoundInData.size > 0) {
+                            let actuallyAddedToManaged = false;
+                            categoriesFoundInData.forEach(catName => {
+                                if (!managedCategories.some(mc => mc === catName)) {
+                                    managedCategories.push(catName);
+                                    actuallyAddedToManaged = true;
+                                }
+                            });
+                            if (actuallyAddedToManaged) {
+                                saveCategories(managedCategories);
+                                populateCategoryDropdown(document.getElementById('modal-product-category'));
+                                newCategoriesAddedMessage = `- Se añadieron ${categoriesFoundInData.size} categorías nuevas desde los productos: ${Array.from(categoriesFoundInData).join(', ')}\n`;
+                                console.log(newCategoriesAddedMessage);
+                            }
+                        }
+
+                        cachedHistoricalData = null;
+                        const currentDate = dateInput ? dateInput.value : new Date().toISOString().split('T')[0];
+                        cargarIPV(currentDate);
+                        calculateAndDisplayGeneralSummary();
+
+                        let message = `Importación Finalizada:\n- ${importedCount} día(s) importado(s)/sobrescrito(s).\n`;
+                        if (categoriesImportedFromFile) message += "- Lista de categorías gestionadas reemplazada desde archivo.\n";
+                        message += newCategoriesAddedMessage;
+                        if (errorCount > 0) {
+                            message += `- Errores/Omitidos: ${errorCount} (Fechas Inválidas: ${skippedInvalidDate}, Datos Inválidos: ${skippedInvalidData})\n`;
+                            alert(message + "\nRevisa la consola (F12) para más detalles.");
+                        } else {
+                            alert(message);
+                        }
+                        console.log(message);
+
+                    } catch (error) {
+                        console.error("Error fatal durante importación:", error);
+                        alert(`Error: ${error.message}\nRevisa la consola (F12) para más detalles.`);
+                    } finally {
+                        hideLoading();
+                        fileInput.value = null;
+                    }
+                }, 50);
+            };
+            reader.onerror = (err) => {
+                console.error("Error leyendo archivo:", err);
+                alert("Error al leer el archivo.");
+                fileInput.value = null;
+            };
+            reader.readAsText(file);
+        }
+
+
+       // --- Funciones PDF ---
+       function generarPDF() {
+            if (typeof window.jspdf === 'undefined' || typeof window.jspdf.jsPDF === 'undefined' || typeof window.jspdf.jsPDF.autoTable !== 'function') { console.error("Error: jsPDF o jsPDF-AutoTable no cargados."); alert("Error al generar PDF: Librerías no encontradas."); return; }
+            showLoading("Generando PDF...");
+             setTimeout(() => {
+                try {
+                    const { jsPDF } = window.jspdf; const doc = new jsPDF(); const fechaInforme = dateInput.value; let fechaFormateada = fechaInforme;
+                    try { const [y, m, d] = fechaInforme.split('-'); fechaFormateada = `${d}/${m}/${y}`; } catch (e) {}
+                    const logo = new Image(); logo.src = './img/Logo.png';
+                    const crearContenidoPDF = () => {
+                        try {
+                            let currentY = 15; const pageHeight = doc.internal.pageSize.height; const pageWidth = doc.internal.pageSize.width; const margin = 14;
+                            if (logo.complete && logo.naturalWidth > 0) { doc.addImage(logo, 'PNG', margin, currentY - 5, 20, 20); } else { console.warn("Logo no cargado para PDF."); }
+                            doc.setFontSize(16); doc.setFont(undefined, 'bold'); doc.text('Inventario y Venta de Productos (IPV)', margin + 25, currentY);
+                            doc.setFontSize(12); doc.setFont(undefined, 'normal'); doc.text(`Fecha del Informe: ${fechaFormateada}`, margin + 25, currentY + 7);
+                            const currentUser = userSelector ? userSelector.value : ''; if (currentUser) { doc.setFontSize(10); doc.setTextColor(80); doc.text(`Trabajador: ${currentUser}`, margin + 25, currentY + 13); doc.setTextColor(0); } currentY += 25;
+                            doc.setFontSize(11); doc.setFont(undefined, 'bold'); doc.text('Detalle de Productos', margin, currentY); currentY += 6;
+                            const showSensitiveData = isPinActive; const pdfTableColumns = ["Producto (Unidad)", "Inicio", "Entr", "Final", "Vend", "Precio", "Importe"];
+                            if (showSensitiveData) { pdfTableColumns.splice(5, 0, "Costo"); pdfTableColumns.push("Ganancia"); }
+                            const tableRows = []; let subTotalImporte = 0, subTotalGanancia = 0;
+                            const groupedProductsPDF = products.reduce((acc, p) => { const cat = p.category || 'Otros'; if (!acc[cat]) acc[cat] = []; acc[cat].push(p); return acc; }, {});
+                            const sortedCategoriesPDF = [...managedCategories].filter(cat => groupedProductsPDF[cat]);
+                            sortedCategoriesPDF.forEach(category => {
+                                 tableRows.push([{ content: category, colSpan: pdfTableColumns.length, styles: { halign: 'left', fontStyle: 'bold', fillColor: [220, 220, 220], textColor: 20, fontSize: 9, cellPadding: 2 } }]);
+                                groupedProductsPDF[category].sort((a, b) => a.name.localeCompare(b.name)).forEach(p => {
+                                    const nombreConUnidad = p.unit && p.unit !== DEFAULT_PRODUCT_UNIT ? `${p.name} (${p.unit})` : p.name;
+                                     const finalesPDF = (p.finales === null || p.finales === undefined || p.finales === '') ? 'N/A' : p.finales;
+                                    const rowData = [nombreConUnidad, p.start, p.entrada, finalesPDF, p.vendido, p.price.toFixed(2), p.importe.toFixed(2)];
+                                    if (showSensitiveData) { rowData.splice(5, 0, p.cost.toFixed(2)); rowData.push(p.ganancias.toFixed(2)); }
+                                    tableRows.push(rowData); subTotalImporte += p.importe || 0; subTotalGanancia += p.ganancias || 0;
+                                });
+                            });
+                             const subtotalRow = [{ content: 'Subtotal Productos', colSpan: showSensitiveData ? 6 : 5, styles: { halign: 'right', fontStyle: 'bold' } }, { content: subTotalImporte.toFixed(2), styles: { fontStyle: 'bold', halign: 'right' } }];
+                             if (showSensitiveData) { subtotalRow.splice(1, 0, ''); subtotalRow.push({ content: subTotalGanancia.toFixed(2), styles: { fontStyle: 'bold', halign: 'right' } }); }
+                             tableRows.push(subtotalRow); const columnStyles = { 0: { cellWidth: 'auto' } };
+                            const numStyle = { halign: 'right', cellPadding: { top: 1.5, right: 2, bottom: 1.5, left: 2 }, fontSize: 8 };
+                            const numWidthShort = 12, numWidthMed = 16, numWidthLong = 18;
+                            columnStyles[1] = { cellWidth: numWidthShort, ...numStyle }; columnStyles[2] = { cellWidth: numWidthShort, ...numStyle }; columnStyles[3] = { cellWidth: numWidthShort, ...numStyle }; columnStyles[4] = { cellWidth: numWidthShort, ...numStyle };
+                            if (showSensitiveData) { columnStyles[5] = { cellWidth: numWidthMed, ...numStyle }; columnStyles[6] = { cellWidth: numWidthMed, ...numStyle }; columnStyles[7] = { cellWidth: numWidthLong, ...numStyle }; columnStyles[8] = { cellWidth: numWidthLong, ...numStyle }; }
+                            else { columnStyles[5] = { cellWidth: numWidthMed, ...numStyle }; columnStyles[6] = { cellWidth: numWidthLong, ...numStyle }; }
+                            doc.autoTable({ head: [pdfTableColumns], body: tableRows, startY: currentY, theme: 'grid', headStyles: { fillColor: [41, 128, 185], textColor: 255, fontStyle: 'bold', fontSize: 9, halign: 'center' }, styles: { fontSize: 8, cellPadding: 1.5, overflow: 'linebreak', valign: 'middle' }, columnStyles: columnStyles, didDrawPage: (data) => { currentY = data.cursor.y; } });
+                            let finalY = doc.lastAutoTable.finalY || currentY;
+                            finalY += 8;
+                            if (gastos.length > 0) {
+                                if (finalY + 30 > pageHeight) { doc.addPage(); finalY = margin; }
+                                doc.setFontSize(11); doc.setFont(undefined, 'bold'); doc.text('Gastos y Recogidas del Día', margin, finalY); finalY += 6;
+                                const gastosData = gastos.map(g => [g.isCashCollection ? `${g.description} (Recogida)` : g.description, g.amount.toFixed(2)]);
+                                let totalGastosDiariosPDF = gastos.reduce((sum, g) => sum + (g.amount || 0), 0);
+                                gastosData.push([{ content: 'Total Movimientos', styles: { halign: 'right', fontStyle: 'bold' } }, { content: totalGastosDiariosPDF.toFixed(2), styles: { fontStyle: 'bold', halign: 'right' } }]);
+                                doc.autoTable({ head: [['Descripción', 'Monto (CUP)']], body: gastosData, startY: finalY, theme: 'grid', headStyles: { fillColor: [192, 57, 43], textColor: 255, fontStyle: 'bold', fontSize: 9, halign: 'center' }, styles: { fontSize: 8, cellPadding: 2 }, columnStyles: { 0: { cellWidth: 'auto' }, 1: { cellWidth: 40, halign: 'right' } }, didDrawPage: (data) => { finalY = data.cursor.y; } });
+                                finalY = doc.lastAutoTable.finalY || finalY;
+                            } else { if (finalY + 10 > pageHeight) { doc.addPage(); finalY = margin; } doc.setFontSize(9); doc.setTextColor(150); doc.text('No se registraron gastos ni recogidas hoy.', margin, finalY); doc.setTextColor(0); finalY += 5; }
+                            finalY += 10; if (finalY + (showSensitiveData ? 60 : 40) > pageHeight) { doc.addPage(); finalY = margin; }
+                            doc.setFontSize(11); doc.setFont(undefined, 'bold'); doc.text('Resumen del Día', margin, finalY); doc.setFont(undefined, 'normal'); finalY += 6;
+                            const pdfTotalImporteDia = parseFloat(document.getElementById('total-importe')?.textContent || 0);
+                            const pdfTotalGananciasDia = parseFloat(document.getElementById('total-ganancias')?.textContent || 0);
+                            const pdfTotalGastos = parseFloat(document.getElementById('total-gastos-display')?.textContent || 0);
+                            const pdfTotalNetoDia = parseFloat(document.getElementById('total-despues-gastos')?.textContent || 0);
+                            const pdfTotalStockCost = parseFloat(document.getElementById('total-stock-cost')?.textContent || 0);
+                            const pdfTotalStockValue = parseFloat(document.getElementById('total-stock-value')?.textContent || 0);
+                            const summaryData = [ ['Total Ingresos Brutos (Día):', `${pdfTotalImporteDia.toFixed(2)} CUP`], ['Total Gastos/Recogidas (Día):', `${pdfTotalGastos.toFixed(2)} CUP`], ['Total Neto Caja (Ingr - Movim):', `${pdfTotalNetoDia.toFixed(2)} CUP`] ];
+                            if (showSensitiveData) { summaryData.splice(1, 0, ['Margen Bruto Productos (Día):', `${pdfTotalGananciasDia.toFixed(2)} CUP`]); summaryData.push(['Costo Total en Stock (Estimado):', `${pdfTotalStockCost.toFixed(2)} CUP`]); summaryData.push(['Valor Total en Stock (Precio Venta):', `${pdfTotalStockValue.toFixed(2)} CUP`]); }
+                            summaryData.sort((a, b) => { const order = ['Ingresos Brutos', 'Margen Bruto', 'Gastos/Recogidas', 'Neto Caja', 'Valor Total en Stock', 'Costo Total en Stock']; const aIndex = order.findIndex(s => a[0].includes(s)); const bIndex = order.findIndex(s => b[0].includes(s)); return (aIndex === -1 ? 99 : aIndex) - (bIndex === -1 ? 99 : bIndex); });
+                            doc.autoTable({ body: summaryData, startY: finalY, theme: 'plain', styles: { fontSize: 9, cellPadding: 1.8 }, columnStyles: { 0: { halign: 'right', cellWidth: 85, fontStyle: 'normal' }, 1: { halign: 'left', fontStyle: 'bold' } } });
+                            finalY = doc.lastAutoTable ? doc.lastAutoTable.finalY : finalY;
+
+                            const notasActualesPDF = document.getElementById('notas-dia')?.value || notasDiaActual;
+                            if (notasActualesPDF.trim() !== '') {
+                                finalY += 10;
+                                if (finalY + 30 > pageHeight) { doc.addPage(); finalY = margin; }
+                                doc.setFontSize(11); doc.setFont(undefined, 'bold'); doc.text('Notas del Día:', margin, finalY); finalY += 6;
+                                doc.setFontSize(9); doc.setFont(undefined, 'normal');
+                                const splitNotes = doc.splitTextToSize(notasActualesPDF, pageWidth - (margin * 2));
+                                doc.text(splitNotes, margin, finalY);
+                                finalY += (splitNotes.length * doc.getTextDimensions('Tg').h);
+                            }
+
+                            const pageCount = doc.internal.getNumberOfPages(); for (let i = 1; i <= pageCount; i++) { doc.setPage(i); doc.setFontSize(8); doc.setTextColor(150); doc.text(`Página ${i} de ${pageCount}`, pageWidth - margin, pageHeight - 10, { align: 'right' }); }
+                            doc.save(`Informe_IPV_${fechaFormateada.replace(/\//g, '-')}.pdf`); console.log("PDF generado.");
+                        } catch (pdfError) { console.error("Error durante generación contenido PDF:", pdfError); alert(`Error: ${pdfError.message}`); }
+                        finally { hideLoading(); }
+                    };
+                    if (logo.complete && logo.naturalWidth > 0) { setTimeout(crearContenidoPDF, 0); }
+                    else { logo.onload = crearContenidoPDF; logo.onerror = () => { console.error("Error logo PDF."); crearContenidoPDF(); }; setTimeout(() => { if (!logo.complete || logo.naturalWidth === 0) { console.warn("Logo PDF no cargó."); crearContenidoPDF(); } }, 3000); }
+                } catch (e) { console.error("Error inicializando jsPDF:", e); alert(`Error PDF: ${e.message}`); hideLoading(); }
+            }, 50);
+       }
+
+       // --- Funciones Resumen General y Datos Históricos ---
+       function loadAllHistoricalData(forceReload = false) {
+           if (cachedHistoricalData && !forceReload) { console.log("Usando historial cacheado."); return cachedHistoricalData; }
+           const startLoadTime = performance.now(); const allData = []; const keys = Object.keys(localStorage); let validKeys = 0;
+           for (const key of keys) {
+               if (key.startsWith(IPV_STORAGE_PREFIX)) {
+                   const date = key.substring(IPV_STORAGE_PREFIX.length); if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) continue; validKeys++;
+                   try {
+                       const dailyRawData = localStorage.getItem(key);
+                       if (dailyRawData) {
+                           const dailyParsed = JSON.parse(dailyRawData);
+                           if (dailyParsed && dailyParsed.products && dailyParsed.gastos) {
+                               const processedProducts = (dailyParsed.products || []).map(p => {
+                                   const start = Number(p.start || 0); const entrada = Number(p.entrada || 0); const finalesNum = (p.finales === '' || p.finales === null || p.finales === undefined) ? 0 : Number(p.finales || 0);
+                                   const cost = Number(p.cost || 0); const price = Number(p.price || 0); const vendido = Math.max(0, start + entrada - finalesNum);
+                                   const importe = vendido * price; const ganancias = importe - (vendido * cost);
+                                   return { ...p, category: String(p.category || 'Otros').trim(), name: String(p.name || 'Desconocido').trim(), unit: String(p.unit || DEFAULT_PRODUCT_UNIT).trim(), start, entrada, finales: finalesNum, cost, price, vendido, importe, ganancias };
+                               });
+                               const processedGastos = (dailyParsed.gastos || []).map(g => ({ ...g, description: String(g.description || 'Desconocido').trim(), amount: Number(g.amount || 0), isCashCollection: !!g.isCashCollection }));
+                               allData.push({ date, products: processedProducts, gastos: processedGastos, user: dailyParsed.user || 'N/A', notas: dailyParsed.notas || '' });
+                           } else { console.warn(`Datos incompletos omitidos para ${date} en historial.`); }
+                       }
+                   } catch (e) { console.warn(`Error parseando ${date} para historial:`, e); }
+               }
+           }
+           allData.sort((a, b) => a.date.localeCompare(b.date)); const endLoadTime = performance.now();
+           console.log(`Historial completo cargado: ${allData.length} días válidos (${(endLoadTime - startLoadTime).toFixed(1)} ms)`);
+           cachedHistoricalData = allData; return allData;
+       }
+
+       function calculateAndDisplayGeneralSummary() {
+           console.log("Calculando resumen financiero general..."); const historicalData = loadAllHistoricalData();
+           const totalGananciaAcumuladaEl = document.getElementById('total-ganancia-acumulada'); const totalIngresosAcumuladosEl = document.getElementById('total-ingresos-acumulados');
+           const totalGastosAcumuladosEl = document.getElementById('total-gastos-acumulados'); const totalBalanceNetoAcumuladoEl = document.getElementById('total-balance-neto-acumulado');
+           const periodoAnalizadoEl = document.getElementById('periodo-analizado');
+           if (!totalGananciaAcumuladaEl || !totalIngresosAcumuladosEl || !totalGastosAcumuladosEl || !totalBalanceNetoAcumuladoEl || !periodoAnalizadoEl) { console.error("Error DOM: Elementos resumen general no encontrados."); return; }
+           if (historicalData.length === 0) {
+                totalGananciaAcumuladaEl.textContent = '0.00'; totalIngresosAcumuladosEl.textContent = '0.00'; totalGastosAcumuladosEl.textContent = '0.00'; totalBalanceNetoAcumuladoEl.textContent = '0.00';
+                periodoAnalizadoEl.textContent = 'No hay datos históricos.'; generalSummarySection?.classList.add('hidden'); return;
+           }
+           let accumulatedMargin = 0, accumulatedIncome = 0, accumulatedOperationalExpenses = 0;
+           historicalData.forEach(day => { day.products.forEach(product => { accumulatedMargin += product.ganancias || 0; accumulatedIncome += product.importe || 0; }); day.gastos.forEach(gasto => { if (!gasto.isCashCollection) { accumulatedOperationalExpenses += gasto.amount || 0; } }); });
+           const accumulatedNetBalance = accumulatedIncome - accumulatedOperationalExpenses; const firstDate = historicalData[0].date; const lastDate = historicalData[historicalData.length - 1].date;
+           const formatDate = (isoDate) => { try { const [y,m,d] = isoDate.split('-'); return `${d}/${m}/${y}`; } catch { return isoDate; } }
+           totalGananciaAcumuladaEl.textContent = accumulatedMargin.toFixed(2); totalIngresosAcumuladosEl.textContent = accumulatedIncome.toFixed(2);
+           totalGastosAcumuladosEl.textContent = accumulatedOperationalExpenses.toFixed(2); totalBalanceNetoAcumuladoEl.textContent = accumulatedNetBalance.toFixed(2);
+           periodoAnalizadoEl.textContent = `Datos desde ${formatDate(firstDate)} hasta ${formatDate(lastDate)} (${historicalData.length} días)`;
+            const isCurrentlySensitiveVisible = isPinActive; generalSummarySection?.classList.toggle('hidden', !isCurrentlySensitiveVisible);
+            totalGananciaAcumuladaEl.parentElement.classList.toggle('js-hidden', !isCurrentlySensitiveVisible);
+       }
+
+       // --- Funciones Navegación y Utilidades Fecha ---
+       function changeDay(offset) {
+            if (!dateInput) return; const currentDateStr = dateInput.value;
+            if (!currentDateStr || !/^\d{4}-\d{2}-\d{2}$/.test(currentDateStr)) { console.warn("Fecha actual inválida, estableciendo a hoy."); dateInput.value = new Date().toISOString().split('T')[0]; cargarIPV(dateInput.value); return; }
+            try {
+                const [year, month, day] = currentDateStr.split('-').map(Number); const currentDate = new Date(Date.UTC(year, month - 1, day));
+                if (isNaN(currentDate.getTime())) { throw new Error("Fecha inválida generada"); }
+                currentDate.setUTCDate(currentDate.getUTCDate() + offset); const newDateStr = currentDate.toISOString().split('T')[0];
+                dateInput.value = newDateStr; dateInput.dispatchEvent(new Event('change', { bubbles: true }));
+            } catch (error) { console.error("Error cambiando fecha:", error); alert("Error al cambiar la fecha. Se restablecerá a hoy."); dateInput.value = new Date().toISOString().split('T')[0]; cargarIPV(dateInput.value); }
+        }
+       function updateDateDisplay(fechaISO) {
+           const fechaDisplay = document.getElementById('fecha'); if (!fechaDisplay) return; let fechaFormateada = fechaISO;
+           try { const [y, m, d] = fechaISO.split('-'); if (y && m && d && y.length === 4 && m.length === 2 && d.length === 2) { fechaFormateada = `${d}/${m}/${y}`; } else { throw new Error("Formato inválido"); } }
+           catch (e) { console.warn("No se pudo formatear fecha:", fechaISO); } fechaDisplay.textContent = fechaFormateada;
+       }
+
+       // --- Función Reiniciar Día ---
+       function reloadFromPreviousDay() {
+           if (!dateInput) return; const currentDateStr = dateInput.value;
+           if (!currentDateStr || !/^\d{4}-\d{2}-\d{2}$/.test(currentDateStr)) { alert("Fecha actual no válida."); return; }
+           let previousDateStr = '';
+           try { const [year, month, day] = currentDateStr.split('-').map(Number); const currentDate = new Date(Date.UTC(year, month - 1, day)); if (isNaN(currentDate.getTime())) throw new Error("Fecha inválida"); currentDate.setUTCDate(currentDate.getUTCDate() - 1); previousDateStr = currentDate.toISOString().split('T')[0]; }
+           catch (error) { console.error("Error calculando fecha anterior:", error); alert("No se pudo calcular la fecha anterior."); return; }
+           console.log(`Intentando reiniciar ${currentDateStr} basado en ${previousDateStr}`);
+           const ipvDataAnterior = localStorage.getItem(IPV_STORAGE_PREFIX + previousDateStr);
+           if (!ipvDataAnterior) { alert(`No se encontraron datos para ${previousDateStr}. No se puede reiniciar.`); return; }
+           const confirmation = confirm( `¿Reiniciar COMPLETAMENTE ${currentDateStr} usando 'Finales' de ${previousDateStr}?\n\nADVERTENCIA:\n- Se sobrescribirán 'Inicio'.\n- 'Entradas' a 0.\n- 'Finales' igual a 'Inicio'.\n- Se perderán ventas y notas de hoy.\n\n¿Continuar?` );
+           if (!confirmation) { alert("Reinicio cancelado."); return; }
+           try {
+               const ipvAnterior = JSON.parse(ipvDataAnterior); const productosAnteriores = ipvAnterior.products || [];
+               let updatedCount = 0, resetNewCount = 0; if (!Array.isArray(products)) { throw new Error("Variable 'products' no es array."); }
+               const previousProductsMap = new Map(); productosAnteriores.forEach(p => { const key = `${String(p.category||'Otros').trim().toLowerCase()}-${String(p.name||'').trim().toLowerCase()}`; if (p.name) { previousProductsMap.set(key, p); } });
+               const newProductsToday = [];
+               products.forEach((productActual) => {
+                    const currentKey = `${String(productActual.category||'Otros').trim().toLowerCase()}-${String(productActual.name||'').trim().toLowerCase()}`;
+                    const productoAnteriorMatch = previousProductsMap.get(currentKey);
+                    if (productoAnteriorMatch) {
+                        const finalesAnterior = (productoAnteriorMatch.finales === '' || productoAnteriorMatch.finales === null || productoAnteriorMatch.finales === undefined) ? 0 : Number(productoAnteriorMatch.finales || 0);
+                        newProductsToday.push({ ...productActual, start: finalesAnterior, entrada: 0, finales: finalesAnterior, vendido: 0, importe: 0, ganancias: 0 });
+                        updatedCount++; previousProductsMap.delete(currentKey);
+                    } else { console.log(`Producto "${productActual.name}" (${productActual.category}) no encontrado ayer. Reseteando.`); newProductsToday.push({ ...productActual, entrada: 0, finales: productActual.start, vendido: 0, importe: 0, ganancias: 0 }); resetNewCount++; }
+                });
+                if (previousProductsMap.size > 0) { console.warn(`${previousProductsMap.size} productos de ayer no existen hoy:`, Array.from(previousProductsMap.values()).map(p => `${p.name} (${p.category})`)); }
+               products = newProductsToday; gastos = []; notasDiaActual = '';
+               const notasTextarea = document.getElementById('notas-dia');
+               if (notasTextarea) { notasTextarea.value = ''; }
+               console.log(`Reinicio completado. Actualizados: ${updatedCount}. Reiniciados (solo hoy): ${resetNewCount}. Notas reseteadas.`);
+               renderProducts(); renderGastos(); guardarIPV(currentDateStr); calculateAndDisplayGeneralSummary();
+               alert(`Día ${currentDateStr} reiniciado. Actualizados: ${updatedCount}, Reiniciados: ${resetNewCount}.`);
+           } catch (e) { console.error("Error procesando reinicio:", e); alert("Error al reiniciar: " + e.message); cargarIPV(currentDateStr); }
+       }
+
+       // --- Funciones Selección de Productos ---
+       function getSelectedProductIds() { const selectedCheckboxes = productListTbody.querySelectorAll('.product-select-checkbox:checked'); return Array.from(selectedCheckboxes).map(cb => cb.dataset.productId); }
+       function updateSelectionState() {
+           const allVisibleCheckboxes = productListTbody.querySelectorAll('.product-row:not(.hidden):not(.search-hidden) .product-select-checkbox'); // Actualizado para Tailwind
+           const selectedVisibleCheckboxes = productListTbody.querySelectorAll('.product-row:not(.hidden):not(.search-hidden) .product-select-checkbox:checked');
+           const selectedCount = selectedVisibleCheckboxes.length; const totalVisibleCount = allVisibleCheckboxes.length;
+           if (showSelectionSummaryBtn) {
+                showSelectionSummaryBtn.disabled = selectedCount === 0;
+                showSelectionSummaryBtn.style.display = selectedCount > 0 ? 'inline-block' : 'none'; // Tailwind: puede ser 'hidden' o 'inline-block'
+                showSelectionSummaryBtn.textContent = `Ver Resumen (${selectedCount})`;
+            }
+            if (selectAllCheckbox) {
+                if (totalVisibleCount === 0) { selectAllCheckbox.checked = false; selectAllCheckbox.indeterminate = false; }
+                else { selectAllCheckbox.checked = selectedCount === totalVisibleCount; selectAllCheckbox.indeterminate = selectedCount > 0 && selectedCount < totalVisibleCount; }
+            }
+       }
+       function toggleSelectAll(masterCheckbox) { const isChecked = masterCheckbox.checked; const visibleCheckboxes = productListTbody.querySelectorAll('.product-row:not(.hidden):not(.search-hidden) .product-select-checkbox'); visibleCheckboxes.forEach(checkbox => { checkbox.checked = isChecked; }); updateSelectionState(); }
+
+       // --- Funciones Modal Resumen Productos Seleccionados ---
+       function getAvailableMonths() {
+           const monthSet = new Set(); const keys = Object.keys(localStorage); const monthNames = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
+           for (const key of keys) { if (key.startsWith(IPV_STORAGE_PREFIX)) { const date = key.substring(IPV_STORAGE_PREFIX.length); if (/^\d{4}-\d{2}-\d{2}$/.test(date)) { monthSet.add(date.substring(0, 7)); } } }
+           return Array.from(monthSet).sort().map(my => { const [year, month] = my.split('-'); const monthIndex = parseInt(month, 10) - 1; return { value: my, text: `${monthNames[monthIndex]} ${year}` }; });
+       }
+       function showProductSummaryModal() {
+           const selectedIds = getSelectedProductIds(); if (selectedIds.length === 0) { alert("Selecciona al menos un producto."); return; }
+           const selectedProductDetails = products.filter(p => selectedIds.includes(p.id)).map(p => ({ id: p.id, name: String(p.name || '').trim(), category: String(p.category || 'Otros').trim() }));
+           currentSelectedProductKeys = new Set(selectedProductDetails.map(p => `${p.category}-${p.name}`));
+           const listElement = document.getElementById('selected-products-list'); listElement.innerHTML = ''; selectedProductDetails.forEach(p => { const li = document.createElement('li'); li.textContent = `${p.name} (${p.category})`; listElement.appendChild(li); });
+           const availableMonths = getAvailableMonths(); summaryPeriodSelector.innerHTML = '<option value="Total">Total Histórico</option>'; availableMonths.forEach(month => { const option = document.createElement('option'); option.value = month.value; option.textContent = month.text; summaryPeriodSelector.appendChild(option); });
+           summaryPeriodSelector.value = "Total"; document.getElementById('summary-total-sold').textContent = '...'; document.getElementById('summary-total-income').textContent = '...'; document.getElementById('summary-total-profit').textContent = '...'; document.getElementById('summary-period').textContent = '...';
+           productSummaryModal.style.display = 'flex'; setTimeout(() => { updateProductSummaryDisplay(); }, 50);
+       }
+       function updateProductSummaryDisplay() {
+           if (!productSummaryModal || productSummaryModal.style.display !== 'flex' || currentSelectedProductKeys.size === 0) { return; }
+           const selectedPeriod = summaryPeriodSelector.value; const historicalData = loadAllHistoricalData();
+           const summary = calculateSummaryForSelectedProducts(currentSelectedProductKeys, historicalData, selectedPeriod);
+           document.getElementById('summary-total-sold').textContent = summary.totalSold; document.getElementById('summary-total-income').textContent = summary.totalIncome.toFixed(2);
+           document.getElementById('summary-total-profit').textContent = summary.totalProfit.toFixed(2); const periodText = selectedPeriod === "Total" ? "Histórico Completo" : summaryPeriodSelector.options[summaryPeriodSelector.selectedIndex].text;
+           document.getElementById('summary-period').textContent = `Periodo: ${periodText} (${summary.daysCount} días: ${summary.firstDateFormatted} - ${summary.lastDateFormatted})`;
+           document.getElementById('summary-total-profit')?.parentElement.classList.toggle('js-hidden', !isPinActive);
+       }
+       function calculateSummaryForSelectedProducts(selectedKeys, historicalData, period = "Total") {
+           let totalSold = 0, totalIncome = 0, totalProfit = 0; const relevantDaysData = new Set();
+           historicalData.forEach(day => { if (period === "Total" || day.date.startsWith(period)) { let dayHasRelevantProduct = false; day.products.forEach(product => { const productKey = `${String(product.category || 'Otros').trim()}-${String(product.name || '').trim()}`; if (selectedKeys.has(productKey)) { totalSold += product.vendido || 0; totalIncome += product.importe || 0; totalProfit += product.ganancias || 0; dayHasRelevantProduct = true; } }); if (dayHasRelevantProduct) { relevantDaysData.add(day.date); } } });
+           const sortedDates = Array.from(relevantDaysData).sort(); const firstDate = sortedDates.length > 0 ? sortedDates[0] : null; const lastDate = sortedDates.length > 0 ? sortedDates[sortedDates.length - 1] : null;
+           const daysCount = sortedDates.length; const formatDate = (isoDate) => { if (!isoDate) return 'N/A'; try { const [y,m,d] = isoDate.split('-'); return `${d}/${m}/${y}`; } catch { return isoDate; } }
+           return { totalSold, totalIncome, totalProfit, firstDateFormatted: formatDate(firstDate), lastDateFormatted: formatDate(lastDate), daysCount };
+       }
+       function closeProductSummaryModal() { if (productSummaryModal) { productSummaryModal.style.display = 'none'; document.getElementById('selected-products-list').innerHTML = ''; currentSelectedProductKeys.clear(); } }
+
+       // --- Funciones Informe Rendimiento Productos ---
+       function showPerformanceReportModal() {
+           if (!performanceReportModal) return; const periodSelector = document.getElementById('performancePeriodSelector'); const criteriaSelector = document.getElementById('performanceCriteriaSelector');
+           if (!periodSelector || !criteriaSelector) return; const availableMonths = getAvailableMonths(); periodSelector.innerHTML = '<option value="Total">Total Histórico</option>';
+           availableMonths.forEach(month => { const option = document.createElement('option'); option.value = month.value; option.textContent = month.text; periodSelector.appendChild(option); });
+           periodSelector.value = "Total"; criteriaSelector.value = "units"; document.getElementById('topProductsTable').querySelector('tbody').innerHTML = '<tr><td colspan="5" class="text-center py-4">Selecciona período y criterio.</td></tr>';
+           document.getElementById('reportPeriodDisplay').textContent = 'Calculando...'; criteriaSelector.querySelector('option[value="profit"]').classList.toggle('js-hidden', !isPinActive);
+           document.querySelectorAll('#performanceReportModal .profit-col').forEach(el => el.classList.toggle('js-hidden', !isPinActive)); performanceReportModal.style.display = 'flex'; generatePerformanceReport();
+       }
+       function closePerformanceReportModal() { if (performanceReportModal) performanceReportModal.style.display = 'none'; }
+       function generatePerformanceReport() {
+           if (!performanceReportModal || performanceReportModal.style.display !== 'flex') return;
+           const periodSelector = document.getElementById('performancePeriodSelector'); const criteriaSelector = document.getElementById('performanceCriteriaSelector');
+           const topTableBody = document.getElementById('topProductsTable')?.querySelector('tbody'); const reportPeriodDisplay = document.getElementById('reportPeriodDisplay');
+           if (!periodSelector || !criteriaSelector || !topTableBody || !reportPeriodDisplay) { console.error("DOM informe rendimiento no encontrado."); return; }
+           const selectedPeriod = periodSelector.value; let selectedCriteria = criteriaSelector.value; const profitOption = criteriaSelector.querySelector('option[value="profit"]'); const profitColumns = document.querySelectorAll('#performanceReportModal .profit-col');
+           if (!isPinActive) { if (profitOption) profitOption.classList.add('js-hidden'); profitColumns.forEach(el => el.classList.add('js-hidden')); if (selectedCriteria === 'profit') { selectedCriteria = 'income'; criteriaSelector.value = 'income'; console.warn("Criterio cambiado a 'income', PIN no activo."); } }
+           else { if (profitOption) profitOption.classList.remove('js-hidden'); profitColumns.forEach(el => el.classList.remove('js-hidden')); } showLoading("Generando informe...");
+           setTimeout(() => {
+                try {
+                   const historicalData = loadAllHistoricalData(); const productPerformance = {}; const uniqueDays = new Set();
+                   historicalData.forEach(day => { if (selectedPeriod === "Total" || day.date.startsWith(selectedPeriod)) { uniqueDays.add(day.date); day.products.forEach(product => { const key = `${String(product.category||'Otros').trim()}-${String(product.name||'').trim()}`; if (!productPerformance[key]) { productPerformance[key] = { units: 0, income: 0, profit: 0, category: String(product.category||'Otros').trim(), name: String(product.name||'').trim() }; } productPerformance[key].units += product.vendido||0; productPerformance[key].income += product.importe||0; productPerformance[key].profit += product.ganancias||0; }); } });
+                   const performanceArray = Object.values(productPerformance).filter(item => item.units > 0 || item.income > 0);
+                   performanceArray.sort((a, b) => { switch (selectedCriteria) { case 'income': return b.income - a.income; case 'profit': return isPinActive ? (b.profit - a.profit) : (b.income - a.income); case 'units': default: return b.units - a.units; } });
+                   topTableBody.innerHTML = ''; const topN = 10; performanceArray.slice(0, topN).forEach((item, index) => { const row = topTableBody.insertRow(); row.className = "hover:bg-gray-700/50"; row.innerHTML = `<td class="px-4 py-2">${index+1}</td><td class="px-4 py-2">${item.name} <em class='text-xs text-gray-500'>(${item.category})</em></td><td class="px-4 py-2 text-right">${item.units}</td><td class="px-4 py-2 text-right">${item.income.toFixed(2)}</td><td class="px-4 py-2 text-right profit-col ${!isPinActive ? 'js-hidden' : ''}">${isPinActive ? item.profit.toFixed(2) : ''}</td>`; });
+                    if (performanceArray.length === 0) { topTableBody.innerHTML = '<tr><td colspan="5" class="text-center py-4">No hay datos de ventas.</td></tr>'; }
+                   const sortedDays = Array.from(uniqueDays).sort(); const firstDateOverall = sortedDays.length > 0 ? sortedDays[0] : null; const lastDateOverall = sortedDays.length > 0 ? sortedDays[sortedDays.length - 1] : null;
+                   const formatDate = (isoDate) => isoDate ? isoDate.split('-').reverse().join('/') : 'N/A'; const periodText = selectedPeriod === "Total" ? "Histórico Completo" : periodSelector.options[periodSelector.selectedIndex].text;
+                    reportPeriodDisplay.textContent = `Informe para: ${periodText} (${uniqueDays.size} días: ${formatDate(firstDateOverall)} - ${formatDate(lastDateOverall)})`;
+                } catch (e) { console.error("Error generando informe rendimiento:", e); alert(`Error: ${e.message}`); topTableBody.innerHTML = '<tr><td colspan="5" class="text-center py-4">Error al generar.</td></tr>'; reportPeriodDisplay.textContent = 'Error'; }
+                finally { hideLoading(); }
+            }, 50);
+       }
+
+       // --- Funciones Informe Comparación Períodos ---
+       function showComparisonModal() {
+            if (!comparisonModal) return; const period1Selector = document.getElementById('comparisonPeriod1Selector'); const period2Selector = document.getElementById('comparisonPeriod2Selector');
+            if (!period1Selector || !period2Selector) return; const availableMonths = getAvailableMonths(); const populate = (selector) => { selector.innerHTML = '<option value="Total">Total Histórico</option>'; availableMonths.forEach(month => { const option = document.createElement('option'); option.value = month.value; option.textContent = month.text; selector.appendChild(option); }); };
+            populate(period1Selector); populate(period2Selector);
+             if (availableMonths.length >= 2) { period1Selector.value = availableMonths[availableMonths.length - 1].value; period2Selector.value = availableMonths[availableMonths.length - 2].value; }
+             else if (availableMonths.length === 1) { period1Selector.value = availableMonths[0].value; period2Selector.value = "Total"; }
+             else { period1Selector.value = "Total"; period2Selector.value = "Total"; }
+            document.getElementById('comparisonTable').querySelector('tbody').innerHTML = '<tr><td colspan="5" class="text-center py-4">Selecciona períodos diferentes.</td></tr>';
+            document.getElementById('comparisonPeriodDisplay').textContent = ''; comparisonModal.style.display = 'flex'; generateComparisonReport();
+       }
+       function closeComparisonModal() { if (comparisonModal) comparisonModal.style.display = 'none'; }
+       function calculateTotalsForPeriod(period, historicalData) {
+           let income = 0, profit = 0, expenses = 0; const uniqueDays = new Set();
+           historicalData.forEach(day => { if (period === "Total" || day.date.startsWith(period)) { uniqueDays.add(day.date); day.products.forEach(p => { income += p.importe || 0; profit += p.ganancias || 0; }); day.gastos.forEach(g => { if (!g.isCashCollection) { expenses += g.amount || 0; } }); } });
+            const sortedDays = Array.from(uniqueDays).sort(); const firstDate = sortedDays.length > 0 ? sortedDays[0] : null; const lastDate = sortedDays.length > 0 ? sortedDays[sortedDays.length - 1] : null;
+            return { income, profit, expenses, netBalance: income - expenses, daysCount: uniqueDays.size, firstDate, lastDate };
+       }
+       function generateComparisonReport() {
+           if (!comparisonModal || comparisonModal.style.display !== 'flex') return;
+           const period1Selector = document.getElementById('comparisonPeriod1Selector'); const period2Selector = document.getElementById('comparisonPeriod2Selector');
+           const tableBody = document.getElementById('comparisonTable')?.querySelector('tbody'); const reportPeriodDisplay = document.getElementById('comparisonPeriodDisplay');
+           if (!period1Selector || !period2Selector || !tableBody || !reportPeriodDisplay) { console.error("DOM modal comparación no encontrado."); return; }
+            const period1 = period1Selector.value; const period2 = period2Selector.value;
+             if (period1 === period2) { tableBody.innerHTML = '<tr><td colspan="5" class="text-center py-4">Selecciona dos períodos diferentes.</td></tr>'; reportPeriodDisplay.textContent = ''; return; }
+            showLoading("Generando comparación...");
+            setTimeout(() => {
+                try {
+                    const historicalData = loadAllHistoricalData(); const data1 = calculateTotalsForPeriod(period1, historicalData); const data2 = calculateTotalsForPeriod(period2, historicalData);
+                    tableBody.innerHTML = ''; const formatCurrency = (value) => value.toFixed(2); const formatPercentage = (value) => { if (!isFinite(value)) return 'N/A'; const sign = value > 0 ? '+' : ''; return `${sign}${value.toFixed(1)}%`; }; const calculateDiff = (v1, v2) => v1 - v2; const calculatePercDiff = (v1, v2) => (v2 === 0 ? (v1 === 0 ? 0 : Infinity) : ((v1 - v2) / Math.abs(v2)) * 100); const getDiffClass = (perc) => { if (!isFinite(perc) || perc === 0) return ''; return perc > 0 ? 'text-green-400' : 'text-red-400'; }; // Tailwind classes
+                    const metrics = [ { label: "Ingresos Brutos", key: "income" }, { label: "Margen Bruto Prod.", key: "profit", sensitive: true }, { label: "Gastos Operativos", key: "expenses", higherIsWorse: true }, { label: "Balance Neto", key: "netBalance" }, { label: "Días con Datos", key: "daysCount", isCount: true } ];
+                     metrics.forEach(metric => { if (metric.sensitive && !isPinActive) return; const val1 = data1[metric.key]; const val2 = data2[metric.key]; let diffAbsStr = '', diffPercStr = '', diffClass = ''; const diffAbs = calculateDiff(val1, val2); const diffPerc = calculatePercDiff(val1, val2); if (!metric.isCount) { diffAbsStr = formatCurrency(diffAbs); diffPercStr = formatPercentage(diffPerc); } else { diffAbsStr = diffAbs.toString(); diffPercStr = formatPercentage(diffPerc); } const effectivePerc = metric.higherIsWorse ? -diffPerc : diffPerc; diffClass = getDiffClass(effectivePerc); const row = tableBody.insertRow(); row.className = `hover:bg-gray-700/50 ${metric.sensitive ? 'profit-row' : ''}`; row.style.display = (metric.sensitive && !isPinActive) ? 'none' : ''; row.innerHTML = `<td class="px-4 py-2">${metric.label}</td><td class="px-4 py-2 text-right">${metric.isCount?val1:formatCurrency(val1)}</td><td class="px-4 py-2 text-right">${metric.isCount?val2:formatCurrency(val2)}</td><td class="px-4 py-2 text-right ${diffClass}">${diffAbsStr}</td><td class="px-4 py-2 text-right ${diffClass}">${diffPercStr}</td>`; });
+                    const formatDate = (isoDate) => isoDate ? isoDate.split('-').reverse().join('/') : 'N/A'; const getPeriodText = (sel) => sel.value === "Total" ? "Total Histórico" : sel.options[sel.selectedIndex].text;
+                     reportPeriodDisplay.textContent = `Comparando: ${getPeriodText(period1Selector)} (${data1.daysCount} d) vs ${getPeriodText(period2Selector)} (${data2.daysCount} d)`;
+                } catch (e) { console.error("Error generando comparación:", e); alert(`Error: ${e.message}`); tableBody.innerHTML = '<tr><td colspan="5" class="text-center py-4">Error al generar.</td></tr>'; reportPeriodDisplay.textContent = 'Error'; }
+                finally { hideLoading(); }
+            }, 50);
+        }
+
+       // --- Función Comprobación Fin de Día ---
+       function checkEndOfDay() {
+           if (!dateInput || !dateInput.value) { alert("Selecciona fecha válida."); return; }
+           const currentDateStr = dateInput.value; console.log(`Comprobando fin de día para: ${currentDateStr}`);
+           let missingFinales = []; products.forEach(p => { if (p.finales === '' || p.finales === null || p.finales === undefined) { missingFinales.push(`- ${p.name} (${p.category})`); } });
+           let message = `Resumen Rápido ${currentDateStr}:\n-----------------------------------\n`;
+            message += `Ingresos Brutos: ${document.getElementById('total-importe')?.textContent || 'N/A'}\n`;
+            if (isPinActive) { message += `Margen Bruto: ${document.getElementById('total-ganancias')?.textContent || 'N/A'}\n`; }
+            message += `Gastos/Recogidas: ${document.getElementById('total-gastos-display')?.textContent || 'N/A'}\n`;
+            message += `Total Neto Caja: ${document.getElementById('total-despues-gastos')?.textContent || 'N/A'}\n`;
+             if (isPinActive) { message += `Stock (Costo): ${document.getElementById('total-stock-cost')?.textContent || 'N/A'}\n`; message += `Stock (Venta): ${document.getElementById('total-stock-value')?.textContent || 'N/A'}\n`; }
+            message += `-----------------------------------\n\n`;
+            if (missingFinales.length > 0) {
+                message += `⚠️ ¡Atención! Falta rellenar "Finales" para:\n`;
+                message += missingFinales.slice(0, 5).join('\n'); if (missingFinales.length > 5) { message += `\n... y ${missingFinales.length - 5} más.`; }
+                message += `\n\n¿Marcar día como revisado y guardar?`;
+                if (!confirm(message)) { console.log("Cierre cancelado por 'Finales' faltantes."); return; } else { console.log("Usuario confirma a pesar de 'Finales' faltantes."); }
+            } else { message += `Todos los campos "Finales" parecen estar rellenados. 👍\n¿Marcar día como revisado y guardar?`; if (!confirm(message)) { console.log("Cierre cancelado."); return; } }
+            guardarIPV(currentDateStr); alert(`Datos ${currentDateStr} guardados.`); console.log(`Fin día ${currentDateStr} completado.`);
+       }
+
+       // --- Funciones Categorías Tabla (Expandir/Contraer) ---
+       function toggleCategory(categoryId, forceExpand = false) {
+            const productRows = document.querySelectorAll(`.product-row.${categoryId}`); const toggleIcon = document.getElementById(`icon-${categoryId}`);
+            if (!productRows.length || !toggleIcon) return; const isCurrentlyHiddenByToggle = toggleIcon.textContent === '+'; const shouldExpand = forceExpand || isCurrentlyHiddenByToggle;
+            productRows.forEach(row => {
+                const isSearchHidden = row.classList.contains('search-hidden');
+                if (!isSearchHidden) { // Solo actuar si no está oculto por búsqueda
+                    row.style.display = shouldExpand ? '' : 'none'; // Control directo de display
+                }
+                // La clase 'hidden' de Tailwind es para el estado colapsado general, no para la búsqueda
+                if (shouldExpand) row.classList.remove('hidden'); else row.classList.add('hidden');
+            });
+            toggleIcon.textContent = shouldExpand ? '-' : '+'; updateSelectionState(); updateToggleAllButtonState();
+       }
+       function updateToggleAllButtonState() {
+           const allCategoryHeaders = document.querySelectorAll('#product-list .category-header'); if (!allCategoryHeaders.length) return;
+           let hiddenCount = 0; let totalVisibleCategories = 0;
+           allCategoryHeaders.forEach(header => { if (header.style.display !== 'none') { totalVisibleCategories++; const icon = header.querySelector('.toggle-icon'); if (icon && icon.textContent === '+') hiddenCount++; } });
+           const toggleBtn = document.getElementById('toggleAllBtn'); if (!toggleBtn) return;
+           if (totalVisibleCategories === 0) { toggleBtn.textContent = 'Expandir Todo'; toggleBtn.disabled = true; }
+           else { toggleBtn.disabled = false; toggleBtn.textContent = (hiddenCount > 0) ? 'Expandir Todo' : 'Contraer Todo'; }
+       }
+       function toggleAllCategories() {
+           const toggleBtn = document.getElementById('toggleAllBtn'); if (!toggleBtn || toggleBtn.disabled) return;
+           const shouldExpand = toggleBtn.textContent.includes('Expandir');
+           const allVisibleCategoryHeaders = document.querySelectorAll('#product-list .category-header:not([style*="display: none"])');
+           allVisibleCategoryHeaders.forEach(header => { const categoryId = header.dataset.categoryId; const icon = header.querySelector('.toggle-icon'); const isCurrentlyHidden = icon ? icon.textContent === '+' : false; if ((shouldExpand && isCurrentlyHidden) || (!shouldExpand && !isCurrentlyHidden)) { toggleCategory(categoryId, shouldExpand); } });
+       }
+    </script>
+</body>
+</html>

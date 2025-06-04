@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="./icono.png">
+    <title>App de Gastos</title>
+
+    <style>
+ body {
+    font-family: 'Inter', sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background: #f0f2f5;
+    color: #4a4a4a; /* Gris oscuro para todo el texto */
+}
+
+.content {
+    flex: 1;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: #ffffff;
+    margin: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.footer-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 60px;
+    background: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-top: 1px solid #e0e0e0;
+    box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
+    z-index: 10;
+}
+
+.button-group {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    padding: 0 20px;
+}
+
+.button-group button {
+    flex: 1;
+    margin: 0 10px;
+    background: #007bff;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background 0.3s ease;
+}
+
+.button-group button:hover {
+    background: #0056b3;
+}
+
+#panel-gasto,
+#panel-importe {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: #ffffff;
+    transition: left 0.3s ease-in-out;
+    padding: 20px;
+    z-index: 15;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    left: 100%;
+}
+
+#panel-gasto.fullscreen,
+#panel-importe.fullscreen {
+    left: 0;
+}
+
+.panel-content {
+    width: 100%;
+    max-width: 500px;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+}
+
+.panel-content div {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.panel-content div label,
+.panel-content div input {
+    margin-bottom: 10px;
+}
+
+button {
+    margin: 10px;
+    background: #007bff;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.panel-content button:last-child {
+    align-self: flex-end;
+}
+
+label {
+    font-size: 18px;
+    font-weight: 500;
+    color: #4a4a4a; /* Gris oscuro */
+}
+
+input {
+    width: calc(100% - 40px);
+    padding: 12px;
+    margin-bottom: 10px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background: #f9f9f9;
+    color: #4a4a4a; /* Gris oscuro */
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+input:focus {
+    border-color: #007bff;
+    outline: none;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1), 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+ul {
+    list-style-type: none;
+    padding: 0;
+    width: 100%;
+}
+
+li {
+    background: #f9f9f9;
+    margin-bottom: 10px;
+    padding: 12px;
+    border-radius: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    color: #4a4a4a; /* Gris oscuro */
+}
+
+.delete-btn {
+    background: #dc3545;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.delete-btn:hover {
+    background: #c82333;
+}
+
+#saldo {
+    font-size: 2em;
+    color: #007bff;
+    background: #e3f2fd;
+    padding: 10px 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+#saldo:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+}
+
+#saldo::before {
+    content: '💰 ';
+    display: inline-block;
+    margin-right: 10px;
+    animation: balance 1s infinite;
+}
+
+@keyframes balance {
+    0% { transform: translateX(-2px); }
+    50% { transform: translateX(2px); }
+    100% { transform: translateX(-2px); }
+}
+
+@media (max-width: 768px) {
+    .content {
+        padding: 10px;
+    }
+
+    input, button {
+        font-size: 16px;
+        padding: 8px;
+    }
+
+    .button-group {
+        flex-direction: row;
+    }
+
+    .button-group button {
+        margin: 5px;
+        padding: 8px;
+        font-size: 14px;
+    }
+}
+h1, h2, h3 {
+    color: #524b4b; /* Color más oscuro para mejor visibilidad */
+
+@media (max-width: 480px) {
+    .content {
+        padding: 10px;
+    }
+
+    input, button {
+        font-size: 14px;
+        padding: 6px;
+    }
+
+    .button-group {
+        flex-direction: row;
+        justify-content: center;
+    }
+
+    .button-group button {
+        margin: 5px;
+        padding: 6px;
+        font-size: 12px;
+    }
+}
+
+    </style>
+</head>
+<body>
+    <!DOCTYPE html>
+    <html lang="es">
+    <head>
+      
+        <div class="content">
+            <h1>Saldo: <span id="saldo">0</span></h1>
+            <h2>Lista de Gastos</h2>
+            <ul id="gastos-lista"></ul>
+            <h3>Total Gastos: <span id="total-gastos">0</span></h3>
+            <h2>Lista de Importes</h2>
+            <ul id="importe-lista"></ul>
+            <h3>Total Importes: <span id="total-importes">0</span></h3>
+            
+            
+        </div>
+        <div class="footer-bar">
+            <div class="button-group">
+                <button id="btn-importe" onclick="abrirPanelImporte()">Agregar Importe</button>
+                <button id="btn-gasto" onclick="abrirPanelGasto()">Agregar Gasto</button>
+            </div>
+        </div>
+        <div id="panel-gasto" class="panel">
+            <div class="panel-content">
+                
+               <div> <label for="gasto">Gasto:</label>
+                <input type="text" id="gasto">
+                <label for="descripcion-gasto">Descripción:</label>
+                <input type="text" id="descripcion-gasto"></div>
+                <button onclick="agregarGasto()">Agregar Gasto</button>
+                <button onclick="cerrarPanelGasto()">Cerrar</button>
+            </div>
+        </div>
+        <div id="panel-importe" class="panel">
+            <div class="panel-content">
+               
+               <div> <label for="importe">Importe:</label>
+                <input type="number" id="importe">
+                <label for="descripcion-importe">Descripción:</label>
+                <input type="text" id="descripcion-importe"></div>
+                <button onclick="agregarImporte()">Agregar Importe</button>
+                <button onclick="cerrarPanelImporte()">Cerrar</button>
+            </div>
+        </div>
+    
+    <script>
+    let totalGastos = 0;
+let totalImportes = 0;
+const panelGasto = document.getElementById('panel-gasto');
+const panelImporte = document.getElementById('panel-importe');
+
+// Cargar datos desde localStorage al iniciar
+document.addEventListener('DOMContentLoaded', () => {
+    cargarDatos();
+    actualizarSaldo();
+});
+
+function agregarGasto() {
+    const gastoInput = document.getElementById('gasto');
+    const descripcionGastoInput = document.getElementById('descripcion-gasto');
+    const gastoLista = document.getElementById('gastos-lista');
+    const nuevoGasto = document.createElement('li');
+    nuevoGasto.textContent = `${gastoInput.value} - ${descripcionGastoInput.value}`;
+    const deleteBtn = document.createElement('button');
+    deleteBtn.textContent = 'Eliminar';
+    deleteBtn.classList.add('delete-btn');
+    deleteBtn.onclick = function() {
+        gastoLista.removeChild(nuevoGasto);
+        totalGastos -= parseFloat(gastoInput.value);
+        document.getElementById('total-gastos').textContent = totalGastos;
+        actualizarSaldo();
+        guardarDatos();
+    };
+    nuevoGasto.appendChild(deleteBtn);
+    gastoLista.appendChild(nuevoGasto);
+    totalGastos += parseFloat(gastoInput.value);
+    document.getElementById('total-gastos').textContent = totalGastos;
+    actualizarSaldo();
+    guardarDatos();
+    gastoInput.value = '';
+    descripcionGastoInput.value = '';
+    cerrarPanelGasto();
+}
+
+function agregarImporte() {
+    const importeInput = document.getElementById('importe');
+    const descripcionImporteInput = document.getElementById('descripcion-importe');
+    const importeLista = document.getElementById('importe-lista');
+    const nuevoImporte = document.createElement('li');
+    nuevoImporte.textContent = `${importeInput.value} - ${descripcionImporteInput.value}`;
+    const deleteBtn = document.createElement('button');
+    deleteBtn.textContent = 'Eliminar';
+    deleteBtn.classList.add('delete-btn');
+    deleteBtn.onclick = function() {
+        importeLista.removeChild(nuevoImporte);
+        totalImportes -= parseFloat(importeInput.value);
+        document.getElementById('total-importes').textContent = totalImportes;
+        actualizarSaldo();
+        guardarDatos();
+    };
+    nuevoImporte.appendChild(deleteBtn);
+    importeLista.appendChild(nuevoImporte);
+    totalImportes += parseFloat(importeInput.value);
+    document.getElementById('total-importes').textContent = totalImportes;
+    actualizarSaldo();
+    guardarDatos();
+    importeInput.value = '';
+    descripcionImporteInput.value = '';
+    cerrarPanelImporte();
+}
+
+function actualizarSaldo() {
+    const saldo = totalImportes - totalGastos;
+    document.getElementById('saldo').textContent = saldo;
+}
+
+function abrirPanelGasto() {
+    panelGasto.classList.add('fullscreen');
+}
+
+function cerrarPanelGasto() {
+    panelGasto.classList.remove('fullscreen');
+}
+
+function abrirPanelImporte() {
+    panelImporte.classList.add('fullscreen');
+}
+
+function cerrarPanelImporte() {
+    panelImporte.classList.remove('fullscreen');
+}
+
+function guardarDatos() {
+    const gastos = [];
+    const importes = [];
+    document.querySelectorAll('#gastos-lista li').forEach(item => {
+        gastos.push(item.textContent.replace('Eliminar', '').trim());
+    });
+    document.querySelectorAll('#importe-lista li').forEach(item => {
+        importes.push(item.textContent.replace('Eliminar', '').trim());
+    });
+    localStorage.setItem('gastos', JSON.stringify(gastos));
+    localStorage.setItem('importes', JSON.stringify(importes));
+    localStorage.setItem('totalGastos', totalGastos);
+    localStorage.setItem('totalImportes', totalImportes);
+}
+
+function cargarDatos() {
+    const gastos = JSON.parse(localStorage.getItem('gastos')) || [];
+    const importes = JSON.parse(localStorage.getItem('importes')) || [];
+    totalGastos = parseFloat(localStorage.getItem('totalGastos')) || 0;
+    totalImportes = parseFloat(localStorage.getItem('totalImportes')) || 0;
+    const gastoLista = document.getElementById('gastos-lista');
+    const importeLista = document.getElementById('importe-lista');
+    gastos.forEach(gasto => {
+        const nuevoGasto = document.createElement('li');
+        nuevoGasto.textContent = gasto;
+        const deleteBtn = document.createElement('button');
+        deleteBtn.textContent = 'Eliminar';
+        deleteBtn.classList.add('delete-btn');
+        deleteBtn.onclick = function() {
+            gastoLista.removeChild(nuevoGasto);
+            totalGastos -= parseFloat(gasto.split(' - ')[0]);
+            document.getElementById('total-gastos').textContent = totalGastos;
+            actualizarSaldo();
+            guardarDatos();
+        };
+        nuevoGasto.appendChild(deleteBtn);
+        gastoLista.appendChild(nuevoGasto);
+    });
+    importes.forEach(importe => {
+        const nuevoImporte = document.createElement('li');
+        nuevoImporte.textContent = importe;
+        const deleteBtn = document.createElement('button');
+        deleteBtn.textContent = 'Eliminar';
+        deleteBtn.classList.add('delete-btn');
+        deleteBtn.onclick = function() {
+            importeLista.removeChild(nuevoImporte);
+            totalImportes -= parseFloat(importe.split(' - ')[0]);
+            document.getElementById('total-importes').textContent = totalImportes;
+            actualizarSaldo();
+            guardarDatos();
+        };
+        nuevoImporte.appendChild(deleteBtn);
+        importeLista.appendChild(nuevoImporte);
+    });
+    document.getElementById('total-gastos').textContent = totalGastos;
+    document.getElementById('total-importes').textContent = totalImportes;
+}
+
+    </script>
+</body>
+</html>

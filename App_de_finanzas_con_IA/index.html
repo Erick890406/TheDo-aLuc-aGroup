@@ -1,0 +1,1007 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro Diario PRO v7 (CUP - Preguntas IA + Exp/Imp)</title>
+    <!-- Fuentes y Librerías -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <!-- Estilos CSS (sin cambios respecto a la versión anterior) -->
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #1f2937; color: #d1d5db; padding-top: 4rem; /* Espacio para banner fijo */ }
+        .main-container { max-width: 80rem; margin: 0 auto; padding: 1rem; }
+        .card { background-color: #374151; border: 1px solid #4b5563; border-radius: 0.75rem; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); padding: 1.5rem; position: relative; }
+        .card-title { color: #f9fafb; font-weight: 600; font-size: 1.1rem; margin-bottom: 1rem; border-bottom: 1px solid #4b5563; padding-bottom: 0.5rem; }
+        input[type="text"], input[type="number"], input[type="date"], input[type="password"], select, textarea { background-color: #4b5563; border: 1px solid #6b7280; color: #f9fafb; border-radius: 0.375rem; padding: 0.5rem 0.75rem; transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out; width: 100%; }
+        input::placeholder, textarea::placeholder { color: #9ca3af; }
+        input:focus, select:focus, textarea:focus { outline: none; border-color: #34d399; box-shadow: 0 0 0 2px rgba(52, 211, 153, 0.3); }
+        label { display: block; text-sm font-medium text-gray-400 mb-1; }
+        .btn { background-color: #10b981; color: #ffffff; font-weight: 600; padding: 0.6rem 1rem; border-radius: 0.375rem; transition: all 0.2s ease; width: 100%; text-align: center; cursor: pointer; border: none; }
+        .btn:hover:not(:disabled) { background-color: #059669; }
+        .btn:active:not(:disabled) { transform: scale(0.98); }
+        .btn:disabled { opacity: 0.6; cursor: not-allowed; }
+        .btn-secondary { background-color: #4b5563; color: #e5e7eb; }
+        .btn-secondary:hover:not(:disabled) { background-color: #525f74; }
+        .btn-small { padding: 0.3rem 0.6rem; font-size: 0.8rem; }
+        .btn-danger { background-color: #dc2626; } .btn-danger:hover:not(:disabled) { background-color: #b91c1c; }
+        .btn-toggle { background-color: #4b5563; color: #e5e7eb; font-size: 0.75rem; padding: 0.25rem 0.5rem; border-radius: 0.375rem; border: 1px solid #6b7280; cursor: pointer; }
+        .btn-toggle:hover { background-color: #525f74; }
+        .expense-type-btn { padding: 0.5rem 0.8rem; border: 1px solid #6b7280; border-radius: 0.375rem; background-color: #4b5563; color: #d1d5db; font-weight: 500; font-size: 0.9rem; cursor: pointer; transition: all 0.2s ease; flex-grow: 1; text-align: center; }
+        .expense-type-btn:hover { background-color: #525f74; border-color: #9ca3af; }
+        .expense-type-btn.active { background-color: #10b981; border-color: #059669; color: #ffffff; font-weight: 600; }
+        .prompt-btn { border: 1px solid #4b5563; background-color: #374151; color: #e5e7eb; font-size: 0.8rem; font-weight: 500; padding: 0.4rem 0.8rem; border-radius: 0.375rem; transition: all 0.15s ease-in-out; cursor: pointer; display: inline-block; margin: 0.25rem; }
+        .prompt-btn:hover:not(:disabled) { border-color: #2dd4bf; color: #ffffff; background-color: #2c3a4f; transform: translateY(-1px); }
+        .prompt-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+        #transaction-list { max-height: 550px; overflow-y: auto; padding-right: 0.5rem; margin-top: 1rem;}
+        .transaction-item { background-color: #2b3648; border-left-width: 4px; padding: 0.6rem 1rem; border-radius: 0.375rem; margin-bottom: 0.5rem; display: flex; justify-content: space-between; align-items: center; font-size: 0.9rem; transition: background-color 0.2s, transform 0.1s; }
+        .transaction-item:hover { background-color: #374151; }
+        .transaction-item.added { animation: fadeIn 0.5s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .transaction-item-details { flex-grow: 1; margin-right: 1rem; overflow: hidden; display: flex; align-items: center; gap: 0.5rem; }
+        .transaction-icon { font-size: 1rem; flex-shrink: 0; }
+        .transaction-text-content { overflow: hidden; }
+        .transaction-item-desc { display: block; font-weight: 500; color: #e5e7eb; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .transaction-item-date { display: block; font-size: 0.75rem; color: #9ca3af; }
+        .transaction-item-amount { font-weight: 600; flex-shrink: 0; margin-left: auto; margin-right: 1rem; }
+        .transaction-item.income-ipv, .transaction-item.income-pizza { border-left-color: #34d399; /* Verde Ingreso */ }
+        .transaction-item.profit-ipv, .transaction-item.profit-pizza { border-left-color: #a3e635; /* Lima Ganancia */ }
+        .transaction-item.expense-business { border-left-color: #f87171; /* Rojo Negocio */ }
+        .transaction-item.expense-personal { border-left-color: #fb923c; /* Naranja Personal */ }
+        .delete-btn { color: #6b7280; background: none; border: none; cursor: pointer; font-size: 0.8rem; padding: 0.2rem 0.4rem; flex-shrink: 0; }
+        .delete-btn:hover { color: #f87171; }
+        #status-message, #ai-status { min-height: 20px; text-align: center; font-size: 0.85rem; margin-top: 0.5rem; }
+        .status-success { color: #34d399; } .status-error { color: #f87171; }
+        .loader { border: 4px solid #4b5563; border-top: 4px solid #2dd4bf; border-radius: 50%; width: 20px; height: 20px; animation: spin 1s linear infinite; margin: 0 auto; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        #ai-report-output { background-color: #2c3a48; border: 1px solid #4b5563; border-radius: 0.5rem; padding: 1rem 1.25rem; margin-top: 1rem; min-height: 100px; max-height: 450px; overflow-y: auto; color: #e5e7eb; font-size: 0.9rem; line-height: 1.6; }
+        #ai-report-output h3 { font-size: 1.1rem; font-weight: 600; margin-top: 0.8rem; margin-bottom: 0.4rem; color: #ffffff; }
+        #ai-report-output h2 { font-size: 1.2rem; font-weight: 700; margin-bottom: 0.5rem; color: #ffffff; }
+        #ai-report-output ul { margin-left: 1.2rem; margin-bottom: 0.8rem; list-style: disc; }
+        #ai-report-output li { margin-bottom: 0.3rem; }
+        #ai-report-output p { margin-bottom: 0.8rem; }
+        #ai-report-output strong { font-weight: 600; color: #ffffff; }
+        .history-filter-container { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.75rem; padding-bottom: 0.75rem; border-bottom: 1px solid #4b5563;}
+        .history-filter-container label { margin-bottom: 0; white-space: nowrap; font-size: 0.8rem; }
+        .history-filter-container input[type="date"] { padding: 0.3rem 0.5rem; font-size: 0.85rem; width: auto; flex-grow: 1;}
+        .show-all-btn { font-size: 0.75rem; padding: 0.3rem 0.6rem; background-color: #4b5563; color: #e5e7eb; border: 1px solid #6b7280; border-radius: 0.375rem; cursor: pointer; transition: background-color 0.2s; white-space: nowrap; }
+        .show-all-btn:hover { background-color: #525f74; }
+        .hidden { display: none; }
+        .api-key-section { background-color: #2b3648; padding: 0.75rem 1rem; border-radius: 0.5rem; border: 1px solid #4b5563; }
+        #quick-summary-banner { position: fixed; top: 0; left: 0; right: 0; background-color: rgba(17, 24, 39, 0.9); backdrop-filter: blur(5px); border-bottom: 1px solid #374151; padding: 0.4rem 1rem; z-index: 50; display: flex; justify-content: space-around; align-items: center; font-size: 0.8rem; color: #d1d5db; }
+        .summary-item strong { color: #ffffff; font-weight: 600; }
+        .summary-item span { margin-left: 0.3rem; }
+        .profit-bar-container { height: 8px; background-color: #4b5563; border-radius: 4px; overflow: hidden; margin: 0.5rem 0; width: 100%; }
+        .profit-bar-fill { height: 100%; background-color: #10b981; border-radius: 4px; transition: width 0.5s ease-out, background-color 0.5s ease; width: 0%; }
+        #recurring-list li { display: flex; justify-content: space-between; align-items: center; padding: 0.3rem 0; border-bottom: 1px solid #4b5563; font-size: 0.85rem; }
+        #recurring-list li:last-child { border-bottom: none; }
+        .chart-container { position: relative; height: 250px; width: 100%; margin-top: 1.5rem; }
+        /* Estilos Scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #1f2937; }
+        ::-webkit-scrollbar-thumb { background: #4b5563; border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: #6b7280; }
+    </style>
+</head>
+<body class="py-6 px-4">
+    <!-- Banner Resumen Rápido -->
+    <div id="quick-summary-banner">
+        <div class="summary-item"><strong>Hoy:</strong> <span id="summary-today-balance">---</span></div>
+        <div class="summary-item"><strong>Total:</strong> <span id="summary-total-balance">---</span></div>
+        <div class="summary-item"><strong>Margen Neto Reg.:</strong> <span id="summary-total-margin">---</span>%</div>
+    </div>
+
+    <!-- Contenedor Principal -->
+    <div class="main-container mt-6">
+        <!-- Encabezado -->
+        <header class="text-center mb-6">
+             <h1 class="text-2xl font-bold text-white">Registro Diario PRO v7 (CUP)</h1>
+             <p class="text-md text-gray-400 mt-1">Preguntas IA + Exportar/Importar</p>
+             <!-- Barra de Progreso Margen -->
+             <div class="max-w-md mx-auto mt-3">
+                 <div class="text-xs text-gray-400 text-left">Margen Ganancia Neta Registrada: <span id="profit-bar-text" class="font-semibold">--%</span></div>
+                 <div class="profit-bar-container"> <div id="profit-bar-fill" class="profit-bar-fill"></div> </div>
+             </div>
+        </header>
+
+        <!-- Mensaje de Estado Global -->
+        <div id="status-message"></div>
+
+        <!-- Contenido Principal (Grid) -->
+        <main class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <!-- Columna 1: Ingresos y Recurrentes -->
+            <div class="space-y-6">
+                <!-- Sección IPV -->
+                <section class="card">
+                    <h2 class="card-title">Ingresos/Ganancias IPV (TPV)</h2>
+                    <form id="ipv-form" class="space-y-3">
+                        <div><label for="ipv-date">Fecha:</label><input type="date" id="ipv-date" required></div>
+                        <div><label for="ipv-total">Ingreso Total IPV (CUP):</label><input type="number" id="ipv-total" required step="0.01" min="0" placeholder="Ej: 8500.50"></div>
+                        <div><label for="ipv-profit">Ganancia Neta IPV (CUP):</label><input type="number" id="ipv-profit" required step="0.01" min="0" placeholder="Ej: 3500.20"></div>
+                        <button type="submit" class="btn">Añadir IPV</button>
+                    </form>
+                </section>
+                <!-- Sección Pizza -->
+                <section class="card">
+                    <h2 class="card-title">Ingresos/Ganancias Pizza</h2>
+                    <form id="pizza-form" class="space-y-3">
+                        <div><label for="pizza-date">Fecha:</label><input type="date" id="pizza-date" required></div>
+                        <div><label for="pizza-total">Ingreso Total Pizza (CUP):</label><input type="number" id="pizza-total" required step="0.01" min="0" placeholder="Ej: 5100.00"></div>
+                         <div><label for="pizza-profit">Ganancia Neta Pizza (CUP):</label><input type="number" id="pizza-profit" required step="0.01" min="0" placeholder="Ej: 2200.00"></div>
+                        <button type="submit" class="btn">Añadir Pizza</button>
+                    </form>
+                </section>
+                <!-- Sección Recurrentes -->
+                <section class="card">
+                     <h2 class="card-title">Gastos Recurrentes (Negocio)</h2>
+                     <ul id="recurring-list" class="mb-3 max-h-40 overflow-y-auto text-sm">
+                         <li id="no-recurring" class="text-center text-gray-500 py-2">No hay gastos recurrentes definidos.</li>
+                     </ul>
+                     <form id="add-recurring-form" class="space-y-2">
+                         <div class="grid grid-cols-3 gap-2">
+                             <div class="col-span-2"><label for="recurring-desc" class="text-xs">Descripción:</label><input type="text" id="recurring-desc" placeholder="Ej: Alquiler Local" required></div>
+                             <div><label for="recurring-amount" class="text-xs">Monto (CUP):</label><input type="number" step="0.01" min="0.01" id="recurring-amount" placeholder="3000" required></div>
+                         </div>
+                         <button type="submit" class="btn btn-secondary btn-small !w-auto">Añadir Recurrente</button>
+                     </form>
+                     <hr class="border-gray-600 my-3">
+                     <button id="apply-recurring-btn" class="btn btn-small !w-full" disabled>Registrar Recurrentes de Hoy</button>
+                 </section>
+            </div>
+
+            <!-- Columna 2: Gasto Puntual y Resumen/IA -->
+            <div class="space-y-6">
+                 <!-- Sección Gasto Puntual -->
+                 <section class="card">
+                    <h2 class="card-title">Añadir Gasto (Puntual)</h2>
+                    <form id="expense-form" class="space-y-3">
+                        <div>
+                            <label>Tipo:</label>
+                            <div id="expense-type-buttons" class="flex space-x-2">
+                                <button type="button" class="expense-type-btn active" data-type="expense-business">Negocio 🏢</button>
+                                <button type="button" class="expense-type-btn" data-type="expense-personal">Personal 🏠</button>
+                            </div>
+                        </div>
+                        <div><label for="expense-date">Fecha:</label><input type="date" id="expense-date" required></div>
+                        <div>
+                            <label for="expense-category-select">Categoría:</label>
+                            <div class="flex gap-2 items-center">
+                                <select id="expense-category-select" class="flex-grow" required>
+                                    <option value="Otro">Otro Gasto</option> <!-- Opción por defecto -->
+                                </select>
+                                <button type="button" id="add-category-btn" class="btn btn-secondary btn-small !w-auto" title="Añadir Nueva Categoría">+</button>
+                            </div>
+                             <input type="text" id="new-expense-category" class="mt-1 text-sm hidden" placeholder="Nombre nueva categoría...">
+                        </div>
+                        <div><label for="expense-amount">Monto (CUP):</label><input type="number" id="expense-amount" required step="0.01" min="0.01" placeholder="Ej: 1250.75"></div>
+                        <div><label for="expense-description">Nota / Detalle (Opcional):</label><input type="text" id="expense-description" placeholder="Ej: Compra extra Mercado"></div>
+                        <button type="submit" class="btn btn-secondary">Añadir Gasto Puntual</button>
+                    </form>
+                </section>
+                 <!-- Sección Resumen/IA/Gráficos -->
+                 <section class="card">
+                    <h2 class="card-title">Resumen / IA / Gráficos</h2>
+                    <div class="text-center mb-4 space-x-2 space-y-2">
+                        <button id="generate-offline-summary-btn" class="prompt-btn bg-blue-700 hover:bg-blue-600 border-blue-600">Resumen Offline 📊</button>
+                        <button id="toggle-charts-btn" class="prompt-btn btn-secondary">Mostrar Gráficos 📈</button>
+                    </div>
+                    <hr class="border-gray-600 my-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-400 mb-3">Consultas rápidas a la IA:</label>
+                        <div id="ia-predefined-questions" class="flex flex-wrap gap-2 justify-center">
+                            <button class="prompt-btn ia-question-btn" data-prompt="Genera un resumen financiero general de los datos para todo el período. Indica: Ingreso Bruto Total, Ganancia Neta Total (suma de registros 'profit-*'), Gasto Negocio Total, Gasto Personal Total, y Balance Final (Ingreso Bruto - Gastos Totales). Formatea los montos en CUP. Añade 1 consejo corto si aplica.">Resumen General IA 🤖</button>
+                            <button class="prompt-btn ia-question-btn" data-prompt="Detalla los gastos de negocio ('expense-business') del último mes completo, agrupados por categoría. Muestra el total por categoría en CUP.">Gastos Negocio (Últ. Mes) 🏢</button>
+                            <button class="prompt-btn ia-question-btn" data-prompt="Calcula el Ingreso Bruto total y la Ganancia Neta total registrada para 'Pizza' durante todo el período. Muestra los montos en CUP.">Total Pizza (Ingr/Gan.) 🍕</button>
+                            <button class="prompt-btn ia-question-btn" data-prompt="Calcula el Ingreso Bruto total y la Ganancia Neta total registrada para 'IPV' durante todo el período. Muestra los montos en CUP.">Total IPV (Ingr/Gan.) 💳</button>
+                            <button class="prompt-btn ia-question-btn" data-prompt="Compara el total de Gasto de Negocio vs Gasto Personal para todo el período. ¿Cuál es mayor y por cuánto (en CUP)?">Comp. Gasto Neg. vs Pers. ⚖️</button>
+                            <button class="prompt-btn ia-question-btn" data-prompt="¿Cuál fue el día con mayor Ingreso Bruto total (sumando IPV y Pizza) registrado en los datos? Indica fecha y monto en CUP.">Día Mayor Ing. Bruto ☀️</button>
+                            <button id="show-custom-query-btn" class="prompt-btn btn-secondary">Otra Pregunta... ❓</button>
+                        </div>
+                        <!-- Área para pregunta personalizada -->
+                        <div id="custom-query-area" class="mt-4 hidden">
+                             <label for="custom-ai-query" class="block text-sm font-medium text-gray-400 mb-2">Escribe tu pregunta:</label>
+                             <textarea id="custom-ai-query" rows="2" class="w-full bg-gray-600 border border-gray-500 rounded-md p-2 text-sm focus:border-teal-500 focus:ring focus:ring-teal-500 focus:ring-opacity-50" placeholder="Ej: ¿Total de ganancia neta este mes en CUP?"></textarea>
+                             <button id="submit-custom-query-btn" class="btn w-full mt-2 text-sm py-1.5">Preguntar a IA</button>
+                         </div>
+                    </div>
+                    <!-- Contenedor para Gráficos -->
+                     <div id="charts-container" class="hidden space-y-6 mt-4">
+                         <div class="chart-container"><canvas id="incomeExpenseChart"></canvas></div>
+                         <div class="chart-container"><canvas id="expenseTypeChart"></canvas></div>
+                     </div>
+                    <!-- Estado y Salida de IA -->
+                    <div id="ai-status" class="my-3"></div>
+                    <div id="ai-report-output">Selecciona una consulta para la IA o genera un resumen offline...</div>
+                 </section>
+            </div>
+
+            <!-- Columna 3: Historial -->
+            <div class="lg:col-span-1 card">
+                 <!-- Cabecera Historial con botones -->
+                 <div class="flex justify-between items-center mb-3">
+                     <h2 class="card-title !mb-0 !pb-0 !border-none">Historial</h2>
+                     <div class="flex space-x-2">
+                          <button id="export-data-btn" class="text-xs bg-blue-700 hover:bg-blue-600 text-blue-100 font-medium py-1 px-2 rounded-md transition-colors duration-200" title="Exportar todos los datos a un archivo JSON">Exportar</button>
+                          <button id="import-data-btn" class="text-xs bg-green-700 hover:bg-green-600 text-green-100 font-medium py-1 px-2 rounded-md transition-colors duration-200" title="Importar datos desde un archivo JSON (reemplaza los actuales)">Importar</button>
+                          <input type="file" id="import-file-input" class="hidden" accept=".json"> <!-- Input oculto para seleccionar archivo -->
+                          <button id="clear-storage-btn" class="text-xs bg-red-900 hover:bg-red-800 text-red-200 font-medium py-1 px-2 rounded-md transition-colors duration-200" title="¡Peligro! Borrar todos los datos guardados">Borrar Todo</button>
+                     </div>
+                 </div>
+                 <!-- Filtro de Fecha Historial -->
+                 <div class="history-filter-container">
+                    <label for="history-date-filter">Ver día:</label>
+                    <input type="date" id="history-date-filter">
+                    <button id="show-all-history-btn" class="show-all-btn">Mostrar Todo</button>
+                 </div>
+                 <!-- Lista de Transacciones -->
+                 <ul id="transaction-list">
+                     <li id="no-transactions" class="text-gray-500 text-center py-4">Sin movimientos aún.</li>
+                 </ul>
+            </div>
+        </main>
+
+        <!-- Pie de Página -->
+        <footer class="text-center text-gray-500 mt-10 py-4 text-sm">
+            <!-- Sección Configuración API Key -->
+            <div class="api-key-section mb-6 max-w-lg mx-auto">
+                <div class="flex justify-between items-center">
+                    <h3 class="text-sm font-semibold text-yellow-400">Configuración IA (Opcional)</h3>
+                    <button id="toggle-api-key-btn" class="btn-toggle">Mostrar</button>
+                </div>
+                <div id="api-key-container" class="hidden mt-3">
+                    <p class="text-xs text-yellow-200 mb-2">Necesaria solo si quieres usar las funciones de IA con Google Gemini.</p>
+                    <label for="api-key" class="text-xs">Tu Clave API (Google AI Studio):</label>
+                    <input type="password" id="api-key" placeholder="Pega tu clave aquí...">
+                </div>
+            </div>
+            <!-- Año Copyright -->
+            Registro PRO v7 (CUP) - © <span id="year"></span>
+        </footer>
+    </div> <!-- Fin .main-container -->
+
+    <!-- JavaScript Principal -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- Referencias a Elementos del DOM (sin cambios) ---
+            const ipvForm = document.getElementById('ipv-form'); const ipvDateInput = document.getElementById('ipv-date'); const ipvTotalInput = document.getElementById('ipv-total'); const ipvProfitInput = document.getElementById('ipv-profit');
+            const pizzaForm = document.getElementById('pizza-form'); const pizzaDateInput = document.getElementById('pizza-date'); const pizzaTotalInput = document.getElementById('pizza-total'); const pizzaProfitInput = document.getElementById('pizza-profit');
+            const expenseForm = document.getElementById('expense-form'); const expenseTypeButtonsContainer = document.getElementById('expense-type-buttons'); const expenseDateInput = document.getElementById('expense-date'); const expenseAmountInput = document.getElementById('expense-amount'); const expenseDescriptionInput = document.getElementById('expense-description'); const expenseCategorySelect = document.getElementById('expense-category-select'); const newExpenseCategoryInput = document.getElementById('new-expense-category'); const addCategoryBtn = document.getElementById('add-category-btn');
+            const addRecurringForm = document.getElementById('add-recurring-form'); const recurringDescInput = document.getElementById('recurring-desc'); const recurringAmountInput = document.getElementById('recurring-amount'); const recurringList = document.getElementById('recurring-list'); const noRecurringMsg = document.getElementById('no-recurring'); const applyRecurringBtn = document.getElementById('apply-recurring-btn');
+            const transactionList = document.getElementById('transaction-list'); const noTransactionsMessage = document.getElementById('no-transactions'); const clearStorageBtn = document.getElementById('clear-storage-btn');
+            const yearSpan = document.getElementById('year'); const statusMessageDiv = document.getElementById('status-message');
+            const apiKeyInput = document.getElementById('api-key'); const toggleApiKeyBtn = document.getElementById('toggle-api-key-btn'); const apiKeyContainer = document.getElementById('api-key-container');
+            const iaPredefinedQuestionsContainer = document.getElementById('ia-predefined-questions'); const generateOfflineSummaryBtn = document.getElementById('generate-offline-summary-btn');
+            const showCustomQueryBtn = document.getElementById('show-custom-query-btn'); const customQueryArea = document.getElementById('custom-query-area'); const customAiQueryInput = document.getElementById('custom-ai-query'); const submitCustomQueryBtn = document.getElementById('submit-custom-query-btn');
+            const aiStatusDiv = document.getElementById('ai-status'); const aiReportOutputDiv = document.getElementById('ai-report-output');
+            const historyDateFilterInput = document.getElementById('history-date-filter'); const showAllHistoryBtn = document.getElementById('show-all-history-btn');
+            const quickSummaryBanner = document.getElementById('quick-summary-banner'); const summaryTodayBalance = document.getElementById('summary-today-balance'); const summaryTotalBalance = document.getElementById('summary-total-balance'); const summaryTotalMargin = document.getElementById('summary-total-margin');
+            const profitBarFill = document.getElementById('profit-bar-fill'); const profitBarText = document.getElementById('profit-bar-text');
+            const toggleChartsBtn = document.getElementById('toggle-charts-btn'); const chartsContainer = document.getElementById('charts-container'); const incomeExpenseChartCtx = document.getElementById('incomeExpenseChart').getContext('2d');
+            const expenseTypeChartCtx = document.getElementById('expenseTypeChart').getContext('2d');
+            const exportDataBtn = document.getElementById('export-data-btn');
+            const importDataBtn = document.getElementById('import-data-btn');
+            const importFileInput = document.getElementById('import-file-input');
+
+            // --- Variables Globales (sin cambios) ---
+            let transactions = [];
+            let recurringExpenses = [];
+            let customCategories = ['Compra Mercancía', 'Alquiler', 'Servicios (Luz, Agua, etc)', 'Marketing', 'Salarios', 'Impuestos/Tasas', 'Reparaciones', 'Otro Negocio'];
+            let selectedExpenseType = 'expense-business';
+            let apiKey = '';
+            let incomeExpenseChartInstance = null;
+            let expenseTypeChartInstance = null;
+
+            // --- Constantes (sin cambios) ---
+            const GEMINI_API_ENDPOINT = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent';
+            const STORAGE_PREFIX = 'registroPro_v7_cup_'; // Cambiado prefijo para evitar conflictos si se usa la versión EUR
+            const TRANSACTIONS_STORAGE_KEY = STORAGE_PREFIX + 'transactions';
+            const API_KEY_STORAGE_KEY = STORAGE_PREFIX + 'apiKey';
+            const RECURRING_STORAGE_KEY = STORAGE_PREFIX + 'recurring';
+            const CATEGORIES_STORAGE_KEY = STORAGE_PREFIX + 'categories';
+            const APP_VERSION = 'RegistroPRO_v7_CUP_Export_1.0'; // Versión para archivos exportados (CUP)
+
+            const typeIcons = {
+                'income-ipv': '💳', 'income-pizza': '🍕',
+                'profit-ipv': '💰', 'profit-pizza': '💰',
+                'expense-business': '🏢', 'expense-personal': '🏠',
+            };
+
+            // --- Funciones Auxiliares ---
+
+            /**
+             * Formatea un número como moneda CUP (Peso Cubano).
+             * @param {number} amount - El monto a formatear.
+             * @returns {string} - El monto formateado como string (ej: "$1,234.50 CUP").
+             */
+            function formatCurrency(amount) {
+                // Intl.NumberFormat es el estándar para formato internacional.
+                // 'es-CU' es el locale para Cuba, pero 'es-ES' también funciona bien para números.
+                // Usamos 'CUP' como código de moneda.
+                // style: 'currency' añade el símbolo/código.
+                return (amount || 0).toLocaleString('es-ES', {
+                    style: 'currency',
+                    currency: 'CUP', // Código ISO para Peso Cubano
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2
+                 });
+                 // Nota: Algunos navegadores pueden mostrar 'CUP' y otros '$'. El estándar es CUP.
+                 // Si se prefiere siempre '$', se podría hacer manualmente:
+                 // return `$${(amount || 0).toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+                 // Pero usar el estándar Intl es más robusto.
+            }
+
+            function getTodayDateString() { const today = new Date(); return today.toISOString().split('T')[0]; }
+            function displayStatus(message, isError = false, targetDiv = statusMessageDiv) {
+                targetDiv.innerHTML = '';
+                const statusP = document.createElement('p');
+                statusP.textContent = message;
+                statusP.className = `status-${isError ? 'error' : 'success'}`;
+                targetDiv.appendChild(statusP);
+                if (targetDiv === statusMessageDiv) {
+                    setTimeout(() => { targetDiv.innerHTML = ''; }, 4000);
+                }
+            }
+            function displayAiStatus(message, isLoading = false) {
+                aiStatusDiv.innerHTML = '';
+                if (isLoading) {
+                    const loader = document.createElement('div');
+                    loader.className = 'loader';
+                    aiStatusDiv.appendChild(loader);
+                    const text = document.createElement('p');
+                    text.textContent = message;
+                    text.className = 'text-sm text-blue-400 mt-1';
+                    aiStatusDiv.appendChild(text);
+                } else {
+                    displayStatus(message, message.toLowerCase().includes("error") || message.toLowerCase().includes("falta") || message.toLowerCase().includes("⚠️") || message.toLowerCase().includes("❌"), aiStatusDiv);
+                }
+            }
+            function setReportButtonsDisabled(isDisabled) {
+                iaPredefinedQuestionsContainer.querySelectorAll('.ia-question-btn').forEach(btn => btn.disabled = isDisabled);
+                generateOfflineSummaryBtn.disabled = isDisabled;
+                toggleChartsBtn.disabled = isDisabled;
+                submitCustomQueryBtn.disabled = isDisabled;
+                showCustomQueryBtn.disabled = isDisabled;
+            }
+
+            // --- Carga y Guardado de Datos (LocalStorage) ---
+            function loadData() {
+                console.log("Cargando datos desde LocalStorage (CUP)...");
+                const storedTx = localStorage.getItem(TRANSACTIONS_STORAGE_KEY);
+                const storedApiKey = localStorage.getItem(API_KEY_STORAGE_KEY);
+                const storedRecurring = localStorage.getItem(RECURRING_STORAGE_KEY);
+                const storedCategories = localStorage.getItem(CATEGORIES_STORAGE_KEY);
+
+                if (storedTx) { try { transactions = JSON.parse(storedTx); if (!Array.isArray(transactions)) transactions = []; console.log(`${transactions.length} transacciones cargadas.`); } catch (e) { console.error("Error al parsear transacciones:", e); transactions = []; localStorage.removeItem(TRANSACTIONS_STORAGE_KEY); } } else { transactions = []; console.log("No se encontraron transacciones guardadas."); }
+                if (storedApiKey) { apiKey = storedApiKey; apiKeyInput.value = storedApiKey; console.log("API Key cargada."); } else { apiKey = ''; apiKeyInput.value = ''; console.log("No se encontró API Key guardada."); }
+                if (storedRecurring) { try { recurringExpenses = JSON.parse(storedRecurring); if (!Array.isArray(recurringExpenses)) recurringExpenses = []; console.log(`${recurringExpenses.length} gastos recurrentes cargados.`); } catch (e) { console.error("Error al parsear recurrentes:", e); recurringExpenses = []; localStorage.removeItem(RECURRING_STORAGE_KEY); } } else { recurringExpenses = []; console.log("No se encontraron gastos recurrentes guardados."); }
+                if (storedCategories) { try { const loadedCats = JSON.parse(storedCategories); if (Array.isArray(loadedCats) && loadedCats.length > 0) { customCategories = loadedCats; console.log(`${customCategories.length} categorías cargadas.`); } else { console.warn("Categorías guardadas inválidas, usando predeterminadas."); } } catch (e) { console.error("Error al parsear categorías:", e); localStorage.removeItem(CATEGORIES_STORAGE_KEY); } } else { console.log("No se encontraron categorías guardadas, usando predeterminadas."); }
+
+                initializeDates();
+                populateCategoryDropdown();
+                renderRecurringExpenses();
+                renderTransactions();
+                updateAllSummaries();
+                yearSpan.textContent = new Date().getFullYear();
+                updateActiveExpenseButton(selectedExpenseType);
+                console.log("Carga de datos y UI (CUP) completada.");
+            }
+
+            function initializeDates() {
+                const today = getTodayDateString();
+                ipvDateInput.value = today;
+                pizzaDateInput.value = today;
+                expenseDateInput.value = today;
+                historyDateFilterInput.value = ''; // Mostrar todo por defecto
+            }
+
+            function saveData() {
+                try { localStorage.setItem(TRANSACTIONS_STORAGE_KEY, JSON.stringify(transactions)); } catch (e) { console.error("Error guardando transacciones:", e); displayStatus("Error al guardar movimientos.", true); }
+                try { localStorage.setItem(RECURRING_STORAGE_KEY, JSON.stringify(recurringExpenses)); } catch (e) { console.error("Error guardando recurrentes:", e); displayStatus("Error al guardar recurrentes.", true); }
+                try { localStorage.setItem(CATEGORIES_STORAGE_KEY, JSON.stringify(customCategories)); } catch (e) { console.error("Error guardando categorías:", e); displayStatus("Error al guardar categorías.", true); }
+                const currentApiKey = apiKeyInput.value.trim();
+                if (currentApiKey) { localStorage.setItem(API_KEY_STORAGE_KEY, currentApiKey); apiKey = currentApiKey; } else { localStorage.removeItem(API_KEY_STORAGE_KEY); apiKey = ''; }
+                console.log("Datos guardados en LocalStorage (CUP).");
+            }
+
+            // --- Renderizado y UI (Usa formatCurrency actualizado) ---
+            function getTypeLabel(type) { switch (type) { case 'income-ipv': return 'Ingreso IPV'; case 'profit-ipv': return 'Ganancia IPV'; case 'income-pizza': return 'Ingreso Pizza'; case 'profit-pizza': return 'Ganancia Pizza'; case 'expense-business': return 'Gasto Negocio'; case 'expense-personal': return 'Gasto Personal'; default: return 'Desconocido'; } }
+
+            function renderTransactions(filterDate = null) {
+                transactionList.innerHTML = '';
+                let transactionsToDisplay = transactions;
+                if (filterDate) {
+                    transactionsToDisplay = transactions.filter(t => t.date === filterDate);
+                }
+                const noTransactionsText = filterDate ? `Sin movimientos para ${new Date(filterDate + 'T00:00:00').toLocaleDateString('es-ES')}.` : 'Sin movimientos registrados aún.';
+                noTransactionsMessage.textContent = noTransactionsText;
+                noTransactionsMessage.style.display = transactionsToDisplay.length === 0 ? 'list-item' : 'none';
+
+                const sorted = [...transactionsToDisplay].sort((a, b) => {
+                    const dateA = new Date(a.date + 'T00:00:00');
+                    const dateB = new Date(b.date + 'T00:00:00');
+                    if (dateB.getTime() !== dateA.getTime()) return dateB - dateA;
+                    const idA = parseInt(String(a.id || '0').split('_')[0]) || 0;
+                    const idB = parseInt(String(b.id || '0').split('_')[0]) || 0;
+                    return idB - idA;
+                });
+
+                let firstElementAdded = false;
+                sorted.forEach((t) => {
+                    if (!t || typeof t !== 'object' || !t.id) { console.warn("Saltando transacción inválida:", t); return; }
+                    const li = document.createElement('li');
+                    li.className = `transaction-item ${t.type}`;
+                    const amountFormatted = formatCurrency(t.amount); // USA LA FUNCIÓN ACTUALIZADA
+                    let dateFormatted = t.date;
+                    try { const dO = new Date(t.date + 'T00:00:00'); if (!isNaN(dO)) { dateFormatted = dO.toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: '2-digit' }); } } catch (e) {console.error("Error formateando fecha:", e, t.date)}
+                    const categoryText = t.category || getTypeLabel(t.type);
+                    const descriptionText = (t.description && t.description !== getTypeLabel(t.type) && t.description !== t.category) ? t.description : '';
+                    const fullTitle = `${categoryText}${descriptionText ? ` (${descriptionText})` : ''}`;
+                    const icon = typeIcons[t.type] || '❔';
+                    li.innerHTML = `
+                        <div class="transaction-item-details">
+                            <span class="transaction-icon" title="${getTypeLabel(t.type)}">${icon}</span>
+                            <div class="transaction-text-content">
+                                <span class="transaction-item-desc" title="${fullTitle}">
+                                    ${categoryText}${descriptionText ? ` <span class="text-xs text-gray-400">(${descriptionText})</span>` : ''}
+                                </span>
+                                <span class="transaction-item-date">${dateFormatted}</span>
+                            </div>
+                        </div>
+                        <span class="transaction-item-amount">${amountFormatted}</span>
+                        <button data-id="${t.id}" class="delete-btn" aria-label="Eliminar movimiento">✖</button>
+                    `;
+                    transactionList.appendChild(li);
+                    if (!filterDate && !firstElementAdded && t.justAdded) {
+                        li.classList.add('added');
+                        setTimeout(() => {
+                            li.classList.remove('added');
+                            delete t.justAdded;
+                        }, 600);
+                        firstElementAdded = true;
+                    }
+                });
+                transactions.forEach(t => delete t.justAdded);
+            }
+
+            function deleteTransaction(id) {
+                const indexToDelete = transactions.findIndex(t => t.id === id);
+                if (indexToDelete > -1) {
+                    const deletedTx = transactions.splice(indexToDelete, 1)[0];
+                    saveData();
+                    renderTransactions(historyDateFilterInput.value || null);
+                    updateAllSummaries();
+                    displayStatus(`Movimiento "${deletedTx.category || getTypeLabel(deletedTx.type)}" eliminado.`, false);
+                } else {
+                    console.warn("Intento de eliminar transacción no encontrada, ID:", id);
+                    displayStatus("Error: No se pudo encontrar el movimiento a eliminar.", true);
+                }
+            }
+
+            function clearAllData() {
+                if (confirm("⚠️ ¡Atención! ¿Estás seguro de que quieres borrar TODO el historial, gastos recurrentes, categorías personalizadas Y la Clave API guardada? Esta acción no se puede deshacer.")) {
+                    transactions = [];
+                    recurringExpenses = [];
+                    customCategories = ['Compra Mercancía', 'Alquiler', 'Servicios (Luz, Agua, etc)', 'Marketing', 'Salarios', 'Impuestos/Tasas', 'Reparaciones', 'Otro Negocio'];
+                    apiKey = '';
+                    localStorage.removeItem(TRANSACTIONS_STORAGE_KEY);
+                    localStorage.removeItem(RECURRING_STORAGE_KEY);
+                    localStorage.removeItem(CATEGORIES_STORAGE_KEY);
+                    localStorage.removeItem(API_KEY_STORAGE_KEY);
+                    apiKeyInput.value = '';
+                    populateCategoryDropdown();
+                    renderRecurringExpenses();
+                    renderTransactions();
+                    updateAllSummaries();
+                    if (incomeExpenseChartInstance) { incomeExpenseChartInstance.destroy(); incomeExpenseChartInstance = null; }
+                    if (expenseTypeChartInstance) { expenseTypeChartInstance.destroy(); expenseTypeChartInstance = null; }
+                    chartsContainer.classList.add('hidden');
+                    toggleChartsBtn.textContent = 'Mostrar Gráficos 📈';
+                    toggleChartsBtn.classList.add('btn-secondary');
+                    toggleChartsBtn.classList.remove('bg-purple-700', 'hover:bg-purple-600', 'border-purple-600');
+                    aiReportOutputDiv.innerHTML = 'Selecciona una consulta para la IA o genera un resumen offline...';
+                    aiStatusDiv.innerHTML = '';
+                    displayStatus("Todos los datos han sido borrados permanentemente.", false);
+                    console.log("Todos los datos borrados.");
+                }
+            }
+
+            function updateActiveExpenseButton(activeType) {
+                expenseTypeButtonsContainer.querySelectorAll('.expense-type-btn').forEach(btn => {
+                    btn.classList.toggle('active', btn.dataset.type === activeType);
+                });
+            }
+
+            // --- Funciones de Cálculo y Resumen (Usa formatCurrency actualizado) ---
+            function calculateTotals(forDate = null) {
+                const targetTransactions = forDate ? transactions.filter(t => t.date === forDate) : transactions;
+                let totals = { grossIncome: 0, netProfit: 0, businessExpense: 0, personalExpense: 0, firstDate: null, lastDate: null };
+                targetTransactions.forEach(t => {
+                    const amount = parseFloat(t.amount || 0);
+                    if (isNaN(amount)) return;
+                    try {
+                        const date = new Date(t.date + 'T00:00:00');
+                        if (!isNaN(date)) {
+                             if(!totals.firstDate || date < totals.firstDate) totals.firstDate = date;
+                             if(!totals.lastDate || date > totals.lastDate) totals.lastDate = date;
+                        }
+                    } catch (e) { console.error("Fecha inválida en transacción:", t); }
+                    switch (t.type) {
+                        case 'income-ipv': case 'income-pizza': totals.grossIncome += amount; break;
+                        case 'profit-ipv': case 'profit-pizza': totals.netProfit += amount; break;
+                        case 'expense-business': totals.businessExpense += amount; break;
+                        case 'expense-personal': totals.personalExpense += amount; break;
+                    }
+                });
+                totals.totalExpense = totals.businessExpense + totals.personalExpense;
+                totals.netBalance = totals.grossIncome - totals.totalExpense;
+                totals.registeredNetMargin = totals.grossIncome > 0 ? (totals.netProfit / totals.grossIncome) * 100 : 0;
+                return totals;
+            }
+
+            function updateAllSummaries() {
+                updateQuickSummary();
+                updateProgressBar();
+                if (!chartsContainer.classList.contains('hidden')) {
+                    renderCharts();
+                }
+            }
+
+            function updateQuickSummary() {
+                const todayTotals = calculateTotals(getTodayDateString());
+                const allTotals = calculateTotals();
+                summaryTodayBalance.textContent = formatCurrency(todayTotals.netBalance); // Usa formatCurrency(CUP)
+                summaryTotalBalance.textContent = formatCurrency(allTotals.netBalance); // Usa formatCurrency(CUP)
+                summaryTotalMargin.textContent = allTotals.registeredNetMargin.toFixed(1);
+            }
+
+            function updateProgressBar() {
+                const totals = calculateTotals();
+                const margin = totals.registeredNetMargin;
+                const percentage = Math.max(0, Math.min(100, margin));
+                profitBarFill.style.width = percentage + '%';
+                profitBarText.textContent = margin.toFixed(1) + '%';
+                if (margin < 15) profitBarFill.style.backgroundColor = '#ef4444';
+                else if (margin < 40) profitBarFill.style.backgroundColor = '#f97316';
+                else profitBarFill.style.backgroundColor = '#10b981';
+            }
+
+             // --- Funciones de Gastos Recurrentes (Usa formatCurrency actualizado) ---
+             function renderRecurringExpenses() {
+                 recurringList.innerHTML = '';
+                 if (recurringExpenses.length === 0) {
+                     noRecurringMsg.style.display = 'block';
+                     applyRecurringBtn.disabled = true;
+                     return;
+                 }
+                 noRecurringMsg.style.display = 'none';
+                 applyRecurringBtn.disabled = false;
+                 recurringExpenses.forEach((item, index) => {
+                     const li = document.createElement('li');
+                     li.innerHTML = `
+                         <span>${item.description} - ${formatCurrency(item.amount)}</span> <!-- Usa formatCurrency(CUP) -->
+                         <button data-index="${index}" class="delete-recurring-btn btn btn-danger btn-small !py-1 !px-1.5" aria-label="Eliminar gasto recurrente ${item.description}">X</button>
+                     `;
+                     recurringList.appendChild(li);
+                 });
+             }
+
+             function addRecurringExpense(description, amount) {
+                 const trimmedDesc = description.trim();
+                 const numAmount = parseFloat(amount);
+                 if (!trimmedDesc || isNaN(numAmount) || numAmount <= 0) { displayStatus("Error: Se requiere descripción y monto positivo.", true); return; }
+                 if (recurringExpenses.some(item => item.description.toLowerCase() === trimmedDesc.toLowerCase())) { displayStatus(`El gasto recurrente "${trimmedDesc}" ya existe.`, true); return; }
+                 recurringExpenses.push({ description: trimmedDesc, amount: numAmount });
+                 saveData();
+                 renderRecurringExpenses();
+                 displayStatus("Gasto recurrente añadido.", false);
+                 recurringDescInput.value = '';
+                 recurringAmountInput.value = '';
+             }
+
+             function deleteRecurringExpense(index) {
+                 if (index >= 0 && index < recurringExpenses.length) {
+                     const deletedItem = recurringExpenses.splice(index, 1)[0];
+                     saveData();
+                     renderRecurringExpenses();
+                     displayStatus(`Gasto recurrente "${deletedItem.description}" eliminado.`, false);
+                 } else { console.error("Índice inválido para eliminar recurrente:", index); }
+             }
+
+             function applyRecurringExpenses() {
+                 if (recurringExpenses.length === 0) { displayStatus("No hay gastos recurrentes definidos.", true); return; }
+                 const today = getTodayDateString();
+                 let addedCount = 0;
+                 let addedItemsDesc = recurringExpenses.map(item => `${item.description} (${formatCurrency(item.amount)})`).join(', '); // Usa formatCurrency(CUP)
+                 const confirmationMessage = `¿Registrar ${recurringExpenses.length} gasto(s) recurrente(s) con fecha de hoy (${today})?\n\nGastos: ${addedItemsDesc}`;
+                 if (!confirm(confirmationMessage)) { displayStatus("Aplicación cancelada.", false); return; }
+                 recurringExpenses.forEach((item, i) => {
+                     const newExpense = { id: Date.now().toString() + '_rec_' + i, type: 'expense-business', category: item.description, amount: item.amount, date: today, description: 'Gasto recurrente auto-aplicado', justAdded: true };
+                     transactions.push(newExpense);
+                     addedCount++;
+                 });
+                 if (addedCount > 0) {
+                     saveData();
+                     renderTransactions(historyDateFilterInput.value || null);
+                     updateAllSummaries();
+                     displayStatus(`${addedCount} gasto(s) recurrente(s) registrado(s).`, false);
+                 } else { displayStatus("No se añadieron gastos (error inesperado).", true); }
+             }
+
+             // --- Funciones de Categorías (sin cambios) ---
+             function populateCategoryDropdown() {
+                 const currentSelected = expenseCategorySelect.value;
+                 expenseCategorySelect.innerHTML = '';
+                 const defaultOption = document.createElement('option');
+                 defaultOption.value = "Otro";
+                 defaultOption.textContent = "Otro Gasto";
+                 expenseCategorySelect.appendChild(defaultOption);
+                 [...customCategories]
+                     .sort((a, b) => a.localeCompare(b, 'es', { sensitivity: 'base' }))
+                     .forEach(cat => {
+                        if (cat.toLowerCase() !== 'otro') {
+                             const option = document.createElement('option');
+                             option.value = cat;
+                             option.textContent = cat;
+                             expenseCategorySelect.appendChild(option);
+                        }
+                     });
+                 if (currentSelected && expenseCategorySelect.querySelector(`option[value="${CSS.escape(currentSelected)}"]`)) {
+                     expenseCategorySelect.value = currentSelected;
+                 } else {
+                     expenseCategorySelect.value = "Otro";
+                 }
+             }
+
+             function addCustomCategory(categoryName) {
+                 const trimmedName = categoryName.trim();
+                 if (!trimmedName) { displayStatus("Nombre de categoría vacío.", true); newExpenseCategoryInput.focus(); return; }
+                 const exists = customCategories.some(cat => cat.toLowerCase() === trimmedName.toLowerCase());
+                 if (!exists) {
+                     customCategories.push(trimmedName);
+                     saveData();
+                     populateCategoryDropdown();
+                     displayStatus(`Categoría "${trimmedName}" añadida.`, false);
+                     newExpenseCategoryInput.value = '';
+                     newExpenseCategoryInput.classList.add('hidden');
+                     expenseCategorySelect.value = trimmedName;
+                 } else {
+                     displayStatus(`La categoría "${trimmedName}" ya existe.`, true);
+                     newExpenseCategoryInput.focus();
+                 }
+             }
+
+            // --- Funciones de IA y Resumen Offline (Usa formatCurrency actualizado y prompt modificado) ---
+            function simpleMarkdownToHtml(text) {
+                if (!text) return '';
+                text = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+                text = text.replace(/(?<!\*)\*(?!\*)(.*?)(?<!\*)\*(?!\*)|(?<!_)_(?!_)(.*?)(?<!_)_(?!_)/g, '<em>$1$2</em>');
+                text = text.replace(/^## (.*$)/gim, '<h3 class="text-lg font-semibold mt-3 mb-1">$1</h3>');
+                text = text.replace(/^# (.*$)/gim, '<h2 class="text-xl font-bold mt-4 mb-2">$1</h2>');
+                text = text.replace(/^\s*[\*\-+] +(.*)/gm, '<li>$1</li>');
+                text = text.replace(/(<li>.*?<\/li>\s*)+/g, (match) => `<ul class="list-disc pl-5 mb-3">${match.trim()}</ul>`);
+                text = text.replace(/`([^`]+)`/g, `<code class="bg-gray-700 px-1 py-0.5 rounded text-sm">${(match, code) => code.replace(/</g, '<').replace(/>/g, '>')}</code>`);
+                text = text.split('\n\n').map(p => {
+                    const tp = p.trim();
+                    if (!tp) return '';
+                    if (/^<(ul|ol|li|h[1-6]|code|strong|em|p|blockquote|pre)/i.test(tp)) { return tp.replace(/\n/g, '<br>'); }
+                    return `<p class="mb-3">${tp.replace(/\n/g, '<br>')}</p>`;
+                }).join('');
+                text = text.replace(/<p>\s*(<br\s*\/?>)?\s*<\/p>/g, '');
+                return text;
+            }
+
+            function generateOfflineSummary() {
+                if (transactions.length === 0) {
+                    aiReportOutputDiv.innerHTML = '<p class="text-center text-gray-400 italic">No hay movimientos registrados.</p>';
+                    displayAiStatus("ℹ️ No hay datos para el resumen.", false);
+                    return;
+                }
+                displayAiStatus("⚙️ Calculando resumen offline...", false);
+                const totals = calculateTotals();
+                let reportHTML = `<h2 class="!text-lg !font-bold !mb-3">📊 Resumen Financiero (Offline)</h2>`;
+                if (totals.firstDate && totals.lastDate) {
+                    const options = { year: 'numeric', month: 'short', day: 'numeric' };
+                    const dateRange = totals.firstDate.getTime() === totals.lastDate.getTime() ? totals.firstDate.toLocaleDateString('es-ES', options) : `${totals.firstDate.toLocaleDateString('es-ES', options)} - ${totals.lastDate.toLocaleDateString('es-ES', options)}`;
+                    reportHTML += `<p class="text-sm text-gray-400 mb-3"><small>Período: ${dateRange}</small></p>`;
+                } else { reportHTML += `<p class="text-sm text-gray-400 mb-3"><small>Período: Sin fechas válidas.</small></p>`; }
+                reportHTML += `<ul class="space-y-1">`;
+                reportHTML += `<li><strong>💰 Ingreso Bruto Total:</strong> ${formatCurrency(totals.grossIncome)}</li>`; // Usa formatCurrency(CUP)
+                reportHTML += `<li><strong>📈 Ganancia Neta Registrada:</strong> ${formatCurrency(totals.netProfit)}</li>`; // Usa formatCurrency(CUP)
+                reportHTML += `<li><strong>📊 Margen Neto Registrado:</strong> ${totals.registeredNetMargin.toFixed(1)}%</li>`;
+                reportHTML += `<hr class="border-gray-600 my-2">`;
+                reportHTML += `<li><strong>🏢 Gasto Negocio Total:</strong> ${formatCurrency(totals.businessExpense)}</li>`; // Usa formatCurrency(CUP)
+                reportHTML += `<li><strong>🏠 Gasto Personal Total:</strong> ${formatCurrency(totals.personalExpense)}</li>`; // Usa formatCurrency(CUP)
+                reportHTML += `<li><strong>💸 Gasto Total (Neg + Per):</strong> ${formatCurrency(totals.totalExpense)}</li>`; // Usa formatCurrency(CUP)
+                reportHTML += `<hr class="border-gray-600 my-2">`;
+                const balanceColor = totals.netBalance >= 0 ? 'text-green-400' : 'text-red-400';
+                reportHTML += `<li><strong>⚖️ Balance Final (Ing. Bruto - Gasto Total):</strong> <strong class="${balanceColor}">${formatCurrency(totals.netBalance)}</strong></li>`; // Usa formatCurrency(CUP)
+                reportHTML += `</ul>`;
+                const allExpenses = transactions.filter(t => t.type.startsWith('expense-')).map(t => ({ desc: t.category || t.description || getTypeLabel(t.type), amount: parseFloat(t.amount || 0), type: t.type })).filter(t => !isNaN(t.amount) && t.amount > 0);
+                if (allExpenses.length > 0) {
+                    allExpenses.sort((a, b) => b.amount - a.amount);
+                    reportHTML += `<h3 class="!text-base !font-semibold !mt-4 !mb-2">Top ${Math.min(3, allExpenses.length)} Gastos (Negocio y Personal):</h3><ul>`;
+                    allExpenses.slice(0, 3).forEach(exp => {
+                         const icon = exp.type === 'expense-business' ? '🏢' : '🏠';
+                         reportHTML += `<li class="text-sm">${icon} ${exp.desc}: <strong>${formatCurrency(exp.amount)}</strong></li>`; // Usa formatCurrency(CUP)
+                    });
+                    reportHTML += `</ul>`;
+                }
+                aiReportOutputDiv.innerHTML = reportHTML;
+                displayAiStatus("✅ Resumen offline generado.", false);
+            }
+
+            async function generateAiReport(userPrompt) {
+                apiKey = apiKeyInput.value.trim();
+                if (!apiKey) { apiKey = localStorage.getItem(API_KEY_STORAGE_KEY) || ''; if (apiKey) apiKeyInput.value = apiKey; }
+                if (!apiKey) { displayAiStatus("⚠️ Error: Falta Clave API de Google AI Studio.", true); apiKeyInput.focus(); apiKeyContainer.classList.remove('hidden'); toggleApiKeyBtn.textContent = 'Ocultar'; return; }
+                if (transactions.length === 0) { displayAiStatus("ℹ️ No hay datos para analizar.", false); aiReportOutputDiv.innerHTML = '<p class="text-center text-gray-400 italic">Añade movimientos para consultar a la IA.</p>'; return; }
+                const trimmedPrompt = userPrompt.trim();
+                if (!trimmedPrompt) { displayAiStatus("⚠️ Escribe una pregunta o selecciona una consulta.", true); if (!customQueryArea.classList.contains('hidden')) { customAiQueryInput.focus(); } return; }
+
+                displayAiStatus("🤖 Contactando IA de Google...", true);
+                setReportButtonsDisabled(true);
+                aiReportOutputDiv.innerHTML = '<div class="loader mx-auto mb-2"></div><p class="text-center">Analizando y generando respuesta...</p>';
+                const transactionsForAI = transactions.map(({ id, justAdded, ...rest }) => rest);
+
+                // Prompt para Gemini, especificando CUP
+                const finalPrompt = `Eres un asistente financiero conciso y útil para un pequeño negocio en Cuba que usa esta aplicación de registro. Analiza las siguientes transacciones (en formato JSON) y responde específicamente a la solicitud del usuario. La moneda es Peso Cubano (CUP). Los tipos de transacción son: 'income-ipv'/'income-pizza' (ingreso bruto de TPV/Pizza), 'profit-ipv'/'profit-pizza' (ganancia neta registrada específica de esa fuente), 'expense-business' (gasto de negocio), 'expense-personal' (gasto personal). La fecha está en formato 'YYYY-MM-DD'.
+
+**Solicitud del Usuario:**
+${trimmedPrompt}
+
+**Datos de Transacciones:**
+${JSON.stringify(transactionsForAI, null, 2)}
+
+**Instrucciones Adicionales:**
+- Responde siempre en **español de Cuba**, con un tono amable pero directo y profesional.
+- Basa tu respuesta **exclusivamente** en los datos proporcionados. Sé preciso en los cálculos. No inventes información.
+- Si la solicitud es un resumen general (como la consulta predefinida "Resumen General IA"), calcula y presenta claramente: Ingreso Bruto Total, Ganancia Neta Total Registrada (suma de todos los registros 'profit-*'), Gasto Negocio Total, Gasto Personal Total, y Balance Final (definido como Ingreso Bruto Total - Gasto Negocio Total - Gasto Personal Total). **Formatea todos los montos como moneda CUP usando el formato adecuado (ej: "$1,234.50 CUP" o similar)**. Puedes añadir 1 consejo financiero corto y relevante basado en los datos si lo ves claro.
+- Si la solicitud es una pregunta específica: Calcula el valor exacto si es posible con los datos. Indica claramente si falta información para responder. **Formatea los montos en CUP**.
+- Si la solicitud pide comparar o agrupar, hazlo claramente.
+- Usa Markdown simple (listas con *, **negritas**) para mejorar la legibilidad. Evita tablas complejas.
+- Finaliza con una frase corta y amable si es apropiado.`;
+
+                try {
+                    const response = await fetch(`${GEMINI_API_ENDPOINT}?key=${apiKey}`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json', },
+                        body: JSON.stringify({
+                            contents: [{ parts: [{ text: finalPrompt }] }],
+                            safetySettings: [ { category: "HARM_CATEGORY_HARASSMENT", threshold: "BLOCK_MEDIUM_AND_ABOVE" }, { category: "HARM_CATEGORY_HATE_SPEECH", threshold: "BLOCK_MEDIUM_AND_ABOVE" }, { category: "HARM_CATEGORY_SEXUALLY_EXPLICIT", threshold: "BLOCK_MEDIUM_AND_ABOVE" }, { category: "HARM_CATEGORY_DANGEROUS_CONTENT", threshold: "BLOCK_MEDIUM_AND_ABOVE" } ],
+                            generationConfig: { temperature: 0.4, topP: 0.95, topK: 40 }
+                        })
+                    });
+                    if (!response.ok) {
+                        let errorDetail = `(${response.status}) ${response.statusText}`;
+                        try { const errorData = await response.json(); errorDetail = `(${response.status}) ${errorData?.error?.message || response.statusText}`; } catch (e) { try { errorDetail = `(${response.status}) ${await response.text()}`; } catch (e2) {} }
+                        throw new Error(`Error API Google: ${errorDetail}. Revisa tu API Key.`);
+                    }
+                    const data = await response.json();
+                    let responseText = "⚠️ No se pudo extraer respuesta válida de la IA.";
+                    if (data.candidates && data.candidates.length > 0 && data.candidates[0].content?.parts?.[0]?.text) {
+                        responseText = data.candidates[0].content.parts[0].text;
+                    } else if (data.promptFeedback?.blockReason) { responseText = `❌ Solicitud bloqueada por IA. Razón: ${data.promptFeedback.blockReason}. Reformula la pregunta.`; }
+                    else if (data.candidates?.[0]?.finishReason && data.candidates[0].finishReason !== 'STOP') { responseText = `❌ IA finalizó inesperadamente. Razón: ${data.candidates[0].finishReason}.`; if (data.candidates[0].safetyRatings) { responseText += ` Detalles: ${JSON.stringify(data.candidates[0].safetyRatings)}`; } }
+                    aiReportOutputDiv.innerHTML = simpleMarkdownToHtml(responseText);
+                    displayAiStatus("✅ Respuesta de la IA recibida.", false);
+                } catch (error) {
+                    console.error("Error llamada IA:", error);
+                    aiReportOutputDiv.innerHTML = `<p class="status-error">❌ Error IA: ${error.message}</p><p class="text-xs mt-2">Verifica API Key, conexión y consulta.</p>`;
+                    displayAiStatus(`❌ Error IA: ${error.message}`, true);
+                } finally {
+                    setReportButtonsDisabled(false);
+                }
+            }
+
+            // --- Funciones de Gráficos (Chart.js - Etiquetas actualizadas a CUP) ---
+            function renderCharts() {
+                if (typeof Chart === 'undefined'){ console.warn("Chart.js no cargado."); return; }
+                if (incomeExpenseChartInstance) incomeExpenseChartInstance.destroy();
+                if (expenseTypeChartInstance) expenseTypeChartInstance.destroy();
+                if (transactions.length < 1) { console.log("Datos insuficientes para gráficos."); return; }
+
+                // 1. Gráfico Ingresos vs Gastos por Mes
+                const monthlyData = {};
+                transactions.forEach(t => {
+                    const month = t.date.substring(0, 7);
+                    if (!monthlyData[month]) monthlyData[month] = { income: 0, expense: 0 };
+                    const amount = parseFloat(t.amount || 0);
+                    if (isNaN(amount)) return;
+                    if (t.type.startsWith('income-')) monthlyData[month].income += amount;
+                    else if (t.type.startsWith('expense-')) monthlyData[month].expense += amount;
+                });
+                const sortedMonths = Object.keys(monthlyData).sort();
+                const labels = sortedMonths.map(month => {
+                    const [year, m] = month.split('-');
+                    return new Date(parseInt(year), parseInt(m) - 1).toLocaleString('es-ES', { month: 'short', year: '2-digit' });
+                });
+                const incomeData = sortedMonths.map(month => monthlyData[month].income);
+                const expenseData = sortedMonths.map(month => monthlyData[month].expense);
+
+                incomeExpenseChartInstance = new Chart(incomeExpenseChartCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: labels,
+                        datasets: [
+                            { label: 'Ingreso Bruto (CUP)', data: incomeData, backgroundColor: 'rgba(52, 211, 153, 0.7)', borderColor: 'rgba(52, 211, 153, 1)', borderWidth: 1 },
+                            { label: 'Gasto Total (CUP)', data: expenseData, backgroundColor: 'rgba(248, 113, 113, 0.7)', borderColor: 'rgba(248, 113, 113, 1)', borderWidth: 1 }
+                        ]
+                    },
+                    options: {
+                        scales: { y: { beginAtZero: true, ticks: { color: '#d1d5db' } }, x: { ticks: { color: '#d1d5db' } } },
+                        responsive: true, maintainAspectRatio: false,
+                        plugins: { title: { display: true, text: 'Ingresos Brutos vs Gastos Totales por Mes', color: '#f9fafb' }, legend: { labels: { color: '#d1d5db' } } }
+                    }
+                });
+
+                // 2. Gráfico Distribución Gastos
+                const expenseTotals = calculateTotals();
+                if (expenseTotals.businessExpense > 0 || expenseTotals.personalExpense > 0) {
+                    expenseTypeChartInstance = new Chart(expenseTypeChartCtx, {
+                        type: 'doughnut',
+                        data: {
+                            labels: ['Gasto Negocio', 'Gasto Personal'],
+                            datasets: [{
+                                label: 'Distribución de Gastos (CUP)', // Etiqueta actualizada
+                                data: [expenseTotals.businessExpense, expenseTotals.personalExpense],
+                                backgroundColor: ['rgba(248, 113, 113, 0.8)', 'rgba(251, 146, 60, 0.8)'],
+                                borderColor: ['#f87171', '#fb923c'],
+                                borderWidth: 1, hoverOffset: 4
+                            }]
+                        },
+                        options: {
+                            responsive: true, maintainAspectRatio: false,
+                            plugins: {
+                                title: { display: true, text: 'Distribución de Gastos Totales', color: '#f9fafb' },
+                                legend: { position: 'top', labels: { color: '#d1d5db' } },
+                                tooltip: { callbacks: { // Tooltip usa formatCurrency(CUP)
+                                    label: function(context) {
+                                        let label = context.label || '';
+                                        if (label) { label += ': '; }
+                                        if (context.parsed !== null) {
+                                            label += formatCurrency(context.parsed); // Usa formatCurrency(CUP)
+                                            const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                            const percentage = total > 0 ? ((context.parsed / total) * 100).toFixed(1) : 0;
+                                            label += ` (${percentage}%)`;
+                                        }
+                                        return label;
+                                    }
+                                }}
+                            }
+                        }
+                    });
+                } else { console.log("No hay gastos para gráfico de distribución."); }
+                 console.log("Gráficos (CUP) renderizados/actualizados.");
+            }
+
+            // --- Funciones de Exportar / Importar (sin cambios funcionales, usa APP_VERSION actualizada) ---
+            function exportData() {
+                console.log("Iniciando exportación de datos (CUP)...");
+                try {
+                    apiKey = apiKeyInput.value.trim();
+                    const dataToExport = { version: APP_VERSION, exportedAt: new Date().toISOString(), data: { transactions: transactions, recurringExpenses: recurringExpenses, customCategories: customCategories, apiKey: apiKey } };
+                    const jsonData = JSON.stringify(dataToExport, null, 2);
+                    const blob = new Blob([jsonData], { type: 'application/json' });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    const timestamp = new Date().toISOString().slice(0, 10).replace(/-/g, '');
+                    a.href = url;
+                    a.download = `registro_pro_v7_cup_backup_${timestamp}.json`; // Nombre archivo CUP
+                    document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
+                    displayStatus("Datos exportados correctamente (CUP).", false);
+                    console.log("Exportación (CUP) completada.");
+                } catch (error) { console.error("Error exportando datos (CUP):", error); displayStatus(`Error al exportar (CUP): ${error.message}`, true); }
+            }
+
+            function handleFileImport(event) {
+                const file = event.target.files[0];
+                if (!file) { console.log("No se seleccionó archivo."); return; }
+                 if (!file.type || file.type !== 'application/json') { displayStatus(`Error: El archivo no es JSON (${file.type || 'desconocido'}).`, true); importFileInput.value = null; return; }
+                console.log(`Importando archivo: ${file.name}`);
+                displayStatus("Procesando archivo importado...", false, aiStatusDiv);
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    try {
+                        const importedData = JSON.parse(e.target.result);
+                        if (!importedData || typeof importedData !== 'object') { throw new Error("Archivo JSON inválido."); }
+                        // Verificar versión (comparar con APP_VERSION que ahora es CUP)
+                        if (importedData.version !== APP_VERSION) {
+                             console.warn(`Importando datos de versión diferente (${importedData.version || '?'}). Esperada: ${APP_VERSION}.`);
+                             if (!confirm(`El archivo parece ser de una versión diferente (${importedData.version || '?'}). ¿Intentar importar de todos modos (podría haber errores)?`)) {
+                                 displayStatus("Importación cancelada por versión.", true); importFileInput.value = null; return;
+                             }
+                        }
+                        if (!importedData.data || typeof importedData.data !== 'object') { throw new Error("Estructura JSON inválida (falta 'data')."); }
+                        const requiredArrays = ['transactions', 'recurringExpenses', 'customCategories'];
+                        for (const key of requiredArrays) { if (!Array.isArray(importedData.data[key])) { throw new Error(`Falta array '${key}' o no es válido.`); } }
+                         if (importedData.data.apiKey !== undefined && typeof importedData.data.apiKey !== 'string') { throw new Error("'apiKey' inválido."); }
+
+                        if (!confirm("⚠️ ¡Atención! Reemplazará TODOS los datos actuales (CUP) con los del archivo. ¿Continuar?")) {
+                            displayStatus("Importación cancelada.", false); importFileInput.value = null; return;
+                        }
+                        console.log("Reemplazando datos...");
+                        transactions = importedData.data.transactions;
+                        recurringExpenses = importedData.data.recurringExpenses;
+                        customCategories = importedData.data.customCategories;
+                        apiKey = importedData.data.apiKey || '';
+                        apiKeyInput.value = apiKey;
+                        saveData();
+                        populateCategoryDropdown();
+                        renderRecurringExpenses();
+                        historyDateFilterInput.value = '';
+                        renderTransactions();
+                        updateAllSummaries();
+                        displayStatus("Datos importados y aplicados (CUP).", false);
+                        console.log("Importación (CUP) completada.");
+                    } catch (error) { console.error("Error importando:", error); displayStatus(`Error al importar: ${error.message}`, true);
+                    } finally { importFileInput.value = null; setTimeout(() => { aiStatusDiv.innerHTML = ''; }, 5000); }
+                };
+                reader.onerror = function(e) { console.error("Error leyendo archivo:", e); displayStatus("Error crítico al leer archivo.", true); importFileInput.value = null; aiStatusDiv.innerHTML = ''; };
+                reader.readAsText(file);
+            }
+
+            // --- Event Listeners (sin cambios funcionales) ---
+            ipvForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const date = ipvDateInput.value; const total = parseFloat(ipvTotalInput.value); const profit = parseFloat(ipvProfitInput.value);
+                if (!date || isNaN(total) || total < 0 || isNaN(profit) || profit < 0) { displayStatus("Error: Revisa datos IPV.", true); return; }
+                if (profit > total) { displayStatus("Error: Ganancia IPV > Ingreso.", true); return; }
+                const ts=Date.now(); const tTx={id: ts+'_ipv_t', type:'income-ipv', amount: total, date:date, description:'Ingreso Total IPV', justAdded: true}; const pTx={id: ts+'_ipv_p', type:'profit-ipv', amount: profit, date:date, description:'Ganancia Neta IPV', justAdded: true};
+                transactions.push(tTx, pTx); saveData(); renderTransactions(historyDateFilterInput.value||null); updateAllSummaries(); displayStatus("IPV añadido.", false);
+                ipvTotalInput.value = ''; ipvProfitInput.value = ''; ipvTotalInput.focus();
+            });
+            pizzaForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const date = pizzaDateInput.value; const total = parseFloat(pizzaTotalInput.value); const profit = parseFloat(pizzaProfitInput.value);
+                if (!date || isNaN(total) || total < 0 || isNaN(profit) || profit < 0) { displayStatus("Error: Revisa datos Pizza.", true); return; }
+                if (profit > total) { displayStatus("Error: Ganancia Pizza > Ingreso.", true); return; }
+                const ts=Date.now(); const tTx={id: ts+'_piz_t', type:'income-pizza', amount: total, date:date, description:'Ingreso Total Pizza', justAdded: true}; const pTx={id: ts+'_piz_p', type:'profit-pizza', amount: profit, date:date, description:'Ganancia Neta Pizza', justAdded: true};
+                transactions.push(tTx, pTx); saveData(); renderTransactions(historyDateFilterInput.value||null); updateAllSummaries(); displayStatus("Pizza añadido.", false);
+                pizzaTotalInput.value = ''; pizzaProfitInput.value = ''; pizzaTotalInput.focus();
+            });
+             expenseTypeButtonsContainer.addEventListener('click', (e) => { const button = e.target.closest('.expense-type-btn'); if (button && !button.classList.contains('active')) { selectedExpenseType = button.dataset.type; updateActiveExpenseButton(selectedExpenseType); } });
+             expenseForm.addEventListener('submit', (e) => {
+                 e.preventDefault(); const date = expenseDateInput.value; const amount = parseFloat(expenseAmountInput.value); const category = expenseCategorySelect.value; const note = expenseDescriptionInput.value.trim();
+                 if (!date) { displayStatus("Error: Falta fecha.", true); expenseDateInput.focus(); return; }
+                 if (category === 'Otro' && !note) { displayStatus("Error: Añade nota para 'Otro Gasto'.", true); expenseDescriptionInput.focus(); return; }
+                 if (isNaN(amount) || amount <= 0) { displayStatus("Error: Monto inválido.", true); expenseAmountInput.focus(); return; }
+                 const newExpense = { id: Date.now().toString() + '_exp', type: selectedExpenseType, category: category, amount: amount, date: date, description: note, justAdded: true };
+                 transactions.push(newExpense); saveData(); renderTransactions(historyDateFilterInput.value||null); updateAllSummaries(); displayStatus(`Gasto ${getTypeLabel(selectedExpenseType)} añadido.`, false);
+                 expenseAmountInput.value = ''; expenseDescriptionInput.value = ''; expenseCategorySelect.value = 'Otro'; expenseAmountInput.focus();
+             });
+             addCategoryBtn.addEventListener('click', () => { newExpenseCategoryInput.classList.toggle('hidden'); if (!newExpenseCategoryInput.classList.contains('hidden')) { newExpenseCategoryInput.focus(); } else { newExpenseCategoryInput.value = ''; } });
+             newExpenseCategoryInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') { e.preventDefault(); addCustomCategory(newExpenseCategoryInput.value); } });
+             newExpenseCategoryInput.addEventListener('blur', () => { if (!newExpenseCategoryInput.classList.contains('hidden')) { newExpenseCategoryInput.classList.add('hidden'); newExpenseCategoryInput.value = ''; } });
+            transactionList.addEventListener('click', (e) => { const deleteButton = e.target.closest('.delete-btn'); if (deleteButton) { const id = deleteButton.getAttribute('data-id'); const txn = transactions.find(t => t.id === id); const confMsg = txn ? `¿Eliminar?\nTipo: ${getTypeLabel(txn.type)}\nDesc: ${txn.category || txn.description}\nMonto: ${formatCurrency(txn.amount)}\nFecha: ${txn.date}` : '¿Eliminar?'; if (confirm(confMsg)) { deleteTransaction(id); } } });
+            historyDateFilterInput.addEventListener('change', (e) => { renderTransactions(e.target.value || null); });
+            showAllHistoryBtn.addEventListener('click', () => { historyDateFilterInput.value = ''; renderTransactions(); });
+            clearStorageBtn.addEventListener('click', clearAllData);
+            exportDataBtn.addEventListener('click', exportData);
+            importDataBtn.addEventListener('click', () => { importFileInput.click(); });
+            importFileInput.addEventListener('change', handleFileImport);
+            apiKeyInput.addEventListener('change', saveData); apiKeyInput.addEventListener('blur', saveData);
+            toggleApiKeyBtn.addEventListener('click', () => { const isHidden = apiKeyContainer.classList.toggle('hidden'); toggleApiKeyBtn.textContent = isHidden ? 'Mostrar' : 'Ocultar'; apiKeyInput.type = isHidden ? 'password' : 'text'; });
+            iaPredefinedQuestionsContainer.addEventListener('click', (e) => { const button = e.target.closest('.ia-question-btn'); if (button && !button.disabled) { customQueryArea.classList.add('hidden'); const prompt = button.dataset.prompt; if (prompt) { aiReportOutputDiv.innerHTML = ''; generateAiReport(prompt); } else { console.error("Botón IA sin data-prompt:", button); displayAiStatus("Error: falta prompt.", true); } } });
+            generateOfflineSummaryBtn.addEventListener('click', () => { aiReportOutputDiv.innerHTML = ''; generateOfflineSummary(); customQueryArea.classList.add('hidden'); });
+            showCustomQueryBtn.addEventListener('click', () => { customQueryArea.classList.toggle('hidden'); if (!customQueryArea.classList.contains('hidden')) { customAiQueryInput.focus(); } });
+            submitCustomQueryBtn.addEventListener('click', () => { const customQuery = customAiQueryInput.value.trim(); aiReportOutputDiv.innerHTML = ''; generateAiReport(customQuery); });
+             customAiQueryInput.addEventListener('keypress', (e) => { if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) { e.preventDefault(); submitCustomQueryBtn.click(); } });
+            addRecurringForm.addEventListener('submit', (e) => { e.preventDefault(); addRecurringExpense(recurringDescInput.value, recurringAmountInput.value); });
+            recurringList.addEventListener('click', (e) => { const deleteButton = e.target.closest('.delete-recurring-btn'); if (deleteButton) { const index = parseInt(deleteButton.dataset.index); const item = recurringExpenses[index]; if (item && confirm(`¿Eliminar recurrente "${item.description}" (${formatCurrency(item.amount)})?`)) { deleteRecurringExpense(index); } } });
+            applyRecurringBtn.addEventListener('click', applyRecurringExpenses);
+             toggleChartsBtn.addEventListener('click', () => {
+                 const isHidden = chartsContainer.classList.contains('hidden');
+                 if (isHidden) { if (transactions.length > 0) { renderCharts(); chartsContainer.classList.remove('hidden'); toggleChartsBtn.textContent = 'Ocultar Gráficos 📉'; toggleChartsBtn.classList.remove('btn-secondary'); toggleChartsBtn.classList.add('bg-purple-700', 'hover:bg-purple-600', 'border-purple-600'); } else { displayAiStatus("ℹ️ No hay datos para gráficos.", false); } }
+                 else { chartsContainer.classList.add('hidden'); toggleChartsBtn.textContent = 'Mostrar Gráficos 📈'; toggleChartsBtn.classList.add('btn-secondary'); toggleChartsBtn.classList.remove('bg-purple-700', 'hover:bg-purple-600', 'border-purple-600'); if (incomeExpenseChartInstance) { incomeExpenseChartInstance.destroy(); incomeExpenseChartInstance = null; } if (expenseTypeChartInstance) { expenseTypeChartInstance.destroy(); expenseTypeChartInstance = null; } }
+             });
+
+            // --- Carga Inicial ---
+            loadData(); // Carga los datos al iniciar la aplicación (versión CUP)
+
+        }); // Fin de DOMContentLoaded
+    </script>
+</body>
+</html>

@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Imperio Financiero CUP/USD ¡Estilo y Progreso!</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Pacifico&display=swap" rel="stylesheet">
+
+    <!-- CSS ESTILOS -->
+    <style>
+        :root {
+            --primary-bg: #f4f9ff; /* Un azul cielo aún más pálido, casi blanco */
+            --secondary-bg: #ffffff;
+            --accent-color-1: #10b981; /* Verde esmeralda más vibrante */
+            --accent-color-2: #f59e0b; /* Naranja ámbar, un poco más sofisticado */
+            --accent-color-3: #3b82f6; /* Azul para configuración */
+            --accent-color-achievement: #a855f7; /* Púrpura para logros */
+            --text-dark: #111827; /* Casi negro para máximo contraste */
+            --text-medium: #4b5563; /* Gris oscuro para texto secundario */
+            --text-light: #9ca3af; /* Gris claro para detalles */
+            --border-color: #e5e7eb; 
+            --shadow-color-light: rgba(100, 116, 139, 0.08);
+            --shadow-color-medium: rgba(100, 116, 139, 0.12);
+
+            --font-heading: 'Pacifico', cursive;
+            --font-body: 'Poppins', sans-serif;
+
+            --modal-info-bg: #eff6ff; 
+            --modal-info-border: #93c5fd;
+            --modal-info-text: #1e40af;
+
+            --modal-success-bg: #f0fdf4; 
+            --modal-success-border: #86efac;
+            --modal-success-text: #15803d;
+
+            --modal-motivation-bg: #fefce8; 
+            --modal-motivation-border: #fde047;
+            --modal-motivation-text: #854d0e;
+
+            --modal-achievement-bg: #f5f3ff; /* Lavanda pálido */
+            --modal-achievement-border: #c4b5fd; /* Lavanda */
+            --modal-achievement-text: #6d28d9; /* Púrpura oscuro */
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: var(--font-body);
+            background: var(--primary-bg);
+            color: var(--text-dark);
+            line-height: 1.7;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            padding: 25px 20px;
+            animation: fadeInPage 1s ease-out;
+        }
+
+        @keyframes fadeInPage { from { opacity: 0; } to { opacity: 1; } }
+
+        .container {
+            background-color: var(--secondary-bg);
+            padding: 35px 45px;
+            border-radius: 24px;
+            box-shadow: 0 15px 40px var(--shadow-color-medium);
+            width: 100%;
+            max-width: 850px;
+            text-align: center;
+            animation: scaleUpContainer 0.8s cubic-bezier(0.165, 0.84, 0.44, 1) 0.2s backwards;
+        }
+        
+        @keyframes scaleUpContainer {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .app-icon { width: 28px; height: 28px; margin-right: 10px; vertical-align: middle; opacity: 0.8; }
+        .app-icon.achievement { color: var(--accent-color-achievement); }
+        .app-icon.config { color: var(--accent-color-3); }
+        .app-icon.money { color: var(--accent-color-1); }
+        .app-icon.history { color: var(--accent-color-2); }
+        .app-icon.progress-title { color: var(--text-dark); }
+
+
+        header h1 {
+            font-family: var(--font-heading);
+            color: var(--accent-color-2);
+            font-size: 3.5em;
+            margin-bottom: 8px;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.07);
+        }
+
+        .subtitle {
+            font-size: 1.25em;
+            color: var(--text-medium);
+            margin-bottom: 40px;
+            font-weight: 400;
+        }
+
+        section {
+            margin-bottom: 35px;
+            padding: 30px;
+            background-color: var(--secondary-bg); /* Mantenerlo limpio */
+            border-radius: 18px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 6px 20px var(--shadow-color-light);
+        }
+
+        h2 {
+            font-family: var(--font-body);
+            font-weight: 700;
+            color: var(--text-dark);
+            font-size: 1.8em;
+            margin-bottom: 25px;
+            position: relative;
+            display: flex; /* Para alinear icono y texto */
+            align-items: center;
+            justify-content: center;
+            padding-bottom: 10px;
+        }
+        h2::after {
+            content: ''; position: absolute; bottom: 0; left: 50%;
+            transform: translateX(-50%); width: 70px; height: 3.5px;
+            background-color: var(--accent-color-2); border-radius: 3px;
+        }
+        .settings-section h2::after { background-color: var(--accent-color-3); }
+        .achievements-section h2::after { background-color: var(--accent-color-achievement); }
+
+
+        .input-group {
+            display: flex; flex-direction: column; align-items: center;
+            gap: 18px; margin-top: 15px;
+        }
+        .input-group label, .setting-item label {
+            font-size: 1.15em; color: var(--text-dark); font-weight: 600;
+        }
+
+        #daily-balance, .setting-input {
+            padding: 14px 20px; border: 2px solid var(--border-color);
+            border-radius: 12px; background-color: #f9fafb; /* Ligero fondo para input */
+            color: var(--text-dark); font-size: 1.1em; width: 75%;
+            max-width: 320px; text-align: center;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            font-weight: 600;
+        }
+        #daily-balance:focus, .setting-input:focus {
+            outline: none; border-color: var(--accent-color-2);
+            box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.2); /* Ámbar */
+        }
+        .settings-section .setting-input:focus {
+            border-color: var(--accent-color-3);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2); /* Azul */
+        }
+
+        button {
+            padding: 15px 35px;
+            background: linear-gradient(135deg, var(--accent-color-2), #d97706); /* Ámbar a ámbar oscuro */
+            color: white; border: none; border-radius: 12px;
+            font-size: 1.1em; font-weight: 600; cursor: pointer;
+            transition: transform 0.2s cubic-bezier(0.25, 0.1, 0.25, 1), box-shadow 0.3s ease, background 0.3s ease;
+            text-transform: uppercase; letter-spacing: 0.8px;
+            box-shadow: 0 5px 15px rgba(245, 158, 11, 0.25);
+            display: inline-flex; align-items: center; justify-content: center;
+        }
+        button .btn-icon { width: 20px; height: 20px; margin-right: 8px; }
+
+        button:hover {
+            transform: translateY(-4px) scale(1.02);
+            box-shadow: 0 8px 20px rgba(245, 158, 11, 0.35);
+            background: linear-gradient(135deg, #d97706, var(--accent-color-2));
+        }
+        button:active {
+            transform: translateY(-1px) scale(0.98);
+            box-shadow: 0 2px 8px rgba(245, 158, 11, 0.2);
+        }
+
+        .btn-secondary {
+            background: transparent; color: var(--accent-color-2);
+            border: 2px solid var(--accent-color-2); box-shadow: none;
+        }
+        .btn-secondary:hover {
+            background: var(--accent-color-2); color: white;
+            box-shadow: 0 5px 15px rgba(245, 158, 11, 0.2);
+        }
+        
+        .btn-config {
+            background: linear-gradient(135deg, var(--accent-color-3), #1d4ed8); /* Azul a azul oscuro */
+            box-shadow: 0 5px 15px rgba(59, 130, 246, 0.25);
+            font-size: 1em; padding: 12px 22px; margin-top: 12px;
+        }
+        .btn-config:hover {
+            background: linear-gradient(135deg, #1d4ed8, var(--accent-color-3));
+            box-shadow: 0 8px 20px rgba(59, 130, 246, 0.35);
+        }
+
+        .stats {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+            gap: 25px; margin-bottom: 35px; text-align: left;
+        }
+        .stat-item {
+            background-color: #f9fafb; /* Fondo muy claro */
+            padding: 22px; border-radius: 16px;
+            border-left: 6px solid var(--accent-color-1);
+            box-shadow: 0 4px 12px var(--shadow-color-light);
+            transition: transform 0.25s ease-out, box-shadow 0.25s ease-out;
+        }
+        .stat-item:hover {
+            transform: translateY(-5px) scale(1.01);
+            box-shadow: 0 7px 20px var(--shadow-color-medium);
+        }
+        .stat-item.usd { border-left-color: var(--accent-color-3); }
+
+        .stat-item .label {
+            display: block; font-size: 1em; color: var(--text-medium);
+            margin-bottom: 10px; font-weight: 600;
+        }
+        .stat-item .amount {
+            font-size: 1.8em; font-weight: 700; color: var(--text-dark);
+            letter-spacing: -0.5px;
+        }
+        #remaining-balance-display.amount { color: var(--accent-color-2); }
+
+        .progress-bar-container {
+            width: 100%; background-color: #f3f4f6; /* Gris aún más claro */
+            border-radius: 30px; height: 40px; position: relative;
+            overflow: hidden; border: 1px solid var(--border-color);
+            box-shadow: inset 0 3px 6px rgba(0,0,0,0.06);
+        }
+        .progress-bar-fill {
+            height: 100%; width: 0%; 
+            background: linear-gradient(90deg, var(--accent-color-1), #34d399); /* Verde a verde menta */
+            border-radius: 30px;
+            transition: width 0.8s cubic-bezier(0.23, 1, 0.32, 1); 
+            display: flex; align-items: center; justify-content: center;
+        }
+        .progress-percentage {
+            color: white; font-weight: 700; font-size: 1em;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.25);
+        }
+
+        #balance-history-list {
+            list-style: none; padding: 0; max-height: 250px; overflow-y: auto;
+            border: 1px solid var(--border-color); border-radius: 16px;
+            margin-bottom: 25px; background-color: var(--secondary-bg);
+        }
+        #balance-history-list::-webkit-scrollbar { width: 10px; }
+        #balance-history-list::-webkit-scrollbar-track { background: #f3f4f6; border-radius: 10px; }
+        #balance-history-list::-webkit-scrollbar-thumb { background: var(--accent-color-2); border-radius: 10px; border: 2px solid #f3f4f6; }
+        #balance-history-list::-webkit-scrollbar-thumb:hover { background: #d97706; }
+
+        #balance-history-list li {
+            padding: 14px 20px; border-bottom: 1px solid var(--border-color);
+            display: flex; justify-content: space-between; align-items: center;
+            font-size: 1em; transition: background-color 0.2s ease;
+        }
+        #balance-history-list li:last-child { border-bottom: none; }
+        #balance-history-list li:hover { background-color: var(--primary-bg); }
+        #balance-history-list li .amount-history { font-weight: 600; color: var(--accent-color-1); }
+        #balance-history-list li .date { color: var(--text-light); font-size: 0.9em; }
+
+        .settings-section .setting-group {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px; margin-top: 20px;
+        }
+        .setting-item {
+            display: flex; flex-direction: column; align-items: center;
+            padding: 20px; background-color: #f9fafb;
+            border-radius: 16px; border: 1px solid var(--border-color);
+        }
+        .setting-item label { margin-bottom: 12px; }
+        .setting-item .current-value { font-size: 0.9em; color: var(--text-medium); margin-bottom: 10px; }
+
+        /* Achievements Section */
+        .achievements-section {
+            border-top: 2px dashed var(--accent-color-achievement);
+            padding-top: 30px;
+        }
+        #achievements-list {
+            list-style: none; padding: 0;
+            display: flex; flex-wrap: wrap; gap: 15px; justify-content: center;
+        }
+        .achievement-item {
+            background-color: #f5f3ff; /* Fondo lavanda pálido */
+            color: var(--accent-color-achievement);
+            padding: 10px 15px;
+            border-radius: 20px; /* Más redondeado */
+            font-size: 0.9em;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            border: 1px solid var(--accent-color-achievement);
+            box-shadow: 0 2px 5px rgba(168, 85, 247, 0.1);
+            opacity: 0.5; /* Por defecto opaco si no está logrado */
+            transition: opacity 0.3s, transform 0.2s;
+        }
+        .achievement-item.achieved {
+            opacity: 1;
+            transform: scale(1.05); /* Resaltar al lograrlo */
+        }
+        .achievement-item .app-icon { margin-right: 8px; }
+
+
+        .modal {
+            display: none; position: fixed; z-index: 1000;
+            left: 0; top: 0; width: 100%; height: 100%;
+            overflow: auto; background-color: rgba(17, 24, 39, 0.6); /* Overlay más oscuro */
+            backdrop-filter: blur(6px); align-items: center; justify-content: center;
+            padding: 20px;
+        }
+        .modal-content {
+            background-color: var(--secondary-bg); margin: auto; padding: 30px 35px;
+            border-left-width: 8px; border-radius: 18px; width: 90%; max-width: 520px;
+            box-shadow: 0 15px 45px rgba(0,0,0, 0.2);
+            position: relative; animation: modalSlideDown 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
+            color: var(--text-dark);
+        }
+        @keyframes modalSlideDown {
+            from { opacity: 0; transform: translateY(-30px) scale(0.95); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        .modal-content.info { background-color: var(--modal-info-bg); border-color: var(--modal-info-border); color: var(--modal-info-text); }
+        .modal-content.success { background-color: var(--modal-success-bg); border-color: var(--modal-success-border); color: var(--modal-success-text); }
+        .modal-content.motivation { background-color: var(--modal-motivation-bg); border-color: var(--modal-motivation-border); color: var(--modal-motivation-text); }
+        .modal-content.achievement { background-color: var(--modal-achievement-bg); border-color: var(--modal-achievement-border); color: var(--modal-achievement-text); }
+        .modal-content.achievement .modal-title .app-icon { color: var(--accent-color-achievement); }
+
+
+        .modal-header {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 20px; padding-bottom: 15px;
+            border-bottom: 1px solid rgba(100, 116, 139, 0.2);
+        }
+        .modal-title { font-size: 1.8em; font-weight: 700; display: flex; align-items: center;}
+        .modal-title .app-icon { width: 24px; height: 24px; margin-right: 10px; }
+
+        .modal-body p { font-size: 1.1em; line-height: 1.8; margin-bottom: 12px; }
+        .modal-body p:last-child { margin-bottom: 0; }
+
+        .close-button {
+            color: #9ca3af; font-size: 32px; font-weight: bold; cursor: pointer;
+            background: none; border: none; padding: 0 5px; line-height: 1;
+            transition: color 0.2s ease, transform 0.2s ease;
+        }
+        .close-button:hover { color: var(--text-dark); transform: rotate(90deg); }
+
+        footer { margin-top: 45px; font-size: 0.95em; color: var(--text-medium); font-weight: 300; }
+        footer p { animation: fadeInUp 0.6s ease-out 1.2s backwards; }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+
+        @media (max-width: 700px) {
+            body { padding: 15px 10px; }
+            .container { padding: 25px; }
+            header h1 { font-size: 2.8em; }
+            .subtitle { font-size: 1.1em; margin-bottom: 30px; }
+            h2 { font-size: 1.5em; }
+            .stats { grid-template-columns: 1fr; gap: 15px;}
+            .stat-item .amount { font-size: 1.6em; }
+            #daily-balance, .setting-input { width: 90%; font-size: 1em; }
+            button, .btn-config { padding: 14px 28px; font-size: 1em; }
+            .modal-content { width: 95%; padding: 25px; }
+            .modal-title { font-size: 1.5em; }
+            .modal-body p { font-size: 1em; }
+            .settings-section .setting-group { grid-template-columns: 1fr; gap: 20px; }
+            .app-icon { width: 24px; height: 24px; }
+        }
+    </style>
+</head>
+<body>
+    <!-- SVG Icons Definition (Hidden) -->
+    <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+        <symbol id="icon-piggy-bank" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-2-9h4v2h-4v-2zm-2-4h8v2H8V7zm2 8h4v2h-4v-2zM7.5 12.5c0-.83.67-1.5 1.5-1.5s1.5.67 1.5 1.5S9.83 14 9 14s-1.5-.67-1.5-1.5zm6 0c0-.83.67-1.5 1.5-1.5s1.5.67 1.5 1.5S15.83 14 15 14s-1.5-.67-1.5-1.5zM12 4.5c-1.93 0-3.5 1.57-3.5 3.5H6.2c-.66 0-1.2.54-1.2 1.2v.6c0 .66.54 1.2 1.2 1.2h11.6c.66 0 1.2-.54 1.2-1.2v-.6c0-.66-.54-1.2-1.2-1.2H15.5c0-1.93-1.57-3.5-3.5-3.5zM12 6c.83 0 1.5.67 1.5 1.5S12.83 9 12 9s-1.5-.67-1.5-1.5S11.17 6 12 6z"/>
+        </symbol>
+        <symbol id="icon-chart-line" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M3.5 18.49l6-6.01 4 4L22 6.92l-1.41-1.41-7.09 7.97-4-4L2 16.99z"/>
+        </symbol>
+        <symbol id="icon-settings" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M19.43 12.98c.04-.32.07-.64.07-.98s-.03-.66-.07-.98l2.11-1.65c.19-.15.24-.42.12-.64l-2-3.46c-.12-.22-.39-.3-.61-.22l-2.49 1c-.52-.4-1.08-.73-1.69-.98l-.38-2.65C14.46 2.18 14.25 2 14 2h-4c-.25 0-.46.18-.49.42l-.38 2.65c-.61.25-1.17.59-1.69.98l-2.49-1c-.23-.09-.49 0-.61.22l-2 3.46c-.13.22-.07.49.12.64l2.11 1.65c-.04.32-.07.65-.07.98s.03.66.07.98l-2.11 1.65c-.19.15-.24.42.12.64l2 3.46c.12.22.39.3.61.22l2.49-1c.52.4 1.08.73 1.69.98l.38 2.65c.03.24.24.42.49.42h4c.25 0 .46-.18.49-.42l.38-2.65c.61-.25 1.17-.59 1.69-.98l2.49 1c.23.09.49 0 .61-.22l2-3.46c.12-.22.07-.49-.12-.64l-2.11-1.65zM12 15.5c-1.93 0-3.5-1.57-3.5-3.5s1.57-3.5 3.5-3.5 3.5 1.57 3.5 3.5-1.57 3.5-3.5 3.5z"/>
+        </symbol>
+        <symbol id="icon-list-alt" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/>
+        </symbol>
+        <symbol id="icon-plus-circle" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm5 11h-4v4h-2v-4H7v-2h4V7h2v4h4v2z"/>
+        </symbol>
+        <symbol id="icon-star" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+        </symbol>
+         <symbol id="icon-trophy" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M20.2 6c-.81 0-1.5.49-1.85 1.21L16.5 3.28a.997.997 0 0 0-.87-.5H8.37c-.37 0-.7.21-.87.5L5.65 7.21C5.3 6.49 4.61 6 3.8 6c-1.21 0-2.2 1-2.2 2.2v.11C2.22 12.28 5.06 15 8 15h8c2.94 0 5.78-2.72 6.4-6.69V8.2C22.4 7 21.41 6 20.2 6zM8 13c-1.86 0-3.43-1.23-3.86-2.97C4.06 9.43 4.58 9 5.18 9h13.64c.6 0 1.12.43 1.04 1.03C19.43 11.77 17.86 13 16 13H8zm8-8H8l1.25-2h5.5L16 5z"/>
+        </symbol>
+        <symbol id="icon-rocket" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v2.14c1.72.45 3 2 3 3.86h-2c0-1.1-.9-2-2-2s-2 .9-2 2H8c0-1.86 1.28-3.41 3-3.86V7zm0 10c-1.1 0-2-.9-2-2H7c0 2.76 2.24 5 5 5s5-2.24 5-5h-3c0 1.1-.9 2-2 2z"/>
+        </symbol>
+    </svg>
+
+    <div class="container">
+        <header>
+            <h1>Mi Imperio Financiero</h1>
+            <p class="subtitle">🌟 ¡Forjando tu Legado CUP/USD con Estilo y Determinación! 🌟</p>
+        </header>
+
+        <main>
+            <section class="balance-input-section">
+                <h2>
+                    <svg class="app-icon money"><use xlink:href="#icon-piggy-bank"></use></svg>
+                    Registrar Ahorro Diario
+                </h2>
+                <div class="input-group">
+                    <label for="daily-balance">Monto del día (CUP):</label>
+                    <input type="number" id="daily-balance" placeholder="Ej: 500.00" step="0.01" inputmode="decimal">
+                    <button id="add-balance-btn">
+                        <svg class="btn-icon"><use xlink:href="#icon-plus-circle"></use></svg>
+                        ¡Ahorrar Ahora!
+                    </button>
+                </div>
+            </section>
+
+            <section class="progress-overview">
+                <h2>
+                    <svg class="app-icon progress-title"><use xlink:href="#icon-chart-line"></use></svg>
+                    Tu Gran Avance
+                </h2>
+                <div class="stats">
+                    <div class="stat-item">
+                        <span class="label">Ahorro Actual (CUP):</span>
+                        <span id="current-balance-display" class="amount">0.00 CUP</span>
+                    </div>
+                    <div class="stat-item usd">
+                        <span class="label">Ahorro Actual (USD aprox.):</span>
+                        <span id="current-balance-usd-display" class="amount">0.00 USD</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="label">Tu Meta Soñada (CUP):</span>
+                        <span id="target-balance-display" class="amount">1,000,000.00 CUP</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="label">🚀 Te Falta (CUP):</span>
+                        <span id="remaining-balance-display" class="amount">1,000,000.00 CUP</span>
+                    </div>
+                </div>
+
+                <div class="progress-bar-container">
+                    <div id="progress-bar-fill" class="progress-bar-fill">
+                        <span id="progress-percentage" class="progress-percentage">0%</span>
+                    </div>
+                </div>
+            </section>
+            
+            <section class="achievements-section">
+                <h2>
+                    <svg class="app-icon achievement"><use xlink:href="#icon-trophy"></use></svg>
+                    Mis Logros Desbloqueados
+                </h2>
+                <ul id="achievements-list">
+                    <!-- Los logros se cargarán aquí -->
+                </ul>
+            </section>
+
+            <section class="settings-section">
+                <h2>
+                    <svg class="app-icon config"><use xlink:href="#icon-settings"></use></svg>
+                    Configuración Personalizada
+                </h2>
+                <div class="setting-group">
+                    <div class="setting-item">
+                        <label for="target-amount-input">🎯 Cambiar Meta (CUP):</label>
+                        <input type="number" id="target-amount-input" class="setting-input" placeholder="Ej: 1500000" step="1000">
+                        <button id="save-target-btn" class="btn-config">Actualizar Meta</button>
+                    </div>
+                    <div class="setting-item">
+                        <label for="usd-rate-input">💲 Tasa USD (CUP por 1 USD):</label>
+                        <input type="number" id="usd-rate-input" class="setting-input" placeholder="Ej: 370" step="0.01">
+                        <button id="save-usd-rate-btn" class="btn-config">Actualizar Tasa</button>
+                    </div>
+                </div>
+            </section>
+
+            <section class="history-section">
+                <h2>
+                    <svg class="app-icon history"><use xlink:href="#icon-list-alt"></use></svg>
+                    Historial de Ahorros
+                </h2>
+                <ul id="balance-history-list"></ul>
+                <button id="reset-progress-btn" class="btn-secondary">Reiniciar Viaje</button>
+            </section>
+        </main>
+
+        <footer>
+            <p>© 2024 Forjando Mi Imperio. ¡Con cada CUP, más cerca de tus sueños!</p>
+        </footer>
+    </div>
+
+    <div id="notification-modal" class="modal">
+        <div class="modal-content"> 
+            <div class="modal-header">
+                <h3 id="modal-title" class="modal-title">
+                    <svg class="app-icon" id="modal-icon"><use xlink:href="#icon-rocket"></use></svg>
+                    <span>Título</span>
+                </h3>
+                <button id="modal-close-btn" class="close-button" aria-label="Cerrar modal">×</button>
+            </div>
+            <div id="modal-body" class="modal-body"></div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            let targetAmount = 1000000;
+            let usdExchangeRate = 370;
+            let currentBalance = 0;
+            let history = [];
+            let achievements = [
+                { id: 'first_save', name: '¡Primer Ahorro!', icon: 'icon-star', threshold: () => history.length === 1, achieved: false, message: '¡Felicidades por dar el primer paso! Todo gran viaje comienza con una sola moneda. 🌟' },
+                { id: 'ten_thousand', name: '10,000 CUP', icon: 'icon-rocket', threshold: (balance) => balance >= 10000, achieved: false, message: '¡Ya tienes 10,000 CUP! Estás en camino. Sigue así. 🚀' },
+                { id: 'hundred_thousand', name: '100,000 CUP', icon: 'icon-trophy', threshold: (balance) => balance >= 100000, achieved: false, message: '¡Increíble, 100,000 CUP ahorrados! Eres una máquina de ahorrar. 🏆' },
+                { id: 'half_way', name: '¡A Mitad de Camino!', icon: 'icon-chart-line', threshold: (balance, target) => balance >= target / 2, achieved: false, message: '¡Estás a mitad de camino de tu meta! Lo más difícil ya pasó. ¡No te detengas ahora! 🏁' },
+                { id: 'five_saves', name: 'Ahorrador Constante', icon: 'icon-piggy-bank', threshold: () => history.length >= 5, achieved: false, message: '¡Has realizado 5 ahorros! La constancia es tu mejor aliada. ¡Excelente hábito! 🐷' }
+            ];
+
+            // DOM Elements (condensed for brevity)
+            const D = document;
+            const dailyBalanceInput = D.getElementById('daily-balance');
+            const addBalanceBtn = D.getElementById('add-balance-btn');
+            const currentBalanceDisplay = D.getElementById('current-balance-display');
+            const currentBalanceUsdDisplay = D.getElementById('current-balance-usd-display');
+            const targetBalanceDisplay = D.getElementById('target-balance-display');
+            const remainingBalanceDisplay = D.getElementById('remaining-balance-display');
+            const progressBarFill = D.getElementById('progress-bar-fill');
+            const progressPercentage = D.getElementById('progress-percentage');
+            const balanceHistoryList = D.getElementById('balance-history-list');
+            const resetProgressBtn = D.getElementById('reset-progress-btn');
+            const targetAmountInput = D.getElementById('target-amount-input');
+            const saveTargetBtn = D.getElementById('save-target-btn');
+            const usdRateInput = D.getElementById('usd-rate-input');
+            const saveUsdRateBtn = D.getElementById('save-usd-rate-btn');
+            const notificationModal = D.getElementById('notification-modal');
+            const modalContent = notificationModal.querySelector('.modal-content');
+            const modalTitleSpan = D.querySelector('#modal-title span');
+            const modalIconUse = D.querySelector('#modal-icon use');
+            const modalBodyElem = D.getElementById('modal-body');
+            const modalCloseBtn = D.getElementById('modal-close-btn');
+            const achievementsListElem = D.getElementById('achievements-list');
+
+
+            const motivationalMessages = [ /* Same as before, can be expanded */ ];
+            let lastMessageIndex = -1;
+
+            function formatCurrency(amount, currency = 'CUP') {
+                const locale = currency === 'USD' ? 'en-US' : 'es-CU';
+                try {
+                    return amount.toLocaleString(locale, { style: 'currency', currency: currency, minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                } catch (e) { return amount.toFixed(2) + ` ${currency}`; }
+            }
+            
+            function animateCountUp(element, endValue, duration = 700, currency = 'CUP') {
+                let startValueText = element.textContent.replace(/[^\d.-]/g, '');
+                let startValue = parseFloat(startValueText) || 0;
+                 if (isNaN(startValue)) startValue = 0;
+                if (Math.abs(endValue - startValue) < 0.01) { // If very close, just set it
+                    element.textContent = formatCurrency(endValue, currency);
+                    return;
+                }
+
+                let startTime = null;
+                function animation(currentTime) {
+                    if (startTime === null) startTime = currentTime;
+                    const timeElapsed = currentTime - startTime;
+                    const progress = Math.min(timeElapsed / duration, 1);
+                    const currentValue = startValue + (endValue - startValue) * progress;
+                    element.textContent = formatCurrency(currentValue, currency);
+                    if (progress < 1) requestAnimationFrame(animation);
+                    else element.textContent = formatCurrency(endValue, currency);
+                }
+                requestAnimationFrame(animation);
+            }
+
+
+            function updateUI() {
+                animateCountUp(currentBalanceDisplay, currentBalance, 700, 'CUP');
+                const currentUsd = (usdExchangeRate > 0) ? currentBalance / usdExchangeRate : 0;
+                animateCountUp(currentBalanceUsdDisplay, currentUsd, 700, 'USD');
+                
+                targetBalanceDisplay.textContent = formatCurrency(targetAmount, 'CUP');
+                targetAmountInput.placeholder = `Actual: ${targetAmount.toLocaleString('es-CU',{minimumFractionDigits:0, maximumFractionDigits:0})} CUP`;
+                usdRateInput.placeholder = `Actual: ${usdExchangeRate.toFixed(2)} CUP/USD`;
+                
+                const remaining = Math.max(0, targetAmount - currentBalance);
+                remainingBalanceDisplay.textContent = formatCurrency(remaining, 'CUP');
+
+                let percentage = targetAmount > 0 ? Math.min(100, (currentBalance / targetAmount) * 100) : 0;
+                progressBarFill.style.width = `${percentage}%`;
+                progressPercentage.textContent = `${percentage.toFixed(1)}%`;
+
+                progressBarFill.style.background = currentBalance >= targetAmount 
+                    ? `linear-gradient(90deg, #059669, var(--accent-color-1))` // Darker green for completed
+                    : `linear-gradient(90deg, var(--accent-color-1), #34d399)`;
+                
+                renderAchievements();
+            }
+
+            function renderHistory() { /* Same as before, for brevity */
+                balanceHistoryList.innerHTML = '';
+                const reversedHistory = [...history].reverse();
+                if (reversedHistory.length === 0) {
+                    const li = document.createElement('li');
+                    li.textContent = 'Aún no has comenzado tu viaje. ¡Anímate!';
+                    li.style.textAlign = 'center'; li.style.color = 'var(--text-light)';
+                    balanceHistoryList.appendChild(li);
+                    return;
+                }
+                reversedHistory.forEach(entry => {
+                    const li = document.createElement('li');
+                    const amountSpan = document.createElement('span');
+                    amountSpan.textContent = `+ ${formatCurrency(entry.amount, 'CUP')}`;
+                    amountSpan.classList.add('amount-history');
+                    const dateSpan = document.createElement('span');
+                    dateSpan.textContent = entry.date;
+                    dateSpan.classList.add('date');
+                    li.appendChild(amountSpan); li.appendChild(dateSpan);
+                    balanceHistoryList.appendChild(li);
+                });
+            }
+            
+            function renderAchievements() {
+                achievementsListElem.innerHTML = '';
+                achievements.forEach(ach => {
+                    const li = document.createElement('li');
+                    li.classList.add('achievement-item');
+                    if (ach.achieved) li.classList.add('achieved');
+                    li.innerHTML = `<svg class="app-icon"><use xlink:href="#${ach.icon}"></use></svg> ${ach.name}`;
+                    li.title = ach.message; // Tooltip con el mensaje
+                    achievementsListElem.appendChild(li);
+                });
+            }
+
+            function checkAchievements() {
+                let newAchievementUnlocked = false;
+                achievements.forEach(ach => {
+                    if (!ach.achieved) {
+                        const conditionMet = typeof ach.threshold === 'function' 
+                            ? ach.threshold(currentBalance, targetAmount) 
+                            : currentBalance >= ach.threshold;
+                        if (conditionMet) {
+                            ach.achieved = true;
+                            newAchievementUnlocked = true;
+                            setTimeout(() => { // Show achievement modal slightly delayed if multiple things happen
+                                showNotificationModal(
+                                    `¡Logro Desbloqueado!`, 
+                                    `<strong>${ach.name}</strong><br>${ach.message}`, 
+                                    "achievement",
+                                    ach.icon
+                                );
+                            }, 500);
+                        }
+                    }
+                });
+                if(newAchievementUnlocked) saveData(); // Save if an achievement state changed
+                return newAchievementUnlocked;
+            }
+
+
+            function saveData() {
+                try {
+                    localStorage.setItem('empireBalance', JSON.stringify(currentBalance));
+                    localStorage.setItem('empireHistory', JSON.stringify(history));
+                    localStorage.setItem('empireTarget', JSON.stringify(targetAmount));
+                    localStorage.setItem('empireUsdRate', JSON.stringify(usdExchangeRate));
+                    localStorage.setItem('empireAchievements', JSON.stringify(achievements.map(a => ({id: a.id, achieved: a.achieved}))));
+                } catch (e) { console.error("Error saving data:", e); }
+            }
+
+            function loadData() {
+                try {
+                    currentBalance = JSON.parse(localStorage.getItem('empireBalance')) || 0;
+                    history = JSON.parse(localStorage.getItem('empireHistory')) || [];
+                    targetAmount = JSON.parse(localStorage.getItem('empireTarget')) || 1000000;
+                    usdExchangeRate = JSON.parse(localStorage.getItem('empireUsdRate')) || 370;
+                    
+                    const savedAchievementsStatus = JSON.parse(localStorage.getItem('empireAchievements')) || [];
+                    achievements.forEach(ach => {
+                        const savedStatus = savedAchievementsStatus.find(sa => sa.id === ach.id);
+                        if (savedStatus) ach.achieved = savedStatus.achieved;
+                    });
+
+                } catch (e) { console.error("Error loading data:", e); /* Reset to defaults if error */ }
+                targetAmountInput.value = targetAmount;
+                usdRateInput.value = usdExchangeRate;
+                updateUI(); renderHistory();
+            }
+
+            function showNotificationModal(title, message, type = 'info', icon = 'icon-rocket') {
+                modalTitleSpan.textContent = title;
+                modalIconUse.setAttribute('xlink:href', `#${icon}`);
+                
+                const remainingBalanceCUP = Math.max(0, targetAmount - currentBalance);
+                const remainingBalanceUSD = usdExchangeRate > 0 ? remainingBalanceCUP / usdExchangeRate : 0;
+                message = message.replace(/{target}/g, formatCurrency(targetAmount, 'CUP'));
+                message = message.replace(/{remaining}/g, formatCurrency(remainingBalanceCUP, 'CUP'));
+                message = message.replace(/{remaining_usd}/g, formatCurrency(remainingBalanceUSD, 'USD'));
+
+                modalBodyElem.innerHTML = `<p>${message.replace(/\n/g, '</p><p>')}</p>`;
+                modalContent.className = 'modal-content';
+                modalContent.classList.add(type);
+                notificationModal.style.display = 'flex';
+                modalCloseBtn.focus();
+            }
+
+            function getRandomMotivationalMessage() { /* Same as before */ return { title: "💡 Consejo", message: "Revisa gastos pequeños, suman mucho.", type: "motivation" }; }
+
+            addBalanceBtn.addEventListener('click', () => {
+                const amountStr = dailyBalanceInput.value.replace(',', '.');
+                const amount = parseFloat(amountStr);
+                if (isNaN(amount) || amount <= 0) {
+                    showNotificationModal("🚫 Monto Inválido", "Ingresa un monto positivo.", "info", "icon-piggy-bank");
+                    dailyBalanceInput.value = ''; dailyBalanceInput.focus(); return;
+                }
+                const oldBalance = currentBalance;
+                currentBalance += amount;
+                history.push({ amount: amount, date: new Date().toLocaleString('es-CU', {day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'}) });
+                dailyBalanceInput.value = '';
+                updateUI(); renderHistory(); 
+
+                const achievementUnlocked = checkAchievements();
+                
+                if (currentBalance >= targetAmount && oldBalance < targetAmount) {
+                    setTimeout(() => { // Delay if an achievement modal might also show
+                         showNotificationModal("🎉🥳 ¡META ALCANZADA! 🥳🎉", `¡LO LOGRASTE! Has alcanzado tu meta de ${formatCurrency(targetAmount, 'CUP')}. ¡Es momento de celebrar! 🇨🇺`, "success", "icon-trophy");
+                    }, achievementUnlocked ? 1000 : 0); // If achievement showed, delay this more
+                } else if (!achievementUnlocked) { // Only show motivational if no achievement was just unlocked
+                    const randomMsg = getRandomMotivationalMessage();
+                    showNotificationModal(randomMsg.title, randomMsg.message, randomMsg.type, 'icon-rocket');
+                }
+                saveData();
+                dailyBalanceInput.focus();
+            });
+            
+            // Event listeners for settings, reset, modal close (condensed for brevity)
+            dailyBalanceInput.addEventListener('keypress', e => e.key === 'Enter' && (e.preventDefault(), addBalanceBtn.click()));
+            saveTargetBtn.addEventListener('click', () => {
+                const newTarget = parseFloat(targetAmountInput.value.replace(',', '.'));
+                if (isNaN(newTarget) || newTarget <= 0) { showNotificationModal("🎯 Meta Inválida", "La meta debe ser positiva.", "info"); targetAmountInput.value = targetAmount; return; }
+                targetAmount = newTarget;
+                // Re-evaluate achievements based on new target, especially 'half_way'
+                achievements.find(a => a.id === 'half_way').achieved = false; // Reset half_way to re-check
+                checkAchievements(); // This will re-evaluate and might show a modal if half_way is now met.
+                saveData(); updateUI();
+                showNotificationModal("🎯 Meta Actualizada", `Tu nueva meta es ${formatCurrency(targetAmount, 'CUP')}. ¡A por ella!`, "success", "icon-settings");
+                targetAmountInput.value = ''; targetAmountInput.placeholder = `Actual: ${targetAmount.toLocaleString('es-CU',{minimumFractionDigits:0, maximumFractionDigits:0})} CUP`;
+            });
+            saveUsdRateBtn.addEventListener('click', () => {
+                const newRate = parseFloat(usdRateInput.value.replace(',', '.'));
+                if (isNaN(newRate) || newRate <= 0) { showNotificationModal("💲 Tasa Inválida", "La tasa USD debe ser positiva.", "info"); usdRateInput.value = usdExchangeRate; return; }
+                usdExchangeRate = newRate;
+                saveData(); updateUI();
+                showNotificationModal("💲 Tasa USD Actualizada", `1 USD = ${formatCurrency(usdExchangeRate, 'CUP')}.`, "success", "icon-settings");
+                usdRateInput.value = ''; usdRateInput.placeholder = `Actual: ${usdExchangeRate.toFixed(2)} CUP/USD`;
+            });
+            resetProgressBtn.addEventListener('click', () => {
+                 modalTitleSpan.textContent = "🤔 ¿Reiniciar Viaje?";
+                 modalIconUse.setAttribute('xlink:href', '#icon-settings');
+                 modalBodyElem.innerHTML = `<p>Se reiniciará tu saldo e historial. Tus metas, tasa USD y logros desbloqueados se mantendrán.</p><p><strong>¿Confirmas el reinicio del saldo?</strong></p><div style="margin-top:20px;text-align:center;display:flex;justify-content:space-around;"><button id="confirm-reset-btn" class="btn-modal-action danger">Sí, Reiniciar</button><button id="cancel-reset-btn" class="btn-modal-action">No</button></div><style>.btn-modal-action{padding:10px 20px;border:none;border-radius:8px;cursor:pointer;font-weight:600;}.btn-modal-action.danger{background-color:#ef4444;color:white;}.btn-modal-action.danger:hover{background-color:#dc2626;}.btn-modal-action{background-color:#6b7280;color:white;}.btn-modal-action:hover{background-color:#4b5563;}</style>`;
+                 modalContent.className = 'modal-content info'; notificationModal.style.display = 'flex';
+                 D.getElementById('confirm-reset-btn').onclick = () => { currentBalance = 0; history = []; updateUI(); renderHistory(); saveData(); notificationModal.style.display = 'none'; showNotificationModal("🚀 Nuevo Comienzo", "Saldo e historial reiniciados. ¡A seguir adelante!", "info"); };
+                 D.getElementById('cancel-reset-btn').onclick = () => notificationModal.style.display = 'none';
+            });
+            modalCloseBtn.addEventListener('click', () => notificationModal.style.display = 'none');
+            window.addEventListener('click', e => e.target == notificationModal && (notificationModal.style.display = 'none'));
+            window.addEventListener('keydown', e => e.key === 'Escape' && notificationModal.style.display === 'flex' && (notificationModal.style.display = 'none'));
+
+            loadData(); 
+            if (currentBalance === 0 && history.length === 0) {
+                showNotificationModal("👋 ¡Bienvenido/a a tu Imperio Financiero!", `Tu meta actual es ${formatCurrency(targetAmount, 'CUP')}. ¡Ingresa tu primer ahorro y que comience la conquista! 🚀`, "info", "icon-star");
+            }
+        });
+    </script>
+</body>
+</html>
