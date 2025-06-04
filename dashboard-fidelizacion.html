@@ -6,7 +6,6 @@
     <title>Panel Admin - Cafetería Pizzería</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
-    <!-- qrcode.min.js ELIMINADO -->
     <style>
         :root { --primary: #e63946; --secondary: #1d3557; --gold: #ffd166; --light: #f1faee; --dark: #1a1a1a; }
         body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif; background-color: #f8f9fa; color: var(--dark); }
@@ -110,6 +109,9 @@
         .order-details-list { list-style-type: none; padding-left: 0; }
         .order-details-list li { padding: 3px 0; border-bottom: 1px dashed #eee; font-size: 0.9rem;}
         .order-details-list li:last-child { border-bottom: none; }
+        .product-image-table { max-width: 50px; max-height: 50px; border-radius: 4px; object-fit: cover; }
+        th.checkbox-column { width: 1%; text-align: center; }
+        td.checkbox-column { text-align: center; }
     </style>
 </head>
 <body>
@@ -147,16 +149,26 @@
         </div>
         <div class="mt-auto pt-3 border-top border-light-subtle"><div class="d-flex align-items-center"><i class="bi bi-person-circle fs-4"></i><div class="ms-3"><small>Admin</small><p class="mb-0 fw-bold" id="adminUserNameDisplayDesktop">Usuario Admin</p></div></div></div>
     </div>
-    
+
     <!-- Contenido principal -->
     <div class="container-fluid px-3 px-lg-4 py-3 py-lg-4" id="main-content-area">
         <div class="row">
             <div class="col-12 col-lg-10 offset-lg-2" id="dynamic-content-col">
-                
+
                 <div id="clients-section" style="display: none;">
                     <div class="d-flex justify-content-between align-items-center mb-3">
-                        <div> <h1 class="h4 mb-0 d-none d-lg-block"><i class="bi bi-people-fill"></i> Gestión de Clientes</h1> <h1 class="h5 mb-0 d-lg-none"><i class="bi bi-people-fill"></i> Clientes</h1> </div>
-                        <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addClientModal"> <i class="bi bi-person-plus"></i> <span class="d-none d-sm-inline">Nuevo Cliente</span> </button>
+                        <div>
+                            <h1 class="h4 mb-0 d-none d-lg-block"><i class="bi bi-people-fill"></i> Gestión de Clientes</h1>
+                            <h1 class="h5 mb-0 d-lg-none"><i class="bi bi-people-fill"></i> Clientes</h1>
+                        </div>
+                        <div>
+                            <button class="btn btn-info btn-sm me-2" id="bulk-email-clients-btn" onclick="showBulkEmailClientsModal()" disabled>
+                                <i class="bi bi-envelope-fill"></i> <span class="d-none d-sm-inline">Enviar Email</span>
+                            </button>
+                            <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addClientModal">
+                                <i class="bi bi-person-plus"></i> <span class="d-none d-sm-inline">Nuevo Cliente</span>
+                            </button>
+                        </div>
                     </div>
                     <div class="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-3 mb-3">
                         <div class="col"><div class="stats-card bg-primary"><h5 class="card-title">Clientes Totales</h5><h2 class="card-text" id="total-clients-stat">0</h2></div></div>
@@ -164,16 +176,53 @@
                         <div class="col"><div class="stats-card bg-warning text-dark"><h5 class="card-title">Recompensas Activas</h5><h2 class="card-text" id="total-rewards-stat">0</h2></div></div>
                     </div>
                     <div class="card mb-3"> <div class="card-body py-2"> <div class="d-flex flex-column flex-md-row gap-2"> <div class="input-group input-group-sm flex-grow-1"> <span class="input-group-text"><i class="bi bi-search"></i></span> <input type="text" id="search-client-input" class="form-control" placeholder="Buscar cliente (Nombre, Teléfono, ID)..."> </div> <button class="btn btn-outline-secondary btn-sm" onclick="resetFilterAndLoadClients()"><i class="bi bi-arrow-counterclockwise"></i> Limpiar</button> </div> </div> </div>
-                    <div class="card"> <div class="card-body p-0"> <div class="table-responsive"> <table class="table table-hover align-middle mb-0"> <thead class="table-light"><tr><th>ID</th><th>Nombre</th><th class="d-none d-md-table-cell">Teléfono</th><th>Puntos</th><th class="d-none d-sm-table-cell">Últ. Visita</th><th>Acciones</th></tr></thead> <tbody id="clients-table"></tbody> </table> </div> </div> </div>
+                    <div class="card"> <div class="card-body p-0"> <div class="table-responsive"> <table class="table table-hover align-middle mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th class="checkbox-column"><input type="checkbox" class="form-check-input" id="select-all-clients"></th>
+                                <th>ID</th>
+                                <th>Nombre</th>
+                                <th class="d-none d-md-table-cell">Teléfono</th>
+                                <th>Email</th>
+                                <th>Puntos</th>
+                                <th class="d-none d-sm-table-cell">Últ. Visita</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="clients-table"></tbody>
+                    </table> </div> </div> </div>
                 </div>
+
 
                 <div id="products-section" style="display: none;">
                     <div class="d-flex justify-content-between align-items-center mb-3">
                         <div> <h1 class="h4 mb-0 d-none d-lg-block"><i class="bi bi-egg-fried"></i> Gestión de Productos</h1> <h1 class="h5 mb-0 d-lg-none"><i class="bi bi-egg-fried"></i> Productos</h1> </div>
-                        <button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#addProductModal"> <i class="bi bi-journal-plus"></i> <span class="d-none d-sm-inline">Nuevo Producto</span> </button>
+                        <div>
+                            <button class="btn btn-danger btn-sm me-2" id="bulk-delete-products-btn" onclick="showBulkDeleteModal()" disabled>
+                                <i class="bi bi-trash-fill"></i> <span class="d-none d-sm-inline">Eliminar Seleccionados</span>
+                            </button>
+                            <button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#addProductModal">
+                                <i class="bi bi-journal-plus"></i> <span class="d-none d-sm-inline">Nuevo Producto</span>
+                            </button>
+                        </div>
                     </div>
                     <div class="card mb-3"> <div class="card-body py-2"> <div class="d-flex flex-column flex-md-row gap-2"> <div class="input-group input-group-sm flex-grow-1"> <span class="input-group-text"><i class="bi bi-search"></i></span> <input type="text" id="search-product-input" class="form-control" placeholder="Buscar producto (Nombre, Categoría, ID)..."> </div> <button class="btn btn-outline-secondary btn-sm" onclick="resetFilterAndLoadProducts()"><i class="bi bi-arrow-counterclockwise"></i> Limpiar</button> </div> </div> </div>
-                    <div class="card"> <div class="card-body p-0"> <div class="table-responsive"> <table class="table table-hover align-middle mb-0"> <thead class="table-light"><tr><th>ID</th><th>Nombre</th><th>Categoría</th><th>Precio</th><th>Puntos</th><th>Activo</th><th>Acciones</th></tr></thead> <tbody id="products-table"></tbody> </table> </div> </div> </div>
+                    <div class="card"> <div class="card-body p-0"> <div class="table-responsive"> <table class="table table-hover align-middle mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th class="checkbox-column"><input type="checkbox" class="form-check-input" id="select-all-products"></th>
+                                <th>Imagen</th>
+                                <th>ID</th>
+                                <th>Nombre</th>
+                                <th class="d-none d-md-table-cell">Categoría</th>
+                                <th>Precio</th>
+                                <th>Puntos</th>
+                                <th>Activo</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="products-table"></tbody>
+                    </table> </div> </div> </div>
                 </div>
 
                 <div id="orders-section" style="display: none;">
@@ -203,12 +252,12 @@
         <span class="luxury-spinner-text">Cargando...</span>
       </div>
     </div>
+
     <!-- Modales -->
     <div class="modal fade" id="addClientModal" tabindex="-1"><div class="modal-dialog"><div class="modal-content"><div class="modal-header"><h5 class="modal-title">Nuevo Cliente</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><form id="newClientForm"><div class="mb-3"><label for="clientName" class="form-label">Nombre Completo <span class="text-danger">*</span></label><input type="text" class="form-control" id="clientName" required></div><div class="mb-3"><label for="clientPhone" class="form-label">Teléfono</label><input type="tel" class="form-control" id="clientPhone"></div><div class="mb-3"><label for="clientEmail" class="form-label">Correo (Opcional)</label><input type="email" class="form-control" id="clientEmail"></div><div class="mb-3"><label for="clientInitialPoints" class="form-label">Puntos Iniciales</label><input type="number" class="form-control" id="clientInitialPoints" value="0" min="0"></div></form></div><div class="modal-footer"><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button><button type="button" class="btn btn-primary" onclick="addNewClient()">Guardar Cliente</button></div></div></div></div>
     <div class="modal fade" id="clientModal" tabindex="-1"><div class="modal-dialog modal-lg"><div class="modal-content"><div class="modal-header"><h5 class="modal-title">Detalles del Cliente</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body" id="client-details"></div><div class="modal-footer"><button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cerrar</button></div></div></div></div>
-    <!-- Modal qrModal ELIMINADO -->
     <div class="modal fade" id="addPointsModal" tabindex="-1"><div class="modal-dialog"><div class="modal-content"><div class="modal-header"><h5 class="modal-title">Añadir/Quitar Puntos</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><form id="addPointsForm"><div class="mb-3"><label for="pointsAmount" class="form-label">Cantidad de Puntos (negativo para quitar)</label><input type="number" class="form-control" id="pointsAmount" value="10" required></div><div class="mb-3"><label for="pointsReason" class="form-label">Razón (Opcional)</label><select class="form-select" id="pointsReason"><option value="compra">Compra</option><option value="ajuste">Ajuste Manual</option><option value="promocion">Promoción</option><option value="recompensa_canjeada">Canje Recompensa</option><option value="correccion">Corrección</option><option value="otro">Otro</option></select></div><input type="hidden" id="currentClientIdPoints"></form></div><div class="modal-footer"><button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cancelar</button><button type="button" class="btn btn-primary btn-sm" onclick="confirmAddPoints()">Aplicar Puntos</button></div></div></div></div>
-    <div class="modal fade" id="deleteModal" tabindex="-1"><div class="modal-dialog"><div class="modal-content"><div class="modal-header bg-danger text-white"><h5 class="modal-title">Confirmar Eliminación</h5><button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button></div><div class="modal-body"><p>¿Seguro que desea eliminar este <strong id="delete-item-type">elemento</strong>?</p><p>Detalles: <strong class="fw-bold" id="item-to-delete"></strong></p><p class="text-danger small">Esta acción no se puede deshacer.</p></div><div class="modal-footer"><button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cancelar</button><button type="button" class="btn btn-danger btn-sm" id="confirm-delete-btn">Eliminar</button></div></div></div></div>
+    <div class="modal fade" id="deleteModal" tabindex="-1"><div class="modal-dialog"><div class="modal-content"><div class="modal-header bg-danger text-white"><h5 class="modal-title">Confirmar Eliminación</h5><button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button></div><div class="modal-body"><p>¿Seguro que desea eliminar <strong id="delete-item-type">este elemento</strong>?</p><p>Detalles: <strong class="fw-bold" id="item-to-delete"></strong></p><p class="text-danger small">Esta acción no se puede deshacer.</p></div><div class="modal-footer"><button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cancelar</button><button type="button" class="btn btn-danger btn-sm" id="confirm-delete-btn">Eliminar</button></div></div></div></div>
     <div class="modal fade" id="addProductModal" tabindex="-1"><div class="modal-dialog modal-lg"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="addProductModalTitle">Añadir Producto</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><form id="productForm"><input type="hidden" id="productId"><div class="mb-3"><label for="productName" class="form-label">Nombre <span class="text-danger">*</span></label><input type="text" class="form-control" id="productName" required></div><div class="mb-3"><label for="productDescription" class="form-label">Descripción</label><textarea class="form-control" id="productDescription" rows="2"></textarea></div><div class="row"><div class="col-md-6 mb-3"><label for="productPrice" class="form-label">Precio (CUP) <span class="text-danger">*</span></label><input type="number" class="form-control" id="productPrice" step="0.01" min="0" required></div><div class="col-md-6 mb-3"><label for="productPoints" class="form-label">Puntos Otorga</label><input type="number" class="form-control" id="productPoints" min="0" value="0"></div></div><div class="mb-3"><label for="productCategory" class="form-label">Categoría</label><input type="text" class="form-control" id="productCategory"></div><div class="mb-3"><label for="productImageUrl" class="form-label">URL Imagen</label><input type="url" class="form-control" id="productImageUrl" placeholder="https://ejemplo.com/imagen.jpg"></div><div class="form-check mb-3"><input class="form-check-input" type="checkbox" id="productActive" checked><label class="form-check-label" for="productActive">Producto Activo</label></div></form></div><div class="modal-footer"><button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cancelar</button><button type="button" class="btn btn-primary btn-sm" onclick="saveProduct()">Guardar Producto</button></div></div></div></div>
     <div class="modal fade" id="orderDetailsModal" tabindex="-1"><div class="modal-dialog modal-lg"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="orderDetailsModalLabel">Detalles del Pedido</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body" id="order-details-content"><p>Cargando...</p></div><div class="modal-footer justify-content-between"><div><label for="orderStatusSelect" class="form-label-sm me-1">Estado:</label><select class="form-select form-select-sm d-inline-block w-auto" id="orderStatusSelect"><option value="Pendiente">Pendiente</option><option value="Procesado">Procesado</option><option value="Entregado">Entregado</option><option value="Cancelado">Cancelado</option></select><button type="button" class="btn btn-primary btn-sm ms-2" onclick="updateOrderStatusAttempt()">Actualizar</button></div><input type="hidden" id="order-id-to-update"><button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cerrar</button></div></div></div></div>
     <div class="modal fade" id="addRewardModal" tabindex="-1"><div class="modal-dialog modal-lg"><div class="modal-content">
@@ -233,420 +282,807 @@
             <button type="button" class="btn btn-primary btn-sm" onclick="saveReward()">Guardar Recompensa</button>
         </div>
     </div></div></div>
+
+    <!-- Modal para Enviar Email Masivo a Clientes -->
+    <div class="modal fade" id="bulkEmailClientsModal" tabindex="-1" aria-labelledby="bulkEmailClientsModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="bulkEmailClientsModalLabel">Enviar Email a Clientes Seleccionados</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="bulkEmailClientsForm">
+                        <div class="mb-3">
+                            <label for="emailSubject" class="form-label">Asunto <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="emailSubject" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="emailBody" class="form-label">Cuerpo del Mensaje <span class="text-danger">*</span> (Puedes usar HTML básico)</label>
+                            <textarea class="form-control" id="emailBody" rows="10" required></textarea>
+                             <small class="form-text text-muted">
+                                Puedes usar marcadores de posición: `{{nombreCliente}}` se reemplazará por el nombre del cliente.
+                            </small>
+                        </div>
+                        <div class="alert alert-info small">
+                            Se enviará un email individual a cada cliente seleccionado que tenga una dirección de correo válida.
+                            Clientes seleccionados: <strong id="selectedClientsCountForEmail">0</strong>.
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" onclick="confirmSendBulkEmailToClients()">Enviar Emails</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-       <script>
-        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx9cSLbeD6NzAHC1aV2xpxVtlzdq3cbQ2sLETcUKKUMnHLyU-ACB70Z1-P-TprVr7C_/exec'; // ¡¡¡ REEMPLAZA ESTO CON TU URL REAL !!!
+ <script>
+    const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxGUdnSCNjDcaUYNv9btJaB_-d0Q8d7EQGrqkdVatsVRHYMTEJsUJT4RNtCxVxW9gej/exec'; // ¡¡¡ REEMPLAZA ESTO CON TU URL REAL !!!
 
-        let allClients = [], displayedClients = [];
-        let allProducts = [], displayedProducts = [];
-        let allOrders = [], displayedOrders = [];
-        let allRewards = [], displayedRewards = [];
-        let itemToDeleteId = null, itemToDeleteType = null;
-        const loadingSpinner = document.getElementById('loadingSpinner');
+    let allClients = [], displayedClients = [];
+    let allProducts = [], displayedProducts = [];
+    let allOrders = [], displayedOrders = [];
+    let allRewards = [], displayedRewards = [];
+    let itemToDeleteId = null, itemToDeleteType = null;
+    const loadingSpinner = document.getElementById('loadingSpinner');
+    let selectedProductIds = new Set();
+    let selectedClientIds = new Set(); // Para emails y otras acciones masivas de clientes
 
-        async function fetchData(action, httpMethod = 'POST', payloadData = null) {
-            if (GOOGLE_SCRIPT_URL === 'TU_URL_DE_SCRIPT_AQUI' || !GOOGLE_SCRIPT_URL || GOOGLE_SCRIPT_URL.length < 20) {
-                alert("CONFIGURACIÓN REQUERIDA: URL de GOOGLE_SCRIPT_URL no es válida.");
-                if(loadingSpinner) loadingSpinner.style.display = 'none';
-                return { success: false, message: 'URL no configurada o inválida.' };
+
+    async function fetchData(action, httpMethod = 'POST', payloadData = null) {
+        if (GOOGLE_SCRIPT_URL === 'AQUI_VA_TU_URL_DEL_SCRIPT_DE_GOOGLE_APPS' || !GOOGLE_SCRIPT_URL || GOOGLE_SCRIPT_URL.length < 20) {
+            alert("CONFIGURACIÓN REQUERIDA: URL de GOOGLE_SCRIPT_URL no es válida.");
+            if(loadingSpinner) loadingSpinner.style.display = 'none';
+            return { success: false, message: 'URL no configurada o inválida.' };
+        }
+        console.log(`Admin fetchData: Acción='${action}', Método='${httpMethod}'`);
+        if (payloadData && httpMethod === 'POST') console.log(`Admin fetchData Payload: ${JSON.stringify(payloadData).substring(0,300)}`);
+
+
+        if(loadingSpinner) loadingSpinner.style.display = 'block';
+        try {
+            let url = GOOGLE_SCRIPT_URL;
+            // No es necesario añadir /exec manualmente si la URL ya lo tiene o es la base /macros/s/ID
+            // El fetch lo manejará correctamente si la URL base del script es correcta.
+
+            const options = { method: httpMethod, headers: {}, mode: 'cors', redirect: 'follow' };
+            if (httpMethod === 'GET') {
+                const params = new URLSearchParams({ action: action, cacheBuster: new Date().getTime() });
+                if (payloadData) { for (const key in payloadData) { params.append(key, payloadData[key]); } }
+                url += (url.includes('?') ? '&' : '?') + params.toString();
+            } else {
+                options.headers['Content-Type'] = 'application/x-www-form-urlencoded';
+                const formBody = new URLSearchParams();
+                formBody.append("data", JSON.stringify({ action, payload: payloadData }));
+                options.body = formBody.toString();
             }
-            console.log(`Admin fetchData: Acción='${action}', Método='${httpMethod}'`);
-            if(loadingSpinner) loadingSpinner.style.display = 'block';
+            const res = await fetch(url, options);
+            const responseText = await res.text();
+            console.log(`Respuesta bruta para '${action}': ${responseText.substring(0, 500)}`);
+
+            if (!res.ok) {
+                console.error(`Error en Fetch (${res.status}) para ${action}: ${responseText}`);
+                throw new Error(`Error de red o servidor (${res.status}): ${responseText.substring(0,100)}...`);
+            }
+
+            let responseJson;
             try {
-                let url = GOOGLE_SCRIPT_URL;
-                if (!url.startsWith('https://script.google.com/macros/s/')) {
-                     url = 'https://script.google.com/macros/s/' + url + '/exec';
-                } else if (!url.endsWith('/exec')) {
-                    url += '/exec';
-                }
-
-                const options = { method: httpMethod, headers: {}, mode: 'cors', redirect: 'follow' };
-                if (httpMethod === 'GET') {
-                    const params = new URLSearchParams({ action: action, cacheBuster: new Date().getTime() });
-                    if (payloadData) { for (const key in payloadData) { params.append(key, payloadData[key]); } }
-                    url += `?${params.toString()}`;
-                } else {
-                    options.headers['Content-Type'] = 'application/x-www-form-urlencoded';
-                    const formBody = new URLSearchParams();
-                    formBody.append("data", JSON.stringify({ action, payload: payloadData }));
-                    options.body = formBody.toString();
-                }
-                const res = await fetch(url, options);
-                if (!res.ok) { 
-                    const errorText = await res.text(); 
-                    console.error(`Error en Fetch (${res.status}) para ${action}: ${errorText}`);
-                    throw new Error(`Error de red o servidor (${res.status}): ${errorText.substring(0,100)}...`); 
-                }
-                const response = await res.json();
-                console.log(`Respuesta para '${action}':`, response);
-                if (response && response.success === false && response.message && response.message.includes("ScriptError: Autorización necesaria")) {
-                     alert("Error de autorización con Google Apps Script. Asegúrate de haber autorizado el script y desplegado la última versión correctamente.");
-                }
-                return response;
-            } catch (error) {
-                console.error(`Error crítico en fetchData (Acción: ${action}):`, error);
-                alert(`Error de comunicación con el servidor: ${error.message}`);
-                return { success: false, message: `Error: ${error.message || 'Desconocido'}` };
-            } finally {
-                if(loadingSpinner) loadingSpinner.style.display = 'none';
+                responseJson = JSON.parse(responseText);
+            } catch (jsonError) {
+                console.error(`Error al parsear JSON para '${action}': ${jsonError}. Respuesta recibida: ${responseText}`);
+                throw new Error(`Respuesta inválida del servidor (no es JSON): ${responseText.substring(0,100)}...`);
             }
-        }
 
-        function navigateToSection(sectionId) {
-            ['clients-section', 'products-section', 'orders-section', 'rewards-section'].forEach(id => {
-                const el = document.getElementById(id);
-                if (el) el.style.display = 'none';
-            });
-            document.querySelectorAll('#sidebarMobile .nav-link, .d-none.d-lg-flex .nav-link').forEach(link => link.classList.remove('active'));
-            
-            const sectionElement = document.getElementById(sectionId + '-section');
-            if (sectionElement) sectionElement.style.display = 'block';
-            
-            let activeLinkSelector = `.nav-link[onclick*="${sectionId}"]`;
-            document.querySelectorAll(activeLinkSelector).forEach(link => link.classList.add('active'));
-
-            if (sectionId === 'clients' && allClients.length === 0) loadClients(true);
-            else if (sectionId === 'products' && allProducts.length === 0) loadProducts(true);
-            else if (sectionId === 'orders' && allOrders.length === 0) loadOrders(true);
-            else if (sectionId === 'rewards' && allRewards.length === 0) loadRewards(true);
-            
-            const offcanvasEl = document.getElementById('sidebarMobile');
-            if (offcanvasEl) {
-                const offcanvas = bootstrap.Offcanvas.getInstance(offcanvasEl);
-                if (offcanvas && offcanvas._isShown) offcanvas.hide();
+            console.log(`Respuesta JSON parseada para '${action}':`, responseJson);
+            if (responseJson && responseJson.success === false && responseJson.message && responseJson.message.includes("ScriptError: Autorización necesaria")) {
+                 alert("Error de autorización con Google Apps Script. Asegúrate de haber autorizado el script y desplegado la última versión correctamente.");
             }
-            setupSidebarLayout();
-            updateDashboard(); 
+            return responseJson;
+        } catch (error) {
+            console.error(`Error crítico en fetchData (Acción: ${action}):`, error);
+            alert(`Error de comunicación con el servidor: ${error.message}`);
+            return { success: false, message: `Error: ${error.message || 'Desconocido'}` };
+        } finally {
+            if(loadingSpinner) loadingSpinner.style.display = 'none';
         }
-        
-        document.addEventListener('DOMContentLoaded', function() {
-            navigateToSection('clients'); 
-            document.getElementById('confirm-delete-btn').addEventListener('click', confirmDeleteItem);
-            ['search-client-input', 'search-product-input', 'search-order-input', 'search-reward-input'].forEach(id => {
-                const inputEl = document.getElementById(id);
-                if (inputEl) {
-                    inputEl.addEventListener('input', () => {
-                        if (id === 'search-client-input') filterClients();
-                        else if (id === 'search-product-input') filterProducts();
-                        else if (id === 'search-order-input') filterOrders();
-                        else if (id === 'search-reward-input') filterRewards();
-                    });
-                }
-            });
-            document.getElementById('addProductModal').addEventListener('show.bs.modal', function(event) {
-                const modalTitle = this.querySelector('.modal-title');
-                const productIdField = document.getElementById('productId');
-                const productForm = document.getElementById('productForm');
-                
-                if (productIdField.value) { 
-                    modalTitle.textContent = 'Editar Producto';
-                } else {
-                    modalTitle.textContent = 'Añadir Nuevo Producto';
-                    productForm.reset();
-                    productIdField.value = ''; 
-                    document.getElementById('productActive').checked = true;
-                }
-            });
-             document.getElementById('addRewardModal').addEventListener('show.bs.modal', function(event) {
-                const modalTitle = this.querySelector('.modal-title');
-                const rewardIdField = document.getElementById('rewardIdField');
-                const rewardForm = document.getElementById('rewardForm');
+    }
 
-                if (rewardIdField.value) { 
-                    modalTitle.textContent = 'Editar Recompensa';
-                } else {
-                    modalTitle.textContent = 'Añadir Nueva Recompensa';
-                    rewardForm.reset(); 
-                    rewardIdField.value = ''; 
-                    document.getElementById('rewardIsActive').checked = true;
-                    document.getElementById('rewardStock').value = '9999';
-                    document.getElementById('rewardType').value = 'Producto'; 
-                }
-            });
-            setupSidebarLayout();
+    function navigateToSection(sectionId) {
+        ['clients-section', 'products-section', 'orders-section', 'rewards-section'].forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.style.display = 'none';
         });
-        
-        window.addEventListener('resize', setupSidebarLayout); 
-        function setupSidebarLayout() {  
-            const sidebar = document.querySelector('.d-none.d-lg-flex.bg-dark');
-            const mainContentCol = document.getElementById('dynamic-content-col');
-            if (window.innerWidth >= 992 && sidebar && mainContentCol) {
-                mainContentCol.style.marginLeft = sidebar.offsetWidth + 'px';
-                mainContentCol.classList.remove('offset-lg-2'); 
-            } else if (mainContentCol) {
-                mainContentCol.style.marginLeft = '0';
-                mainContentCol.classList.add('offset-lg-2');
-            }
-        }
+        document.querySelectorAll('#sidebarMobile .nav-link, .d-none.d-lg-flex .nav-link').forEach(link => link.classList.remove('active'));
 
-        function updateDashboard() {
-            document.getElementById('total-clients-stat').textContent = allClients.length;
-            const totalPoints = allClients.reduce((sum, client) => sum + (parseInt(client.puntos) || 0), 0);
-            document.getElementById('total-points-stat').textContent = totalPoints;
-            const activeRewardsCount = allRewards.filter(r => r.isactive === true || String(r.isactive).toLowerCase() === 'true').length;
-            document.getElementById('total-rewards-stat').textContent = activeRewardsCount;
-        }
+        const sectionElement = document.getElementById(sectionId + '-section');
+        if (sectionElement) sectionElement.style.display = 'block';
 
-        async function loadClients(force = false) {
-            if (!force && allClients.length) { renderClientsTable(); return; }
-            const res = await fetchData('getClients', 'GET');
-            if (res.success && Array.isArray(res.data)) {
-                allClients = res.data.map(c => ({...c, puntos: parseInt(c.puntos)||0, compras: parseInt(c.compras)||0, verificado: c.verificado===true||String(c.verificado).toLowerCase()==='true'}));
-                filterClients(); 
-            } else { document.getElementById('clients-table').innerHTML = `<tr><td colspan="6" class="text-center text-danger">Error: ${res.message||'No se cargaron clientes.'}</td></tr>`; }
-            updateDashboard(); 
-        }
-        function renderClientsTable() {
-            const tb = document.getElementById('clients-table'); tb.innerHTML = '';
-            if (displayedClients.length === 0) { tb.innerHTML = '<tr><td colspan="6" class="text-center">No hay clientes para mostrar.</td></tr>'; return; } 
-            displayedClients.sort((a,b) => (a.nombre||"").localeCompare(b.nombre||"")).forEach(c => {
-                const vIcon = c.verificado ? '<i class="bi bi-check-circle-fill text-success" title="Verificado"></i>' : '<i class="bi bi-patch-question-fill text-warning" title="Pendiente"></i>';
-                const telefonoDisplay = c.telefono && String(c.telefono).trim() !== "" ? c.telefono : 'N/A';
-                tb.innerHTML += `<tr>
-                    <td>${c.id||'N/A'}</td>
-                    <td>${c.nombre||'S/N'} ${vIcon}<small class="d-block d-md-none text-muted">${telefonoDisplay}</small></td>
-                    <td class="d-none d-md-table-cell">${telefonoDisplay}</td>
-                    <td><span class="badge points-badge">${c.puntos}</span></td>
-                    <td class="d-none d-sm-table-cell">${c.ultimavisita||'N/A'}</td>
-                    <td><div class="btn-group btn-group-sm">
-                        <button class="btn btn-outline-primary" onclick="viewClientDetails('${c.id}')"><i class="bi bi-eye"></i></button>
-                        <button class="btn btn-outline-success" onclick="showAddPointsModal('${c.id}')"><i class="bi bi-plus-circle"></i></button>
-                        <!-- Botón QR Eliminado -->
-                        <button class="btn btn-outline-danger" onclick="showDeleteModal('${c.id}','${c.nombre}','client')"><i class="bi bi-trash"></i></button>
-                    </div></td>
-                </tr>`;
-            });
-        }
-        function filterClients() {
-            const term = document.getElementById('search-client-input').value.toLowerCase().trim();
-            displayedClients = term ? allClients.filter(c => (c.nombre&&c.nombre.toLowerCase().includes(term))||(c.telefono&&String(c.telefono).includes(term))||(c.id&&String(c.id).toLowerCase().includes(term))) : [...allClients];
-            renderClientsTable();
-        }
-        async function resetFilterAndLoadClients() { document.getElementById('search-client-input').value = ''; await loadClients(true); }
-        function viewClientDetails(id) { 
-            const c=allClients.find(x=>x.id===id); 
-            if(!c){alert('Cliente no hallado.');return;} 
-            let btns=''; 
-            // Botón QR Eliminado de aquí, solo queda el de verificar
-            if(!c.verificado){btns=`<button class="btn btn-success btn-sm" onclick="manuallyMarkVerified('${c.id}'); bootstrap.Modal.getInstance(document.getElementById('clientModal')).hide();">Verificar Manualmente</button>`;} 
-            const telefonoDisplay = c.telefono && String(c.telefono).trim() !== "" ? c.telefono : 'N/A';
-            document.getElementById('client-details').innerHTML=`<h5>${c.nombre||'S/N'} <span class="badge bg-${c.verificado?'success':'warning text-dark'}">${c.verificado?'Verificado':'No Verificado'}</span></h5><p><strong>ID:</strong> ${c.id||'N/A'}</p><p><strong>Tel:</strong> ${telefonoDisplay}</p><p><strong>Email:</strong> ${c.email||'N/A'}</p><p><strong>Puntos:</strong> <span class="badge points-badge fs-6">${c.puntos||0}</span></p><p><strong>Desde:</strong> ${c.fecharegistro||'N/A'}</p><p><strong>Últ. Visita:</strong> ${c.ultimavisita||'N/A'}</p><p><strong>Compras:</strong> ${c.compras||0}</p><hr>${btns}`; 
-            (bootstrap.Modal.getInstance(document.getElementById('clientModal'))||new bootstrap.Modal(document.getElementById('clientModal'))).show(); 
-        }
-        function showAddPointsModal(id) { const c=allClients.find(x=>x.id===id); if(!c){alert('Cliente no hallado.');return;} document.getElementById('currentClientIdPoints').value=id; document.getElementById('addPointsForm').reset(); document.getElementById('pointsAmount').value=10; (bootstrap.Modal.getInstance(document.getElementById('addPointsModal'))||new bootstrap.Modal(document.getElementById('addPointsModal'))).show(); }
-        // Función generateVerificationQR ELIMINADA
-        async function manuallyMarkVerified(id) { if(!confirm(`Verificar cliente '${id}'?`))return; const res=await fetchData('markClientVerified','POST',{clientId:id}); if(res.success){alert(res.message||"Verificado.");await loadClients(true);}else{alert(`Error: ${res.message||'Error.'}`);}}
-        async function addNewClient() { 
-            const data={
-                nombre:document.getElementById('clientName').value.trim(),
-                telefono:document.getElementById('clientPhone').value.trim(),
-                email:document.getElementById('clientEmail').value.trim(),
-                puntos:parseInt(document.getElementById('clientInitialPoints').value),
-                verificado:true 
-            }; 
-            if(!data.nombre){alert('Nombre requerido.');return;} 
-            if(isNaN(data.puntos)||data.puntos<0){alert('Puntos inválidos.');return;} 
-            const res=await fetchData('addClient','POST',{client:data}); 
-            if(res.success&&res.data){alert(res.message||`Cliente '${res.data.nombre}' añadido.`);await loadClients(true);bootstrap.Modal.getInstance(document.getElementById('addClientModal')).hide();document.getElementById('newClientForm').reset();}
-            else{alert(`Error: ${res.message||'Fallo.'}`);}
-        }
-        async function confirmAddPoints() { const id=document.getElementById('currentClientIdPoints').value; const pts=parseInt(document.getElementById('pointsAmount').value); const rsn=document.getElementById('pointsReason').value; if(isNaN(pts)){alert("Cantidad de puntos inválida.");return;} const res=await fetchData('updateClientPoints','POST',{clientId:id,points:pts,reason:rsn}); if(res.success&&res.data){alert(res.message||`Puntos actualizados.`);await loadClients(true);bootstrap.Modal.getInstance(document.getElementById('addPointsModal')).hide();}else{alert(`Error: ${res.message||'Fallo.'}`);}}
-        
-        async function loadProducts(force=false) { 
-            if(!force&&allProducts.length){renderProductsTable(); return;} 
-            const res=await fetchData('getProducts','GET'); 
-            if(res.success&&Array.isArray(res.data)){
-                allProducts=res.data.map(p=>({...p,price:parseFloat(p.price)||0,points:parseInt(p.points)||0,active:p.active===true||String(p.active).toLowerCase()==='true'})); 
-                filterProducts();
-            }else{document.getElementById('products-table').innerHTML=`<tr><td colspan="7" class="text-center text-danger">Error: ${res.message||'No se cargaron productos.'}</td></tr>`;}
-            updateDashboard();
-        }
-        function renderProductsTable() { const tb=document.getElementById('products-table');tb.innerHTML=''; if(displayedProducts.length===0){tb.innerHTML='<tr><td colspan="7" class="text-center">No hay productos.</td></tr>';return;} displayedProducts.sort((a,b)=>(a.name||"").localeCompare(b.name||"")).forEach(p=>{tb.innerHTML+=`<tr><td>${p.id||'N/A'}</td><td>${p.name||'S/N'}</td><td class="d-none d-md-table-cell">${p.category||'N/A'}</td><td>${(p.price||0).toFixed(2)}</td><td>${p.points||0}</td><td><span class="badge bg-${p.active?'success':'secondary'}">${p.active?'Sí':'No'}</span></td><td><div class="btn-group btn-group-sm"><button class="btn btn-outline-primary" onclick="editProduct('${p.id}')"><i class="bi bi-pencil"></i></button><button class="btn btn-outline-danger" onclick="showDeleteModal('${p.id}','${p.name}','product')"><i class="bi bi-trash"></i></button></div></td></tr>`;});}
-        function filterProducts() { const term=document.getElementById('search-product-input').value.toLowerCase().trim(); displayedProducts=term?allProducts.filter(p=>(p.name&&p.name.toLowerCase().includes(term))||(p.category&&p.category.toLowerCase().includes(term))||(p.id&&String(p.id).toLowerCase().includes(term))):[...allProducts]; renderProductsTable(); }
-        async function resetFilterAndLoadProducts() { document.getElementById('search-product-input').value='';await loadProducts(true); }
-        function editProduct(id) { 
-            const p=allProducts.find(x=>x.id===id); 
-            if(!p){alert('Producto no hallado.');return;} 
-            document.getElementById('productId').value=p.id; 
-            document.getElementById('productName').value=p.name; 
-            document.getElementById('productDescription').value=p.description||''; 
-            document.getElementById('productPrice').value=p.price; 
-            document.getElementById('productPoints').value=p.points; 
-            document.getElementById('productCategory').value=p.category||''; 
-            document.getElementById('productImageUrl').value=p.imageurl||''; 
-            document.getElementById('productActive').checked=p.active; 
-            (bootstrap.Modal.getInstance(document.getElementById('addProductModal'))||new bootstrap.Modal(document.getElementById('addProductModal'))).show(); 
-        }
-        async function saveProduct() { const data={id:document.getElementById('productId').value,name:document.getElementById('productName').value.trim(),description:document.getElementById('productDescription').value.trim(),price:parseFloat(document.getElementById('productPrice').value),points:parseInt(document.getElementById('productPoints').value)||0,category:document.getElementById('productCategory').value.trim(),imageurl:document.getElementById('productImageUrl').value.trim(),active:document.getElementById('productActive').checked}; if(!data.name||isNaN(data.price)||data.price<0){alert('Nombre y Precio requeridos.');return;} const action=data.id?'updateProduct':'addProduct'; const res=await fetchData(action,'POST',{product:data}); if(res.success&&res.data){alert(res.message||`Producto guardado.`);await loadProducts(true);bootstrap.Modal.getInstance(document.getElementById('addProductModal')).hide();}else{alert(`Error: ${res.message||'Fallo.'}`);}}
+        let activeLinkSelector = `.nav-link[onclick*="${sectionId}"]`;
+        document.querySelectorAll(activeLinkSelector).forEach(link => link.classList.add('active'));
 
-        async function loadOrders(force = false) {
-            if (!force && allOrders.length > 0) { renderOrdersTable(); return; }
-            const result = await fetchData('getAdminOrders', 'GET');
-            if (result.success && Array.isArray(result.data)) {
-                allOrders = result.data.map(o => ({
-                    ...o,
-                    totalamount: parseFloat(o.totalamount) || 0,
-                })).sort((a,b) => { 
-                    const dateA = new Date( (String(a.orderdate).includes('/') ? String(a.orderdate).split('/').reverse().join('-') : String(a.orderdate)) + "T" + (String(a.orderid).includes('_') && !isNaN(parseInt(String(a.orderid).split('_')[1])) ? new Date(parseInt(String(a.orderid).split('_')[1])).toTimeString().split(' ')[0] : "00:00:00") );
-                    const dateB = new Date( (String(b.orderdate).includes('/') ? String(b.orderdate).split('/').reverse().join('-') : String(b.orderdate)) + "T" + (String(b.orderid).includes('_') && !isNaN(parseInt(String(b.orderid).split('_')[1])) ? new Date(parseInt(String(b.orderid).split('_')[1])).toTimeString().split(' ')[0] : "00:00:00") );
-                    return dateB - dateA;
+        if (sectionId === 'clients' && allClients.length === 0) loadClients(true);
+        else if (sectionId === 'products' && allProducts.length === 0) loadProducts(true);
+        else if (sectionId === 'orders' && allOrders.length === 0) loadOrders(true);
+        else if (sectionId === 'rewards' && allRewards.length === 0) loadRewards(true);
+
+        const offcanvasEl = document.getElementById('sidebarMobile');
+        if (offcanvasEl) {
+            const offcanvas = bootstrap.Offcanvas.getInstance(offcanvasEl);
+            if (offcanvas && offcanvas._isShown) offcanvas.hide();
+        }
+        setupSidebarLayout();
+        updateDashboard();
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        navigateToSection('clients');
+        document.getElementById('confirm-delete-btn').addEventListener('click', confirmDeleteItem);
+        ['search-client-input', 'search-product-input', 'search-order-input', 'search-reward-input'].forEach(id => {
+            const inputEl = document.getElementById(id);
+            if (inputEl) {
+                inputEl.addEventListener('input', () => {
+                    if (id === 'search-client-input') filterClients();
+                    else if (id === 'search-product-input') filterProducts();
+                    else if (id === 'search-order-input') filterOrders();
+                    else if (id === 'search-reward-input') filterRewards();
                 });
-                filterOrders(); 
-            } else {
-                 document.getElementById('orders-table').innerHTML = `<tr><td colspan="6" class="text-center text-danger">Error al cargar pedidos: ${result.message || 'Error.'}</td></tr>`;
             }
-            updateDashboard();
-        }
-        function renderOrdersTable() {
-            const tb = document.getElementById('orders-table'); tb.innerHTML = '';
-            if (displayedOrders.length === 0) { tb.innerHTML = '<tr><td colspan="6" class="text-center">No hay pedidos para mostrar.</td></tr>'; return; }
-            displayedOrders.forEach(order => {
-                let sClass=''; switch(String(order.status).toLowerCase()){case 'pendiente':sClass='status-pendiente';break;case 'procesado':sClass='status-procesado';break;case 'entregado':sClass='status-entregado';break;case 'cancelado':sClass='status-cancelado';break;default:sClass='bg-secondary text-white';}
-                tb.innerHTML += `<tr><td>${order.orderid?String(order.orderid).substr(-8):'N/A'}</td><td>${order.clientname||'N/A'}<small class="d-block text-muted">${order.clientid||''}</small></td><td class="d-none d-md-table-cell">${order.orderdate||'N/A'}</td><td>${(order.totalamount||0).toFixed(2)}</td><td><span class="status-badge ${sClass}">${order.status||'N/A'}</span></td><td><button class="btn btn-sm btn-outline-primary" onclick="viewOrderDetails('${order.orderid}')"><i class="bi bi-eye"></i></button></td></tr>`;
-            });
-        }
-        function filterOrders() {
-            const term = document.getElementById('search-order-input').value.toLowerCase().trim();
-            displayedOrders = term ? allOrders.filter(o => (o.orderid&&String(o.orderid).toLowerCase().includes(term))||(o.clientname&&o.clientname.toLowerCase().includes(term))||(o.clientid&&String(o.clientid).toLowerCase().includes(term))||(o.status&&o.status.toLowerCase().includes(term))) : [...allOrders];
-            renderOrdersTable();
-        }
-        function viewOrderDetails(id) { const o=allOrders.find(x=>x.orderid===id); if(!o){alert('Pedido no hallado.');return;} const content=document.getElementById('order-details-content'); document.getElementById('order-id-to-update').value=id; let items='<p class="text-muted small">No hay ítems.</p>'; if(o.itemsjson&&Array.isArray(o.itemsjson)&&o.itemsjson.length>0){items='<ul class="order-details-list">';o.itemsjson.forEach(i=>{items+=`<li>${i.quantity}x <strong>${i.name||'N/A'}</strong> (@ ${(parseFloat(i.price)||0).toFixed(2)}) = ${(i.quantity*(parseFloat(i.price)||0)).toFixed(2)}</li>`;});items+='</ul>';} content.innerHTML=`<p><strong>ID:</strong> ${o.orderid}</p><p><strong>Cliente:</strong> ${o.clientname||'N/A'} (ID: ${o.clientid||'N/A'})</p><p><strong>Fecha:</strong> ${o.orderdate||'N/A'}</p><p><strong>Total:</strong> ${(parseFloat(o.totalamount)||0).toFixed(2)} CUP</p><p><strong>Puntos Otorgados (si aplica):</strong> ${o.totalpointsawarded||0}</p><p><strong>Estado:</strong> <span class="fw-bold">${o.status||'N/A'}</span></p><p><strong>Puntos Ya Entregados:</strong> <span class="badge bg-${o.pointsgiven ? 'success' : 'secondary'}">${o.pointsgiven ? 'Sí' : 'No'}</span></p><hr><h5>Ítems:</h5>${items}`; document.getElementById('orderStatusSelect').value=o.status||'Pendiente'; (bootstrap.Modal.getInstance(document.getElementById('orderDetailsModal'))||new bootstrap.Modal(document.getElementById('orderDetailsModal'))).show(); }
-        async function updateOrderStatusAttempt() { const id=document.getElementById('order-id-to-update').value; const status=document.getElementById('orderStatusSelect').value; if(!id||!status){alert("Datos inválidos.");return;} const res=await fetchData('updateOrderStatus','POST',{orderId:id,newStatus:status}); if(res.success){alert(res.message||"Estado actualizado.");await loadOrders(true);bootstrap.Modal.getInstance(document.getElementById('orderDetailsModal'))?.hide();}else{alert(`Error: ${res.message||'Fallo.'}`);}}
+        });
+        document.getElementById('addProductModal').addEventListener('show.bs.modal', function(event) {
+            const modalTitle = this.querySelector('.modal-title');
+            const productIdField = document.getElementById('productId');
+            const productForm = document.getElementById('productForm');
 
-        async function loadRewards(force = false) {
-            if (!force && allRewards.length) { renderRewardsTable(); return; }
-            const res = await fetchData('getAvailableRewards', 'GET'); 
-            if (res.success && Array.isArray(res.data)) {
-                allRewards = res.data.map(r => ({
-                    ...r,
-                    pointsrequired: parseInt(r.pointsrequired) || 0,
-                    stock: parseInt(r.stock) || 0, 
-                    isactive: r.isactive === true || String(r.isactive).toLowerCase() === 'true'
-                }));
-                filterRewards(); 
+            if (productIdField.value) {
+                modalTitle.textContent = 'Editar Producto';
             } else {
-                document.getElementById('rewards-table').innerHTML = `<tr><td colspan="8" class="text-center text-danger">Error: ${res.message || 'No se cargaron recompensas.'}</td></tr>`;
+                modalTitle.textContent = 'Añadir Nuevo Producto';
+                productForm.reset();
+                productIdField.value = '';
+                document.getElementById('productActive').checked = true;
             }
-            updateDashboard(); 
+        });
+         document.getElementById('addRewardModal').addEventListener('show.bs.modal', function(event) {
+            const modalTitle = this.querySelector('.modal-title');
+            const rewardIdField = document.getElementById('rewardIdField');
+            const rewardForm = document.getElementById('rewardForm');
+
+            if (rewardIdField.value) {
+                modalTitle.textContent = 'Editar Recompensa';
+            } else {
+                modalTitle.textContent = 'Añadir Nueva Recompensa';
+                rewardForm.reset();
+                rewardIdField.value = '';
+                document.getElementById('rewardIsActive').checked = true;
+                document.getElementById('rewardStock').value = '9999';
+                document.getElementById('rewardType').value = 'Producto';
+            }
+        });
+        document.getElementById('select-all-products').addEventListener('change', handleProductSelectAll);
+        document.getElementById('select-all-clients').addEventListener('change', handleClientSelectAll); // Nuevo
+        setupSidebarLayout();
+    });
+
+    window.addEventListener('resize', setupSidebarLayout);
+    function setupSidebarLayout() {
+        const sidebar = document.querySelector('.d-none.d-lg-flex.bg-dark');
+        const mainContentCol = document.getElementById('dynamic-content-col');
+        if (window.innerWidth >= 992 && sidebar && mainContentCol) {
+            mainContentCol.style.marginLeft = sidebar.offsetWidth + 'px';
+            mainContentCol.classList.remove('offset-lg-2');
+        } else if (mainContentCol) {
+            mainContentCol.style.marginLeft = '0';
+            mainContentCol.classList.add('offset-lg-2');
         }
-        function renderRewardsTable() {
-            const tb = document.getElementById('rewards-table');
-            tb.innerHTML = '';
-            if (displayedRewards.length === 0) {
-                tb.innerHTML = '<tr><td colspan="8" class="text-center">No hay recompensas para mostrar.</td></tr>';
-                return;
+    }
+
+    function updateDashboard() {
+        document.getElementById('total-clients-stat').textContent = allClients.length;
+        const totalPoints = allClients.reduce((sum, client) => sum + (parseInt(client.puntos) || 0), 0);
+        document.getElementById('total-points-stat').textContent = totalPoints;
+        const activeRewardsCount = allRewards.filter(r => r.isactive === true || String(r.isactive).toLowerCase() === 'true').length;
+        document.getElementById('total-rewards-stat').textContent = activeRewardsCount;
+    }
+
+    // --- CLIENT FUNCTIONS ---
+    async function loadClients(force = false) {
+        if (!force && allClients.length) {
+            renderClientsTable();
+            return;
+        }
+        const res = await fetchData('getClients', 'GET');
+        if (res && res.success && Array.isArray(res.data)) {
+            allClients = res.data.map(c => ({...c, puntos: parseInt(c.puntos)||0, compras: parseInt(c.compras)||0, verificado: c.verificado===true||String(c.verificado).toLowerCase()==='true'}));
+            filterClients();
+        } else {
+            document.getElementById('clients-table').innerHTML = `<tr><td colspan="8" class="text-center text-danger">Error: ${res.message||'No se cargaron clientes.'}</td></tr>`; // colspan actualizado
+            updateBulkEmailClientsButtonState();
+            const selectAllClientsCheckbox = document.getElementById('select-all-clients');
+            if (selectAllClientsCheckbox) selectAllClientsCheckbox.checked = false;
+        }
+        updateDashboard();
+    }
+
+    function renderClientsTable() {
+        const tb = document.getElementById('clients-table'); tb.innerHTML = '';
+        if (displayedClients.length === 0) {
+            tb.innerHTML = '<tr><td colspan="8" class="text-center">No hay clientes para mostrar.</td></tr>'; // colspan ajustado
+            updateBulkEmailClientsButtonState();
+            const selectAllClientsCheckbox = document.getElementById('select-all-clients');
+            if (selectAllClientsCheckbox) selectAllClientsCheckbox.checked = false;
+            return;
+        }
+        displayedClients.sort((a,b) => (a.nombre||"").localeCompare(b.nombre||"")).forEach(c => {
+            const vIcon = c.verificado ? '<i class="bi bi-check-circle-fill text-success" title="Verificado"></i>' : '<i class="bi bi-patch-question-fill text-warning" title="Pendiente"></i>';
+            const telefonoDisplay = c.telefono && String(c.telefono).trim() !== "" ? c.telefono : 'N/A';
+            const emailDisplay = c.email && String(c.email).trim() !== "" ? c.email : 'N/A';
+            const isChecked = selectedClientIds.has(c.id);
+
+            tb.innerHTML += `<tr>
+                <td class="checkbox-column"><input type="checkbox" class="form-check-input client-select-checkbox" value="${c.id}" data-client-id="${c.id}" ${isChecked ? 'checked' : ''}></td>
+                <td>${c.id||'N/A'}</td>
+                <td>${c.nombre||'S/N'} ${vIcon}<small class="d-block d-md-none text-muted">${telefonoDisplay}</small></td>
+                <td class="d-none d-md-table-cell">${telefonoDisplay}</td>
+                <td>${emailDisplay}</td>
+                <td><span class="badge points-badge">${c.puntos}</span></td>
+                <td class="d-none d-sm-table-cell">${c.ultimavisita||'N/A'}</td>
+                <td><div class="btn-group btn-group-sm">
+                    <button class="btn btn-outline-primary" onclick="viewClientDetails('${c.id}')"><i class="bi bi-eye"></i></button>
+                    <button class="btn btn-outline-success" onclick="showAddPointsModal('${c.id}')"><i class="bi bi-plus-circle"></i></button>
+                    <button class="btn btn-outline-danger" onclick="showDeleteModal('${c.id}','${c.nombre}','client')"><i class="bi bi-trash"></i></button>
+                </div></td>
+            </tr>`;
+        });
+
+        document.querySelectorAll('.client-select-checkbox').forEach(checkbox => {
+            checkbox.addEventListener('change', handleClientSelectSingle);
+        });
+
+        updateSelectAllClientsCheckboxState();
+        updateBulkEmailClientsButtonState();
+    }
+
+    function filterClients() {
+        const term = document.getElementById('search-client-input').value.toLowerCase().trim();
+        displayedClients = term ? allClients.filter(c => (c.nombre&&c.nombre.toLowerCase().includes(term))||(c.telefono&&String(c.telefono).includes(term))||(c.id&&String(c.id).toLowerCase().includes(term))||(c.email&&c.email.toLowerCase().includes(term))) : [...allClients];
+        renderClientsTable();
+    }
+
+    async function resetFilterAndLoadClients() {
+        document.getElementById('search-client-input').value = '';
+        selectedClientIds.clear();
+        await loadClients(true);
+    }
+
+    function handleClientSelectAll(event) {
+        const isChecked = event.target.checked;
+        const visibleClientCheckboxes = document.querySelectorAll('#clients-table .client-select-checkbox');
+
+        visibleClientCheckboxes.forEach(checkbox => {
+            const clientId = checkbox.dataset.clientId;
+            checkbox.checked = isChecked;
+            if (isChecked) {
+                selectedClientIds.add(clientId);
+            } else {
+                selectedClientIds.delete(clientId);
             }
-            displayedRewards.sort((a, b) => (a.name || "").localeCompare(b.name || "")).forEach(r => {
+        });
+        updateBulkEmailClientsButtonState();
+    }
+
+    function handleClientSelectSingle(event) {
+        const clientId = event.target.dataset.clientId;
+        if (event.target.checked) {
+            selectedClientIds.add(clientId);
+        } else {
+            selectedClientIds.delete(clientId);
+        }
+        updateSelectAllClientsCheckboxState();
+        updateBulkEmailClientsButtonState();
+    }
+
+    function updateSelectAllClientsCheckboxState() {
+        const selectAllCheckbox = document.getElementById('select-all-clients');
+        if (!selectAllCheckbox) return;
+        const allClientCheckboxes = document.querySelectorAll('#clients-table .client-select-checkbox');
+
+        if (allClientCheckboxes.length === 0) {
+            selectAllCheckbox.checked = false;
+            selectAllCheckbox.indeterminate = false;
+            return;
+        }
+        const checkedCount = Array.from(allClientCheckboxes).filter(cb => cb.checked).length;
+
+        if (checkedCount === 0) {
+            selectAllCheckbox.checked = false;
+            selectAllCheckbox.indeterminate = false;
+        } else if (checkedCount === allClientCheckboxes.length) {
+            selectAllCheckbox.checked = true;
+            selectAllCheckbox.indeterminate = false;
+        } else {
+            selectAllCheckbox.checked = false;
+            selectAllCheckbox.indeterminate = true;
+        }
+    }
+
+    function updateBulkEmailClientsButtonState() {
+        const btn = document.getElementById('bulk-email-clients-btn');
+        if (!btn) return;
+        const btnTextSpan = btn.querySelector('span.d-none.d-sm-inline');
+
+        if (selectedClientIds.size > 0) {
+            btn.disabled = false;
+            if (btnTextSpan) btnTextSpan.textContent = `Enviar Email (${selectedClientIds.size})`;
+        } else {
+            btn.disabled = true;
+            if (btnTextSpan) btnTextSpan.textContent = `Enviar Email`;
+        }
+        const countSpan = document.getElementById('selectedClientsCountForEmail');
+        if (countSpan) countSpan.textContent = selectedClientIds.size;
+    }
+
+    function showBulkEmailClientsModal() {
+        if (selectedClientIds.size === 0) {
+            alert("Por favor, selecciona al menos un cliente.");
+            return;
+        }
+        document.getElementById('bulkEmailClientsForm').reset();
+        document.getElementById('selectedClientsCountForEmail').textContent = selectedClientIds.size;
+        const emailModal = bootstrap.Modal.getInstance(document.getElementById('bulkEmailClientsModal')) || new bootstrap.Modal(document.getElementById('bulkEmailClientsModal'));
+        emailModal.show();
+    }
+
+    async function confirmSendBulkEmailToClients() {
+        const subject = document.getElementById('emailSubject').value.trim();
+        const body = document.getElementById('emailBody').value.trim();
+
+        if (!subject || !body) {
+            alert("El asunto y el cuerpo del mensaje son obligatorios.");
+            return;
+        }
+        if (selectedClientIds.size === 0) {
+            alert("No hay clientes seleccionados.");
+            return;
+        }
+
+        const clientIdsArray = Array.from(selectedClientIds);
+        const payload = { clientIds: clientIdsArray, subject: subject, emailBody: body };
+
+        const sendButton = document.querySelector('#bulkEmailClientsModal .modal-footer .btn-primary');
+        sendButton.disabled = true;
+        sendButton.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Enviando...';
+
+        const res = await fetchData('sendBulkEmailToClients', 'POST', payload);
+
+        sendButton.disabled = false;
+        sendButton.innerHTML = 'Enviar Emails';
+
+        if (res && res.success) {
+            alert(res.message || "Proceso de envío de emails completado.");
+            bootstrap.Modal.getInstance(document.getElementById('bulkEmailClientsModal')).hide();
+        } else {
+            alert(`Error al enviar emails: ${res ? res.message : 'Fallo desconocido o respuesta inesperada.'}`);
+        }
+    }
+
+
+    function viewClientDetails(id) {
+        const c=allClients.find(x=>x.id===id);
+        if(!c){alert('Cliente no hallado.');return;}
+        let btns='';
+        if(!c.verificado){btns=`<button class="btn btn-success btn-sm" onclick="manuallyMarkVerified('${c.id}'); bootstrap.Modal.getInstance(document.getElementById('clientModal')).hide();">Verificar Manualmente</button>`;}
+        const telefonoDisplay = c.telefono && String(c.telefono).trim() !== "" ? c.telefono : 'N/A';
+        document.getElementById('client-details').innerHTML=`<h5>${c.nombre||'S/N'} <span class="badge bg-${c.verificado?'success':'warning text-dark'}">${c.verificado?'Verificado':'No Verificado'}</span></h5><p><strong>ID:</strong> ${c.id||'N/A'}</p><p><strong>Tel:</strong> ${telefonoDisplay}</p><p><strong>Email:</strong> ${c.email||'N/A'}</p><p><strong>Puntos:</strong> <span class="badge points-badge fs-6">${c.puntos||0}</span></p><p><strong>Desde:</strong> ${c.fecharegistro||'N/A'}</p><p><strong>Últ. Visita:</strong> ${c.ultimavisita||'N/A'}</p><p><strong>Compras:</strong> ${c.compras||0}</p><hr>${btns}`;
+        (bootstrap.Modal.getInstance(document.getElementById('clientModal'))||new bootstrap.Modal(document.getElementById('clientModal'))).show();
+    }
+    function showAddPointsModal(id) { const c=allClients.find(x=>x.id===id); if(!c){alert('Cliente no hallado.');return;} document.getElementById('currentClientIdPoints').value=id; document.getElementById('addPointsForm').reset(); document.getElementById('pointsAmount').value=10; (bootstrap.Modal.getInstance(document.getElementById('addPointsModal'))||new bootstrap.Modal(document.getElementById('addPointsModal'))).show(); }
+    async function manuallyMarkVerified(id) { if(!confirm(`Verificar cliente '${id}'?`))return; const res=await fetchData('markClientVerified','POST',{clientId:id}); if(res && res.success){alert(res.message||"Verificado.");await loadClients(true);}else{alert(`Error: ${res.message||'Error.'}`);}}
+    async function addNewClient() {
+        const data={
+            nombre:document.getElementById('clientName').value.trim(),
+            telefono:document.getElementById('clientPhone').value.trim(),
+            email:document.getElementById('clientEmail').value.trim(),
+            puntos:parseInt(document.getElementById('clientInitialPoints').value),
+            verificado:true
+        };
+        if(!data.nombre){alert('Nombre requerido.');return;}
+        if(isNaN(data.puntos)||data.puntos<0){alert('Puntos inválidos.');return;}
+        const res=await fetchData('addClient','POST',{client:data});
+        if(res && res.success && res.data){alert(res.message||`Cliente '${res.data.nombre}' añadido.`);await loadClients(true);bootstrap.Modal.getInstance(document.getElementById('addClientModal')).hide();document.getElementById('newClientForm').reset();}
+        else{alert(`Error: ${res.message||'Fallo.'}`);}
+    }
+    async function confirmAddPoints() { const id=document.getElementById('currentClientIdPoints').value; const pts=parseInt(document.getElementById('pointsAmount').value); const rsn=document.getElementById('pointsReason').value; if(isNaN(pts)){alert("Cantidad de puntos inválida.");return;} const res=await fetchData('updateClientPoints','POST',{clientId:id,points:pts,reason:rsn}); if(res && res.success && res.data){alert(res.message||`Puntos actualizados.`);await loadClients(true);bootstrap.Modal.getInstance(document.getElementById('addPointsModal')).hide();}else{alert(`Error: ${res.message||'Fallo.'}`);}}
+
+    // --- PRODUCT FUNCTIONS ---
+    async function loadProducts(force=false) {
+        if(!force&&allProducts.length){renderProductsTable(); return;}
+        const res=await fetchData('getProducts','GET');
+        if(res && res.success && Array.isArray(res.data)){
+            allProducts=res.data.map(p=>({...p,price:parseFloat(p.price)||0,points:parseInt(p.points)||0,active:p.active===true||String(p.active).toLowerCase()==='true', imageurl: p.imageurl || ''}));
+            filterProducts();
+        }else{
+            document.getElementById('products-table').innerHTML=`<tr><td colspan="9" class="text-center text-danger">Error: ${res.message||'No se cargaron productos.'}</td></tr>`;
+            updateBulkDeleteButtonState();
+            const selectAllCheckbox = document.getElementById('select-all-products');
+            if (selectAllCheckbox) selectAllCheckbox.checked = false;
+        }
+        updateDashboard();
+    }
+
+    function renderProductsTable() {
+        const tb = document.getElementById('products-table');
+        tb.innerHTML = '';
+
+        if (displayedProducts.length === 0) {
+            tb.innerHTML = `<tr><td colspan="9" class="text-center">No hay productos para mostrar.</td></tr>`;
+        } else {
+             displayedProducts.sort((a, b) => (a.name || "").localeCompare(b.name || "")).forEach(p => {
+                const imageUrl = p.imageurl ? p.imageurl : 'https://via.placeholder.com/50?text=No+Img';
+                const isChecked = selectedProductIds.has(p.id);
                 tb.innerHTML += `<tr>
-                    <td>${r.rewardid || 'N/A'}</td>
-                    <td>${r.name || 'S/N'}</td>
-                    <td>${r.pointsrequired || 0}</td>
-                    <td>${r.type || 'N/A'}</td>
-                    <td>${(r.value !== undefined ? String(r.value) : 'N/A')}</td>
-                    <td>${r.stock === 9999 ? 'Ilimitado' : (r.stock || 0)}</td>
-                    <td><span class="badge bg-${r.isactive ? 'success' : 'secondary'}">${r.isactive ? 'Sí' : 'No'}</span></td>
+                    <td class="checkbox-column"><input type="checkbox" class="form-check-input product-select-checkbox" value="${p.id}" data-product-id="${p.id}" ${isChecked ? 'checked' : ''}></td>
+                    <td><img src="${imageUrl}" alt="${p.name || 'Producto'}" class="product-image-table" onerror="this.onerror=null; this.src='https://via.placeholder.com/50?text=Error';"></td>
+                    <td>${p.id || 'N/A'}</td>
+                    <td>${p.name || 'S/N'}</td>
+                    <td class="d-none d-md-table-cell">${p.category || 'N/A'}</td>
+                    <td>${(p.price || 0).toFixed(2)}</td>
+                    <td>${p.points || 0}</td>
+                    <td><span class="badge bg-${p.active ? 'success' : 'secondary'}">${p.active ? 'Sí' : 'No'}</span></td>
                     <td>
                         <div class="btn-group btn-group-sm">
-                            <button class="btn btn-outline-primary" onclick="editReward('${r.rewardid}')"><i class="bi bi-pencil"></i></button>
-                            <button class="btn btn-outline-danger" onclick="showDeleteModal('${r.rewardid}','${r.name}','reward')"><i class="bi bi-trash"></i></button>
+                            <button class="btn btn-outline-primary" onclick="editProduct('${p.id}')"><i class="bi bi-pencil"></i></button>
+                            <button class="btn btn-outline-danger" onclick="showDeleteModal('${p.id}','${p.name}','product')"><i class="bi bi-trash"></i></button>
                         </div>
                     </td>
                 </tr>`;
             });
         }
-        function filterRewards() {
-            const term = document.getElementById('search-reward-input').value.toLowerCase().trim();
-            displayedRewards = term ? allRewards.filter(r =>
-                (r.name && r.name.toLowerCase().includes(term)) ||
-                (r.type && r.type.toLowerCase().includes(term)) ||
-                (r.rewardid && String(r.rewardid).toLowerCase().includes(term))
-            ) : [...allRewards];
-            renderRewardsTable();
-        }
-        async function resetFilterAndLoadRewards() {
-            document.getElementById('search-reward-input').value = '';
-            await loadRewards(true);
-        }
-        function editReward(id) {
-            const r = allRewards.find(x => x.rewardid === id);
-            if (!r) { alert('Recompensa no hallada.'); return; }
-            document.getElementById('rewardIdField').value = r.rewardid; 
-            document.getElementById('rewardName').value = r.name;
-            document.getElementById('rewardDescription').value = r.description || '';
-            document.getElementById('rewardPointsRequired').value = r.pointsrequired;
-            document.getElementById('rewardStock').value = r.stock;
-            document.getElementById('rewardType').value = r.type || 'Producto';
-            document.getElementById('rewardValue').value = r.value !== undefined ? String(r.value) : '';
-            document.getElementById('rewardImageUrl').value = r.imageurl || '';
-            document.getElementById('rewardIsActive').checked = r.isactive;
-            (bootstrap.Modal.getInstance(document.getElementById('addRewardModal'))||new bootstrap.Modal(document.getElementById('addRewardModal'))).show();
-        }
-        async function saveReward() {
-            const rewardData = {
-                rewardid: document.getElementById('rewardIdField').value,
-                name: document.getElementById('rewardName').value.trim(),
-                description: document.getElementById('rewardDescription').value.trim(),
-                pointsrequired: parseInt(document.getElementById('rewardPointsRequired').value),
-                stock: parseInt(document.getElementById('rewardStock').value),
-                type: document.getElementById('rewardType').value,
-                value: document.getElementById('rewardValue').value.trim(),
-                imageurl: document.getElementById('rewardImageUrl').value.trim(),
-                isactive: document.getElementById('rewardIsActive').checked
-            };
 
-            if (!rewardData.name || isNaN(rewardData.pointsrequired) || rewardData.pointsrequired < 0) {
-                alert('Nombre y Puntos Requeridos son obligatorios y deben ser válidos.');
-                return;
-            }
-            if (isNaN(rewardData.stock) || rewardData.stock < 0) {
-                 alert('El stock debe ser un número válido (0 o más). Use 9999 para ilimitado.');
-                return;
-            }
+        document.querySelectorAll('.product-select-checkbox').forEach(checkbox => {
+            checkbox.addEventListener('change', handleProductSelectSingle);
+        });
 
-            const action = rewardData.rewardid ? 'updateReward' : 'addReward';
-            const res = await fetchData(action, 'POST', { reward: rewardData }); 
+        updateSelectAllCheckboxState();
+        updateBulkDeleteButtonState();
+    }
 
-            if (res.success && res.data) {
-                alert(res.message || `Recompensa guardada.`);
-                await loadRewards(true); 
-                bootstrap.Modal.getInstance(document.getElementById('addRewardModal')).hide();
+    function filterProducts() {
+        const term=document.getElementById('search-product-input').value.toLowerCase().trim();
+        displayedProducts=term?allProducts.filter(p=>(p.name&&p.name.toLowerCase().includes(term))||(p.category&&p.category.toLowerCase().includes(term))||(p.id&&String(p.id).toLowerCase().includes(term))):[...allProducts];
+        renderProductsTable();
+    }
+
+    async function resetFilterAndLoadProducts() {
+        document.getElementById('search-product-input').value='';
+        selectedProductIds.clear();
+        await loadProducts(true);
+    }
+
+    function handleProductSelectAll(event) {
+        const isChecked = event.target.checked;
+        const visibleProductCheckboxes = document.querySelectorAll('#products-table .product-select-checkbox');
+
+        visibleProductCheckboxes.forEach(checkbox => {
+            const productId = checkbox.dataset.productId;
+            checkbox.checked = isChecked;
+            if (isChecked) {
+                selectedProductIds.add(productId);
             } else {
-                alert(`Error: ${res.message || 'Fallo al guardar la recompensa.'}`);
+                selectedProductIds.delete(productId);
             }
+        });
+        updateBulkDeleteButtonState();
+    }
+
+    function handleProductSelectSingle(event) {
+        const productId = event.target.dataset.productId;
+        if (event.target.checked) {
+            selectedProductIds.add(productId);
+        } else {
+            selectedProductIds.delete(productId);
+        }
+        updateSelectAllCheckboxState();
+        updateBulkDeleteButtonState();
+    }
+
+    function updateSelectAllCheckboxState() {
+        const selectAllCheckbox = document.getElementById('select-all-products');
+        if (!selectAllCheckbox) return;
+        const allProductCheckboxes = document.querySelectorAll('#products-table .product-select-checkbox');
+
+        if (allProductCheckboxes.length === 0) {
+            selectAllCheckbox.checked = false;
+            selectAllCheckbox.indeterminate = false;
+            return;
         }
 
-        function showDeleteModal(id,name,type) { 
-            itemToDeleteId=id;
-            itemToDeleteType=type; 
-            let itemTypeDisplay = 'elemento';
-            if (type === 'client') itemTypeDisplay = 'cliente';
-            else if (type === 'product') itemTypeDisplay = 'producto';
-            else if (type === 'reward') itemTypeDisplay = 'recompensa';
+        const checkedCount = Array.from(allProductCheckboxes).filter(cb => cb.checked).length;
 
-            document.getElementById('delete-item-type').textContent= itemTypeDisplay;
-            document.getElementById('item-to-delete').textContent=`${name||'N/A'} (ID: ${id||'N/A'})`; 
-            (bootstrap.Modal.getInstance(document.getElementById('deleteModal'))||new bootstrap.Modal(document.getElementById('deleteModal'))).show(); 
+        if (checkedCount === 0) {
+            selectAllCheckbox.checked = false;
+            selectAllCheckbox.indeterminate = false;
+        } else if (checkedCount === allProductCheckboxes.length) {
+            selectAllCheckbox.checked = true;
+            selectAllCheckbox.indeterminate = false;
+        } else {
+            selectAllCheckbox.checked = false;
+            selectAllCheckbox.indeterminate = true;
         }
-        async function confirmDeleteItem() { 
-            if(!itemToDeleteId||!itemToDeleteType)return; 
-            let action,key,msgPrefix,loadFn; 
-            if(itemToDeleteType==='client'){action='deleteClient';key='clientId';msgPrefix='Cliente';loadFn=()=>loadClients(true);}
-            else if(itemToDeleteType==='product'){action='deleteProduct';key='productId';msgPrefix='Producto';loadFn=()=>loadProducts(true);}
-            else if(itemToDeleteType==='reward'){action='deleteReward';key='rewardId';msgPrefix='Recompensa';loadFn=()=>loadRewards(true);}
-            else return; 
-            
-            const res=await fetchData(action,'POST',{[key]:itemToDeleteId}); 
-            if(res.success){
-                alert(res.message||`${msgPrefix} eliminado.`);
-                await loadFn();
-                const deleteModalEl = document.getElementById('deleteModal');
-                if (deleteModalEl) {
-                    const modalInstance = bootstrap.Modal.getInstance(deleteModalEl);
-                    if (modalInstance) modalInstance.hide();
+    }
+
+    function updateBulkDeleteButtonState() {
+        const btn = document.getElementById('bulk-delete-products-btn');
+        if (!btn) return;
+        const btnTextSpan = btn.querySelector('span.d-none.d-sm-inline');
+
+        if (selectedProductIds.size > 0) {
+            btn.disabled = false;
+            if (btnTextSpan) btnTextSpan.textContent = `Eliminar Seleccionados (${selectedProductIds.size})`;
+        } else {
+            btn.disabled = true;
+            if (btnTextSpan) btnTextSpan.textContent = `Eliminar Seleccionados`;
+        }
+    }
+
+    function showBulkDeleteModal() {
+        if (selectedProductIds.size === 0) return;
+        itemToDeleteType = 'products_bulk';
+        document.getElementById('delete-item-type').textContent = `los ${selectedProductIds.size} productos seleccionados`;
+        document.getElementById('item-to-delete').innerHTML = `IDs: <small>${Array.from(selectedProductIds).slice(0, 5).join(', ')}${selectedProductIds.size > 5 ? '...' : ''}</small>`;
+
+        const deleteModal = bootstrap.Modal.getInstance(document.getElementById('deleteModal')) || new bootstrap.Modal(document.getElementById('deleteModal'));
+        deleteModal.show();
+    }
+
+
+    function editProduct(id) {
+        const p=allProducts.find(x=>x.id===id);
+        if(!p){alert('Producto no hallado.');return;}
+        document.getElementById('productId').value=p.id;
+        document.getElementById('productName').value=p.name;
+        document.getElementById('productDescription').value=p.description||'';
+        document.getElementById('productPrice').value=p.price;
+        document.getElementById('productPoints').value=p.points;
+        document.getElementById('productCategory').value=p.category||'';
+        document.getElementById('productImageUrl').value=p.imageurl||'';
+        document.getElementById('productActive').checked=p.active;
+        (bootstrap.Modal.getInstance(document.getElementById('addProductModal'))||new bootstrap.Modal(document.getElementById('addProductModal'))).show();
+    }
+    async function saveProduct() {
+        const data={id:document.getElementById('productId').value,name:document.getElementById('productName').value.trim(),description:document.getElementById('productDescription').value.trim(),price:parseFloat(document.getElementById('productPrice').value),points:parseInt(document.getElementById('productPoints').value)||0,category:document.getElementById('productCategory').value.trim(),imageurl:document.getElementById('productImageUrl').value.trim(),active:document.getElementById('productActive').checked};
+        if(!data.name||isNaN(data.price)||data.price<0){alert('Nombre y Precio requeridos.');return;}
+        const action=data.id?'updateProduct':'addProduct';
+        const res=await fetchData(action,'POST',{product:data});
+        if(res && res.success && res.data){
+            alert(res.message||`Producto guardado.`);
+            selectedProductIds.clear();
+            await loadProducts(true);
+            bootstrap.Modal.getInstance(document.getElementById('addProductModal')).hide();
+        }else{alert(`Error: ${res.message||'Fallo.'}`);}
+    }
+
+    // --- ORDER FUNCTIONS ---
+    async function loadOrders(force = false) {
+        if (!force && allOrders.length > 0) { renderOrdersTable(); return; }
+        const result = await fetchData('getAdminOrders', 'GET');
+        if (result && result.success && Array.isArray(result.data)) {
+            allOrders = result.data.map(o => ({
+                ...o,
+                totalamount: parseFloat(o.totalamount) || 0,
+            })).sort((a,b) => {
+                const dateA = new Date( (String(a.orderdate).includes('/') ? String(a.orderdate).split('/').reverse().join('-') : String(a.orderdate)) + "T" + (String(a.orderid).includes('_') && !isNaN(parseInt(String(a.orderid).split('_')[1])) ? new Date(parseInt(String(a.orderid).split('_')[1])).toTimeString().split(' ')[0] : "00:00:00") );
+                const dateB = new Date( (String(b.orderdate).includes('/') ? String(b.orderdate).split('/').reverse().join('-') : String(b.orderdate)) + "T" + (String(b.orderid).includes('_') && !isNaN(parseInt(String(b.orderid).split('_')[1])) ? new Date(parseInt(String(b.orderid).split('_')[1])).toTimeString().split(' ')[0] : "00:00:00") );
+                return dateB - dateA;
+            });
+            filterOrders();
+        } else {
+             document.getElementById('orders-table').innerHTML = `<tr><td colspan="6" class="text-center text-danger">Error al cargar pedidos: ${result.message || 'Error.'}</td></tr>`;
+        }
+        updateDashboard();
+    }
+    function renderOrdersTable() {
+        const tb = document.getElementById('orders-table'); tb.innerHTML = '';
+        if (displayedOrders.length === 0) { tb.innerHTML = '<tr><td colspan="6" class="text-center">No hay pedidos para mostrar.</td></tr>'; return; }
+        displayedOrders.forEach(order => {
+            let sClass=''; switch(String(order.status).toLowerCase()){case 'pendiente':sClass='status-pendiente';break;case 'procesado':sClass='status-procesado';break;case 'entregado':sClass='status-entregado';break;case 'cancelado':sClass='status-cancelado';break;default:sClass='bg-secondary text-white';}
+            tb.innerHTML += `<tr><td>${order.orderid?String(order.orderid).substr(-8):'N/A'}</td><td>${order.clientname||'N/A'}<small class="d-block text-muted">${order.clientid||''}</small></td><td class="d-none d-md-table-cell">${order.orderdate||'N/A'}</td><td>${(order.totalamount||0).toFixed(2)}</td><td><span class="status-badge ${sClass}">${order.status||'N/A'}</span></td><td><button class="btn btn-sm btn-outline-primary" onclick="viewOrderDetails('${order.orderid}')"><i class="bi bi-eye"></i></button></td></tr>`;
+        });
+    }
+    function filterOrders() {
+        const term = document.getElementById('search-order-input').value.toLowerCase().trim();
+        displayedOrders = term ? allOrders.filter(o => (o.orderid&&String(o.orderid).toLowerCase().includes(term))||(o.clientname&&o.clientname.toLowerCase().includes(term))||(o.clientid&&String(o.clientid).toLowerCase().includes(term))||(o.status&&o.status.toLowerCase().includes(term))) : [...allOrders];
+        renderOrdersTable();
+    }
+    function viewOrderDetails(id) { const o=allOrders.find(x=>x.orderid===id); if(!o){alert('Pedido no hallado.');return;} const content=document.getElementById('order-details-content'); document.getElementById('order-id-to-update').value=id; let items='<p class="text-muted small">No hay ítems.</p>'; if(o.itemsjson&&Array.isArray(o.itemsjson)&&o.itemsjson.length>0){items='<ul class="order-details-list">';o.itemsjson.forEach(i=>{items+=`<li>${i.quantity}x <strong>${i.name||'N/A'}</strong> (@ ${(parseFloat(i.price)||0).toFixed(2)}) = ${(i.quantity*(parseFloat(i.price)||0)).toFixed(2)}</li>`;});items+='</ul>';} content.innerHTML=`<p><strong>ID:</strong> ${o.orderid}</p><p><strong>Cliente:</strong> ${o.clientname||'N/A'} (ID: ${o.clientid||'N/A'})</p><p><strong>Fecha:</strong> ${o.orderdate||'N/A'}</p><p><strong>Total:</strong> ${(parseFloat(o.totalamount)||0).toFixed(2)} CUP</p><p><strong>Puntos Otorgados (si aplica):</strong> ${o.totalpointsawarded||0}</p><p><strong>Estado:</strong> <span class="fw-bold">${o.status||'N/A'}</span></p><p><strong>Puntos Ya Entregados:</strong> <span class="badge bg-${o.pointsgiven ? 'success' : 'secondary'}">${o.pointsgiven ? 'Sí' : 'No'}</span></p><hr><h5>Ítems:</h5>${items}`; document.getElementById('orderStatusSelect').value=o.status||'Pendiente'; (bootstrap.Modal.getInstance(document.getElementById('orderDetailsModal'))||new bootstrap.Modal(document.getElementById('orderDetailsModal'))).show(); }
+    async function updateOrderStatusAttempt() { const id=document.getElementById('order-id-to-update').value; const status=document.getElementById('orderStatusSelect').value; if(!id||!status){alert("Datos inválidos.");return;} const res=await fetchData('updateOrderStatus','POST',{orderId:id,newStatus:status}); if(res && res.success){alert(res.message||"Estado actualizado.");await loadOrders(true);bootstrap.Modal.getInstance(document.getElementById('orderDetailsModal'))?.hide();}else{alert(`Error: ${res.message||'Fallo.'}`);}}
+
+    // --- REWARD FUNCTIONS ---
+    async function loadRewards(force = false) {
+        if (!force && allRewards.length) { renderRewardsTable(); return; }
+        const res = await fetchData('getAvailableRewards', 'GET');
+        if (res && res.success && Array.isArray(res.data)) {
+            allRewards = res.data.map(r => ({
+                ...r,
+                pointsrequired: parseInt(r.pointsrequired) || 0,
+                stock: parseInt(r.stock) || 0,
+                isactive: r.isactive === true || String(r.isactive).toLowerCase() === 'true'
+            }));
+            filterRewards();
+        } else {
+            document.getElementById('rewards-table').innerHTML = `<tr><td colspan="8" class="text-center text-danger">Error: ${res.message || 'No se cargaron recompensas.'}</td></tr>`;
+        }
+        updateDashboard();
+    }
+    function renderRewardsTable() {
+        const tb = document.getElementById('rewards-table');
+        tb.innerHTML = '';
+        if (displayedRewards.length === 0) {
+            tb.innerHTML = '<tr><td colspan="8" class="text-center">No hay recompensas para mostrar.</td></tr>';
+            return;
+        }
+        displayedRewards.sort((a, b) => (a.name || "").localeCompare(b.name || "")).forEach(r => {
+            tb.innerHTML += `<tr>
+                <td>${r.rewardid || 'N/A'}</td>
+                <td>${r.name || 'S/N'}</td>
+                <td>${r.pointsrequired || 0}</td>
+                <td>${r.type || 'N/A'}</td>
+                <td>${(r.value !== undefined ? String(r.value) : 'N/A')}</td>
+                <td>${r.stock === 9999 ? 'Ilimitado' : (r.stock || 0)}</td>
+                <td><span class="badge bg-${r.isactive ? 'success' : 'secondary'}">${r.isactive ? 'Sí' : 'No'}</span></td>
+                <td>
+                    <div class="btn-group btn-group-sm">
+                        <button class="btn btn-outline-primary" onclick="editReward('${r.rewardid}')"><i class="bi bi-pencil"></i></button>
+                        <button class="btn btn-outline-danger" onclick="showDeleteModal('${r.rewardid}','${r.name}','reward')"><i class="bi bi-trash"></i></button>
+                    </div>
+                </td>
+            </tr>`;
+        });
+    }
+    function filterRewards() {
+        const term = document.getElementById('search-reward-input').value.toLowerCase().trim();
+        displayedRewards = term ? allRewards.filter(r =>
+            (r.name && r.name.toLowerCase().includes(term)) ||
+            (r.type && r.type.toLowerCase().includes(term)) ||
+            (r.rewardid && String(r.rewardid).toLowerCase().includes(term))
+        ) : [...allRewards];
+        renderRewardsTable();
+    }
+    async function resetFilterAndLoadRewards() {
+        document.getElementById('search-reward-input').value = '';
+        await loadRewards(true);
+    }
+    function editReward(id) {
+        const r = allRewards.find(x => x.rewardid === id);
+        if (!r) { alert('Recompensa no hallada.'); return; }
+        document.getElementById('rewardIdField').value = r.rewardid;
+        document.getElementById('rewardName').value = r.name;
+        document.getElementById('rewardDescription').value = r.description || '';
+        document.getElementById('rewardPointsRequired').value = r.pointsrequired;
+        document.getElementById('rewardStock').value = r.stock;
+        document.getElementById('rewardType').value = r.type || 'Producto';
+        document.getElementById('rewardValue').value = r.value !== undefined ? String(r.value) : '';
+        document.getElementById('rewardImageUrl').value = r.imageurl || '';
+        document.getElementById('rewardIsActive').checked = r.isactive;
+        (bootstrap.Modal.getInstance(document.getElementById('addRewardModal'))||new bootstrap.Modal(document.getElementById('addRewardModal'))).show();
+    }
+    async function saveReward() {
+        const rewardData = {
+            rewardid: document.getElementById('rewardIdField').value,
+            name: document.getElementById('rewardName').value.trim(),
+            description: document.getElementById('rewardDescription').value.trim(),
+            pointsrequired: parseInt(document.getElementById('rewardPointsRequired').value),
+            stock: parseInt(document.getElementById('rewardStock').value),
+            type: document.getElementById('rewardType').value,
+            value: document.getElementById('rewardValue').value.trim(),
+            imageurl: document.getElementById('rewardImageUrl').value.trim(),
+            isactive: document.getElementById('rewardIsActive').checked
+        };
+
+        if (!rewardData.name || isNaN(rewardData.pointsrequired) || rewardData.pointsrequired < 0) {
+            alert('Nombre y Puntos Requeridos son obligatorios y deben ser válidos.');
+            return;
+        }
+        if (isNaN(rewardData.stock) || rewardData.stock < 0) {
+             alert('El stock debe ser un número válido (0 o más). Use 9999 para ilimitado.');
+            return;
+        }
+
+        const action = rewardData.rewardid ? 'updateReward' : 'addReward';
+        const res = await fetchData(action, 'POST', { reward: rewardData });
+
+        if (res && res.success && res.data) {
+            alert(res.message || `Recompensa guardada.`);
+            await loadRewards(true);
+            bootstrap.Modal.getInstance(document.getElementById('addRewardModal')).hide();
+        } else {
+            alert(`Error: ${res.message || 'Fallo al guardar la recompensa.'}`);
+        }
+    }
+
+    // --- GENERAL DELETE FUNCTIONS ---
+    function showDeleteModal(id,name,type) {
+        itemToDeleteId=id;
+        itemToDeleteType=type;
+        let itemTypeDisplay = 'elemento';
+        if (type === 'client') itemTypeDisplay = 'cliente';
+        else if (type === 'product') itemTypeDisplay = 'producto';
+        else if (type === 'reward') itemTypeDisplay = 'recompensa';
+
+        document.getElementById('delete-item-type').textContent= itemTypeDisplay;
+        document.getElementById('item-to-delete').textContent=`${name||'N/A'} (ID: ${id||'N/A'})`;
+        (bootstrap.Modal.getInstance(document.getElementById('deleteModal'))||new bootstrap.Modal(document.getElementById('deleteModal'))).show();
+    }
+
+    async function confirmDeleteItem() {
+        if (!itemToDeleteType) return;
+        let res;
+        let loadFn;
+        let itemTypeDisplayForAlert = 'Elemento(s)';
+
+        if (itemToDeleteType === 'products_bulk') {
+            const idsToDelete = Array.from(selectedProductIds);
+            if (idsToDelete.length === 0) {
+                bootstrap.Modal.getInstance(document.getElementById('deleteModal'))?.hide();
+                return;
+            }
+            itemTypeDisplayForAlert = `${idsToDelete.length} producto(s)`;
+            res = await fetchData('bulkDeleteProducts', 'POST', { productIds: idsToDelete });
+            loadFn = () => loadProducts(true);
+        } else {
+            let action, key;
+            if(itemToDeleteType==='client'){action='deleteClient';key='clientId';loadFn=()=>loadClients(true); itemTypeDisplayForAlert = 'Cliente';}
+            else if(itemToDeleteType==='product'){action='deleteProduct';key='productId';loadFn=()=>loadProducts(true); itemTypeDisplayForAlert = 'Producto';}
+            else if(itemToDeleteType==='reward'){action='deleteReward';key='rewardId';loadFn=()=>loadRewards(true); itemTypeDisplayForAlert = 'Recompensa';}
+            else {
+                 bootstrap.Modal.getInstance(document.getElementById('deleteModal'))?.hide();
+                 return;
+            }
+            res = await fetchData(action,'POST',{[key]:itemToDeleteId});
+        }
+
+        const deleteModalEl = document.getElementById('deleteModal');
+        const modalInstance = bootstrap.Modal.getInstance(deleteModalEl);
+
+        if (res && res.success) {
+            alert(res.message || `${itemTypeDisplayForAlert} eliminado(s) correctamente.`);
+            if (itemToDeleteType === 'products_bulk') {
+                selectedProductIds.clear();
+            }
+            if (loadFn) await loadFn();
+        } else {
+            const errorMessage = res ? (res.message || 'Fallo en la operación.') : 'Respuesta inesperada del servidor.';
+            alert(`Error al eliminar: ${errorMessage}`);
+        }
+
+        if (modalInstance && modalInstance._isShown) { // Solo si el modal está visible
+             deleteModalEl.addEventListener('hidden.bs.modal', () => {
+                const bulkDeleteBtn = document.getElementById('bulk-delete-products-btn');
+                const bulkEmailBtn = document.getElementById('bulk-email-clients-btn'); // Considerar este también
+                if (bulkDeleteBtn && bulkDeleteBtn.offsetParent !== null) { // Si es visible y está en el DOM
+                    bulkDeleteBtn.focus();
+                } else if (bulkEmailBtn && bulkEmailBtn.offsetParent !== null) {
+                    bulkEmailBtn.focus();
                 }
-                itemToDeleteId=null;itemToDeleteType=null;
-            }else{alert(`Error: ${res.message||'Fallo.'}`);}
+                 else {
+                   const firstFocusableElement = document.querySelector('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+                   if (firstFocusableElement) firstFocusableElement.focus();
+                   else document.body.focus();
+                }
+            }, { once: true });
+            modalInstance.hide();
+        } else if (modalInstance && !modalInstance._isShown) {
+            // Si el modal ya se ocultó por otra vía, simplemente enfocar.
+            const bulkDeleteBtn = document.getElementById('bulk-delete-products-btn');
+             if (bulkDeleteBtn && bulkDeleteBtn.offsetParent !== null) bulkDeleteBtn.focus(); else document.body.focus();
         }
-    </script>
+
+
+        itemToDeleteId = null;
+        itemToDeleteType = null;
+    }
+</script>
 </body>
 </html>
