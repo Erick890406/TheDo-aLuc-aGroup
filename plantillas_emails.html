@@ -23,16 +23,6 @@
       transform: translateY(-5px) scale(1.01);
       box-shadow: 0 10px 30px rgba(0,0,0,0.15);
     }
-    .preview-box {
-      background-color: #ffffff;
-      border: 1px solid #dee2e6;
-      border-radius: 8px;
-      padding: 1.5rem;
-      overflow-x: auto;
-      max-height: 55vh; /* Ajustado para más espacio */
-      min-height: 300px;
-      box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
-    }
     .btn-action-custom {
       background-color: #0d6efd;
       color: #fff;
@@ -52,26 +42,27 @@
     .btn-success.btn-copy-custom:hover {
       background-color: #146c43;
     }
-    pre {
+    pre { 
       background: #e9ecef;
       padding: 1rem;
       border-radius: 8px;
       font-size: 0.875rem;
-      max-height: 35vh; /* Ajustado */
-      overflow-y: auto;
+      overflow-y: auto; 
       border: 1px solid #ced4da;
     }
-    #editorControls .form-label, #aiGeneratorControls .form-label, #add-template-tab-pane .form-label {
+    .editor-properties-panel .form-label, 
+    #aiGeneratorControlsContent .form-label, 
+    #addTemplateControlsContent .form-label {
       font-weight: 500;
       font-size: 0.9rem;
       color: #495057;
     }
-    #editorControls .form-control-sm, #aiGeneratorControls .form-control-sm, #add-template-tab-pane .form-control-sm {
+    .editor-properties-panel .form-control-sm, 
+    #aiGeneratorControlsContent .form-control-sm, 
+    #addTemplateControlsContent .form-control-sm {
       font-size: 0.875rem;
     }
-    .modal-body {
-      max-height: calc(100vh - 120px);
-    }
+
     .page-header {
       background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       color: white;
@@ -83,23 +74,134 @@
     .page-header h1 {
         font-weight: 300;
     }
-    .nav-tabs .nav-link.active {
-        background-color: #e9ecef;
-        border-bottom-color: #e9ecef;
-    }
     #aiApiKeyWarning {
         font-size: 0.8rem;
         background-color: #fff3cd;
         border-left: 4px solid #ffeeba;
         padding: 0.5rem;
     }
+
+    .modal-fullscreen {
+        width: 100vw;
+        max-width: none;
+        height: 100vh;
+        max-height: none;
+        margin: 0;
+    }
+    .modal-fullscreen .modal-content {
+        height: 100vh;
+        border-radius: 0;
+        border: none;
+    }
+    .modal-fullscreen .modal-header {
+        border-radius: 0;
+    }
+    .modal-fullscreen .modal-body {
+        overflow-y: hidden;
+    }
+    .editor-main-container {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+    }
+    .editor-header {
+        background-color: #f8f9fa;
+        border-bottom: 1px solid #dee2e6;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.5rem 1rem;
+    }
+    .editor-body {
+        flex-grow: 1;
+        display: flex;
+        overflow: hidden;
+    }
+    .editor-sidebar-left {
+        width: 280px;
+        flex-shrink: 0;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+        background-color: #f8f9fa;
+        border-right: 1px solid #dee2e6;
+    }
+    .editor-sidebar-left .nav-pills .nav-link {
+        color: #343a40;
+        padding: 0.75rem 1rem;
+        border-radius: 0.375rem;
+        margin-bottom: 0.25rem;
+        font-weight: 500;
+    }
+    .editor-sidebar-left .nav-pills .nav-link.active {
+        background-color: #0d6efd;
+        color: white;
+    }
+     .editor-sidebar-left .nav-pills .nav-link:not(.active):hover {
+        background-color: #e9ecef;
+    }
+    .editor-sidebar-left .nav-link i {
+        opacity: 0.9;
+        margin-right: 0.5rem;
+    }
+    .editor-properties-panel {
+        padding: 1rem;
+        flex-grow: 1;
+        overflow-y: auto;
+    }
+    .editor-canvas-area {
+        flex-grow: 1;
+        background-color: #e0e0e0; /* Fondo del canvas */
+        padding: 20px;
+        overflow: auto; 
+        display: flex;
+        justify-content: center; 
+        align-items: flex-start; 
+    }
+    .preview-box-main-editor {
+        background-color: #ffffff;
+        border: 1px solid #ccc;
+        box-shadow: 0 0 15px rgba(0,0,0,0.15);
+        transform-origin: top center;
+        width: auto; /* Permitir que el contenido defina el ancho */
+        min-width: 320px; 
+        margin: 0 auto; /* Centrar si el canvas es más ancho */
+    }
+    .editor-sidebar-right {
+        width: 35%;
+        min-width: 320px;
+        flex-shrink: 0;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+        background-color: #f8f9fa;
+        border-left: 1px solid #dee2e6;
+    }
+    .editor-sidebar-right h6 {
+        padding: 1rem 1rem 0.5rem;
+        margin-bottom: 0;
+    }
+    .editor-sidebar-right pre {
+        flex-grow: 1;
+        margin: 0 1rem 0.5rem;
+        max-height: calc(100% - 100px);
+        border-radius: 0.375rem;
+    }
+     .editor-sidebar-right .btn-copy-custom {
+        margin: 0 1rem 1rem;
+    }
+    #resetValuesButton {
+        margin: 1rem;
+        margin-top:auto; /* Empuja al final de la sidebar */
+    }
+    .new-editable-field-group input { margin-bottom: 0.25rem; }
   </style>
 </head>
 <body>
 
 <div class="page-header text-center">
   <div class="container">
-    <h1 class="display-5"><i class="bi bi-easel2-fill me-2"></i>Editor Visual de Plantillas de Correo Avanzado</h1>
+    <h1 class="display-5"><i class="bi bi-envelope-fill me-2"></i>Editor Visual de Plantillas de Correo</h1>
     <p class="lead">Crea, personaliza, guarda, genera con IA y añade tus propias plantillas.</p>
   </div>
 </div>
@@ -112,128 +214,141 @@
 
 <!-- Modal -->
 <div class="modal fade" id="templateModal" tabindex="-1" aria-labelledby="modalTitle" aria-hidden="true">
-  <div class="modal-dialog modal-xl modal-dialog-scrollable">
-    <div class="modal-content shadow-lg">
-      <div class="modal-header bg-light">
-        <h5 class="modal-title" id="modalTitle">Editor de Plantilla</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+  <div class="modal-dialog modal-fullscreen">
+    <div class="modal-content editor-main-container">
+      <div class="modal-header editor-header">
+        <h5 class="modal-title d-flex align-items-center" id="modalTitle"><i class="bi bi-palette2 me-2"></i><span id="editorTitleText">Editor de Plantilla</span></h5>
+        <div>
+            <button type="button" class="btn btn-sm btn-outline-secondary me-2" onclick="toggleCodePreviewPanel()" title="Ver/Ocultar Código HTML">
+                <i class="bi bi-code-slash"></i> Código
+            </button>
+            <button type="button" class="btn btn-sm btn-primary me-2" onclick="saveAndCloseEditor()" title="Guardar cambios y cerrar editor">
+                <i class="bi bi-check-lg"></i> Guardar y Cerrar
+            </button>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" title="Cerrar editor"></button>
+        </div>
       </div>
-      <div class="modal-body p-0"> <!-- p-0 para que las tabs ocupen todo -->
-        <ul class="nav nav-tabs nav-fill" id="editorTabs" role="tablist">
-          <li class="nav-item" role="presentation">
-            <button class="nav-link active" id="customize-tab" data-bs-toggle="tab" data-bs-target="#customize-tab-pane" type="button" role="tab" aria-controls="customize-tab-pane" aria-selected="true">
-              <i class="bi bi-palette-fill me-1"></i>Personalizar Actual
+      <div class="modal-body editor-body p-0 d-flex">
+
+        <div class="editor-sidebar-left p-0">
+          <ul class="nav nav-pills flex-column p-3" id="editorMainTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+              <button class="nav-link active w-100 text-start" id="content-tab-trigger" data-bs-toggle="tab" data-bs-target="#placeholder-for-js-logic1" type="button" role="tab">
+                <i class="bi bi-tools"></i>Personalizar Campos
+              </button>
+            </li>
+            <li class="nav-item" role="presentation">
+              <button class="nav-link w-100 text-start" id="appearance-tab-trigger" data-bs-toggle="tab" data-bs-target="#placeholder-for-js-logic2" type="button" role="tab">
+                <i class="bi bi-palette"></i>Apariencia Global
+              </button>
+            </li>
+            <li class="nav-item" role="presentation">
+              <button class="nav-link w-100 text-start" id="ai-generator-tab-trigger" data-bs-toggle="tab" data-bs-target="#placeholder-for-js-logic3" type="button" role="tab">
+                <i class="bi bi-magic"></i>Generador IA
+              </button>
+            </li>
+            <li class="nav-item" role="presentation">
+              <button class="nav-link w-100 text-start" id="add-template-tab-trigger" data-bs-toggle="tab" data-bs-target="#placeholder-for-js-logic4" type="button" role="tab">
+                <i class="bi bi-plus-circle-dotted"></i>Añadir/Importar
+              </button>
+            </li>
+          </ul>
+          <hr class="my-0">
+           <div id="editorControlsContainer" class="editor-properties-panel">
+              <!-- Los controles de edición se generarán aquí basados en la pestaña activa -->
+           </div>
+            <button class="btn btn-sm btn-outline-secondary w-100" onclick="resetCurrentTemplateValues()" id="resetValuesButton" style="display:none;">
+                <i class="bi bi-arrow-clockwise me-2"></i>Restaurar Defectos
             </button>
-          </li>
-          <li class="nav-item" role="presentation">
-            <button class="nav-link" id="ai-generator-tab" data-bs-toggle="tab" data-bs-target="#ai-generator-tab-pane" type="button" role="tab" aria-controls="ai-generator-tab-pane" aria-selected="false">
-              <i class="bi bi-magic me-1"></i>Generador IA Premium
-            </button>
-          </li>
-          <li class="nav-item" role="presentation">
-            <button class="nav-link" id="add-template-tab" data-bs-toggle="tab" data-bs-target="#add-template-tab-pane" type="button" role="tab" aria-controls="add-template-tab-pane" aria-selected="false">
-              <i class="bi bi-plus-circle-fill me-1"></i>Añadir Nueva Plantilla
-            </button>
-          </li>
-        </ul>
-        <div class="tab-content p-4" id="editorTabsContent">
-          <div class="tab-pane fade show active" id="customize-tab-pane" role="tabpanel" aria-labelledby="customize-tab">
-            <div class="row g-4">
-              <div class="col-lg-8">
-                <h6 class="mb-3"><i class="bi bi-eye-fill me-2"></i>Vista Previa Dinámica</h6>
-                <div class="preview-box mb-4" id="emailPreview"></div>
-                <h6 class="mb-3"><i class="bi bi-code-slash me-2"></i>Código HTML Resultante</h6>
-                <pre><code id="emailCode"></code></pre>
-                <button class="btn btn-copy-custom w-100 mt-2" onclick="copiarCodigo()">
-                  <i class="bi bi-clipboard-check-fill me-2"></i>Copiar Código HTML
-                </button>
-              </div>
-              <div class="col-lg-4 border-start ps-lg-4">
-                <h6 class="mb-3"><i class="bi bi-tools me-2"></i>Personalizar Plantilla</h6>
-                <div id="editorControls" class="mt-3" style="max-height: 65vh; overflow-y: auto; padding-right: 10px;">
-                  <!-- Controles de edición -->
-                </div>
-                <button class="btn btn-sm btn-outline-secondary w-100 mt-3" onclick="resetCurrentTemplateValues()">
-                    <i class="bi bi-arrow-clockwise me-2"></i>Restaurar Valores por Defecto
-                </button>
-              </div>
+        </div>
+
+        <div class="editor-canvas-area flex-grow-1">
+            <div class="preview-box-main-editor" id="emailPreview">
+                <!-- La vista previa del correo se renderizará aquí -->
             </div>
-          </div>
-          <div class="tab-pane fade" id="ai-generator-tab-pane" role="tabpanel" aria-labelledby="ai-generator-tab">
-            <div class="row g-4">
-                <div class="col-lg-12">
-                    <h6 class="mb-3"><i class="bi bi-robot me-2"></i>Generador de Plantillas con IA (Gemini)</h6>
+        </div>
+
+        <div class="editor-sidebar-right p-0" id="codePreviewPanel" style="display:none;">
+            <h6><i class="bi bi-code-slash me-2"></i>Código HTML Resultante</h6>
+            <pre><code id="emailCode"></code></pre>
+            <button class="btn btn-copy-custom w-100" onclick="copiarCodigo()">
+              <i class="bi bi-clipboard-check-fill me-2"></i>Copiar Código
+            </button>
+        </div>
+
+        <div class="d-none"> <!-- Contenedores ocultos para el contenido de las pestañas -->
+            <div id="appearanceTabPaneContent">
+                <h6 class="mb-3">Configuración de Apariencia Global</h6>
+                <p class="text-muted small">Opciones para ancho, fondo, fuentes, etc. (Futuro).</p>
+                <div class="mb-2">
+                    <label class="form-label small">Ancho del Correo (px)</label>
+                    <input type="number" class="form-control form-control-sm" value="600" disabled>
                 </div>
-                <div class="col-lg-5">
-                    <div id="aiGeneratorControls">
-                        <div class="mb-3">
-                            <label for="aiApiKey" class="form-label">Tu API Key de Google AI Studio (Gemini)</label>
-                            <input type="password" class="form-control form-control-sm" id="aiApiKey" placeholder="Ingresa tu API Key">
-                            <div class="form-text" id="aiApiKeyWarning">
-                                <i class="bi bi-exclamation-triangle-fill text-warning me-1"></i>
-                                Tu API Key se guardará en el almacenamiento local de tu navegador. No uses esta función en un PC compartido o público.
-                            </div>
-                        </div>
-                         <div class="mb-3">
-                            <label for="aiPrompt" class="form-label">Describe la plantilla que necesitas (sé detallado):</label>
-                            <textarea class="form-control form-control-sm" id="aiPrompt" rows="8" placeholder="Ej: Una plantilla de correo elegante para el lanzamiento de un producto de lujo. Tema oscuro, con espacio para una imagen grande de cabecera, texto descriptivo, un botón de 'Comprar Ahora' y enlaces a redes sociales. Incluye placeholders como {{productName}}, {{productImageURL}}, {{buttonLink}}, {{mainColor}}."></textarea>
-                        </div>
-                        <button class="btn btn-primary w-100" id="generateWithAIButton" onclick="generateWithAI()">
-                            <span id="aiSpinner" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true" style="display: none;"></span>
-                            <i class="bi bi-stars me-1" id="aiIcon"></i>Generar Plantilla Premium
-                        </button>
+                 <div class="mb-2">
+                    <label class="form-label small">Familia de Fuente Principal</label>
+                    <select class="form-select form-select-sm" disabled>
+                        <option>Arial, Helvetica, sans-serif</option>
+                        <option>Verdana, Geneva, sans-serif</option>
+                    </select>
+                </div>
+                <p class="text-center mt-3"><i class="bi bi-cone-striped"></i> Próximamente</p>
+            </div>
+
+            <div id="aiGeneratorControlsContent">
+                <h6 class="mb-3"><i class="bi bi-robot me-2"></i>Generador de Plantillas con IA (Gemini)</h6>
+                <div class="mb-3">
+                    <label for="aiApiKey" class="form-label">Tu API Key de Google AI Studio (Gemini)</label>
+                    <input type="password" class="form-control form-control-sm" id="aiApiKey" placeholder="Ingresa tu API Key">
+                    <div class="form-text" id="aiApiKeyWarning">
+                        <i class="bi bi-exclamation-triangle-fill text-warning me-1"></i>
+                        Tu API Key se guardará en el almacenamiento local de tu navegador.
                     </div>
                 </div>
-                <div class="col-lg-7">
-                    <h6 class="mb-2"><i class="bi bi-lightbulb-fill me-2"></i>Resultado Generado por IA</h6>
-                    <p class="small text-muted mb-2">El HTML generado aparecerá abajo. Puedes copiarlo. La IA puede no ser perfecta, revisa y prueba el código.</p>
-                    <div class="preview-box mb-3" id="aiEmailPreview" style="min-height: 250px; max-height: 40vh;">Presiona "Generar" para ver el resultado aquí.</div>
-                    <pre class="mb-2"><code id="aiEmailCode"></code></pre>
-                    <button class="btn btn-copy-custom w-100" onclick="copiarAICodigo()" id="copyAiCodeButton" disabled>
-                        <i class="bi bi-clipboard-check-fill me-2"></i>Copiar Código HTML de IA
+                 <div class="mb-3">
+                    <label for="aiPrompt" class="form-label">Describe la plantilla que necesitas:</label>
+                     <button type="button" class="btn btn-sm btn-outline-secondary float-end mb-1" onclick="generateExamplePrompt()" title="Obtener un prompt de ejemplo">
+                        <i class="bi bi-lightbulb"></i> Ejemplo
                     </button>
+                    <textarea class="form-control form-control-sm" id="aiPrompt" rows="5" placeholder="Ej: Plantilla de bienvenida, tema oscuro..."></textarea>
                 </div>
+                <button class="btn btn-primary w-100 btn-sm mb-2" id="generateWithAIButton" onclick="generateWithAI()">
+                    <span id="aiSpinner" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true" style="display: none;"></span>
+                    <i class="bi bi-stars me-1" id="aiIcon"></i>Generar con IA
+                </button>
+                <h6 class="mt-3 mb-1 small">Resultado de IA:</h6>
+                <div class="preview-box mb-2" id="aiEmailPreview" style="min-height: 150px; max-height: 20vh; border:1px solid #ddd; padding:0.5rem; font-size:0.8em; overflow:auto;"></div>
+                <pre style="max-height: 15vh; font-size:0.8em;"><code id="aiEmailCode"></code></pre>
+                <button class="btn btn-copy-custom w-100 btn-sm" onclick="copiarAICodigo()" id="copyAiCodeButton" disabled>
+                    <i class="bi bi-clipboard-check-fill me-2"></i>Copiar HTML de IA
+                </button>
             </div>
-          </div>
-           <div class="tab-pane fade" id="add-template-tab-pane" role="tabpanel" aria-labelledby="add-template-tab">
-            <div class="row g-4">
-              <div class="col-12">
-                <h6 class="mb-3"><i class="bi bi-file-earmark-plus-fill me-2"></i>Crear y Guardar Nueva Plantilla</h6>
-                <p class="small text-muted">Pega el HTML de tu plantilla (por ejemplo, una generada por IA). Luego, define algunos campos editables simples si lo deseas.</p>
-              </div>
-              <div class="col-lg-7">
-                <div class="mb-3">
-                  <label for="newTemplateName" class="form-label">Nombre de la Plantilla <span class="text-danger">*</span></label>
-                  <input type="text" class="form-control form-control-sm" id="newTemplateName" placeholder="Ej: Plantilla Promocional Dark Mode">
+
+            <div id="addTemplateControlsContent">
+                <h6 class="mb-3"><i class="bi bi-file-earmark-plus-fill me-2"></i>Añadir/Importar Plantilla</h6>
+                 <div class="mb-2">
+                  <label for="newTemplateName" class="form-label small">Nombre <span class="text-danger">*</span></label>
+                  <input type="text" class="form-control form-control-sm" id="newTemplateName" placeholder="Mi Plantilla Personalizada">
                 </div>
-                <div class="mb-3">
-                  <label for="newTemplateDescription" class="form-label">Descripción Breve</label>
-                  <textarea class="form-control form-control-sm" id="newTemplateDescription" rows="2" placeholder="Ej: Ideal para ofertas especiales con un toque moderno."></textarea>
+                <div class="mb-2">
+                  <label for="newTemplateDescription" class="form-label small">Descripción</label>
+                  <textarea class="form-control form-control-sm" id="newTemplateDescription" rows="2"></textarea>
                 </div>
-                <div class="mb-3">
-                  <label for="newTemplateHtml" class="form-label">Código HTML de la Plantilla <span class="text-danger">*</span></label>
-                  <textarea class="form-control" id="newTemplateHtml" rows="10" placeholder="Pega aquí el código HTML completo de tu plantilla..."></textarea>
-                  <div class="form-text">Asegúrate de que los estilos estén en línea para máxima compatibilidad.</div>
+                <div class="mb-2">
+                  <label for="newTemplateHtml" class="form-label small">Código HTML <span class="text-danger">*</span></label>
+                  <textarea class="form-control form-control-sm" id="newTemplateHtml" rows="6" placeholder="Pega HTML aquí..."></textarea>
                 </div>
-              </div>
-              <div class="col-lg-5 border-start ps-lg-4">
-                 <h6 class="mb-3"><i class="bi bi-input-cursor-text me-2"></i>Definir Campos Editables Simples (Opcional)</h6>
-                 <p class="small text-muted">Si tu HTML usa placeholders como `{{miVariable}}`, puedes listarlos aquí para crear controles de texto simples.</p>
-                 <div id="newTemplateEditableFieldsContainer">
-                    <!-- Campos para definir placeholders se añadirán aquí dinámicamente -->
-                 </div>
-                 <button type="button" class="btn btn-sm btn-outline-secondary mt-2 w-100" onclick="addEditableFieldInput()">
-                    <i class="bi bi-plus-lg me-1"></i> Añadir Campo Editable Simple
+                <h6 class="mt-3 mb-1 small">Campos Editables Simples (Opcional):</h6>
+                 <div id="newTemplateEditableFieldsContainer" style="max-height: 15vh; overflow-y:auto; padding-right:5px;"></div>
+                 <button type="button" class="btn btn-sm btn-outline-secondary mt-1 w-100 mb-2" onclick="addEditableFieldInput()">
+                    <i class="bi bi-plus-lg me-1"></i>Añadir Campo
                  </button>
-                 <hr>
-                 <button class="btn btn-success w-100 mt-3" onclick="saveNewCustomTemplate()">
-                    <i class="bi bi-save-fill me-2"></i>Guardar Nueva Plantilla
+                 <button class="btn btn-success w-100 btn-sm" onclick="saveNewCustomTemplate()">
+                    <i class="bi bi-save-fill me-2"></i>Guardar Plantilla
                  </button>
-                 <div id="newTemplateStatus" class="mt-2 small"></div>
-              </div>
+                 <div id="newTemplateStatus" class="mt-1 small"></div>
             </div>
-          </div>
         </div>
+
       </div>
     </div>
   </div>
@@ -242,8 +357,7 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script>
 // --- Plantillas Disponibles (Array Inicial) ---
-let plantillasDisponibles = [ // Cambiado a let para poder añadir las de usuario
-  // Plantilla 1: Boletín Informativo Moderno
+let plantillasDisponibles = [
   {
     nombre: "Boletín Informativo Moderno",
     id: "boletinModerno",
@@ -293,7 +407,6 @@ let plantillasDisponibles = [ // Cambiado a let para poder añadir las de usuari
   </td></tr>
 </table>`
   },
-  // Plantilla 2: Anuncio de Producto Simple
   {
     nombre: "Anuncio de Producto Simple",
     id: "anuncioProducto",
@@ -332,7 +445,6 @@ let plantillasDisponibles = [ // Cambiado a let para poder añadir las de usuari
   </td></tr>
 </table>`
   },
-  // Plantilla 3: Invitación a Evento Exclusivo
   {
     nombre: "Invitación a Evento Exclusivo",
     id: "invitacionEvento",
@@ -376,7 +488,6 @@ let plantillasDisponibles = [ // Cambiado a let para poder añadir las de usuari
   </td></tr>
 </table>`
   },
-  // Plantilla 4: Bienvenida Personalizada con Pasos
   {
     nombre: "Bienvenida con Pasos de Inicio",
     id: "bienvenidaPasos",
@@ -408,24 +519,20 @@ let plantillasDisponibles = [ // Cambiado a let para poder añadir las de usuari
       </td></tr>
       <tr><td style="padding:30px 25px;font-size:16px;color:#333333;line-height:1.6;">
         <p style="margin:0 0 25px;">{{mensajeBienvenida}}</p>
-        
         <div style="margin-bottom:20px;padding:15px;border:1px dashed {{colorPrimarioBienvenida}};border-radius:5px;background:#f8fbff;">
           <p style="margin:0 0 10px;font-size:18px;font-weight:bold;color:{{colorPrimarioBienvenida}};">Paso 1: {{textoPaso1}}</p>
           <a href="{{urlPaso1}}" target="_blank" style="color:{{colorPrimarioBienvenida}};text-decoration:underline;font-weight:500;">Completar ahora →</a>
         </div>
-        
         <div style="margin-bottom:20px;padding:15px;border:1px dashed {{colorPrimarioBienvenida}};border-radius:5px;background:#f8fbff;">
           <p style="margin:0 0 10px;font-size:18px;font-weight:bold;color:{{colorPrimarioBienvenida}};">Paso 2: {{textoPaso2}}</p>
           <a href="{{urlPaso2}}" target="_blank" style="color:{{colorPrimarioBienvenida}};text-decoration:underline;font-weight:500;">Descubrir funciones →</a>
         </div>
-
         {{#if textoPaso3}}
         <div style="margin-bottom:30px;padding:15px;border:1px dashed {{colorPrimarioBienvenida}};border-radius:5px;background:#f8fbff;">
           <p style="margin:0 0 10px;font-size:18px;font-weight:bold;color:{{colorPrimarioBienvenida}};">Paso 3: {{textoPaso3}}</p>
           <a href="{{urlPaso3}}" target="_blank" style="color:{{colorPrimarioBienvenida}};text-decoration:underline;font-weight:500;">Unirme →</a>
         </div>
         {{/if}}
-
         {{#if urlBotonFinal}}
         <table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td align="center" style="padding-top:10px;">
           <a href="{{urlBotonFinal}}" target="_blank" style="background:{{colorPrimarioBienvenida}};color:#ffffff;padding:14px 28px;text-decoration:none;border-radius:5px;display:inline-block;font-weight:bold;font-size:16px;">{{textoBotonFinal}}</a>
@@ -440,7 +547,6 @@ let plantillasDisponibles = [ // Cambiado a let para poder añadir las de usuari
   </td></tr>
 </table>`
   },
-  // Plantilla 5: Anuncio de Nueva Característica con GIF
   {
     nombre: "Anuncio de Nueva Característica",
     id: "anuncioCaracteristica",
@@ -492,7 +598,6 @@ let plantillasDisponibles = [ // Cambiado a let para poder añadir las de usuari
   </td></tr>
 </table>`
   },
-  // Plantilla 6: Encuesta de Satisfacción Rápida
   {
     nombre: "Encuesta de Satisfacción Rápida",
     id: "encuestaSatisfaccion",
@@ -520,34 +625,13 @@ let plantillasDisponibles = [ // Cambiado a let para poder añadir las de usuari
       <tr><td style="padding:30px 25px;font-size:16px;color:#3a3a3a;line-height:1.65;text-align:center;">
         <p style="margin:0 0 15px;">{{mensajeEncuesta}}</p>
         <p style="margin:0 0 25px;font-size:18px;font-weight:bold;color:{{colorTemaEncuesta}};">{{preguntaEncuesta}}</p>
-        
         <table border="0" cellpadding="0" cellspacing="0" width="100%" style="margin-bottom:25px;">
           <tr>
-            <td align="center" style="padding:5px;">
-              <a href="{{urlBaseRespuesta}}?rating=1" target="_blank" title="Muy Malo">
-                <img src="{{urlIconoMuyMalo}}" alt="Muy Malo" width="50" height="50" style="display:block;border:0;outline:none;text-decoration:none;-ms-interpolation-mode:bicubic;border-radius:50%;">
-              </a>
-            </td>
-            <td align="center" style="padding:5px;">
-              <a href="{{urlBaseRespuesta}}?rating=2" target="_blank" title="Malo">
-                <img src="{{urlIconoMalo}}" alt="Malo" width="50" height="50" style="display:block;border:0;outline:none;text-decoration:none;-ms-interpolation-mode:bicubic;border-radius:50%;">
-              </a>
-            </td>
-            <td align="center" style="padding:5px;">
-              <a href="{{urlBaseRespuesta}}?rating=3" target="_blank" title="Regular">
-                <img src="{{urlIconoRegular}}" alt="Regular" width="50" height="50" style="display:block;border:0;outline:none;text-decoration:none;-ms-interpolation-mode:bicubic;border-radius:50%;">
-              </a>
-            </td>
-            <td align="center" style="padding:5px;">
-              <a href="{{urlBaseRespuesta}}?rating=4" target="_blank" title="Bueno">
-                <img src="{{urlIconoBueno}}" alt="Bueno" width="50" height="50" style="display:block;border:0;outline:none;text-decoration:none;-ms-interpolation-mode:bicubic;border-radius:50%;">
-              </a>
-            </td>
-            <td align="center" style="padding:5px;">
-              <a href="{{urlBaseRespuesta}}?rating=5" target="_blank" title="Excelente">
-                <img src="{{urlIconoExcelente}}" alt="Excelente" width="50" height="50" style="display:block;border:0;outline:none;text-decoration:none;-ms-interpolation-mode:bicubic;border-radius:50%;">
-              </a>
-            </td>
+            <td align="center" style="padding:5px;"><a href="{{urlBaseRespuesta}}?rating=1" target="_blank" title="Muy Malo"><img src="{{urlIconoMuyMalo}}" alt="Muy Malo" width="50" height="50" style="display:block;border:0;outline:none;text-decoration:none;-ms-interpolation-mode:bicubic;border-radius:50%;"></a></td>
+            <td align="center" style="padding:5px;"><a href="{{urlBaseRespuesta}}?rating=2" target="_blank" title="Malo"><img src="{{urlIconoMalo}}" alt="Malo" width="50" height="50" style="display:block;border:0;outline:none;text-decoration:none;-ms-interpolation-mode:bicubic;border-radius:50%;"></a></td>
+            <td align="center" style="padding:5px;"><a href="{{urlBaseRespuesta}}?rating=3" target="_blank" title="Regular"><img src="{{urlIconoRegular}}" alt="Regular" width="50" height="50" style="display:block;border:0;outline:none;text-decoration:none;-ms-interpolation-mode:bicubic;border-radius:50%;"></a></td>
+            <td align="center" style="padding:5px;"><a href="{{urlBaseRespuesta}}?rating=4" target="_blank" title="Bueno"><img src="{{urlIconoBueno}}" alt="Bueno" width="50" height="50" style="display:block;border:0;outline:none;text-decoration:none;-ms-interpolation-mode:bicubic;border-radius:50%;"></a></td>
+            <td align="center" style="padding:5px;"><a href="{{urlBaseRespuesta}}?rating=5" target="_blank" title="Excelente"><img src="{{urlIconoExcelente}}" alt="Excelente" width="50" height="50" style="display:block;border:0;outline:none;text-decoration:none;-ms-interpolation-mode:bicubic;border-radius:50%;"></a></td>
           </tr>
         </table>
         <p style="margin:0;font-size:14px;color:#666666;">{{textoPieEncuesta}}</p>
@@ -559,7 +643,6 @@ let plantillasDisponibles = [ // Cambiado a let para poder añadir las de usuari
   </td></tr>
 </table>`
   },
-  // Plantilla 7: Recordatorio de Carrito Abandonado
   {
     nombre: "Carrito Abandonado Amigable",
     id: "carritoAbandonado",
@@ -585,38 +668,26 @@ let plantillasDisponibles = [ // Cambiado a let para poder añadir las de usuari
         <h1 style="margin:0 0 15px;font-size:26px;color:{{colorAcentoCarrito}};font-weight:600;">{{saludoCarrito}}</h1>
         <p style="margin:0 0 25px;font-size:16px;color:#555555;line-height:1.6;">{{mensajeIntroCarrito}}</p>
       </td></tr>
-      
       <tr><td style="padding:0 25px 25px;">
         <table style="width:100%;border:1px solid #eee;border-radius:8px;background:{{colorFondoProducto}};padding:20px;">
           <tr>
-            <td width="120" style="padding-right:15px;">
-              <a href="{{urlProducto1}}" target="_blank">
-                <img src="{{urlImagenProducto1}}" alt="{{nombreProducto1}}" width="100" height="100" style="display:block;border-radius:6px;border:1px solid #ddd;">
-              </a>
-            </td>
+            <td width="120" style="padding-right:15px;"><a href="{{urlProducto1}}" target="_blank"><img src="{{urlImagenProducto1}}" alt="{{nombreProducto1}}" width="100" height="100" style="display:block;border-radius:6px;border:1px solid #ddd;"></a></td>
             <td>
-              <h3 style="margin:0 0 5px;font-size:18px;color:#333333;font-weight:500;">
-                <a href="{{urlProducto1}}" target="_blank" style="color:#333333;text-decoration:none;">{{nombreProducto1}}</a>
-              </h3>
+              <h3 style="margin:0 0 5px;font-size:18px;color:#333333;font-weight:500;"><a href="{{urlProducto1}}" target="_blank" style="color:#333333;text-decoration:none;">{{nombreProducto1}}</a></h3>
               <p style="margin:0 0 8px;font-size:16px;color:{{colorAcentoCarrito}};font-weight:bold;">{{precioProducto1}}</p>
               <a href="{{urlProducto1}}" target="_blank" style="font-size:14px;color:{{colorAcentoCarrito}};text-decoration:underline;">Ver detalles</a>
             </td>
           </tr>
         </table>
       </td></tr>
-
       {{#if mensajeIncentivo}}
       <tr><td style="padding:0px 25px 25px;text-align:center;">
-        <p style="margin:0;padding:12px;background:#fff0f5;border:1px dashed {{colorAcentoCarrito}};border-radius:5px;font-size:16px;color:{{colorAcentoCarrito}};font-weight:500;">
-          {{mensajeIncentivo}}
-        </p>
+        <p style="margin:0;padding:12px;background:#fff0f5;border:1px dashed {{colorAcentoCarrito}};border-radius:5px;font-size:16px;color:{{colorAcentoCarrito}};font-weight:500;">{{mensajeIncentivo}}</p>
       </td></tr>
       {{/if}}
-
       <tr><td style="padding:0 25px 30px;text-align:center;">
         <a href="{{urlBotonCarrito}}" target="_blank" style="background:{{colorAcentoCarrito}};color:#ffffff;padding:16px 35px;text-decoration:none;border-radius:50px;display:inline-block;font-weight:bold;font-size:17px;letter-spacing:0.3px;box-shadow: 0 3px 8px rgba(232, 62, 140, 0.4);">{{textoBotonCarrito}}</a>
       </td></tr>
-
       <tr><td style="padding:20px 25px;text-align:center;font-size:12px;color:#aaaaaa;border-top:1px solid #f0f0f0;background-color:#f9f9f9;border-bottom-left-radius:12px;border-bottom-right-radius:12px;">
         <p style="margin:0;">Si ya completaste tu compra, ¡ignora este mensaje!</p>
         <p style="margin:5px 0 0;">TuTiendaFavorita | <a href="https://ejemplo.com/ayuda" style="color:{{colorAcentoCarrito}};text-decoration:none;">Ayuda</a></p>
@@ -627,13 +698,14 @@ let plantillasDisponibles = [ // Cambiado a let para poder añadir las de usuari
   }
 ];
 
+// --- Selectores DOM ---
 const gallery = document.getElementById('templateGallery');
-const modalTitleEl = document.getElementById('modalTitle');
+const modalTitleEl = document.getElementById('modalTitle'); // Contenedor del título
+const editorTitleTextEl = document.getElementById('editorTitleText'); // Span para el texto del título
 const emailPreviewEl = document.getElementById('emailPreview');
 const emailCodeEl = document.getElementById('emailCode');
-const editorControlsEl = document.getElementById('editorControls');
+const editorControlsContainer = document.getElementById('editorControlsContainer');
 
-// Para la pestaña de IA
 const aiEmailPreviewEl = document.getElementById('aiEmailPreview');
 const aiEmailCodeEl = document.getElementById('aiEmailCode');
 const aiApiKeyInput = document.getElementById('aiApiKey');
@@ -642,21 +714,34 @@ const copyAiCodeButton = document.getElementById('copyAiCodeButton');
 const generateWithAIButton = document.getElementById('generateWithAIButton');
 const aiSpinner = document.getElementById('aiSpinner');
 const aiIcon = document.getElementById('aiIcon');
+const aiGeneratorControlsContent = document.getElementById('aiGeneratorControlsContent');
 
-// Para la nueva pestaña "Añadir Plantilla"
 const newTemplateNameInput = document.getElementById('newTemplateName');
 const newTemplateDescriptionInput = document.getElementById('newTemplateDescription');
 const newTemplateHtmlInput = document.getElementById('newTemplateHtml');
 const newTemplateEditableFieldsContainer = document.getElementById('newTemplateEditableFieldsContainer');
 const newTemplateStatusEl = document.getElementById('newTemplateStatus');
+const addTemplateControlsContent = document.getElementById('addTemplateControlsContent');
 
+const appearanceTabPaneContent = document.getElementById('appearanceTabPaneContent');
 
+const codePreviewPanel = document.getElementById('codePreviewPanel');
+const resetValuesButton = document.getElementById('resetValuesButton');
+
+// --- Variables Globales ---
 let currentTemplateIndex = -1;
 let templateModalInstance = null;
 const GEMINI_API_KEY_STORAGE = 'geminiApiKey';
 const USER_TEMPLATES_STORAGE_KEY = 'userDefinedTemplates';
+const EXAMPLE_PROMPTS = [
+    "Una plantilla de correo elegante para el lanzamiento de un nuevo producto de tecnología. Debe tener un encabezado llamativo con espacio para una imagen del producto (placeholder: {{productImageURL}}), una sección para el nombre del producto (placeholder: {{productName}}), una descripción detallada, una lista de 3 características clave, y un botón de 'Comprar Ahora' (placeholder para URL: {{purchaseLink}}, texto: {{buttonText}}). Paleta de colores: azul oscuro y plateado. Incluir un pie de página con enlaces a redes sociales (placeholders: {{facebookLink}}, {{twitterLink}}, {{instagramLink}}).",
+    "Plantilla de correo para un boletín informativo semanal de una tienda de moda. Diseño minimalista y moderno. Cabecera con el logo de la tienda (placeholder: {{storeLogoURL}}). Sección principal con un artículo destacado (placeholders: {{articleTitle}}, {{articleImageURL}}, {{articleSummary}}, {{articleLink}}). Tres productos recomendados en una cuadrícula (placeholders para cada uno: {{product1ImageURL}}, {{product1Name}}, {{product1Price}}, {{product1Link}}, y similar para product2 y product3). Botón 'Ver Todas las Novedades' (placeholder: {{allNewsLink}}). Pie de página simple.",
+    "Un correo de bienvenida para nuevos suscriptores de un blog de viajes. Tono amigable y personal. Incluir un saludo (placeholder: {{userName}}). Breve introducción al blog. Enlace a la publicación más popular (placeholder: {{popularPostLink}}). Invitación a seguir en redes sociales. Usar imágenes de paisajes inspiradoras (placeholder: {{headerImageURL}}). Color principal: verde azulado.",
+    "Plantilla para una oferta especial de tiempo limitado. Diseño urgente y llamativo. Gran titular con el descuento (placeholder: {{discountPercentage}}). Imagen del producto en oferta (placeholder: {{offerProductImageURL}}). Descripción concisa de la oferta. Contador regresivo (si es posible, o un placeholder para la fecha de finalización: {{offerEndDate}}). Botón 'Aprovechar Oferta Ahora' (placeholder: {{offerLink}}). Colores: rojo y amarillo.",
+    "Correo electrónico para recordar un carrito abandonado. Tono amigable y servicial. Saludo (placeholder: {{customerName}}). Mensaje como '¿Olvidaste algo?'. Mostrar el producto principal del carrito (placeholders: {{cartItemImageURL}}, {{cartItemName}}, {{cartItemPrice}}). Botón 'Volver a Mi Carrito' (placeholder: {{cartLink}}). Opcionalmente, ofrecer un pequeño descuento o envío gratis como incentivo (placeholder: {{incentiveMessage}})."
+];
 
-// --- Funciones Auxiliares (shadeColor, generarHtmlConValores) ---
+// --- Funciones Auxiliares ---
 function shadeColor(color, percent) {
     if (typeof color !== 'string' || !color.startsWith('#') || (color.length !== 7 && color.length !== 4)) {
         return color; 
@@ -713,8 +798,8 @@ function resetCurrentTemplateValues() {
         return;
     }
     const plantilla = plantillasDisponibles[currentTemplateIndex];
-    if (!plantilla) {
-        console.warn("resetCurrentTemplateValues: Plantilla no encontrada en el índice", currentTemplateIndex);
+    if (!plantilla || !plantilla.camposEditables) {
+        console.warn("resetCurrentTemplateValues: Plantilla o camposEditables no encontrados.");
         return;
     }
 
@@ -738,9 +823,8 @@ function loadUserTemplates() {
     if (storedUserTemplates) {
         try {
             const parsedTemplates = JSON.parse(storedUserTemplates);
-            // Asegurarse de que plantillasDisponibles sea un array antes de concatenar
             if (!Array.isArray(plantillasDisponibles)) {
-                plantillasDisponibles = []; // O inicializar con las predefinidas si es necesario
+                plantillasDisponibles = [];
             }
             parsedTemplates.forEach(userTpl => {
                 if (!plantillasDisponibles.find(p => p.id === userTpl.id)) {
@@ -748,7 +832,7 @@ function loadUserTemplates() {
                 }
             });
         } catch (e) {
-            console.error("Error al cargar plantillas de usuario desde localStorage:", e);
+            console.error("Error al cargar plantillas de usuario:", e);
             localStorage.removeItem(USER_TEMPLATES_STORAGE_KEY);
         }
     }
@@ -770,13 +854,17 @@ function addEditableFieldInput() {
             <input type="text" class="form-control form-control-sm" placeholder="Etiqueta (ej: Título Principal)">
         </div>
         <div class="col-auto">
-            <button type="button" class="btn btn-sm btn-danger" onclick="this.parentElement.parentElement.remove()"><i class="bi bi-trash"></i></button>
+            <button type="button" class="btn btn-sm btn-danger py-1 px-2" onclick="this.parentElement.parentElement.remove()"><i class="bi bi-trash"></i></button>
         </div>
     `;
-    newTemplateEditableFieldsContainer.appendChild(fieldGroup);
+    if (newTemplateEditableFieldsContainer) newTemplateEditableFieldsContainer.appendChild(fieldGroup);
 }
 
 function saveNewCustomTemplate() {
+    if (!newTemplateNameInput || !newTemplateHtmlInput || !newTemplateStatusEl || !newTemplateDescriptionInput || !newTemplateEditableFieldsContainer) {
+        console.error("Faltan elementos DOM para guardar plantilla personalizada.");
+        return;
+    }
     const name = newTemplateNameInput.value.trim();
     const description = newTemplateDescriptionInput.value.trim();
     const htmlBase = newTemplateHtmlInput.value.trim();
@@ -784,7 +872,7 @@ function saveNewCustomTemplate() {
     newTemplateStatusEl.textContent = '';
 
     if (!name || !htmlBase) {
-        newTemplateStatusEl.innerHTML = '<span class="text-danger">El nombre y el HTML de la plantilla son obligatorios.</span>';
+        newTemplateStatusEl.innerHTML = '<span class="text-danger">El nombre y el HTML son obligatorios.</span>';
         return;
     }
 
@@ -800,7 +888,7 @@ function saveNewCustomTemplate() {
                 label: labelInput.value.trim() || placeholderInput.value.trim(),
                 clavePlaceholder: placeholderInput.value.trim(),
                 tipo: 'text',
-                valorDefecto: `{{${placeholderInput.value.trim()}}}` 
+                valorDefecto: '' 
             });
         }
     });
@@ -818,7 +906,7 @@ function saveNewCustomTemplate() {
     saveUserTemplatesToStorage();
     renderTemplateGallery();
 
-    newTemplateStatusEl.innerHTML = '<span class="text-success">¡Plantilla guardada con éxito!</span>';
+    newTemplateStatusEl.innerHTML = '<span class="text-success">¡Plantilla guardada!</span>';
     newTemplateNameInput.value = '';
     newTemplateDescriptionInput.value = '';
     newTemplateHtmlInput.value = '';
@@ -826,21 +914,22 @@ function saveNewCustomTemplate() {
 }
 
 function renderTemplateGallery() {
+    if (!gallery) return;
     gallery.innerHTML = '';
     plantillasDisponibles.forEach((tpl, idx) => {
       const col = document.createElement('div');
       col.className = 'col-md-6 col-lg-4 mb-4 d-flex align-items-stretch';
-      const userIndicator = tpl.isUserDefined ? '<span class="badge bg-info ms-2" title="Plantilla Personalizada"><i class="bi bi-person-fill"></i></span>' : '';
+      const userIndicator = tpl.isUserDefined ? '<span class="badge bg-info ms-2" title="Plantilla Personalizada"><i class="bi bi-person-check-fill"></i></span>' : '';
       
       col.innerHTML = `
         <div class="template-card card h-100">
           <div class="card-body d-flex flex-column">
             <h5 class="card-title">${tpl.nombre} ${userIndicator}</h5>
-            <p class="card-text small text-muted flex-grow-1">${tpl.descripcion || 'Haz clic para previsualizar, editar y copiar el código HTML.'}</p>
+            <p class="card-text small text-muted flex-grow-1">${tpl.descripcion || 'Haz clic para previsualizar y editar.'}</p>
             <button class="btn btn-action-custom w-100 mt-auto" onclick="mostrarEditorPlantilla(${idx})">
               <i class="bi bi-pencil-square me-2"></i>Abrir Editor
             </button>
-            ${tpl.isUserDefined ? `<button class="btn btn-sm btn-outline-danger w-100 mt-2" onclick="deleteUserTemplate('${tpl.id}', event)"><i class="bi bi-trash-fill me-1"></i> Eliminar Esta Plantilla</button>` : ''}
+            ${tpl.isUserDefined ? `<button class="btn btn-sm btn-outline-danger w-100 mt-2" onclick="deleteUserTemplate('${tpl.id}', event)"><i class="bi bi-trash-fill me-1"></i> Eliminar</button>` : ''}
           </div>
         </div>
       `;
@@ -859,134 +948,156 @@ function deleteUserTemplate(templateId, event) {
         plantillasDisponibles.splice(templateIndex, 1);
         saveUserTemplatesToStorage();
         renderTemplateGallery();
-        // Si la plantilla eliminada era la que se estaba editando, cerrar el modal o limpiar.
         if(templateModalInstance && currentTemplateIndex === templateIndex) {
-            templateModalInstance.hide();
-            currentTemplateIndex = -1; // Resetear
+            templateModalInstance.hide(); // Cierra el modal si se elimina la plantilla activa
+            currentTemplateIndex = -1;
         } else if (currentTemplateIndex > templateIndex) {
-            currentTemplateIndex--; // Ajustar índice si se eliminó una anterior
+            currentTemplateIndex--; // Ajusta el índice si se eliminó una anterior
         }
-
         alert("Plantilla eliminada.");
     } else {
-        alert("No se pudo encontrar la plantilla para eliminar.");
+        alert("No se pudo encontrar la plantilla.");
     }
 }
-
 
 // --- Funciones Principales del Editor ---
 function actualizarPreviewYCodigo(templateIndex, save = true) {
   if (templateIndex < 0 || templateIndex >= plantillasDisponibles.length) return;
   const plantilla = plantillasDisponibles[templateIndex];
-   if (!plantilla) { // Chequeo adicional
-        console.error("actualizarPreviewYCodigo: Plantilla no encontrada en índice", templateIndex);
+   if (!plantilla) {
+        console.error("actualizarPreviewYCodigo: Plantilla no encontrada", templateIndex);
         return;
     }
   const valoresActuales = {};
 
-  plantilla.camposEditables.forEach(campo => {
-    const inputElement = document.getElementById(`editor-${plantilla.id}-${campo.clavePlaceholder}`);
-    if (inputElement) {
-      valoresActuales[campo.clavePlaceholder] = inputElement.type === 'checkbox' ? inputElement.checked : inputElement.value;
-    } else {
-      valoresActuales[campo.clavePlaceholder] = campo.valorDefecto;
-    }
-  });
+  if (plantilla.camposEditables) {
+    plantilla.camposEditables.forEach(campo => {
+        const inputElement = document.getElementById(`editor-${plantilla.id}-${campo.clavePlaceholder}`);
+        if (inputElement) {
+        valoresActuales[campo.clavePlaceholder] = inputElement.type === 'checkbox' ? inputElement.checked : inputElement.value;
+        }
+    });
+  }
 
   if (save) {
     saveValues(plantilla.id, valoresActuales);
   }
 
   const htmlGenerado = generarHtmlConValores(plantilla.htmlBase, valoresActuales);
-  emailPreviewEl.innerHTML = htmlGenerado;
-  emailCodeEl.textContent = htmlGenerado;
+  if(emailPreviewEl) emailPreviewEl.innerHTML = htmlGenerado;
+  if (emailCodeEl) emailCodeEl.textContent = htmlGenerado;
 }
 
+function loadTemplateControlsIntoPanel(plantilla) {
+    if (!editorControlsContainer) return;
+    editorControlsContainer.innerHTML = '';
+    const savedUserValues = getSavedValues(plantilla.id);
+
+    if (plantilla && plantilla.camposEditables && plantilla.camposEditables.length > 0) {
+        plantilla.camposEditables.forEach(campo => {
+            const formGroup = document.createElement('div');
+            formGroup.className = 'mb-3';
+            const label = document.createElement('label');
+            label.htmlFor = `editor-${plantilla.id}-${campo.clavePlaceholder}`;
+            label.className = 'form-label small fw-semibold';
+            label.textContent = campo.label;
+            let inputElement;
+            if (campo.tipo === 'textarea') {
+                inputElement = document.createElement('textarea');
+                inputElement.rows = 3;
+            } else {
+                inputElement = document.createElement('input');
+                inputElement.type = campo.tipo;
+            }
+            inputElement.id = `editor-${plantilla.id}-${campo.clavePlaceholder}`;
+            inputElement.className = 'form-control form-control-sm';
+            
+            const valorInicial = (savedUserValues && typeof savedUserValues[campo.clavePlaceholder] !== 'undefined') 
+                                 ? savedUserValues[campo.clavePlaceholder] 
+                                 : (campo.valorDefecto !== undefined ? campo.valorDefecto : '');
+
+            if (campo.tipo === 'checkbox') {
+                inputElement.checked = !!valorInicial;
+            } else {
+                inputElement.value = valorInicial;
+            }
+
+            const updateFunction = () => actualizarPreviewYCodigo(currentTemplateIndex);
+            if (campo.tipo !== 'color' && campo.tipo !== 'checkbox' && campo.tipo !== 'radio') {
+                inputElement.addEventListener('input', updateFunction);
+            }
+            if (campo.tipo === 'color' || campo.tipo === 'checkbox' || campo.tipo === 'radio') {
+                inputElement.addEventListener('change', updateFunction);
+            }
+            formGroup.appendChild(label);
+            formGroup.appendChild(inputElement);
+            editorControlsContainer.appendChild(formGroup);
+        });
+    } else {
+        editorControlsContainer.innerHTML = '<p class="text-muted small p-2">Esta plantilla no tiene campos personalizables o no hay una plantilla activa.</p>';
+    }
+    if(resetValuesButton) {
+        resetValuesButton.style.display = (plantilla && plantilla.camposEditables && plantilla.camposEditables.length > 0) ? 'block' : 'none';
+    }
+}
 
 function mostrarEditorPlantilla(idx) {
   if (idx < 0 || idx >= plantillasDisponibles.length) {
-      console.error("mostrarEditorPlantilla: Índice de plantilla inválido", idx);
+      console.error("mostrarEditorPlantilla: Índice inválido", idx);
       return;
   }
   currentTemplateIndex = idx;
   const plantilla = plantillasDisponibles[idx];
    if (!plantilla) {
-        console.error("mostrarEditorPlantilla: Plantilla no encontrada en índice", idx);
+        console.error("mostrarEditorPlantilla: Plantilla no encontrada", idx);
+        if(editorTitleTextEl) editorTitleTextEl.textContent = "Error al cargar plantilla";
         return;
     }
 
-  modalTitleEl.textContent = `Editando: ${plantilla.nombre}`;
-  editorControlsEl.innerHTML = '';
-
-  const savedUserValues = getSavedValues(plantilla.id);
-
-  plantilla.camposEditables.forEach(campo => {
-    const formGroup = document.createElement('div');
-    formGroup.className = 'mb-3';
-    const label = document.createElement('label');
-    label.htmlFor = `editor-${plantilla.id}-${campo.clavePlaceholder}`;
-    label.className = 'form-label small';
-    label.textContent = campo.label;
-    let inputElement;
-    if (campo.tipo === 'textarea') {
-      inputElement = document.createElement('textarea');
-      inputElement.rows = 3;
-    } else {
-      inputElement = document.createElement('input');
-      inputElement.type = campo.tipo;
-    }
-    inputElement.id = `editor-${plantilla.id}-${campo.clavePlaceholder}`;
-    inputElement.className = 'form-control form-control-sm';
-    
-    const valorInicial = (savedUserValues && typeof savedUserValues[campo.clavePlaceholder] !== 'undefined') 
-                         ? savedUserValues[campo.clavePlaceholder] 
-                         : campo.valorDefecto;
-
-    if (campo.tipo === 'checkbox') {
-      inputElement.checked = !!valorInicial;
-    } else {
-      inputElement.value = valorInicial;
-    }
-
-    const updateFunction = () => actualizarPreviewYCodigo(currentTemplateIndex);
-    if (campo.tipo !== 'color' && campo.tipo !== 'checkbox' && campo.tipo !== 'radio') {
-        inputElement.addEventListener('input', updateFunction);
-    }
-    if (campo.tipo === 'color' || campo.tipo === 'checkbox' || campo.tipo === 'radio') {
-        inputElement.addEventListener('change', updateFunction);
-    }
-    formGroup.appendChild(label);
-    formGroup.appendChild(inputElement);
-    editorControlsEl.appendChild(formGroup);
-  });
+  if(editorTitleTextEl) editorTitleTextEl.textContent = `${plantilla.nombre}`; // Solo el nombre para más espacio
+  
+  const customizeTabButton = document.getElementById('content-tab-trigger');
+  if (customizeTabButton) {
+    const tab = new bootstrap.Tab(customizeTabButton);
+    tab.show(); 
+  } else {
+    if (editorControlsContainer) editorControlsContainer.innerHTML = '<p class="text-danger">Error: Pestaña no encontrada.</p>';
+    loadTemplateControlsIntoPanel(plantilla);
+  }
 
   actualizarPreviewYCodigo(idx, false);
 
-  if (!templateModalInstance) {
-    // se inicializa en DOMContentLoaded
-  }
-  templateModalInstance.show();
+  if (templateModalInstance) templateModalInstance.show();
   
   const savedApiKey = localStorage.getItem(GEMINI_API_KEY_STORAGE);
-  if (savedApiKey) {
+  if (savedApiKey && aiApiKeyInput) {
     aiApiKeyInput.value = savedApiKey;
   }
+
+  if(codePreviewPanel) codePreviewPanel.style.display = 'none';
 }
 
 function copiarCodigo() {
+  if (!emailCodeEl) return;
   const codigo = emailCodeEl.textContent;
   navigator.clipboard.writeText(codigo).then(() => {
-    const copyButton = document.querySelector('#customize-tab-pane .btn-copy-custom');
-    if (!copyButton) return;
-    const originalText = copyButton.innerHTML;
-    const originalClasses = Array.from(copyButton.classList);
-    copyButton.innerHTML = '<i class="bi bi-check-circle-fill me-2"></i>¡HTML Copiado!';
-    copyButton.classList.remove('btn-copy-custom');
-    copyButton.classList.add('btn-success');
+    const activeCopyButton = codePreviewPanel && codePreviewPanel.style.display !== 'none' 
+                            ? codePreviewPanel.querySelector('.btn-copy-custom') 
+                            : null; 
+    if (!activeCopyButton) { // Si no está visible el panel de código, no hay botón específico allí.
+        alert('Código copiado (desde preview general).'); // O encontrar otro botón si existe.
+        return;
+    }
+    
+    const originalText = activeCopyButton.innerHTML;
+    const originalClasses = Array.from(activeCopyButton.classList);
+    activeCopyButton.innerHTML = '<i class="bi bi-check-circle-fill me-2"></i>¡HTML Copiado!';
+    activeCopyButton.classList.remove('btn-copy-custom');
+    activeCopyButton.classList.add('btn-success');
     setTimeout(() => {
-      copyButton.innerHTML = originalText;
-      copyButton.className = ''; 
-      originalClasses.forEach(cls => copyButton.classList.add(cls));
+      activeCopyButton.innerHTML = originalText;
+      activeCopyButton.className = ''; 
+      originalClasses.forEach(cls => activeCopyButton.classList.add(cls));
     }, 2500);
   }).catch(err => {
     console.error('Error al copiar código: ', err);
@@ -995,11 +1106,26 @@ function copiarCodigo() {
 }
 
 // --- Lógica de Google AI Studio (Gemini) ---
-aiApiKeyInput.addEventListener('change', () => {
-    localStorage.setItem(GEMINI_API_KEY_STORAGE, aiApiKeyInput.value);
-});
+if (aiApiKeyInput) {
+    aiApiKeyInput.addEventListener('change', () => {
+        localStorage.setItem(GEMINI_API_KEY_STORAGE, aiApiKeyInput.value);
+    });
+}
+
+function generateExamplePrompt() {
+    if (aiPromptInput && EXAMPLE_PROMPTS.length > 0) {
+        const randomIndex = Math.floor(Math.random() * EXAMPLE_PROMPTS.length);
+        aiPromptInput.value = EXAMPLE_PROMPTS[randomIndex];
+        aiPromptInput.focus();
+    }
+}
 
 async function generateWithAI() {
+    if (!aiApiKeyInput || !aiPromptInput || !generateWithAIButton || !aiSpinner || !aiIcon || !aiEmailPreviewEl || !aiEmailCodeEl || !copyAiCodeButton) {
+        console.error("Faltan elementos DOM para el generador IA.");
+        alert("Error interno: Faltan componentes para el generador IA.");
+        return;
+    }
     const apiKey = aiApiKeyInput.value.trim();
     const userPrompt = aiPromptInput.value.trim();
 
@@ -1023,25 +1149,15 @@ async function generateWithAI() {
 
     const MODEL_NAME = "gemini-1.5-flash-latest";
     const API_ENDPOINT = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL_NAME}:generateContent?key=${apiKey}`;
-
     const fullPrompt = userPrompt + "\n\nIMPORTANTE: El resultado debe ser únicamente el código HTML completo de la plantilla de correo, usando estilos en línea y compatible con la mayoría de los clientes de correo. No incluyas explicaciones adicionales, solo el HTML. Asegúrate de que el HTML sea válido y esté bien estructurado.";
 
     try {
         const response = await fetch(API_ENDPOINT, {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
+            headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({
-                contents: [{
-                    parts: [{
-                        text: fullPrompt
-                    }]
-                }],
-                generationConfig: {
-                    temperature: 0.7,
-                    maxOutputTokens: 8192,
-                },
+                contents: [{parts: [{text: fullPrompt}]}],
+                generationConfig: {temperature: 0.7, maxOutputTokens: 8192},
                 safetySettings: [ 
                     { category: "HARM_CATEGORY_HARASSMENT", threshold: "BLOCK_MEDIUM_AND_ABOVE" },
                     { category: "HARM_CATEGORY_HATE_SPEECH", threshold: "BLOCK_MEDIUM_AND_ABOVE" },
@@ -1054,49 +1170,36 @@ async function generateWithAI() {
         if (!response.ok) {
             const errorData = await response.json();
             console.error("Error API Response:", errorData);
-            let errorMessage = `Error de la API (${response.status}): `;
-            if (errorData && errorData.error && errorData.error.message) {
-                errorMessage += errorData.error.message;
-            } else {
-                errorMessage += response.statusText;
-            }
+            let errorMessage = `Error de la API (${response.status}): ${errorData.error?.message || response.statusText}`;
             throw new Error(errorMessage);
         }
-
         const data = await response.json();
-        
-        if (data.candidates && data.candidates.length > 0 && 
-            data.candidates[0].content && data.candidates[0].content.parts && 
-            data.candidates[0].content.parts.length > 0 && data.candidates[0].content.parts[0].text) {
-            
+        if (data.candidates?.[0]?.content?.parts?.[0]?.text) {
             let generatedHtml = data.candidates[0].content.parts[0].text;
             generatedHtml = generatedHtml.replace(/^```(?:html)?\s*([\s\S]*?)\s*```$/, '$1').trim();
-            
             aiEmailPreviewEl.innerHTML = generatedHtml;
             aiEmailCodeEl.textContent = generatedHtml;
             copyAiCodeButton.disabled = false;
-        } else if (data.promptFeedback && data.promptFeedback.blockReason) {
-             aiEmailPreviewEl.innerHTML = `<p class="text-danger">La solicitud fue bloqueada por la IA. Razón: ${data.promptFeedback.blockReason}. Intenta reformular tu prompt.</p>`;
+        } else if (data.promptFeedback?.blockReason) {
+             aiEmailPreviewEl.innerHTML = `<p class="text-danger">Solicitud bloqueada por IA: ${data.promptFeedback.blockReason}. Reformula.</p>`;
              console.warn("AI Prompt Blocked:", data.promptFeedback);
-        } else if (data.candidates && data.candidates.length > 0 && data.candidates[0].finishReason && data.candidates[0].finishReason !== "STOP") {
-             aiEmailPreviewEl.innerHTML = `<p class="text-warning">La IA terminó de generar por una razón inesperada: ${data.candidates[0].finishReason}. El resultado podría estar incompleto.</p>`;
+        } else if (data.candidates?.[0]?.finishReason && data.candidates[0].finishReason !== "STOP") {
+             aiEmailPreviewEl.innerHTML = `<p class="text-warning">IA terminó inesperadamente: ${data.candidates[0].finishReason}. Resultado parcial.</p>`;
              console.warn("AI Finish Reason:", data.candidates[0].finishReason, data.candidates[0]);
-             if (data.candidates[0].content && data.candidates[0].content.parts && data.candidates[0].content.parts.length > 0 && data.candidates[0].content.parts[0].text) {
+             if (data.candidates[0].content?.parts?.[0]?.text) {
                 let partialHtml = data.candidates[0].content.parts[0].text;
                 partialHtml = partialHtml.replace(/^```(?:html)?\s*([\s\S]*?)\s*```$/, '$1').trim();
                 aiEmailPreviewEl.innerHTML = partialHtml;
                 aiEmailCodeEl.textContent = partialHtml;
                 copyAiCodeButton.disabled = false;
              }
-        }
-         else {
-            aiEmailPreviewEl.innerHTML = "<p class='text-danger'>La IA no generó contenido válido o la respuesta no tuvo el formato esperado. Revisa la consola para más detalles.</p>";
+        } else {
+            aiEmailPreviewEl.innerHTML = "<p class='text-danger'>IA no generó contenido válido. Revisa consola.</p>";
             console.error("Respuesta inesperada de la IA:", data);
         }
-
     } catch (error) {
         console.error("Error al generar con IA:", error);
-        aiEmailPreviewEl.innerHTML = `<p class="text-danger">Ocurrió un error: ${error.message}. Revisa la consola.</p>`;
+        aiEmailPreviewEl.innerHTML = `<p class="text-danger">Ocurrió un error: ${error.message}. Revisa consola.</p>`;
     } finally {
         generateWithAIButton.disabled = false;
         aiSpinner.style.display = 'none';
@@ -1105,55 +1208,90 @@ async function generateWithAI() {
 }
 
 function copiarAICodigo() {
+  if (!aiEmailCodeEl) return;
   const codigo = aiEmailCodeEl.textContent;
-  if (!codigo) return;
+  if (!codigo || !copyAiCodeButton) return;
   navigator.clipboard.writeText(codigo).then(() => {
     const originalText = copyAiCodeButton.innerHTML;
     copyAiCodeButton.innerHTML = '<i class="bi bi-check-circle-fill me-2"></i>¡HTML de IA Copiado!';
-    setTimeout(() => {
-      copyAiCodeButton.innerHTML = originalText;
-    }, 2500);
+    setTimeout(() => { copyAiCodeButton.innerHTML = originalText; }, 2500);
   }).catch(err => {
     console.error('Error al copiar código de IA: ', err);
     alert('No se pudo copiar el código de IA.');
   });
 }
 
+// --- Funciones de UI del Editor (Nuevo Layout) ---
+function toggleCodePreviewPanel() {
+    if (codePreviewPanel) {
+        codePreviewPanel.style.display = codePreviewPanel.style.display === 'none' ? 'flex' : 'none';
+    }
+}
 
-// --- Inicialización y Event Listeners del Modal ---
+function saveAndCloseEditor() {
+    if (templateModalInstance) templateModalInstance.hide();
+}
+
+// --- Inicialización y Event Listeners ---
 document.addEventListener('DOMContentLoaded', () => {
     loadUserTemplates();
     renderTemplateGallery();
 
     const modalElement = document.getElementById('templateModal');
     if (modalElement) {
-        templateModalInstance = new bootstrap.Modal(modalElement);
+        templateModalInstance = new bootstrap.Modal(modalElement, {
+            backdrop: 'static', keyboard: false 
+        });
 
         modalElement.addEventListener('hidden.bs.modal', function () {
             currentTemplateIndex = -1;
-            aiEmailPreviewEl.innerHTML = "Presiona \"Generar\" para ver el resultado aquí.";
-            aiEmailCodeEl.textContent = "";
-            copyAiCodeButton.disabled = true;
-            newTemplateStatusEl.textContent = '';
+            if (aiEmailPreviewEl) aiEmailPreviewEl.innerHTML = "Presiona \"Generar\" para ver el resultado aquí.";
+            if (aiEmailCodeEl) aiEmailCodeEl.textContent = "";
+            if (copyAiCodeButton) copyAiCodeButton.disabled = true;
+            if (newTemplateStatusEl) newTemplateStatusEl.textContent = '';
+            if (editorControlsContainer) editorControlsContainer.innerHTML = '';
+            if (editorTitleTextEl) editorTitleTextEl.textContent = "Editor de Plantilla";
         });
 
         modalElement.addEventListener('show.bs.modal', function () {
-            const activeTab = modalElement.querySelector('.nav-tabs .nav-link.active');
-            if (!activeTab) {
-                const firstTabButton = modalElement.querySelector('.nav-tabs .nav-link');
-                if (firstTabButton) {
-                    new bootstrap.Tab(firstTabButton).show();
-                }
-            }
-            newTemplateNameInput.value = '';
-            newTemplateDescriptionInput.value = '';
-            newTemplateHtmlInput.value = '';
-            newTemplateEditableFieldsContainer.innerHTML = '';
-            newTemplateStatusEl.textContent = '';
+            if (newTemplateNameInput) newTemplateNameInput.value = '';
+            if (newTemplateDescriptionInput) newTemplateDescriptionInput.value = '';
+            if (newTemplateHtmlInput) newTemplateHtmlInput.value = '';
+            if (newTemplateEditableFieldsContainer) newTemplateEditableFieldsContainer.innerHTML = '';
+            if (newTemplateStatusEl) newTemplateStatusEl.textContent = '';
+            if (aiPromptInput) aiPromptInput.value = '';
         });
-
     } else {
         console.error("Elemento del modal 'templateModal' no encontrado.");
+    }
+
+    const editorMainTabsContainer = document.getElementById('editorMainTabs');
+    if (editorMainTabsContainer) {
+        const tabTriggers = editorMainTabsContainer.querySelectorAll('.nav-link');
+        tabTriggers.forEach(trigger => {
+            trigger.addEventListener('shown.bs.tab', function (event) {
+                const activeTabTriggerId = event.target.id;
+                if (!editorControlsContainer) return;
+                
+                editorControlsContainer.innerHTML = '';
+                if(resetValuesButton) resetValuesButton.style.display = 'none';
+
+                if (activeTabTriggerId === 'content-tab-trigger') {
+                    if (currentTemplateIndex !== -1 && currentTemplateIndex < plantillasDisponibles.length) {
+                        const plantilla = plantillasDisponibles[currentTemplateIndex];
+                        loadTemplateControlsIntoPanel(plantilla);
+                    } else {
+                        editorControlsContainer.innerHTML = '<p class="text-muted small p-2">Selecciona o abre una plantilla para ver sus campos.</p>';
+                    }
+                } else if (activeTabTriggerId === 'appearance-tab-trigger' && appearanceTabPaneContent) {
+                    editorControlsContainer.appendChild(appearanceTabPaneContent);
+                } else if (activeTabTriggerId === 'ai-generator-tab-trigger' && aiGeneratorControlsContent) {
+                    editorControlsContainer.appendChild(aiGeneratorControlsContent);
+                } else if (activeTabTriggerId === 'add-template-tab-trigger' && addTemplateControlsContent) {
+                    editorControlsContainer.appendChild(addTemplateControlsContent);
+                }
+            });
+        });
     }
 });
 </script>
