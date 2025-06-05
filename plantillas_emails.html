@@ -1,0 +1,1161 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Editor Visual de Plantillas de Correo Avanzado</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+  <style>
+    body {
+      background-color: #f8f9fa;
+      font-family: 'Segoe UI', sans-serif;
+      color: #343a40;
+    }
+    .template-card {
+      border-radius: 12px;
+      box-shadow: 0 6px 25px rgba(0,0,0,0.1);
+      overflow: hidden;
+      transition: transform 0.25s ease-in-out, box-shadow 0.25s ease-in-out;
+      background-color: #ffffff;
+    }
+    .template-card:hover {
+      transform: translateY(-5px) scale(1.01);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+    }
+    .preview-box {
+      background-color: #ffffff;
+      border: 1px solid #dee2e6;
+      border-radius: 8px;
+      padding: 1.5rem;
+      overflow-x: auto;
+      max-height: 55vh; /* Ajustado para más espacio */
+      min-height: 300px;
+      box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
+    }
+    .btn-action-custom {
+      background-color: #0d6efd;
+      color: #fff;
+      border: none;
+    }
+    .btn-action-custom:hover {
+      background-color: #0b5ed7;
+    }
+    .btn-copy-custom {
+      background-color: #198754;
+      color: #fff;
+      border: none;
+    }
+    .btn-copy-custom:hover {
+      background-color: #157347;
+    }
+    .btn-success.btn-copy-custom:hover {
+      background-color: #146c43;
+    }
+    pre {
+      background: #e9ecef;
+      padding: 1rem;
+      border-radius: 8px;
+      font-size: 0.875rem;
+      max-height: 35vh; /* Ajustado */
+      overflow-y: auto;
+      border: 1px solid #ced4da;
+    }
+    #editorControls .form-label, #aiGeneratorControls .form-label, #add-template-tab-pane .form-label {
+      font-weight: 500;
+      font-size: 0.9rem;
+      color: #495057;
+    }
+    #editorControls .form-control-sm, #aiGeneratorControls .form-control-sm, #add-template-tab-pane .form-control-sm {
+      font-size: 0.875rem;
+    }
+    .modal-body {
+      max-height: calc(100vh - 120px);
+    }
+    .page-header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 2rem 0;
+      margin-bottom: 3rem;
+      border-bottom-left-radius: 20px;
+      border-bottom-right-radius: 20px;
+    }
+    .page-header h1 {
+        font-weight: 300;
+    }
+    .nav-tabs .nav-link.active {
+        background-color: #e9ecef;
+        border-bottom-color: #e9ecef;
+    }
+    #aiApiKeyWarning {
+        font-size: 0.8rem;
+        background-color: #fff3cd;
+        border-left: 4px solid #ffeeba;
+        padding: 0.5rem;
+    }
+  </style>
+</head>
+<body>
+
+<div class="page-header text-center">
+  <div class="container">
+    <h1 class="display-5"><i class="bi bi-easel2-fill me-2"></i>Editor Visual de Plantillas de Correo Avanzado</h1>
+    <p class="lead">Crea, personaliza, guarda, genera con IA y añade tus propias plantillas.</p>
+  </div>
+</div>
+
+<div class="container pb-5">
+  <div class="row" id="templateGallery">
+    <!-- Aquí se insertan las plantillas dinámicamente -->
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="templateModal" tabindex="-1" aria-labelledby="modalTitle" aria-hidden="true">
+  <div class="modal-dialog modal-xl modal-dialog-scrollable">
+    <div class="modal-content shadow-lg">
+      <div class="modal-header bg-light">
+        <h5 class="modal-title" id="modalTitle">Editor de Plantilla</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body p-0"> <!-- p-0 para que las tabs ocupen todo -->
+        <ul class="nav nav-tabs nav-fill" id="editorTabs" role="tablist">
+          <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="customize-tab" data-bs-toggle="tab" data-bs-target="#customize-tab-pane" type="button" role="tab" aria-controls="customize-tab-pane" aria-selected="true">
+              <i class="bi bi-palette-fill me-1"></i>Personalizar Actual
+            </button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button class="nav-link" id="ai-generator-tab" data-bs-toggle="tab" data-bs-target="#ai-generator-tab-pane" type="button" role="tab" aria-controls="ai-generator-tab-pane" aria-selected="false">
+              <i class="bi bi-magic me-1"></i>Generador IA Premium
+            </button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button class="nav-link" id="add-template-tab" data-bs-toggle="tab" data-bs-target="#add-template-tab-pane" type="button" role="tab" aria-controls="add-template-tab-pane" aria-selected="false">
+              <i class="bi bi-plus-circle-fill me-1"></i>Añadir Nueva Plantilla
+            </button>
+          </li>
+        </ul>
+        <div class="tab-content p-4" id="editorTabsContent">
+          <div class="tab-pane fade show active" id="customize-tab-pane" role="tabpanel" aria-labelledby="customize-tab">
+            <div class="row g-4">
+              <div class="col-lg-8">
+                <h6 class="mb-3"><i class="bi bi-eye-fill me-2"></i>Vista Previa Dinámica</h6>
+                <div class="preview-box mb-4" id="emailPreview"></div>
+                <h6 class="mb-3"><i class="bi bi-code-slash me-2"></i>Código HTML Resultante</h6>
+                <pre><code id="emailCode"></code></pre>
+                <button class="btn btn-copy-custom w-100 mt-2" onclick="copiarCodigo()">
+                  <i class="bi bi-clipboard-check-fill me-2"></i>Copiar Código HTML
+                </button>
+              </div>
+              <div class="col-lg-4 border-start ps-lg-4">
+                <h6 class="mb-3"><i class="bi bi-tools me-2"></i>Personalizar Plantilla</h6>
+                <div id="editorControls" class="mt-3" style="max-height: 65vh; overflow-y: auto; padding-right: 10px;">
+                  <!-- Controles de edición -->
+                </div>
+                <button class="btn btn-sm btn-outline-secondary w-100 mt-3" onclick="resetCurrentTemplateValues()">
+                    <i class="bi bi-arrow-clockwise me-2"></i>Restaurar Valores por Defecto
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="tab-pane fade" id="ai-generator-tab-pane" role="tabpanel" aria-labelledby="ai-generator-tab">
+            <div class="row g-4">
+                <div class="col-lg-12">
+                    <h6 class="mb-3"><i class="bi bi-robot me-2"></i>Generador de Plantillas con IA (Gemini)</h6>
+                </div>
+                <div class="col-lg-5">
+                    <div id="aiGeneratorControls">
+                        <div class="mb-3">
+                            <label for="aiApiKey" class="form-label">Tu API Key de Google AI Studio (Gemini)</label>
+                            <input type="password" class="form-control form-control-sm" id="aiApiKey" placeholder="Ingresa tu API Key">
+                            <div class="form-text" id="aiApiKeyWarning">
+                                <i class="bi bi-exclamation-triangle-fill text-warning me-1"></i>
+                                Tu API Key se guardará en el almacenamiento local de tu navegador. No uses esta función en un PC compartido o público.
+                            </div>
+                        </div>
+                         <div class="mb-3">
+                            <label for="aiPrompt" class="form-label">Describe la plantilla que necesitas (sé detallado):</label>
+                            <textarea class="form-control form-control-sm" id="aiPrompt" rows="8" placeholder="Ej: Una plantilla de correo elegante para el lanzamiento de un producto de lujo. Tema oscuro, con espacio para una imagen grande de cabecera, texto descriptivo, un botón de 'Comprar Ahora' y enlaces a redes sociales. Incluye placeholders como {{productName}}, {{productImageURL}}, {{buttonLink}}, {{mainColor}}."></textarea>
+                        </div>
+                        <button class="btn btn-primary w-100" id="generateWithAIButton" onclick="generateWithAI()">
+                            <span id="aiSpinner" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true" style="display: none;"></span>
+                            <i class="bi bi-stars me-1" id="aiIcon"></i>Generar Plantilla Premium
+                        </button>
+                    </div>
+                </div>
+                <div class="col-lg-7">
+                    <h6 class="mb-2"><i class="bi bi-lightbulb-fill me-2"></i>Resultado Generado por IA</h6>
+                    <p class="small text-muted mb-2">El HTML generado aparecerá abajo. Puedes copiarlo. La IA puede no ser perfecta, revisa y prueba el código.</p>
+                    <div class="preview-box mb-3" id="aiEmailPreview" style="min-height: 250px; max-height: 40vh;">Presiona "Generar" para ver el resultado aquí.</div>
+                    <pre class="mb-2"><code id="aiEmailCode"></code></pre>
+                    <button class="btn btn-copy-custom w-100" onclick="copiarAICodigo()" id="copyAiCodeButton" disabled>
+                        <i class="bi bi-clipboard-check-fill me-2"></i>Copiar Código HTML de IA
+                    </button>
+                </div>
+            </div>
+          </div>
+           <div class="tab-pane fade" id="add-template-tab-pane" role="tabpanel" aria-labelledby="add-template-tab">
+            <div class="row g-4">
+              <div class="col-12">
+                <h6 class="mb-3"><i class="bi bi-file-earmark-plus-fill me-2"></i>Crear y Guardar Nueva Plantilla</h6>
+                <p class="small text-muted">Pega el HTML de tu plantilla (por ejemplo, una generada por IA). Luego, define algunos campos editables simples si lo deseas.</p>
+              </div>
+              <div class="col-lg-7">
+                <div class="mb-3">
+                  <label for="newTemplateName" class="form-label">Nombre de la Plantilla <span class="text-danger">*</span></label>
+                  <input type="text" class="form-control form-control-sm" id="newTemplateName" placeholder="Ej: Plantilla Promocional Dark Mode">
+                </div>
+                <div class="mb-3">
+                  <label for="newTemplateDescription" class="form-label">Descripción Breve</label>
+                  <textarea class="form-control form-control-sm" id="newTemplateDescription" rows="2" placeholder="Ej: Ideal para ofertas especiales con un toque moderno."></textarea>
+                </div>
+                <div class="mb-3">
+                  <label for="newTemplateHtml" class="form-label">Código HTML de la Plantilla <span class="text-danger">*</span></label>
+                  <textarea class="form-control" id="newTemplateHtml" rows="10" placeholder="Pega aquí el código HTML completo de tu plantilla..."></textarea>
+                  <div class="form-text">Asegúrate de que los estilos estén en línea para máxima compatibilidad.</div>
+                </div>
+              </div>
+              <div class="col-lg-5 border-start ps-lg-4">
+                 <h6 class="mb-3"><i class="bi bi-input-cursor-text me-2"></i>Definir Campos Editables Simples (Opcional)</h6>
+                 <p class="small text-muted">Si tu HTML usa placeholders como `{{miVariable}}`, puedes listarlos aquí para crear controles de texto simples.</p>
+                 <div id="newTemplateEditableFieldsContainer">
+                    <!-- Campos para definir placeholders se añadirán aquí dinámicamente -->
+                 </div>
+                 <button type="button" class="btn btn-sm btn-outline-secondary mt-2 w-100" onclick="addEditableFieldInput()">
+                    <i class="bi bi-plus-lg me-1"></i> Añadir Campo Editable Simple
+                 </button>
+                 <hr>
+                 <button class="btn btn-success w-100 mt-3" onclick="saveNewCustomTemplate()">
+                    <i class="bi bi-save-fill me-2"></i>Guardar Nueva Plantilla
+                 </button>
+                 <div id="newTemplateStatus" class="mt-2 small"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+// --- Plantillas Disponibles (Array Inicial) ---
+let plantillasDisponibles = [ // Cambiado a let para poder añadir las de usuario
+  // Plantilla 1: Boletín Informativo Moderno
+  {
+    nombre: "Boletín Informativo Moderno",
+    id: "boletinModerno",
+    descripcion: "Una plantilla elegante para enviar noticias, actualizaciones o artículos de blog. Incluye secciones para imagen destacada y múltiples bloques de contenido.",
+    camposEditables: [
+      { label: "Título Principal del Boletín", clavePlaceholder: "tituloBoletin", tipo: "text", valorDefecto: "Novedades de la Semana" },
+      { label: "Subtítulo o Resumen", clavePlaceholder: "subtituloBoletin", tipo: "text", valorDefecto: "Un vistazo a lo más destacado de nuestra comunidad." },
+      { label: "URL Imagen Cabecera", clavePlaceholder: "urlImagenCabecera", tipo: "url", valorDefecto: "https://via.placeholder.com/600x200/667eea/ffffff?text=Imagen+Destacada" },
+      { label: "Texto Introductorio", clavePlaceholder: "textoIntroduccion", tipo: "textarea", valorDefecto: "Hola {{nombreSuscriptor}}, aquí tienes las últimas noticias y actualizaciones que hemos preparado para ti. ¡Esperamos que las disfrutes!" },
+      { label: "Título Sección 1", clavePlaceholder: "tituloSeccion1", tipo: "text", valorDefecto: "Artículo Destacado" },
+      { label: "Contenido Sección 1", clavePlaceholder: "contenidoSeccion1", tipo: "textarea", valorDefecto: "Detalles sobre el artículo más importante de esta semana. Puedes incluir enlaces y formato básico." },
+      { label: "Texto Botón Principal", clavePlaceholder: "textoBotonPrincipal", tipo: "text", valorDefecto: "Leer Más" },
+      { label: "URL Botón Principal", clavePlaceholder: "urlBotonPrincipal", tipo: "url", valorDefecto: "https://ejemplo.com/noticias" },
+      { label: "Color Acento Principal", clavePlaceholder: "colorAcento", tipo: "color", valorDefecto: "#667eea" },
+      { label: "Color Fondo General", clavePlaceholder: "colorFondo", tipo: "color", valorDefecto: "#f4f7f6" }
+    ],
+    htmlBase: `
+<table style="width:100%;background:{{colorFondo}};font-family:'Helvetica Neue', Helvetica, Arial, sans-serif;padding:20px 0;">
+  <tr><td align="center">
+    <table style="max-width:600px;width:100%;background:#ffffff;margin:0 auto;border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,0.1);">
+      {{#if urlImagenCabecera}}
+      <tr><td>
+        <img src="{{urlImagenCabecera}}" alt="Cabecera del Boletín" style="width:100%;max-width:600px;height:auto;border-top-left-radius:8px;border-top-right-radius:8px;display:block;">
+      </td></tr>
+      {{/if}}
+      <tr><td style="padding:30px 25px;text-align:center;background:{{colorAcento}};color:#ffffff;">
+        <h1 style="margin:0;font-size:28px;font-weight:bold;">{{tituloBoletin}}</h1>
+        {{#if subtituloBoletin}}
+        <p style="margin:10px 0 0;font-size:16px;opacity:0.9;">{{subtituloBoletin}}</p>
+        {{/if}}
+      </td></tr>
+      <tr><td style="padding:30px 25px;font-size:16px;color:#333333;line-height:1.6;">
+        <p style="margin:0 0 20px;">{{textoIntroduccion}}</p>
+        <h3 style="color:{{colorAcento}};margin-top:25px;margin-bottom:10px;">{{tituloSeccion1}}</h3>
+        <p style="margin:0 0 25px;">{{contenidoSeccion1}}</p>
+        {{#if urlBotonPrincipal}}
+        <table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td align="center">
+          <a href="{{urlBotonPrincipal}}" target="_blank" style="background:{{colorAcento}};color:#ffffff;padding:14px 28px;text-decoration:none;border-radius:5px;display:inline-block;font-weight:bold;font-size:16px;letter-spacing:0.5px;">{{textoBotonPrincipal}}</a>
+        </td></tr></table>
+        {{/if}}
+      </td></tr>
+      <tr><td style="padding:20px 25px;text-align:center;font-size:12px;color:#777777;border-top:1px solid #eeeeee;background-color:#f9f9f9;border-bottom-left-radius:8px;border-bottom-right-radius:8px;">
+        <p style="margin:0;">TuEmpresa © ${new Date().getFullYear()}. Todos los derechos reservados.</p>
+        <p style="margin:5px 0 0;"><a href="https://ejemplo.com/unsubscribe" style="color:{{colorAcento}};text-decoration:none;">Darse de baja</a></p>
+      </td></tr>
+    </table>
+  </td></tr>
+</table>`
+  },
+  // Plantilla 2: Anuncio de Producto Simple
+  {
+    nombre: "Anuncio de Producto Simple",
+    id: "anuncioProducto",
+    descripcion: "Perfecta para destacar un nuevo producto o una oferta especial. Diseño limpio y centrado en la imagen y el llamado a la acción.",
+    camposEditables: [
+      { label: "Nombre del Producto", clavePlaceholder: "nombreProducto", tipo: "text", valorDefecto: "Nuestro Nuevo Gadget Increíble" },
+      { label: "Descripción Corta", clavePlaceholder: "descripcionProducto", tipo: "textarea", valorDefecto: "Descubre la última innovación que cambiará tu forma de hacer las cosas. ¡Stock limitado!" },
+      { label: "URL Imagen Producto", clavePlaceholder: "urlImagenProducto", tipo: "url", valorDefecto: "https://via.placeholder.com/550x300/764ba2/ffffff?text=Producto+Estrella" },
+      { label: "Precio (Opcional)", clavePlaceholder: "precioProducto", tipo: "text", valorDefecto: "$99.99 USD" },
+      { label: "Texto del Botón", clavePlaceholder: "textoBotonCompra", tipo: "text", valorDefecto: "Comprar Ahora" },
+      { label: "URL del Botón", clavePlaceholder: "urlBotonCompra", tipo: "url", valorDefecto: "https://ejemplo.com/producto" },
+      { label: "Color de Fondo Botón", clavePlaceholder: "colorFondoBoton", tipo: "color", valorDefecto: "#764ba2" },
+      { label: "Color de Texto Botón", clavePlaceholder: "colorTextoBoton", tipo: "color", valorDefecto: "#ffffff" }
+    ],
+    htmlBase: `
+<table style="width:100%;background:#f0f2f5;font-family:'Arial', sans-serif;padding:20px 0;">
+  <tr><td align="center">
+    <table style="max-width:580px;width:100%;background:#ffffff;margin:0 auto;border-radius:10px;overflow:hidden;box-shadow:0 5px 15px rgba(0,0,0,0.08);">
+      {{#if urlImagenProducto}}
+      <tr><td>
+        <a href="{{urlBotonCompra}}" target="_blank"><img src="{{urlImagenProducto}}" alt="{{nombreProducto}}" style="width:100%;max-width:580px;height:auto;display:block;"></a>
+      </td></tr>
+      {{/if}}
+      <tr><td style="padding:25px 30px;text-align:center;">
+        <h2 style="margin:0 0 10px;font-size:26px;color:#333333;font-weight:bold;">{{nombreProducto}}</h2>
+        <p style="margin:0 0 20px;font-size:16px;color:#555555;line-height:1.6;">{{descripcionProducto}}</p>
+        {{#if precioProducto}}
+        <p style="margin:0 0 25px;font-size:22px;color:{{colorFondoBoton}};font-weight:bold;">{{precioProducto}}</p>
+        {{/if}}
+        <a href="{{urlBotonCompra}}" target="_blank" style="background:{{colorFondoBoton}};color:{{colorTextoBoton}};padding:15px 30px;text-decoration:none;border-radius:6px;display:inline-block;font-weight:bold;font-size:17px;min-width:200px;">{{textoBotonCompra}}</a>
+      </td></tr>
+      <tr><td style="padding:15px;text-align:center;font-size:11px;color:#888888;background-color:#f9f9f9;">
+        <p style="margin:0;">© ${new Date().getFullYear()} TuTiendaOnline. <a href="https://ejemplo.com/contacto" style="color:{{colorFondoBoton}};text-decoration:none;">Contáctanos</a>.</p>
+      </td></tr>
+    </table>
+  </td></tr>
+</table>`
+  },
+  // Plantilla 3: Invitación a Evento Exclusivo
+  {
+    nombre: "Invitación a Evento Exclusivo",
+    id: "invitacionEvento",
+    descripcion: "Un diseño elegante para invitar a tus contactos a un webinar, lanzamiento o evento especial. Incluye detalles del evento y un CTA claro.",
+    camposEditables: [
+      { label: "Título del Evento", clavePlaceholder: "tituloEvento", tipo: "text", valorDefecto: "¡Estás Invitado! Evento Exclusivo" },
+      { label: "Nombre del Evento", clavePlaceholder: "nombreEvento", tipo: "text", valorDefecto: "Webinar: El Futuro de la IA" },
+      { label: "Fecha y Hora", clavePlaceholder: "fechaHoraEvento", tipo: "text", valorDefecto: "Martes, 25 de Diciembre - 10:00 AM (GMT-5)" },
+      { label: "Lugar / Enlace (si es online)", clavePlaceholder: "lugarEnlaceEvento", tipo: "text", valorDefecto: "Online vía Zoom (Enlace en el botón)" },
+      { label: "URL Imagen del Evento", clavePlaceholder: "urlImagenEvento", tipo: "url", valorDefecto: "https://via.placeholder.com/600x250/ff6347/ffffff?text=Nuestro+Evento" },
+      { label: "Descripción Breve del Evento", clavePlaceholder: "descripcionEvento", tipo: "textarea", valorDefecto: "Únete a nosotros para una sesión inspiradora donde exploraremos las últimas tendencias y cómo pueden impactar tu negocio. Contaremos con expertos de la industria." },
+      { label: "Texto del Botón (RSVP/Registrarse)", clavePlaceholder: "textoBotonEvento", tipo: "text", valorDefecto: "Reserva tu Lugar" },
+      { label: "URL del Botón", clavePlaceholder: "urlBotonEvento", tipo: "url", valorDefecto: "https://ejemplo.com/registro-evento" },
+      { label: "Color Tema del Evento", clavePlaceholder: "colorTemaEvento", tipo: "color", valorDefecto: "#ff6347" },
+      { label: "Color de Fondo", clavePlaceholder: "colorFondoEvento", tipo: "color", valorDefecto: "#f9f9f9" }
+    ],
+    htmlBase: `
+<table style="width:100%;background:{{colorFondoEvento}};font-family:'Roboto', Arial, sans-serif;padding:30px 0;">
+  <tr><td align="center">
+    <table style="max-width:600px;width:100%;background:#ffffff;margin:0 auto;border-radius:12px;box-shadow:0 8px 20px rgba(0,0,0,0.12);overflow:hidden;">
+      {{#if urlImagenEvento}}
+      <tr><td>
+        <img src="{{urlImagenEvento}}" alt="Banner del Evento" style="width:100%;max-width:600px;height:auto;display:block;">
+      </td></tr>
+      {{/if}}
+      <tr><td style="padding:35px 30px;text-align:left;">
+        <h1 style="margin:0 0 10px;font-size:26px;color:{{colorTemaEvento}};font-weight:700;">{{tituloEvento}}</h1>
+        <h2 style="margin:0 0 15px;font-size:22px;color:#333333;font-weight:500;">{{nombreEvento}}</h2>
+        <p style="margin:0 0 8px;font-size:16px;color:#555555;"><strong style="color:{{colorTemaEvento}};">Cuándo:</strong> {{fechaHoraEvento}}</p>
+        <p style="margin:0 0 25px;font-size:16px;color:#555555;"><strong style="color:{{colorTemaEvento}};">Dónde:</strong> {{lugarEnlaceEvento}}</p>
+        <p style="margin:0 0 30px;font-size:16px;color:#666666;line-height:1.7;">{{descripcionEvento}}</p>
+        <table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td align="center">
+          <a href="{{urlBotonEvento}}" target="_blank" style="background:{{colorTemaEvento}};color:#ffffff;padding:16px 35px;text-decoration:none;border-radius:8px;display:inline-block;font-weight:bold;font-size:18px;letter-spacing:0.5px;box-shadow: 0 4px 10px rgba(0,0,0,0.1);">{{textoBotonEvento}}</a>
+        </td></tr></table>
+      </td></tr>
+      <tr><td style="padding:20px 30px;text-align:center;font-size:13px;color:#888888;border-top:1px solid #eeeeee;background-color:#fcfcfc;">
+        <p style="margin:0;">¿No puedes asistir? Visita <a href="https://ejemplo.com" style="color:{{colorTemaEvento}};text-decoration:none;">nuestro sitio web</a> para futuras oportunidades.</p>
+        <p style="margin:5px 0 0;">Organizado por TuEmpresaGlobal.</p>
+      </td></tr>
+    </table>
+  </td></tr>
+</table>`
+  },
+  // Plantilla 4: Bienvenida Personalizada con Pasos
+  {
+    nombre: "Bienvenida con Pasos de Inicio",
+    id: "bienvenidaPasos",
+    descripcion: "Ideal para nuevos usuarios, guiándolos a través de los primeros pasos importantes. Fomenta la activación y el engagement.",
+    camposEditables: [
+      { label: "Título Principal", clavePlaceholder: "tituloBienvenida", tipo: "text", valorDefecto: "¡Bienvenido a Bordo, {{nombreUsuario}}!" },
+      { label: "Mensaje de Bienvenida", clavePlaceholder: "mensajeBienvenida", tipo: "textarea", valorDefecto: "Estamos emocionados de tenerte con nosotros. Para ayudarte a comenzar, hemos preparado algunos pasos sencillos:" },
+      { label: "URL Logo Empresa", clavePlaceholder: "urlLogoEmpresa", tipo: "url", valorDefecto: "https://via.placeholder.com/150x50/007bff/ffffff?text=TuLogo" },
+      { label: "Texto Paso 1", clavePlaceholder: "textoPaso1", tipo: "text", valorDefecto: "Completa tu Perfil" },
+      { label: "URL Paso 1", clavePlaceholder: "urlPaso1", tipo: "url", valorDefecto: "https://ejemplo.com/perfil" },
+      { label: "Texto Paso 2", clavePlaceholder: "textoPaso2", tipo: "text", valorDefecto: "Explora Nuestras Funciones" },
+      { label: "URL Paso 2", clavePlaceholder: "urlPaso2", tipo: "url", valorDefecto: "https://ejemplo.com/funciones" },
+      { label: "Texto Paso 3 (Opcional)", clavePlaceholder: "textoPaso3", tipo: "text", valorDefecto: "Únete a la Comunidad" },
+      { label: "URL Paso 3 (Opcional)", clavePlaceholder: "urlPaso3", tipo: "url", valorDefecto: "https://ejemplo.com/comunidad" },
+      { label: "Texto Botón Principal (Opcional)", clavePlaceholder: "textoBotonFinal", tipo: "text", valorDefecto: "Ir a mi Panel" },
+      { label: "URL Botón Principal (Opcional)", clavePlaceholder: "urlBotonFinal", tipo: "url", valorDefecto: "https://ejemplo.com/dashboard" },
+      { label: "Color Primario", clavePlaceholder: "colorPrimarioBienvenida", tipo: "color", valorDefecto: "#007bff" },
+      { label: "Color Fondo Cabecera", clavePlaceholder: "colorFondoCabecera", tipo: "color", valorDefecto: "#e9f3ff" }
+    ],
+    htmlBase: `
+<table style="width:100%;background:#f4f7fa;font-family:'Open Sans', Arial, sans-serif;padding:20px 0;">
+  <tr><td align="center">
+    <table style="max-width:620px;width:100%;background:#ffffff;margin:0 auto;border:1px solid #e0e0e0;border-radius:8px;">
+      <tr><td align="center" style="padding:25px 20px;background-color:{{colorFondoCabecera}};">
+        {{#if urlLogoEmpresa}}
+        <img src="{{urlLogoEmpresa}}" alt="Logo de la Empresa" style="max-width:180px;height:auto;margin-bottom:15px;">
+        {{/if}}
+        <h1 style="margin:0;font-size:28px;color:{{colorPrimarioBienvenida}};font-weight:bold;">{{tituloBienvenida}}</h1>
+      </td></tr>
+      <tr><td style="padding:30px 25px;font-size:16px;color:#333333;line-height:1.6;">
+        <p style="margin:0 0 25px;">{{mensajeBienvenida}}</p>
+        
+        <div style="margin-bottom:20px;padding:15px;border:1px dashed {{colorPrimarioBienvenida}};border-radius:5px;background:#f8fbff;">
+          <p style="margin:0 0 10px;font-size:18px;font-weight:bold;color:{{colorPrimarioBienvenida}};">Paso 1: {{textoPaso1}}</p>
+          <a href="{{urlPaso1}}" target="_blank" style="color:{{colorPrimarioBienvenida}};text-decoration:underline;font-weight:500;">Completar ahora →</a>
+        </div>
+        
+        <div style="margin-bottom:20px;padding:15px;border:1px dashed {{colorPrimarioBienvenida}};border-radius:5px;background:#f8fbff;">
+          <p style="margin:0 0 10px;font-size:18px;font-weight:bold;color:{{colorPrimarioBienvenida}};">Paso 2: {{textoPaso2}}</p>
+          <a href="{{urlPaso2}}" target="_blank" style="color:{{colorPrimarioBienvenida}};text-decoration:underline;font-weight:500;">Descubrir funciones →</a>
+        </div>
+
+        {{#if textoPaso3}}
+        <div style="margin-bottom:30px;padding:15px;border:1px dashed {{colorPrimarioBienvenida}};border-radius:5px;background:#f8fbff;">
+          <p style="margin:0 0 10px;font-size:18px;font-weight:bold;color:{{colorPrimarioBienvenida}};">Paso 3: {{textoPaso3}}</p>
+          <a href="{{urlPaso3}}" target="_blank" style="color:{{colorPrimarioBienvenida}};text-decoration:underline;font-weight:500;">Unirme →</a>
+        </div>
+        {{/if}}
+
+        {{#if urlBotonFinal}}
+        <table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td align="center" style="padding-top:10px;">
+          <a href="{{urlBotonFinal}}" target="_blank" style="background:{{colorPrimarioBienvenida}};color:#ffffff;padding:14px 28px;text-decoration:none;border-radius:5px;display:inline-block;font-weight:bold;font-size:16px;">{{textoBotonFinal}}</a>
+        </td></tr></table>
+        {{/if}}
+      </td></tr>
+      <tr><td style="padding:20px 25px;text-align:center;font-size:12px;color:#777777;border-top:1px solid #e0e0e0;background-color:#f0f0f0;">
+        <p style="margin:0;">Si tienes preguntas, <a href="https://ejemplo.com/soporte" style="color:{{colorPrimarioBienvenida}};text-decoration:none;">contacta a soporte</a>.</p>
+        <p style="margin:5px 0 0;">TuEquipoFavorito © ${new Date().getFullYear()}</p>
+      </td></tr>
+    </table>
+  </td></tr>
+</table>`
+  },
+  // Plantilla 5: Anuncio de Nueva Característica con GIF
+  {
+    nombre: "Anuncio de Nueva Característica",
+    id: "anuncioCaracteristica",
+    descripcion: "Muestra una nueva función o actualización importante de tu producto/servicio, idealmente con un GIF animado para demostrarla.",
+    camposEditables: [
+      { label: "Título Principal", clavePlaceholder: "tituloPrincipalCaracteristica", tipo: "text", valorDefecto: "¡Novedad! Descubre {{nombreCaracteristica}}" },
+      { label: "Nombre de la Característica", clavePlaceholder: "nombreCaracteristica", tipo: "text", valorDefecto: "el Editor Avanzado" },
+      { label: "URL GIF/Imagen Demostrativa", clavePlaceholder: "urlImagenDemo", tipo: "url", valorDefecto: "https://via.placeholder.com/580x300/28a745/ffffff?text=Demostraci%C3%B3n+Aqu%C3%AD+(GIF)" },
+      { label: "Descripción de la Característica", clavePlaceholder: "descripcionCaracteristica", tipo: "textarea", valorDefecto: "Hemos trabajado duro para traerte esta increíble nueva función que revolucionará tu forma de trabajar. Ahora puedes hacer X, Y y Z con mayor facilidad." },
+      { label: "Beneficio Clave 1", clavePlaceholder: "beneficio1", tipo: "text", valorDefecto: "Ahorra tiempo en tus tareas diarias." },
+      { label: "Beneficio Clave 2", clavePlaceholder: "beneficio2", tipo: "text", valorDefecto: "Colabora de forma más eficiente." },
+      { label: "Beneficio Clave 3 (Opcional)", clavePlaceholder: "beneficio3", tipo: "text", valorDefecto: "Obtén resultados profesionales." },
+      { label: "Texto Botón Ver Más/Probar", clavePlaceholder: "textoBotonCaracteristica", tipo: "text", valorDefecto: "Probar Ahora" },
+      { label: "URL Botón", clavePlaceholder: "urlBotonCaracteristica", tipo: "url", valorDefecto: "https://ejemplo.com/nueva-funcion" },
+      { label: "Color Acento Característica", clavePlaceholder: "colorAcentoCaracteristica", tipo: "color", valorDefecto: "#28a745" },
+      { label: "Color Fondo Email", clavePlaceholder: "colorFondoEmail", tipo: "color", valorDefecto: "#ffffff" }
+    ],
+    htmlBase: `
+<table style="width:100%;background:{{colorFondoEmail}};font-family:'Lato', Arial, sans-serif;padding:20px 0;">
+  <tr><td align="center">
+    <table style="max-width:600px;width:100%;background:#ffffff;margin:0 auto;border: 1px solid #dee2e6; border-radius:10px; overflow:hidden;">
+      <tr><td style="padding:30px 25px 20px;text-align:center;background:linear-gradient(135deg, {{colorAcentoCaracteristica}} 0%, {{shadeColor(colorAcentoCaracteristica, -20)}} 100%);color:#ffffff;">
+        <h1 style="margin:0;font-size:30px;font-weight:bold; line-height:1.2;">{{tituloPrincipalCaracteristica}}</h1>
+      </td></tr>
+      {{#if urlImagenDemo}}
+      <tr><td style="padding:0px 10px 20px;">
+        <a href="{{urlBotonCaracteristica}}" target="_blank"><img src="{{urlImagenDemo}}" alt="Demostración de {{nombreCaracteristica}}" style="width:100%;max-width:580px;height:auto;display:block;border-radius:5px; margin:0 auto; box-shadow: 0 4px 8px rgba(0,0,0,0.1);"></a>
+      </td></tr>
+      {{/if}}
+      <tr><td style="padding:10px 30px 25px;font-size:16px;color:#444444;line-height:1.7;">
+        <p style="margin:0 0 20px;">{{descripcionCaracteristica}}</p>
+        <h3 style="color:{{colorAcentoCaracteristica}};margin-top:25px;margin-bottom:15px;font-size:18px;">Beneficios Clave:</h3>
+        <ul style="margin:0 0 25px;padding-left:20px;list-style-type:disc; color: {{colorAcentoCaracteristica}};">
+          <li style="margin-bottom:8px; color:#444444;">{{beneficio1}}</li>
+          <li style="margin-bottom:8px; color:#444444;">{{beneficio2}}</li>
+          {{#if beneficio3}}
+          <li style="color:#444444;">{{beneficio3}}</li>
+          {{/if}}
+        </ul>
+        <table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td align="center">
+          <a href="{{urlBotonCaracteristica}}" target="_blank" style="background:{{colorAcentoCaracteristica}};color:#ffffff;padding:15px 30px;text-decoration:none;border-radius:50px;display:inline-block;font-weight:bold;font-size:17px;box-shadow: 0 2px 5px rgba(0,0,0,0.2);">{{textoBotonCaracteristica}}</a>
+        </td></tr></table>
+      </td></tr>
+      <tr><td style="padding:20px 25px;text-align:center;font-size:12px;color:#999999;border-top:1px solid #e9ecef;background-color:#f8f9fa;">
+        <p style="margin:0;">¿Preguntas? <a href="https://ejemplo.com/ayuda" style="color:{{colorAcentoCaracteristica}};text-decoration:none;">Visita nuestra sección de ayuda</a>.</p>
+        <p style="margin:5px 0 0;">El equipo de TuPlataformaIncreible.</p>
+      </td></tr>
+    </table>
+  </td></tr>
+</table>`
+  },
+  // Plantilla 6: Encuesta de Satisfacción Rápida
+  {
+    nombre: "Encuesta de Satisfacción Rápida",
+    id: "encuestaSatisfaccion",
+    descripcion: "Invita a los usuarios a dar su opinión con una encuesta breve y visual. Usa iconos o estrellas para calificar.",
+    camposEditables: [
+      { label: "Título de la Encuesta", clavePlaceholder: "tituloEncuesta", tipo: "text", valorDefecto: "¡Tu Opinión Nos Importa!" },
+      { label: "Mensaje Principal", clavePlaceholder: "mensajeEncuesta", tipo: "textarea", valorDefecto: "Hola {{nombreCliente}}, nos encantaría saber cómo fue tu experiencia reciente con nosotros. Por favor, tómate un momento para calificarla:" },
+      { label: "Pregunta de la Encuesta", clavePlaceholder: "preguntaEncuesta", tipo: "text", valorDefecto: "¿Qué tan satisfecho estás con nuestro servicio?" },
+      { label: "URL Icono Muy Malo", clavePlaceholder: "urlIconoMuyMalo", tipo: "url", valorDefecto: "https://via.placeholder.com/60x60/dc3545/ffffff?text=:(" },
+      { label: "URL Icono Malo", clavePlaceholder: "urlIconoMalo", tipo: "url", valorDefecto: "https://via.placeholder.com/60x60/ffc107/ffffff?text=:/ " },
+      { label: "URL Icono Regular", clavePlaceholder: "urlIconoRegular", tipo: "url", valorDefecto: "https://via.placeholder.com/60x60/fd7e14/ffffff?text=:|" },
+      { label: "URL Icono Bueno", clavePlaceholder: "urlIconoBueno", tipo: "url", valorDefecto: "https://via.placeholder.com/60x60/20c997/ffffff?text=:)" },
+      { label: "URL Icono Excelente", clavePlaceholder: "urlIconoExcelente", tipo: "url", valorDefecto: "https://via.placeholder.com/60x60/0d6efd/ffffff?text=:D" },
+      { label: "URL Base para Respuesta (se añadirá ?rating=X)", clavePlaceholder: "urlBaseRespuesta", tipo: "url", valorDefecto: "https://ejemplo.com/encuesta-respuesta" },
+      { label: "Texto Pie de Página", clavePlaceholder: "textoPieEncuesta", tipo: "text", valorDefecto: "Gracias por ayudarnos a mejorar." },
+      { label: "Color Tema Encuesta", clavePlaceholder: "colorTemaEncuesta", tipo: "color", valorDefecto: "#4a90e2" }
+    ],
+    htmlBase: `
+<table style="width:100%;background:#f0f4f8;font-family:'Helvetica Neue', Helvetica, Arial, sans-serif;padding:25px 0;">
+  <tr><td align="center">
+    <table style="max-width:580px;width:100%;background:#ffffff;margin:0 auto;border-radius:10px;box-shadow:0 6px 18px rgba(0,0,0,0.07);">
+      <tr><td style="padding:30px 25px;text-align:center;background:{{colorTemaEncuesta}};border-top-left-radius:10px;border-top-right-radius:10px;">
+        <h1 style="margin:0;font-size:26px;color:#ffffff;font-weight:500;">{{tituloEncuesta}}</h1>
+      </td></tr>
+      <tr><td style="padding:30px 25px;font-size:16px;color:#3a3a3a;line-height:1.65;text-align:center;">
+        <p style="margin:0 0 15px;">{{mensajeEncuesta}}</p>
+        <p style="margin:0 0 25px;font-size:18px;font-weight:bold;color:{{colorTemaEncuesta}};">{{preguntaEncuesta}}</p>
+        
+        <table border="0" cellpadding="0" cellspacing="0" width="100%" style="margin-bottom:25px;">
+          <tr>
+            <td align="center" style="padding:5px;">
+              <a href="{{urlBaseRespuesta}}?rating=1" target="_blank" title="Muy Malo">
+                <img src="{{urlIconoMuyMalo}}" alt="Muy Malo" width="50" height="50" style="display:block;border:0;outline:none;text-decoration:none;-ms-interpolation-mode:bicubic;border-radius:50%;">
+              </a>
+            </td>
+            <td align="center" style="padding:5px;">
+              <a href="{{urlBaseRespuesta}}?rating=2" target="_blank" title="Malo">
+                <img src="{{urlIconoMalo}}" alt="Malo" width="50" height="50" style="display:block;border:0;outline:none;text-decoration:none;-ms-interpolation-mode:bicubic;border-radius:50%;">
+              </a>
+            </td>
+            <td align="center" style="padding:5px;">
+              <a href="{{urlBaseRespuesta}}?rating=3" target="_blank" title="Regular">
+                <img src="{{urlIconoRegular}}" alt="Regular" width="50" height="50" style="display:block;border:0;outline:none;text-decoration:none;-ms-interpolation-mode:bicubic;border-radius:50%;">
+              </a>
+            </td>
+            <td align="center" style="padding:5px;">
+              <a href="{{urlBaseRespuesta}}?rating=4" target="_blank" title="Bueno">
+                <img src="{{urlIconoBueno}}" alt="Bueno" width="50" height="50" style="display:block;border:0;outline:none;text-decoration:none;-ms-interpolation-mode:bicubic;border-radius:50%;">
+              </a>
+            </td>
+            <td align="center" style="padding:5px;">
+              <a href="{{urlBaseRespuesta}}?rating=5" target="_blank" title="Excelente">
+                <img src="{{urlIconoExcelente}}" alt="Excelente" width="50" height="50" style="display:block;border:0;outline:none;text-decoration:none;-ms-interpolation-mode:bicubic;border-radius:50%;">
+              </a>
+            </td>
+          </tr>
+        </table>
+        <p style="margin:0;font-size:14px;color:#666666;">{{textoPieEncuesta}}</p>
+      </td></tr>
+      <tr><td style="padding:15px 25px;text-align:center;font-size:12px;color:#888888;border-top:1px solid #e8e8e8;background-color:#fafafa;border-bottom-left-radius:10px;border-bottom-right-radius:10px;">
+        <p style="margin:0;">TuVozImporta Inc. | <a href="https://ejemplo.com/privacidad" style="color:{{colorTemaEncuesta}};text-decoration:none;">Política de Privacidad</a></p>
+      </td></tr>
+    </table>
+  </td></tr>
+</table>`
+  },
+  // Plantilla 7: Recordatorio de Carrito Abandonado
+  {
+    nombre: "Carrito Abandonado Amigable",
+    id: "carritoAbandonado",
+    descripcion: "Un recordatorio suave y amigable para usuarios que dejaron productos en su carrito. Incluye el producto y un incentivo opcional.",
+    camposEditables: [
+      { label: "Saludo Principal", clavePlaceholder: "saludoCarrito", tipo: "text", valorDefecto: "¡Hola, {{nombreUsuario}}! ¿Olvidaste algo?" },
+      { label: "Mensaje Introductorio", clavePlaceholder: "mensajeIntroCarrito", tipo: "textarea", valorDefecto: "Notamos que dejaste algunos artículos geniales en tu carrito. ¡Todavía te están esperando!" },
+      { label: "URL Imagen Producto 1", clavePlaceholder: "urlImagenProducto1", tipo: "url", valorDefecto: "https://via.placeholder.com/100x100/ffc0cb/333333?text=Producto" },
+      { label: "Nombre Producto 1", clavePlaceholder: "nombreProducto1", tipo: "text", valorDefecto: "Artículo Increíble XYZ" },
+      { label: "Precio Producto 1", clavePlaceholder: "precioProducto1", tipo: "text", valorDefecto: "$49.99" },
+      { label: "URL Producto 1", clavePlaceholder: "urlProducto1", tipo: "url", valorDefecto: "https://ejemplo.com/producto-xyz" },
+      { label: "Mensaje de Incentivo (Opcional)", clavePlaceholder: "mensajeIncentivo", tipo: "text", valorDefecto: "¡Completa tu compra ahora y obtén envío GRATIS!" },
+      { label: "Texto Botón Volver al Carrito", clavePlaceholder: "textoBotonCarrito", tipo: "text", valorDefecto: "Ver Mi Carrito" },
+      { label: "URL Botón Volver al Carrito", clavePlaceholder: "urlBotonCarrito", tipo: "url", valorDefecto: "https://ejemplo.com/carrito" },
+      { label: "Color Acento Carrito", clavePlaceholder: "colorAcentoCarrito", tipo: "color", valorDefecto: "#e83e8c" },
+      { label: "Color Fondo Sección Producto", clavePlaceholder: "colorFondoProducto", tipo: "color", valorDefecto: "#fff8fb" }
+    ],
+    htmlBase: `
+<table style="width:100%;background:#fdfdfe;font-family:'Montserrat', Arial, sans-serif;padding:20px 0;">
+  <tr><td align="center">
+    <table style="max-width:600px;width:100%;background:#ffffff;margin:0 auto;border:1px solid #f0f0f0;border-radius:12px;box-shadow: 0 5px 15px rgba(0,0,0,0.05);">
+      <tr><td style="padding:30px 25px;text-align:center;">
+        <h1 style="margin:0 0 15px;font-size:26px;color:{{colorAcentoCarrito}};font-weight:600;">{{saludoCarrito}}</h1>
+        <p style="margin:0 0 25px;font-size:16px;color:#555555;line-height:1.6;">{{mensajeIntroCarrito}}</p>
+      </td></tr>
+      
+      <tr><td style="padding:0 25px 25px;">
+        <table style="width:100%;border:1px solid #eee;border-radius:8px;background:{{colorFondoProducto}};padding:20px;">
+          <tr>
+            <td width="120" style="padding-right:15px;">
+              <a href="{{urlProducto1}}" target="_blank">
+                <img src="{{urlImagenProducto1}}" alt="{{nombreProducto1}}" width="100" height="100" style="display:block;border-radius:6px;border:1px solid #ddd;">
+              </a>
+            </td>
+            <td>
+              <h3 style="margin:0 0 5px;font-size:18px;color:#333333;font-weight:500;">
+                <a href="{{urlProducto1}}" target="_blank" style="color:#333333;text-decoration:none;">{{nombreProducto1}}</a>
+              </h3>
+              <p style="margin:0 0 8px;font-size:16px;color:{{colorAcentoCarrito}};font-weight:bold;">{{precioProducto1}}</p>
+              <a href="{{urlProducto1}}" target="_blank" style="font-size:14px;color:{{colorAcentoCarrito}};text-decoration:underline;">Ver detalles</a>
+            </td>
+          </tr>
+        </table>
+      </td></tr>
+
+      {{#if mensajeIncentivo}}
+      <tr><td style="padding:0px 25px 25px;text-align:center;">
+        <p style="margin:0;padding:12px;background:#fff0f5;border:1px dashed {{colorAcentoCarrito}};border-radius:5px;font-size:16px;color:{{colorAcentoCarrito}};font-weight:500;">
+          {{mensajeIncentivo}}
+        </p>
+      </td></tr>
+      {{/if}}
+
+      <tr><td style="padding:0 25px 30px;text-align:center;">
+        <a href="{{urlBotonCarrito}}" target="_blank" style="background:{{colorAcentoCarrito}};color:#ffffff;padding:16px 35px;text-decoration:none;border-radius:50px;display:inline-block;font-weight:bold;font-size:17px;letter-spacing:0.3px;box-shadow: 0 3px 8px rgba(232, 62, 140, 0.4);">{{textoBotonCarrito}}</a>
+      </td></tr>
+
+      <tr><td style="padding:20px 25px;text-align:center;font-size:12px;color:#aaaaaa;border-top:1px solid #f0f0f0;background-color:#f9f9f9;border-bottom-left-radius:12px;border-bottom-right-radius:12px;">
+        <p style="margin:0;">Si ya completaste tu compra, ¡ignora este mensaje!</p>
+        <p style="margin:5px 0 0;">TuTiendaFavorita | <a href="https://ejemplo.com/ayuda" style="color:{{colorAcentoCarrito}};text-decoration:none;">Ayuda</a></p>
+      </td></tr>
+    </table>
+  </td></tr>
+</table>`
+  }
+];
+
+const gallery = document.getElementById('templateGallery');
+const modalTitleEl = document.getElementById('modalTitle');
+const emailPreviewEl = document.getElementById('emailPreview');
+const emailCodeEl = document.getElementById('emailCode');
+const editorControlsEl = document.getElementById('editorControls');
+
+// Para la pestaña de IA
+const aiEmailPreviewEl = document.getElementById('aiEmailPreview');
+const aiEmailCodeEl = document.getElementById('aiEmailCode');
+const aiApiKeyInput = document.getElementById('aiApiKey');
+const aiPromptInput = document.getElementById('aiPrompt');
+const copyAiCodeButton = document.getElementById('copyAiCodeButton');
+const generateWithAIButton = document.getElementById('generateWithAIButton');
+const aiSpinner = document.getElementById('aiSpinner');
+const aiIcon = document.getElementById('aiIcon');
+
+// Para la nueva pestaña "Añadir Plantilla"
+const newTemplateNameInput = document.getElementById('newTemplateName');
+const newTemplateDescriptionInput = document.getElementById('newTemplateDescription');
+const newTemplateHtmlInput = document.getElementById('newTemplateHtml');
+const newTemplateEditableFieldsContainer = document.getElementById('newTemplateEditableFieldsContainer');
+const newTemplateStatusEl = document.getElementById('newTemplateStatus');
+
+
+let currentTemplateIndex = -1;
+let templateModalInstance = null;
+const GEMINI_API_KEY_STORAGE = 'geminiApiKey';
+const USER_TEMPLATES_STORAGE_KEY = 'userDefinedTemplates';
+
+// --- Funciones Auxiliares (shadeColor, generarHtmlConValores) ---
+function shadeColor(color, percent) {
+    if (typeof color !== 'string' || !color.startsWith('#') || (color.length !== 7 && color.length !== 4)) {
+        return color; 
+    }
+    var f=parseInt(color.slice(1),16),t=percent<0?0:255,p=percent<0?percent*-1:percent,R=f>>16,G=f>>8&0x00FF,B=f&0x0000FF;
+    let newR = Math.round((t-R)*p)+R;
+    let newG = Math.round((t-G)*p)+G;
+    let newB = Math.round((t-B)*p)+B;
+    newR = Math.max(0, Math.min(255, newR));
+    newG = Math.max(0, Math.min(255, newG));
+    newB = Math.max(0, Math.min(255, newB));
+    return "#"+(0x1000000+newR*0x10000+newG*0x100+newB).toString(16).slice(1);
+}
+
+function generarHtmlConValores(htmlBase, valores) {
+  let htmlResultado = htmlBase;
+  for (const key in valores) {
+    const placeholder = new RegExp(`{{${key}}}`, 'g');
+    htmlResultado = htmlResultado.replace(placeholder, valores[key] || '');
+  }
+  htmlResultado = htmlResultado.replace(/\{\{#if\s+([a-zA-Z0-9_]+)\s*\}\}([\s\S]*?)\{\{\/if\}\}/g, (match, key, content) => {
+    const valorActual = valores[key];
+    if (valorActual && String(valorActual).trim() !== '' && String(valorActual).trim() !== 'false' && String(valorActual).trim() !== '0') {
+        return content.trim();
+    }
+    return '';
+  });
+  htmlResultado = htmlResultado.replace(/\{\{shadeColor\s*\(\s*([a-zA-Z0-9_#]+)\s*,\s*(-?\d+)\s*\)\s*\}\}/g, (match, colorKeyOrValue, percent) => {
+    let colorValue = colorKeyOrValue;
+    if (valores[colorKeyOrValue]) {
+        colorValue = valores[colorKeyOrValue];
+    }
+    if (typeof colorValue === 'string') {
+        return shadeColor(colorValue, parseInt(percent));
+    }
+    return colorKeyOrValue;
+  });
+  return htmlResultado;
+}
+
+// --- Lógica de Persistencia (localStorage) ---
+function getSavedValues(templateId) {
+    const saved = localStorage.getItem(`templateValues_${templateId}`);
+    return saved ? JSON.parse(saved) : null;
+}
+
+function saveValues(templateId, valores) {
+    localStorage.setItem(`templateValues_${templateId}`, JSON.stringify(valores));
+}
+
+function resetCurrentTemplateValues() {
+    if (currentTemplateIndex === -1 || currentTemplateIndex >= plantillasDisponibles.length) {
+        console.warn("resetCurrentTemplateValues: No hay plantilla seleccionada o índice fuera de rango.");
+        return;
+    }
+    const plantilla = plantillasDisponibles[currentTemplateIndex];
+    if (!plantilla) {
+        console.warn("resetCurrentTemplateValues: Plantilla no encontrada en el índice", currentTemplateIndex);
+        return;
+    }
+
+    localStorage.removeItem(`templateValues_${plantilla.id}`);
+    plantilla.camposEditables.forEach(campo => {
+        const inputElement = document.getElementById(`editor-${plantilla.id}-${campo.clavePlaceholder}`);
+        if (inputElement) {
+            if (campo.tipo === 'checkbox') {
+                inputElement.checked = !!campo.valorDefecto;
+            } else {
+                inputElement.value = campo.valorDefecto;
+            }
+        }
+    });
+    actualizarPreviewYCodigo(currentTemplateIndex);
+}
+
+// --- Funciones de Plantillas Personalizadas ---
+function loadUserTemplates() {
+    const storedUserTemplates = localStorage.getItem(USER_TEMPLATES_STORAGE_KEY);
+    if (storedUserTemplates) {
+        try {
+            const parsedTemplates = JSON.parse(storedUserTemplates);
+            // Asegurarse de que plantillasDisponibles sea un array antes de concatenar
+            if (!Array.isArray(plantillasDisponibles)) {
+                plantillasDisponibles = []; // O inicializar con las predefinidas si es necesario
+            }
+            parsedTemplates.forEach(userTpl => {
+                if (!plantillasDisponibles.find(p => p.id === userTpl.id)) {
+                    plantillasDisponibles.push(userTpl);
+                }
+            });
+        } catch (e) {
+            console.error("Error al cargar plantillas de usuario desde localStorage:", e);
+            localStorage.removeItem(USER_TEMPLATES_STORAGE_KEY);
+        }
+    }
+}
+
+function saveUserTemplatesToStorage() {
+    const userTemplates = plantillasDisponibles.filter(tpl => tpl.isUserDefined);
+    localStorage.setItem(USER_TEMPLATES_STORAGE_KEY, JSON.stringify(userTemplates));
+}
+
+function addEditableFieldInput() {
+    const fieldGroup = document.createElement('div');
+    fieldGroup.className = 'row gx-2 mb-2 align-items-center new-editable-field-group';
+    fieldGroup.innerHTML = `
+        <div class="col">
+            <input type="text" class="form-control form-control-sm" placeholder="Placeholder (ej: tituloPrincipal)">
+        </div>
+        <div class="col">
+            <input type="text" class="form-control form-control-sm" placeholder="Etiqueta (ej: Título Principal)">
+        </div>
+        <div class="col-auto">
+            <button type="button" class="btn btn-sm btn-danger" onclick="this.parentElement.parentElement.remove()"><i class="bi bi-trash"></i></button>
+        </div>
+    `;
+    newTemplateEditableFieldsContainer.appendChild(fieldGroup);
+}
+
+function saveNewCustomTemplate() {
+    const name = newTemplateNameInput.value.trim();
+    const description = newTemplateDescriptionInput.value.trim();
+    const htmlBase = newTemplateHtmlInput.value.trim();
+
+    newTemplateStatusEl.textContent = '';
+
+    if (!name || !htmlBase) {
+        newTemplateStatusEl.innerHTML = '<span class="text-danger">El nombre y el HTML de la plantilla son obligatorios.</span>';
+        return;
+    }
+
+    const newTemplateId = `user_${name.toLowerCase().replace(/\s+/g, '_')}_${Date.now()}`;
+    
+    const camposEditablesPersonalizados = [];
+    const fieldGroups = newTemplateEditableFieldsContainer.querySelectorAll('.new-editable-field-group');
+    fieldGroups.forEach(group => {
+        const placeholderInput = group.querySelector('input[placeholder^="Placeholder"]');
+        const labelInput = group.querySelector('input[placeholder^="Etiqueta"]');
+        if (placeholderInput && labelInput && placeholderInput.value.trim()) {
+            camposEditablesPersonalizados.push({
+                label: labelInput.value.trim() || placeholderInput.value.trim(),
+                clavePlaceholder: placeholderInput.value.trim(),
+                tipo: 'text',
+                valorDefecto: `{{${placeholderInput.value.trim()}}}` 
+            });
+        }
+    });
+
+    const nuevaPlantilla = {
+        nombre: name,
+        id: newTemplateId,
+        descripcion: description,
+        htmlBase: htmlBase,
+        camposEditables: camposEditablesPersonalizados,
+        isUserDefined: true
+    };
+
+    plantillasDisponibles.push(nuevaPlantilla);
+    saveUserTemplatesToStorage();
+    renderTemplateGallery();
+
+    newTemplateStatusEl.innerHTML = '<span class="text-success">¡Plantilla guardada con éxito!</span>';
+    newTemplateNameInput.value = '';
+    newTemplateDescriptionInput.value = '';
+    newTemplateHtmlInput.value = '';
+    newTemplateEditableFieldsContainer.innerHTML = '';
+}
+
+function renderTemplateGallery() {
+    gallery.innerHTML = '';
+    plantillasDisponibles.forEach((tpl, idx) => {
+      const col = document.createElement('div');
+      col.className = 'col-md-6 col-lg-4 mb-4 d-flex align-items-stretch';
+      const userIndicator = tpl.isUserDefined ? '<span class="badge bg-info ms-2" title="Plantilla Personalizada"><i class="bi bi-person-fill"></i></span>' : '';
+      
+      col.innerHTML = `
+        <div class="template-card card h-100">
+          <div class="card-body d-flex flex-column">
+            <h5 class="card-title">${tpl.nombre} ${userIndicator}</h5>
+            <p class="card-text small text-muted flex-grow-1">${tpl.descripcion || 'Haz clic para previsualizar, editar y copiar el código HTML.'}</p>
+            <button class="btn btn-action-custom w-100 mt-auto" onclick="mostrarEditorPlantilla(${idx})">
+              <i class="bi bi-pencil-square me-2"></i>Abrir Editor
+            </button>
+            ${tpl.isUserDefined ? `<button class="btn btn-sm btn-outline-danger w-100 mt-2" onclick="deleteUserTemplate('${tpl.id}', event)"><i class="bi bi-trash-fill me-1"></i> Eliminar Esta Plantilla</button>` : ''}
+          </div>
+        </div>
+      `;
+      gallery.appendChild(col);
+    });
+}
+
+function deleteUserTemplate(templateId, event) {
+    event.stopPropagation();
+    if (!confirm("¿Estás seguro de que quieres eliminar esta plantilla personalizada? Esta acción no se puede deshacer.")) {
+        return;
+    }
+
+    const templateIndex = plantillasDisponibles.findIndex(tpl => tpl.id === templateId && tpl.isUserDefined);
+    if (templateIndex > -1) {
+        plantillasDisponibles.splice(templateIndex, 1);
+        saveUserTemplatesToStorage();
+        renderTemplateGallery();
+        // Si la plantilla eliminada era la que se estaba editando, cerrar el modal o limpiar.
+        if(templateModalInstance && currentTemplateIndex === templateIndex) {
+            templateModalInstance.hide();
+            currentTemplateIndex = -1; // Resetear
+        } else if (currentTemplateIndex > templateIndex) {
+            currentTemplateIndex--; // Ajustar índice si se eliminó una anterior
+        }
+
+        alert("Plantilla eliminada.");
+    } else {
+        alert("No se pudo encontrar la plantilla para eliminar.");
+    }
+}
+
+
+// --- Funciones Principales del Editor ---
+function actualizarPreviewYCodigo(templateIndex, save = true) {
+  if (templateIndex < 0 || templateIndex >= plantillasDisponibles.length) return;
+  const plantilla = plantillasDisponibles[templateIndex];
+   if (!plantilla) { // Chequeo adicional
+        console.error("actualizarPreviewYCodigo: Plantilla no encontrada en índice", templateIndex);
+        return;
+    }
+  const valoresActuales = {};
+
+  plantilla.camposEditables.forEach(campo => {
+    const inputElement = document.getElementById(`editor-${plantilla.id}-${campo.clavePlaceholder}`);
+    if (inputElement) {
+      valoresActuales[campo.clavePlaceholder] = inputElement.type === 'checkbox' ? inputElement.checked : inputElement.value;
+    } else {
+      valoresActuales[campo.clavePlaceholder] = campo.valorDefecto;
+    }
+  });
+
+  if (save) {
+    saveValues(plantilla.id, valoresActuales);
+  }
+
+  const htmlGenerado = generarHtmlConValores(plantilla.htmlBase, valoresActuales);
+  emailPreviewEl.innerHTML = htmlGenerado;
+  emailCodeEl.textContent = htmlGenerado;
+}
+
+
+function mostrarEditorPlantilla(idx) {
+  if (idx < 0 || idx >= plantillasDisponibles.length) {
+      console.error("mostrarEditorPlantilla: Índice de plantilla inválido", idx);
+      return;
+  }
+  currentTemplateIndex = idx;
+  const plantilla = plantillasDisponibles[idx];
+   if (!plantilla) {
+        console.error("mostrarEditorPlantilla: Plantilla no encontrada en índice", idx);
+        return;
+    }
+
+  modalTitleEl.textContent = `Editando: ${plantilla.nombre}`;
+  editorControlsEl.innerHTML = '';
+
+  const savedUserValues = getSavedValues(plantilla.id);
+
+  plantilla.camposEditables.forEach(campo => {
+    const formGroup = document.createElement('div');
+    formGroup.className = 'mb-3';
+    const label = document.createElement('label');
+    label.htmlFor = `editor-${plantilla.id}-${campo.clavePlaceholder}`;
+    label.className = 'form-label small';
+    label.textContent = campo.label;
+    let inputElement;
+    if (campo.tipo === 'textarea') {
+      inputElement = document.createElement('textarea');
+      inputElement.rows = 3;
+    } else {
+      inputElement = document.createElement('input');
+      inputElement.type = campo.tipo;
+    }
+    inputElement.id = `editor-${plantilla.id}-${campo.clavePlaceholder}`;
+    inputElement.className = 'form-control form-control-sm';
+    
+    const valorInicial = (savedUserValues && typeof savedUserValues[campo.clavePlaceholder] !== 'undefined') 
+                         ? savedUserValues[campo.clavePlaceholder] 
+                         : campo.valorDefecto;
+
+    if (campo.tipo === 'checkbox') {
+      inputElement.checked = !!valorInicial;
+    } else {
+      inputElement.value = valorInicial;
+    }
+
+    const updateFunction = () => actualizarPreviewYCodigo(currentTemplateIndex);
+    if (campo.tipo !== 'color' && campo.tipo !== 'checkbox' && campo.tipo !== 'radio') {
+        inputElement.addEventListener('input', updateFunction);
+    }
+    if (campo.tipo === 'color' || campo.tipo === 'checkbox' || campo.tipo === 'radio') {
+        inputElement.addEventListener('change', updateFunction);
+    }
+    formGroup.appendChild(label);
+    formGroup.appendChild(inputElement);
+    editorControlsEl.appendChild(formGroup);
+  });
+
+  actualizarPreviewYCodigo(idx, false);
+
+  if (!templateModalInstance) {
+    // se inicializa en DOMContentLoaded
+  }
+  templateModalInstance.show();
+  
+  const savedApiKey = localStorage.getItem(GEMINI_API_KEY_STORAGE);
+  if (savedApiKey) {
+    aiApiKeyInput.value = savedApiKey;
+  }
+}
+
+function copiarCodigo() {
+  const codigo = emailCodeEl.textContent;
+  navigator.clipboard.writeText(codigo).then(() => {
+    const copyButton = document.querySelector('#customize-tab-pane .btn-copy-custom');
+    if (!copyButton) return;
+    const originalText = copyButton.innerHTML;
+    const originalClasses = Array.from(copyButton.classList);
+    copyButton.innerHTML = '<i class="bi bi-check-circle-fill me-2"></i>¡HTML Copiado!';
+    copyButton.classList.remove('btn-copy-custom');
+    copyButton.classList.add('btn-success');
+    setTimeout(() => {
+      copyButton.innerHTML = originalText;
+      copyButton.className = ''; 
+      originalClasses.forEach(cls => copyButton.classList.add(cls));
+    }, 2500);
+  }).catch(err => {
+    console.error('Error al copiar código: ', err);
+    alert('No se pudo copiar el código.');
+  });
+}
+
+// --- Lógica de Google AI Studio (Gemini) ---
+aiApiKeyInput.addEventListener('change', () => {
+    localStorage.setItem(GEMINI_API_KEY_STORAGE, aiApiKeyInput.value);
+});
+
+async function generateWithAI() {
+    const apiKey = aiApiKeyInput.value.trim();
+    const userPrompt = aiPromptInput.value.trim();
+
+    if (!apiKey) {
+        alert("Por favor, ingresa tu API Key de Google AI Studio.");
+        aiApiKeyInput.focus();
+        return;
+    }
+    if (!userPrompt) {
+        alert("Por favor, describe la plantilla que deseas generar.");
+        aiPromptInput.focus();
+        return;
+    }
+
+    generateWithAIButton.disabled = true;
+    aiSpinner.style.display = 'inline-block';
+    aiIcon.style.display = 'none';
+    aiEmailPreviewEl.innerHTML = "Generando con IA...";
+    aiEmailCodeEl.textContent = "";
+    copyAiCodeButton.disabled = true;
+
+    const MODEL_NAME = "gemini-1.5-flash-latest";
+    const API_ENDPOINT = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL_NAME}:generateContent?key=${apiKey}`;
+
+    const fullPrompt = userPrompt + "\n\nIMPORTANTE: El resultado debe ser únicamente el código HTML completo de la plantilla de correo, usando estilos en línea y compatible con la mayoría de los clientes de correo. No incluyas explicaciones adicionales, solo el HTML. Asegúrate de que el HTML sea válido y esté bien estructurado.";
+
+    try {
+        const response = await fetch(API_ENDPOINT, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                contents: [{
+                    parts: [{
+                        text: fullPrompt
+                    }]
+                }],
+                generationConfig: {
+                    temperature: 0.7,
+                    maxOutputTokens: 8192,
+                },
+                safetySettings: [ 
+                    { category: "HARM_CATEGORY_HARASSMENT", threshold: "BLOCK_MEDIUM_AND_ABOVE" },
+                    { category: "HARM_CATEGORY_HATE_SPEECH", threshold: "BLOCK_MEDIUM_AND_ABOVE" },
+                    { category: "HARM_CATEGORY_SEXUALLY_EXPLICIT", threshold: "BLOCK_MEDIUM_AND_ABOVE" },
+                    { category: "HARM_CATEGORY_DANGEROUS_CONTENT", threshold: "BLOCK_MEDIUM_AND_ABOVE" },
+                ]
+            }),
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            console.error("Error API Response:", errorData);
+            let errorMessage = `Error de la API (${response.status}): `;
+            if (errorData && errorData.error && errorData.error.message) {
+                errorMessage += errorData.error.message;
+            } else {
+                errorMessage += response.statusText;
+            }
+            throw new Error(errorMessage);
+        }
+
+        const data = await response.json();
+        
+        if (data.candidates && data.candidates.length > 0 && 
+            data.candidates[0].content && data.candidates[0].content.parts && 
+            data.candidates[0].content.parts.length > 0 && data.candidates[0].content.parts[0].text) {
+            
+            let generatedHtml = data.candidates[0].content.parts[0].text;
+            generatedHtml = generatedHtml.replace(/^```(?:html)?\s*([\s\S]*?)\s*```$/, '$1').trim();
+            
+            aiEmailPreviewEl.innerHTML = generatedHtml;
+            aiEmailCodeEl.textContent = generatedHtml;
+            copyAiCodeButton.disabled = false;
+        } else if (data.promptFeedback && data.promptFeedback.blockReason) {
+             aiEmailPreviewEl.innerHTML = `<p class="text-danger">La solicitud fue bloqueada por la IA. Razón: ${data.promptFeedback.blockReason}. Intenta reformular tu prompt.</p>`;
+             console.warn("AI Prompt Blocked:", data.promptFeedback);
+        } else if (data.candidates && data.candidates.length > 0 && data.candidates[0].finishReason && data.candidates[0].finishReason !== "STOP") {
+             aiEmailPreviewEl.innerHTML = `<p class="text-warning">La IA terminó de generar por una razón inesperada: ${data.candidates[0].finishReason}. El resultado podría estar incompleto.</p>`;
+             console.warn("AI Finish Reason:", data.candidates[0].finishReason, data.candidates[0]);
+             if (data.candidates[0].content && data.candidates[0].content.parts && data.candidates[0].content.parts.length > 0 && data.candidates[0].content.parts[0].text) {
+                let partialHtml = data.candidates[0].content.parts[0].text;
+                partialHtml = partialHtml.replace(/^```(?:html)?\s*([\s\S]*?)\s*```$/, '$1').trim();
+                aiEmailPreviewEl.innerHTML = partialHtml;
+                aiEmailCodeEl.textContent = partialHtml;
+                copyAiCodeButton.disabled = false;
+             }
+        }
+         else {
+            aiEmailPreviewEl.innerHTML = "<p class='text-danger'>La IA no generó contenido válido o la respuesta no tuvo el formato esperado. Revisa la consola para más detalles.</p>";
+            console.error("Respuesta inesperada de la IA:", data);
+        }
+
+    } catch (error) {
+        console.error("Error al generar con IA:", error);
+        aiEmailPreviewEl.innerHTML = `<p class="text-danger">Ocurrió un error: ${error.message}. Revisa la consola.</p>`;
+    } finally {
+        generateWithAIButton.disabled = false;
+        aiSpinner.style.display = 'none';
+        aiIcon.style.display = 'inline-block';
+    }
+}
+
+function copiarAICodigo() {
+  const codigo = aiEmailCodeEl.textContent;
+  if (!codigo) return;
+  navigator.clipboard.writeText(codigo).then(() => {
+    const originalText = copyAiCodeButton.innerHTML;
+    copyAiCodeButton.innerHTML = '<i class="bi bi-check-circle-fill me-2"></i>¡HTML de IA Copiado!';
+    setTimeout(() => {
+      copyAiCodeButton.innerHTML = originalText;
+    }, 2500);
+  }).catch(err => {
+    console.error('Error al copiar código de IA: ', err);
+    alert('No se pudo copiar el código de IA.');
+  });
+}
+
+
+// --- Inicialización y Event Listeners del Modal ---
+document.addEventListener('DOMContentLoaded', () => {
+    loadUserTemplates();
+    renderTemplateGallery();
+
+    const modalElement = document.getElementById('templateModal');
+    if (modalElement) {
+        templateModalInstance = new bootstrap.Modal(modalElement);
+
+        modalElement.addEventListener('hidden.bs.modal', function () {
+            currentTemplateIndex = -1;
+            aiEmailPreviewEl.innerHTML = "Presiona \"Generar\" para ver el resultado aquí.";
+            aiEmailCodeEl.textContent = "";
+            copyAiCodeButton.disabled = true;
+            newTemplateStatusEl.textContent = '';
+        });
+
+        modalElement.addEventListener('show.bs.modal', function () {
+            const activeTab = modalElement.querySelector('.nav-tabs .nav-link.active');
+            if (!activeTab) {
+                const firstTabButton = modalElement.querySelector('.nav-tabs .nav-link');
+                if (firstTabButton) {
+                    new bootstrap.Tab(firstTabButton).show();
+                }
+            }
+            newTemplateNameInput.value = '';
+            newTemplateDescriptionInput.value = '';
+            newTemplateHtmlInput.value = '';
+            newTemplateEditableFieldsContainer.innerHTML = '';
+            newTemplateStatusEl.textContent = '';
+        });
+
+    } else {
+        console.error("Elemento del modal 'templateModal' no encontrado.");
+    }
+});
+</script>
+</body>
+</html>
