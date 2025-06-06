@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Lista de Compras PRO</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="manifest" href="manifest.json">
+    <style>
+        :root {
+            --primary: #4361ee; --secondary: #3a0ca3; --accent: #4895ef; --light: #f8f9fa; --dark: #212529;
+            --success: #4cc9f0; --danger: #f72585; --warning: #fca311; --gray: #adb5bd; --border-radius: 12px;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.08); --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif; background-color: var(--light); color: var(--dark); line-height: 1.5; height: 100vh; overflow: hidden; }
+        #app { display: flex; flex-direction: column; height: 100%; max-width: 100%; }
+
+        .header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; padding: 1.2rem 1rem;
+            text-align: center; position: sticky; top: 0; z-index: 10; display: flex; justify-content: space-between; align-items: center;
+        }
+        .header-title { text-align: left; }
+        .header h1 { font-size: 1.5rem; font-weight: 600; }
+        .header-stats { font-size: 0.8rem; opacity: 0.85; margin-top: 0.25rem; }
+        .header-actions button { background: none; border: none; color: white; font-size: 1.25rem; cursor: pointer; padding: 0.5rem; }
+
+        .input-container {
+            display: flex; gap: 0.5rem; padding: 1rem; background: white; position: sticky; top: 85px;
+            z-index: 9; border-bottom: 1px solid rgba(0, 0, 0, 0.05); align-items: center;
+        }
+        .input-container input[type="text"] {
+            flex: 1; padding: 0.8rem 1rem; border: 2px solid var(--gray); border-radius: var(--border-radius);
+            font-size: 1rem; outline: none; transition: var(--transition); min-width: 0;
+        }
+        .input-container input[type="text"]:focus { border-color: var(--accent); }
+        .input-container button {
+            padding: 0 1rem; border: none; border-radius: var(--border-radius); background-color: var(--primary); color: white;
+            font-weight: 600; cursor: pointer; transition: var(--transition); display: flex; align-items: center;
+            justify-content: center; height: 48px; flex-shrink: 0;
+        }
+        .input-container button:active { transform: scale(0.95); background-color: var(--secondary); }
+
+        .content {
+            flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; padding: 0 1rem;
+            padding-bottom: calc(70px + 1rem + env(safe-area-inset-bottom));
+        }
+        .items-list { list-style: none; padding-top: 1rem; }
+
+        .category-header {
+            font-weight: 600; color: var(--secondary); margin-top: 1.5rem; margin-bottom: 0.5rem;
+            padding-bottom: 0.25rem; border-bottom: 2px solid rgba(0,0,0,0.05);
+        }
+        .items-list li:first-child .category-header { margin-top: 0; }
+        
+        /* --- ESTILOS PARA SWIPE Y DRAG/DROP --- */
+        .item-wrapper { position: relative; margin-bottom: 0.5rem; overflow: hidden; border-radius: var(--border-radius); }
+        .item-actions-background {
+            position: absolute; top: 0; right: 0; height: 100%; display: flex;
+        }
+        .item-actions-background button {
+            height: 100%; border: none; color: white; font-size: 1rem; width: 75px;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .item-actions-background .edit-btn { background-color: var(--accent); }
+        .item-actions-background .delete-btn { background-color: var(--danger); }
+        .item {
+            display: flex; align-items: center; padding: 1rem; background: white;
+            box-shadow: var(--shadow); position: relative; z-index: 2;
+            transition: transform 0.3s ease; user-select: none;
+        }
+        .item.dragging { opacity: 0.5; box-shadow: 0 8px 20px rgba(0,0,0,0.2); }
+        .item.over { border-top: 2px solid var(--primary); }
+
+        .item.completed { opacity: 0.7; }
+        .item.completed .item-name { text-decoration: line-through; color: var(--gray); }
+        .item-checkbox { min-width: 22px; min-height: 22px; margin-right: 1rem; cursor: pointer; accent-color: var(--success); z-index: 3; }
+        .item-name { flex: 1; font-size: 1rem; word-break: break-word; }
+        .item-name-input { flex: 1; font-size: 1rem; border: none; padding: 0; background: #eef2fa; border-radius: 4px; }
+        .drag-handle { color: var(--gray); margin-left: 0.5rem; cursor: grab; z-index: 3; }
+
+        .empty-state { text-align: center; padding: 4rem 1rem; color: var(--gray); }
+        .empty-state i { font-size: 3rem; margin-bottom: 1rem; opacity: 0.5; }
+        .empty-state p { font-size: 1.1rem; }
+
+        .bottom-nav {
+            position: fixed; bottom: 0; left: 0; right: 0; display: flex; justify-content: space-around;
+            background-color: #ffffff; border-top: 1px solid #e9ecef; box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.06);
+            z-index: 100; padding-bottom: env(safe-area-inset-bottom);
+        }
+        .nav-tab {
+            flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
+            padding: 0.6rem 0.2rem; cursor: pointer; color: var(--gray); transition: var(--transition);
+        }
+        .nav-tab i { font-size: 1.2rem; margin-bottom: 0.2rem; }
+        .nav-tab span { font-size: 0.75rem; font-weight: 500; }
+        .nav-tab.active { color: var(--primary); transform: translateY(-3px); }
+        
+        /* --- ESTILOS PARA MODALES Y NOTIFICACIONES --- */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.6);
+            display: flex; align-items: center; justify-content: center; z-index: 1000;
+            opacity: 0; visibility: hidden; transition: opacity 0.3s ease;
+        }
+        .modal-overlay.visible { opacity: 1; visibility: visible; }
+        .modal-content {
+            background: white; padding: 1.5rem; border-radius: var(--border-radius); box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            width: 90%; max-width: 400px; transform: scale(0.95); transition: transform 0.3s ease;
+        }
+        .modal-overlay.visible .modal-content { transform: scale(1); }
+        .modal-content h3 { margin-bottom: 0.5rem; }
+        .modal-content p { font-size: 0.9rem; color: var(--gray); margin-bottom: 1rem; }
+        .modal-content textarea, .modal-content select {
+            width: 100%; padding: 0.8rem; border-radius: var(--border-radius);
+            border: 2px solid var(--gray); font-family: inherit; font-size: 1rem; margin-bottom: 1rem;
+        }
+        .modal-content textarea:focus, .modal-content select:focus { outline: none; border-color: var(--primary); }
+        .modal-actions { display: flex; gap: 0.5rem; justify-content: flex-end; }
+        .modal-actions button {
+            padding: 0.7rem 1.2rem; border: none; border-radius: var(--border-radius);
+            font-weight: 600; cursor: pointer; transition: var(--transition);
+        }
+        .modal-actions .btn-primary { background-color: var(--primary); color: white; }
+        .modal-actions .btn-secondary { background-color: #e9ecef; color: var(--dark); }
+        .modal-actions .btn-danger { background-color: var(--danger); color: white; }
+
+        .undo-toast {
+            position: fixed; bottom: calc(70px + env(safe-area-inset-bottom)); left: 50%; transform: translate(-50%, 200%);
+            background-color: var(--dark); color: white; padding: 1rem; border-radius: var(--border-radius);
+            display: flex; align-items: center; gap: 1rem; z-index: 1001; transition: var(--transition);
+        }
+        .undo-toast.visible { transform: translate(-50%, -1rem); }
+        .undo-toast button { background: none; border: none; color: var(--accent); font-weight: bold; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <header class="header">
+            <div class="header-title">
+                <h1>Lista de Compras</h1>
+                <div class="header-stats"></div>
+            </div>
+            <div class="header-actions">
+                <button id="mainMenuButton" aria-label="Más acciones"><i class="fas fa-ellipsis-v"></i></button>
+            </div>
+        </header>
+        
+        <div class="input-container">
+            <input type="text" id="itemInput" placeholder="Añade un producto..." autocapitalize="sentences" autocomplete="off">
+            <button id="addButton" aria-label="Añadir producto"><i class="fas fa-plus"></i></button>
+        </div>
+        
+        <main class="content">
+            <ul class="items-list" id="itemsList"></ul>
+        </main>
+        
+        <footer class="bottom-nav">
+            <div class="nav-tab active" data-filter="all"><i class="fas fa-list-ul"></i><span>Todos</span></div>
+            <div class="nav-tab" data-filter="pending"><i class="fas fa-hourglass-half"></i><span>Pendientes</span></div>
+            <div class="nav-tab" data-filter="completed"><i class="fas fa-check-double"></i><span>Comprados</span></div>
+        </footer>
+    </div>
+
+    <!-- Modales -->
+    <div class="modal-overlay" id="mainMenuModal">
+        <div class="modal-content">
+            <h3>Acciones</h3>
+            <button class="modal-actions-btn" id="openBulkAddModalBtn"><i class="fas fa-list-check"></i> Añadir Varios Productos</button>
+            <button class="modal-actions-btn" id="clearCompletedBtn"><i class="fas fa-trash-check"></i> Limpiar Comprados</button>
+        </div>
+    </div>
+    
+    <div class="modal-overlay" id="bulkAddModal">
+        <div class="modal-content">
+            <h3>Añadir Varios Productos</h3>
+            <p>Escribe cada producto en una nueva línea.</p>
+            <select id="bulkCategorySelect"></select>
+            <textarea id="bulkItemInput" placeholder="Detergente
+Chicles
+Gomitas..."></textarea>
+            <div class="modal-actions">
+                <button class="btn-secondary" data-close>Cancelar</button>
+                <button id="confirmBulkAddButton" class="btn-primary">Añadir</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Notificación de Deshacer -->
+    <div class="undo-toast" id="undoToast">
+        <span>Producto eliminado.</span>
+        <button id="undoButton">Deshacer</button>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // --- ELEMENTOS DEL DOM ---
+            const app = document.getElementById('app');
+            const itemsList = document.getElementById('itemsList');
+            const itemInput = document.getElementById('itemInput');
+            const addButton = document.getElementById('addButton');
+            const navTabs = document.querySelectorAll('.nav-tab');
+            const headerStats = document.querySelector('.header-stats');
+            
+            // --- Modales y Acciones ---
+            const mainMenuButton = document.getElementById('mainMenuButton');
+            const mainMenuModal = document.getElementById('mainMenuModal');
+            const openBulkAddModalBtn = document.getElementById('openBulkAddModalBtn');
+            const clearCompletedBtn = document.getElementById('clearCompletedBtn');
+            const bulkAddModal = document.getElementById('bulkAddModal');
+            const bulkItemInput = document.getElementById('bulkItemInput');
+            const bulkCategorySelect = document.getElementById('bulkCategorySelect');
+            const confirmBulkAddButton = document.getElementById('confirmBulkAddButton');
+            
+            // --- Undo Toast ---
+            const undoToast = document.getElementById('undoToast');
+            const undoButton = document.getElementById('undoButton');
+            
+            // --- ESTADO DE LA APLICACIÓN ---
+            let items = JSON.parse(localStorage.getItem('shoppingList')) || [];
+            let categories = JSON.parse(localStorage.getItem('shoppingCategories')) || ['General', 'Frutas y Verduras', 'Lácteos', 'Carnes', 'Limpieza', 'Bebidas'];
+            let currentFilter = 'all';
+            let lastDeletedItem = null;
+            let undoTimeout = null;
+
+            // --- FUNCIONES PRINCIPALES ---
+
+            const saveState = () => {
+                localStorage.setItem('shoppingList', JSON.stringify(items));
+                localStorage.setItem('shoppingCategories', JSON.stringify(categories));
+            };
+            
+            const updateStats = () => {
+                const total = items.length;
+                const completed = items.filter(item => item.completed).length;
+                headerStats.innerHTML = `<span>${total} productos</span> · <span>${completed} comprados</span>`;
+            };
+
+            const render = () => {
+                itemsList.innerHTML = '';
+                
+                const filtered = items.filter(item => {
+                    if (currentFilter === 'pending') return !item.completed;
+                    if (currentFilter === 'completed') return item.completed;
+                    return true;
+                });
+                
+                if (filtered.length === 0) {
+                    // ... Lógica del estado vacío (sin cambios) ...
+                    let message = 'Tu lista está vacía. ¡Añade algo!';
+                    let icon = 'shopping-basket';
+                    if (items.length > 0) {
+                        if (currentFilter === 'pending') { message = '¡Todo comprado! No hay pendientes.'; icon = 'clipboard-check'; }
+                        else if (currentFilter === 'completed') { message = 'Aún no has comprado nada.'; icon = 'cart-plus'; }
+                    }
+                    itemsList.innerHTML = `<div class="empty-state"><i class="fas fa-${icon}"></i><p>${message}</p></div>`;
+                } else {
+                    const grouped = filtered.reduce((acc, item) => {
+                        const category = item.category || 'General';
+                        if (!acc[category]) acc[category] = [];
+                        acc[category].push(item);
+                        return acc;
+                    }, {});
+
+                    Object.keys(grouped).sort().forEach(category => {
+                        const categoryHeader = document.createElement('h3');
+                        categoryHeader.className = 'category-header';
+                        categoryHeader.textContent = category;
+                        itemsList.appendChild(categoryHeader);
+
+                        grouped[category].forEach(item => {
+                            const li = document.createElement('li');
+                            li.className = 'item-wrapper';
+                            li.dataset.id = item.id;
+                            li.innerHTML = `
+                                <div class="item-actions-background">
+                                    <button class="edit-btn" data-action="edit"><i class="fas fa-edit"></i></button>
+                                    <button class="delete-btn" data-action="delete"><i class="fas fa-trash"></i></button>
+                                </div>
+                                <div class="item" draggable="true">
+                                    <input type="checkbox" class="item-checkbox" ${item.completed ? 'checked' : ''}>
+                                    <span class="item-name">${item.name}</span>
+                                    <i class="fas fa-grip-vertical drag-handle"></i>
+                                </div>`;
+                            itemsList.appendChild(li);
+                        });
+                    });
+                }
+                updateStats();
+                attachItemEventListeners();
+            };
+            
+            const addItem = (name, category = 'General') => {
+                if (!name.trim()) return;
+                items.unshift({ id: Date.now(), name: name.trim(), completed: false, category });
+                saveState();
+                render();
+            };
+            
+            // --- MANEJO DE EVENTOS DE ITEMS (SWIPE, DRAG, ETC.) ---
+
+            function attachItemEventListeners() {
+                document.querySelectorAll('.item-wrapper').forEach(wrapper => {
+                    const itemEl = wrapper.querySelector('.item');
+                    const id = parseInt(wrapper.dataset.id);
+
+                    // Checkbox y Drag Handle
+                    itemEl.querySelector('.item-checkbox').addEventListener('click', (e) => { e.stopPropagation(); toggleComplete(id); });
+                    itemEl.querySelector('.drag-handle').addEventListener('mousedown', e => e.stopPropagation());
+                    
+                    // Edición en Línea
+                    itemEl.addEventListener('dblclick', () => startInlineEdit(itemEl, id));
+
+                    // Swipe (Táctil y Ratón)
+                    let startX, currentX, isSwiping = false;
+                    const onSwipeStart = (e) => {
+                        startX = e.type.includes('mouse') ? e.pageX : e.touches[0].pageX;
+                        wrapper.style.transition = 'none';
+                        isSwiping = true;
+                    };
+                    const onSwipeMove = (e) => {
+                        if (!isSwiping) return;
+                        currentX = e.type.includes('mouse') ? e.pageX : e.touches[0].pageX;
+                        let diff = currentX - startX;
+                        if (diff < 0 && diff > -150) { // Limita el swipe
+                            itemEl.style.transform = `translateX(${diff}px)`;
+                        }
+                    };
+                    const onSwipeEnd = () => {
+                        if (!isSwiping) return;
+                        isSwiping = false;
+                        wrapper.style.transition = 'transform 0.3s ease';
+                        const diff = currentX - startX;
+                        if (diff < -50) {
+                            itemEl.style.transform = 'translateX(-150px)'; // Ancho de los 2 botones
+                        } else {
+                            itemEl.style.transform = 'translateX(0)';
+                        }
+                    };
+                    itemEl.addEventListener('mousedown', onSwipeStart);
+                    itemEl.addEventListener('mousemove', onSwipeMove);
+                    itemEl.addEventListener('mouseup', onSwipeEnd);
+                    itemEl.addEventListener('mouseleave', onSwipeEnd);
+                    itemEl.addEventListener('touchstart', onSwipeStart);
+                    itemEl.addEventListener('touchmove', onSwipeMove);
+                    itemEl.addEventListener('touchend', onSwipeEnd);
+                    
+                    // Botones de acción (Edit/Delete)
+                    wrapper.querySelector('[data-action="edit"]').addEventListener('click', () => startInlineEdit(itemEl, id));
+                    wrapper.querySelector('[data-action="delete"]').addEventListener('click', () => deleteItem(id));
+
+                    // Drag & Drop
+                    itemEl.addEventListener('dragstart', e => {
+                        e.dataTransfer.setData('text/plain', id);
+                        setTimeout(() => itemEl.classList.add('dragging'), 0);
+                    });
+                    itemEl.addEventListener('dragend', () => itemEl.classList.remove('dragging'));
+                    wrapper.addEventListener('dragover', e => { e.preventDefault(); wrapper.classList.add('over'); });
+                    wrapper.addEventListener('dragleave', () => wrapper.classList.remove('over'));
+                    wrapper.addEventListener('drop', e => {
+                        e.preventDefault();
+                        wrapper.classList.remove('over');
+                        const draggedId = parseInt(e.dataTransfer.getData('text/plain'));
+                        const targetId = id;
+                        moveItem(draggedId, targetId);
+                    });
+                });
+            }
+
+            // --- LÓGICA DE ACCIONES ---
+            
+            const toggleComplete = (id) => {
+                const item = items.find(i => i.id === id);
+                if(item) { item.completed = !item.completed; saveState(); render(); }
+            };
+
+            const startInlineEdit = (itemEl, id) => {
+                const nameSpan = itemEl.querySelector('.item-name');
+                if (!nameSpan) return;
+                const currentName = nameSpan.textContent;
+                nameSpan.innerHTML = `<input type="text" class="item-name-input" value="${currentName}">`;
+                const input = nameSpan.querySelector('input');
+                input.focus();
+                input.select();
+                
+                const saveEdit = () => {
+                    const newName = input.value.trim();
+                    if (newName) {
+                        const item = items.find(i => i.id === id);
+                        item.name = newName;
+                        saveState();
+                    }
+                    render(); // Re-render para restaurar el span y listeners
+                };
+                input.addEventListener('blur', saveEdit);
+                input.addEventListener('keydown', e => { if (e.key === 'Enter') input.blur(); });
+            };
+
+            const deleteItem = (id) => {
+                lastDeletedItem = { ...items.find(i => i.id === id), index: items.findIndex(i => i.id === id) };
+                items = items.filter(i => i.id !== id);
+                saveState();
+                render();
+                showUndoToast();
+            };
+
+            const moveItem = (draggedId, targetId) => {
+                const draggedIndex = items.findIndex(i => i.id === draggedId);
+                const targetIndex = items.findIndex(i => i.id === targetId);
+                const [draggedItem] = items.splice(draggedIndex, 1);
+                items.splice(targetIndex, 0, draggedItem);
+                saveState();
+                render();
+            };
+
+            const clearCompleted = () => {
+                if (confirm('¿Seguro que quieres eliminar todos los productos comprados?')) {
+                    items = items.filter(item => !item.completed);
+                    saveState();
+                    render();
+                }
+            };
+            
+            // --- MODALES Y NOTIFICACIONES ---
+
+            const openModal = (modalEl) => modalEl.classList.add('visible');
+            const closeModal = (modalEl) => modalEl.classList.remove('visible');
+            
+            const showUndoToast = () => {
+                clearTimeout(undoTimeout);
+                undoToast.classList.add('visible');
+                undoTimeout = setTimeout(() => {
+                    undoToast.classList.remove('visible');
+                    lastDeletedItem = null;
+                }, 5000);
+            };
+
+            const undoDelete = () => {
+                if(lastDeletedItem) {
+                    items.splice(lastDeletedItem.index, 0, lastDeletedItem);
+                    saveState();
+                    render();
+                    undoToast.classList.remove('visible');
+                    clearTimeout(undoTimeout);
+                    lastDeletedItem = null;
+                }
+            };
+
+            const populateCategorySelect = (selectEl) => {
+                selectEl.innerHTML = categories.map(cat => `<option value="${cat}">${cat}</option>`).join('');
+            };
+
+            // --- EVENT LISTENERS INICIALES ---
+
+            addButton.addEventListener('click', () => {
+                addItem(itemInput.value);
+                itemInput.value = '';
+                itemInput.focus();
+            });
+            itemInput.addEventListener('keypress', e => { if (e.key === 'Enter') addButton.click(); });
+            
+            navTabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    navTabs.forEach(t => t.classList.remove('active'));
+                    tab.classList.add('active');
+                    currentFilter = tab.dataset.filter;
+                    render();
+                });
+            });
+
+            mainMenuButton.addEventListener('click', () => openModal(mainMenuModal));
+            openBulkAddModalBtn.addEventListener('click', () => {
+                closeModal(mainMenuModal);
+                populateCategorySelect(bulkCategorySelect);
+                openModal(bulkAddModal);
+            });
+            clearCompletedBtn.addEventListener('click', () => {
+                closeModal(mainMenuModal);
+                clearCompleted();
+            });
+
+            confirmBulkAddButton.addEventListener('click', () => {
+                const category = bulkCategorySelect.value;
+                const newItems = bulkItemInput.value.trim().split('\n').filter(Boolean);
+                newItems.reverse().forEach(name => addItem(name, category));
+                bulkItemInput.value = '';
+                closeModal(bulkAddModal);
+            });
+
+            document.querySelectorAll('[data-close]').forEach(btn => btn.addEventListener('click', () => closeModal(btn.closest('.modal-overlay'))));
+            document.querySelectorAll('.modal-overlay').forEach(modal => modal.addEventListener('click', e => {
+                if (e.target === modal) closeModal(modal);
+            }));
+
+            undoButton.addEventListener('click', undoDelete);
+
+            // --- INICIALIZACIÓN ---
+            render();
+        });
+        // --- REGISTRO DEL SERVICE WORKER (PWA) ---
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./service-worker.js')
+            .then(registration => {
+                console.log('Service Worker registrado con éxito:', registration.scope);
+            })
+            .catch(error => {
+                console.log('Fallo en el registro del Service Worker:', error);
+            });
+    });
+}
+    </script>
+</body>
+</html>
