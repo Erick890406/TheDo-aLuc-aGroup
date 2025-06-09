@@ -29,12 +29,14 @@ body {
     padding: 0;
     min-height: 100vh;
     overflow-x: hidden;
+    padding-bottom: 80px; /* Espacio para el banner fijo inferior si está visible */
 }
 
 .navbar-custom {
     background: #0f1c2d;
     border-bottom: 1px solid rgba(255,255,255,0.1);
     box-shadow: var(--shadow-lg);
+    z-index: 1030; 
 }
 
 .navbar-brand {
@@ -61,7 +63,7 @@ body {
     background-color: #d4ac0d;
 }
 
-.btn-outline-secondary { /* Para botones genéricos con este outline */
+.btn-outline-secondary { 
     border-color: var(--accent-color);
     color: var(--accent-color);
 }
@@ -124,7 +126,7 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-top: 1rem; /* Separación del contenido superior */
+    margin-top: 1rem; 
     padding-top: 0.5rem;
     border-top: 1px solid rgba(255,255,255,0.1);
 }
@@ -134,12 +136,12 @@ body {
     padding: 0.4em 0.6em;
     border-radius: 0.75rem;
 }
-   /* CSS para ocultar el avatar y su botón de edición */
-        #user-avatar,
-        #changeAvatarButton,
-        #vip-card-container > .text-center.text-md-start > .position-relative.d-inline-block { /* Agrupados para concisión */
-            display: none !important;
-        }
+   
+#user-avatar,
+#changeAvatarButton,
+#vip-card-container > .text-center.text-md-start > .position-relative.d-inline-block {
+    display: none !important;
+}
 
 #filter-container .btn-filter {
     margin: 0.25rem;
@@ -152,7 +154,7 @@ body {
 #filter-container .btn-filter.active,
 #filter-container .btn-filter:hover {
     background: var(--primary-color);
-    color: #2C3E50; /* Texto oscuro para contraste con fondo primario */
+    color: #2C3E50; 
 }
 
 .toast {
@@ -170,21 +172,21 @@ body {
     left: 0;
     width: 100vw;
     height: 100vh;
-    background: rgba(20, 30, 48, 0.8); /* Fondo oscuro semi-transparente */
-    display: none; /* Se controla por JS con .show */
+    background: rgba(20, 30, 48, 0.8); 
+    display: none; 
     align-items: center;
     justify-content: center;
     z-index: 2000;
     transition: opacity 0.3s ease;
 }
-.loading-spinner.show { /* Clase para mostrar el spinner */
-    display: flex !important; /* Usar !important para asegurar la visualización */
+.loading-spinner.show { 
+    display: flex !important; 
 }
 
 
 .luxury-spinner-inner {
-    border: 5px solid rgba(255,255,255,0.1); /* Borde claro semi-transparente */
-    border-top: 5px solid var(--primary-color); /* Borde superior con color primario */
+    border: 5px solid rgba(255,255,255,0.1); 
+    border-top: 5px solid var(--primary-color); 
     border-radius: 50%;
     width: 60px;
     height: 60px;
@@ -203,81 +205,110 @@ body {
 }
 
 .modal-content {
-    background-color: #1f2a3d; /* Fondo oscuro para modales */
+    background-color: #1f2a3d; 
     color: var(--text-light);
     border-radius: var(--radius-lg);
     box-shadow: var(--shadow-lg);
 }
 
 .form-control {
-    background-color: #2c3e50; /* Fondo oscuro para inputs */
-    border: 1px solid #3b4a5a; /* Borde sutil */
-    color: white; /* Texto blanco */
+    background-color: #2c3e50; 
+    border: 1px solid #3b4a5a; 
+    color: white; 
 }
 
 .form-control:focus {
-    border-color: var(--primary-color); /* Borde primario en focus */
-    box-shadow: 0 0 0 0.2rem rgba(241, 196, 15, 0.25); /* Sombra de focus */
+    border-color: var(--primary-color); 
+    box-shadow: 0 0 0 0.2rem rgba(241, 196, 15, 0.25); 
     background-color: #2c3e50;
     color: white;
 }
 
+/* --- ESTILOS DE PESTAÑAS ACTUALIZADOS --- */
+.nav-pills {
+    background-color: rgba(0,0,0,0.2);
+    padding: 0.5rem; 
+    border-radius: 1rem; 
+    display: flex; 
+    flex-wrap: wrap; 
+    gap: 0.5rem; 
+    justify-content: center; 
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2); 
+}
+
+.nav-pills .nav-item {
+    flex-grow: 1; 
+    flex-basis: 0; 
+    min-width: 100px; 
+}
+
 .nav-pills .nav-link {
-    background-color: #2c3e50; /* Fondo para links no activos */
+    background-color: #2c3e50; 
     color: var(--text-light);
-    margin: 0 0.25rem;
     border-radius: 0.75rem;
     transition: var(--transition-fast);
+    padding: 0.6rem 0.5rem; 
+    font-size: 0.85rem; 
+    text-align: center; 
+    display: block; 
+    width: 100%; 
+}
+
+.nav-pills .nav-link:hover {
+    background-color: #3a506b; 
 }
 
 .nav-pills .nav-link.active {
-    background-color: var(--primary-color); /* Fondo primario para link activo */
-    color: #2C3E50; /* Texto oscuro para contraste */
+    background-color: var(--primary-color); 
+    color: #2C3E50; 
     font-weight: 600;
+    box-shadow: 0 2px 8px rgba(241,196,15,0.3); 
 }
+/* --- FIN ESTILOS DE PESTAÑAS ACTUALIZADOS --- */
+
 
 .accordion-button {
-    background-color: #1f2a3d; /* Fondo para botón de acordeón */
+    background-color: #1f2a3d; 
     color: var(--text-light);
     border: none;
 }
-.accordion-button:not(.collapsed) { /* Estilo para botón de acordeón abierto */
+.accordion-button:not(.collapsed) { 
     color: var(--primary-color);
-    background-color: #1a2535; /* Un poco más oscuro que el default */
+    background-color: #1a2535; 
     box-shadow: inset 0 -1px 0 rgba(255,255,255,.1);
 }
 .accordion-button:focus {
     z-index: 3;
     border-color: var(--primary-color);
     outline: 0;
-    box-shadow: 0 0 0 0.2rem rgba(241,196,15,.25); /* Sombra de focus consistente */
+    box-shadow: 0 0 0 0.2rem rgba(241,196,15,.25); 
 }
 
 
 .accordion-body {
-    background-color: var(--bg-card); /* Fondo del cuerpo del acordeón */
+    background-color: var(--bg-card); 
     color: var(--text-light);
 }
 
 #vip-card-container {
-    background: linear-gradient(135deg, #1a1a2e, #16213e); /* Gradiente para la tarjeta VIP */
-    border: 2px solid rgba(241, 196, 15, 0.6); /* Borde con color primario */
-    box-shadow: 0 0 25px rgba(241, 196, 15, 0.2), 0 0 60px rgba(0,0,0,0.4); /* Sombras múltiples */
+    background: linear-gradient(135deg, #1a1a2e, #16213e); 
+    border: 2px solid rgba(241, 196, 15, 0.6); 
+    box-shadow: 0 0 25px rgba(241, 196, 15, 0.2), 0 0 60px rgba(0,0,0,0.4); 
     border-radius: var(--radius-lg);
     color: var(--text-light);
     position: relative;
     overflow: hidden;
     transition: all 0.4s ease;
     padding: 2rem;
-    backdrop-filter: blur(10px); /* Efecto de desenfoque (si el navegador lo soporta) */
+    backdrop-filter: blur(10px); 
 }
 
 #vip-card-container:hover {
-    transform: scale(1.02); /* Ligero zoom al pasar el mouse */
+    transform: scale(1.02); 
     box-shadow: 0 0 35px rgba(241, 196, 15, 0.4), 0 0 80px rgba(0,0,0,0.5);
 }
 
-#vip-card-container::before { /* Efecto de brillo sutil */
+#vip-card-container::before { 
     content: "";
     position: absolute;
     top: -50%;
@@ -289,26 +320,26 @@ body {
     z-index: 0;
 }
 
-#vip-card-container * { /* Asegura que el contenido esté sobre el ::before */
+#vip-card-container * { 
     position: relative;
     z-index: 1;
 }
 
 #vip-status-badge {
-    background: linear-gradient(45deg, #F1C40F, #E67E22); /* Gradiente para el badge VIP */
-    color: #2C3E50; /* Texto oscuro para contraste */
+    background: linear-gradient(45deg, #F1C40F, #E67E22); 
+    color: #2C3E50; 
     font-size: 0.9rem;
     padding: 0.4em 0.8em;
-    border-radius: 2rem; /* Más redondeado */
+    border-radius: 2rem; 
     font-weight: 700;
-    text-shadow: 0 0 3px rgba(0,0,0,0.5); /* Sombra de texto sutil */
+    text-shadow: 0 0 3px rgba(0,0,0,0.5); 
 }
 
 #user-avatar {
-    border: 3px solid #F1C40F; /* Borde primario para el avatar */
-    box-shadow: 0 0 15px rgba(241, 196, 15, 0.5); /* Sombra primaria */
+    border: 3px solid #F1C40F; 
+    box-shadow: 0 0 15px rgba(241, 196, 15, 0.5); 
     transition: transform 0.3s ease;
-    object-fit: cover; /* Asegura que la imagen cubra el área sin distorsionarse */
+    object-fit: cover; 
 }
 
 #user-avatar:hover {
@@ -342,35 +373,40 @@ body {
 }
 
 #changeAvatarButton {
-    background: var(--primary-color); /* Fondo primario */
-    color: #2C3E50; /* Texto oscuro */
+    background: var(--primary-color); 
+    color: #2C3E50; 
     box-shadow: 0 0 5px rgba(241,196,15,0.6);
     border: none;
 }
 
-.cart-nav-button { /* Estilo para el botón del carrito en la navbar */
+.cart-nav-button { 
     position: relative;
     color: var(--text-light);
     background: transparent;
     border: none;
-    font-size: 1.5rem; /* Ajusta el tamaño del ícono del carrito */
+    font-size: 1.5rem; 
 }
 .cart-nav-button:hover {
     color: var(--primary-color);
 }
 
-.cart-count-nav { /* Estilo para el contador del carrito */
+.cart-count-nav { 
     position: absolute;
     top: -5px;
     right: -10px;
-    background-color: var(--accent-color); /* Color de acento */
+    background-color: var(--accent-color); 
     color: white;
     font-size: 0.7rem;
     padding: 0.2em 0.45em;
 }
 
+#downloadAppBanner {
+    border-top: 3px solid var(--primary-color);
+    animation-duration: 0.6s; 
+}
 
-@media (max-width: 1024px) { /* Para tablets grandes y laptops pequeñas */
+
+@media (max-width: 1024px) { 
     .product-image,
     .reward-image {
         height: 180px;
@@ -380,7 +416,7 @@ body {
     }
 }
 
-@media (max-width: 768px) { /* Para tablets */
+@media (max-width: 768px) { 
     .navbar-brand {
         font-size: 1.25rem;
     }
@@ -391,37 +427,47 @@ body {
     .card-text {
         font-size: 0.85rem;
     }
-    .btn { /* Ajuste general de tamaño de botones */
+    .btn { 
         font-size: 0.85rem;
     }
     .card-body {
         padding: 0.75rem;
     }
-    /* Las clases col-md-6 ya se encargan de 2 columnas aquí */
+    #downloadAppBanner .container {
+        flex-direction: column;
+        text-align: center;
+    }
+    #downloadAppBanner .me-3.mb-2.mb-md-0 { margin-bottom: 0.75rem !important; }
 }
 
-@media (max-width: 576px) { /* Para móviles (Bootstrap sm y xs) */
-    /* Las clases col-6 ya se encargan de 2 columnas aquí */
+@media (max-width: 576px) { 
     .product-image,
     .reward-image {
-        height: 140px; /* Imágenes más pequeñas en móviles */
+        height: 140px; 
     }
     .card-title {
         font-size: 0.95rem;
     }
-    .price-points-row { /* Elementos de precio/puntos en columna */
+    .price-points-row { 
         flex-direction: column;
         gap: 0.25rem;
         align-items: flex-start;
     }
-    .btn { /* Botones un poco más pequeños */
+    .btn { 
         font-size: 0.8rem;
     }
-    #client-name { /* Nombre del cliente más pequeño en móviles */
+    #client-name { 
         font-size: 1.5rem;
     }
-    .points-display { /* Puntos más pequeños en móviles */
+    .points-display { 
         font-size: 1.5rem;
+    }
+    .nav-pills .nav-link {
+        font-size: 0.8rem; 
+        padding: 0.5rem;
+    }
+    .nav-pills .nav-item {
+        min-width: 90px; 
     }
 }
 </style>
@@ -430,9 +476,12 @@ body {
 <body>
     <input type="file" id="avatarUploadInput" accept="image/jpeg, image/png, image/gif" style="display: none;">
 
-    <nav class="navbar navbar-expand-sm navbar-custom fixed-top">
+       <nav class="navbar navbar-expand-sm navbar-custom fixed-top">
         <div class="container">
-            <a class="navbar-brand" href="#"><i class="bi bi-star-half me-2"></i>Doña Lucía</a>
+            <a class="navbar-brand d-flex align-items-center" data-bs-toggle="modal" data-bs-target="#downloadAppModal" style="cursor:pointer;">
+                <img src="https://i.postimg.cc/bwc5SzJG/striking-app-icon-the-letters-dl-in-a-custom-l-1.png" alt="Doña Lucía Logo" style="height: 30px; margin-right: 8px;">
+                Doña Lucía
+            </a>
             <div class="ms-auto d-flex align-items-center">
                 <div id="auth-buttons-nav" class="d-flex align-items-center">
                     <!-- Botones login/registro o nombre de usuario -->
@@ -448,10 +497,10 @@ body {
         </div>
     </nav>
 
-    <div class="container mt-5 pt-4 pb-5"> <!-- Ajustado padding para fixed-top navbar y contenido inferior -->
-        <div id="vip-card-container" class="vip-card p-md-4 p-3 mb-4 position-relative animate__animated animate__fadeInDown" style="display: none;"> <!-- Padding responsivo -->
+    <div class="container mt-5 pt-4 pb-5"> 
+        <div id="vip-card-container" class="vip-card p-md-4 p-3 mb-4 position-relative animate__animated animate__fadeInDown" style="display: none;"> 
             <span class="position-absolute top-0 start-0 m-3 badge" id="vip-status-badge">VIP</span>
-            <div class="text-center text-md-start"> <!-- Centrado en móvil, izquierda en md+ -->
+            <div class="text-center text-md-start"> 
                 <div class="position-relative d-inline-block">
                     <img id="user-avatar" src="https://via.placeholder.com/80/FFFFFF/2C3E50?Text=VIP" alt="User Avatar" class="rounded-circle mb-2 shadow-sm" width="80" height="80" style="cursor:pointer; display:none;" title="Haz clic para cambiar tu avatar">
                     <button id="changeAvatarButton" class="btn btn-sm position-absolute bottom-0 end-0 mb-2 me-0 rounded-circle p-1 lh-1" title="Cambiar avatar" style="display:none; transform: translate(25%, 25%);">
@@ -471,7 +520,7 @@ body {
             <p class="lead mb-2">Inicia sesión para ver tus puntos y acceder a beneficios exclusivos, o regístrate para empezar a acumular.</p>
         </div>
 
-        <ul class="nav nav-pills nav-fill mb-4 justify-content-center shadow-sm p-2 rounded" style="background-color: rgba(0,0,0,0.2);"> <!-- Fondo semi-transparente para tabs -->
+        <ul class="nav nav-pills mb-4"> 
             <li class="nav-item" role="presentation"><a class="nav-link active" id="menu-tab-link" data-bs-toggle="pill" href="#menu-tab" role="tab" aria-controls="menu-tab" aria-selected="true"><i class="bi bi-card-list me-1"></i>Menú</a></li>
             <li class="nav-item" role="presentation"><a class="nav-link" id="rewards-tab-link" data-bs-toggle="pill" href="#rewards-tab" role="tab" aria-controls="rewards-tab" aria-selected="false"><i class="bi bi-gift me-1"></i>Recompensas</a></li>
             <li class="nav-item" role="presentation"><a class="nav-link" id="my-orders-tab-link" data-bs-toggle="pill" href="#my-orders-tab" role="tab" aria-controls="my-orders-tab" aria-selected="false"><i class="bi bi-receipt me-1"></i>Mis Pedidos</a></li>
@@ -488,7 +537,7 @@ body {
                 <div id="filter-container" class="d-flex flex-wrap justify-content-center align-items-center mb-3">
                     <button class="btn btn-sm btn-filter active" onclick="filterMenuByCategory('all')">Todos</button>
                 </div>
-                <div class="row g-3 g-md-4" id="menu-container"> <!-- g-3 para móviles, g-4 para md+ -->
+                <div class="row g-3 g-md-4" id="menu-container"> 
                     <div class="col-12 text-center p-5">
                         <div class="spinner-border" style="width: 3rem; height: 3rem; color: var(--primary-color);" role="status">
                             <span class="visually-hidden">Cargando...</span>
@@ -515,27 +564,74 @@ body {
       </div>
     </div>
 
-    <div class="toast-container position-fixed bottom-0 end-0 p-3" id="toastPlacement" style="z-index: 2050"> <!-- z-index más alto para toasts --></div>
+    <div id="downloadAppBanner" class="fixed-bottom p-3 bg-dark text-light shadow-lg" style="z-index: 1040; display:none;">
+        <div class="container d-flex justify-content-between align-items-center flex-wrap">
+            <div class="me-3 mb-2 mb-md-0">
+                <strong class="d-block fs-5"><i class="bi bi-star-fill me-1 text-warning"></i> ¡Nuestra App VIP te espera!</strong>
+                <span class="small">Descárgala ahora y accede a ofertas exclusivas.</span>
+            </div>
+            <div class="d-flex align-items-center">
+                <a href="ENLACE_A_TU_APK_AQUI" download="DonaLucia_Cumanayagua.apk" class="btn btn-warning btn-sm me-3 py-2">
+                    <i class="bi bi-android2 me-1"></i> Descargar App
+                </a>
+                <button type="button" class="btn-close btn-close-white" aria-label="Cerrar banner"></button>
+            </div>
+        </div>
+    </div>
 
-    <!-- Modales -->
+    <div class="toast-container position-fixed bottom-0 end-0 p-3" id="toastPlacement" style="z-index: 2050"> </div>
+
     <div class="modal fade" id="registerUserModal" tabindex="-1" aria-labelledby="registerUserModalLabel" aria-hidden="true"><div class="modal-dialog modal-dialog-centered"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="registerUserModalLabel">Crear Cuenta VIP</h5><button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button></div><div class="modal-body"><form id="newUserRegistrationForm"><div class="mb-3"><label for="newUserName" class="form-label">Nombre Completo <span class="text-danger">*</span></label><input type="text" class="form-control" id="newUserName" required autocomplete="name"></div><div class="mb-3"><label for="newUserPhone" class="form-label">Teléfono <span class="text-danger">*</span></label><input type="tel" class="form-control" id="newUserPhone" required placeholder="Ej: 5xxxxxxx" autocomplete="tel"></div><div class="mb-3"><label for="newUserEmail" class="form-label">Correo (Opcional)</label><input type="email" class="form-control" id="newUserEmail" autocomplete="email"></div><div class="mb-3"><label for="newUserPassword" class="form-label">Contraseña <span class="text-danger">*</span></label><input type="password" class="form-control" id="newUserPassword" required autocomplete="new-password"></div><div class="mb-3"><label for="newUserConfirmPassword" class="form-label">Confirmar Contraseña <span class="text-danger">*</span></label><input type="password" class="form-control" id="newUserConfirmPassword" required autocomplete="new-password"></div><div id="registration-feedback" class="mt-3"></div></form></div><div class="modal-footer"><button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button><button type="button" class="btn btn-primary" onclick="handleUserRegistrationAttempt()">Registrarme</button></div></div></div></div>
     <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true"><div class="modal-dialog modal-dialog-centered"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="loginModalLabel">Iniciar Sesión VIP</h5><button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button></div><div class="modal-body"><form id="loginForm"><div class="mb-3"><label for="loginPhone" class="form-label">Teléfono</label><input type="tel" class="form-control" id="loginPhone" required autocomplete="username tel"></div><div class="mb-3"><label for="loginPassword" class="form-label">Contraseña</label><input type="password" class="form-control" id="loginPassword" required autocomplete="current-password"></div><div id="login-feedback" class="mt-3"></div></form></div><div class="modal-footer"><button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button><button type="button" class="btn btn-primary" onclick="handleLoginAttempt()">Acceder</button></div></div></div></div>
     <div class="modal fade" id="cartModal" tabindex="-1" aria-labelledby="cartModalLabel" aria-hidden="true"><div class="modal-dialog modal-lg modal-dialog-scrollable modal-dialog-centered"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="cartModalLabel"><i class="bi bi-cart3 me-2"></i>Mi Pedido</h5><button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button></div><div class="modal-body" id="cart-items-container"><p class="text-center">Tu carrito está vacío.</p></div><div class="modal-footer justify-content-between flex-wrap"><div class="text-start mb-2 mb-sm-0"><small class="text-muted d-block">Puntos a ganar: <span id="cart-points-to-earn" class="fw-bold">0</span></small><strong class="fs-5">Total: <span id="cart-total-price" style="color: var(--primary-color);">0.00</span> CUP</strong></div><div class="d-flex"><button type="button" class="btn btn-outline-danger me-2" onclick="clearCart()"><i class="bi bi-trash3 me-1"></i>Vaciar</button><button type="button" class="btn btn-success" onclick="confirmAndPlaceOrder()"><i class="bi bi-check-circle me-1"></i>Confirmar</button></div></div><div id="order-placement-feedback" class="m-3"></div></div></div></div>
 
+    <div class="modal fade" id="downloadAppModal" tabindex="-1" aria-labelledby="downloadAppModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="downloadAppModalLabel"><i class="bi bi-phone-vibrate-fill me-2" style="color:var(--primary-color);"></i> ¡Descarga Nuestra App VIP!</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <img src="https://i.postimg.cc/XJxYzHZW/striking-app-icon-the-letters-dl-in-a-custom-l.png" alt="Doña Lucía App Icon" class="img-fluid rounded-circle mb-3 shadow" style="width: 100px; height: 100px; border: 3px solid var(--primary-color);">
+                    <p class="lead mb-2">Lleva la experiencia Doña Lucía contigo.</p>
+                    <p>Accede a beneficios exclusivos, acumula puntos más rápido y no te pierdas ninguna novedad. ¡Todo en la palma de tu mano!</p>
+                    <a href="https://drive.google.com/file/d/1X6943Eb9nBGAsAaizDRPPkolg4apUmHS/view?usp=drive_link" download="DonaLucia_Cumanayagua.apk" class="btn btn-primary btn-lg mt-3 w-100 animate__animated animate__pulse animate__infinite animate__slower">
+                        <i class="bi bi-android2 me-2"></i> Descargar para Android
+                    </a>
+                    <p class="mt-3 mb-1"><small class="text-muted">Si tu dispositivo lo solicita, recuerda habilitar "Instalar apps desconocidas" en Ajustes para poder instalarla.</small></p>
+                </div>
+                <div class="modal-footer justify-content-center border-0 pt-0">
+                     <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="" id="dontShowDownloadModalAgain">
+                        <label class="form-check-label small" for="dontShowDownloadModalAgain">
+                            No volver a mostrar este mensaje (al inicio)
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     
     <script>
-        const GOOGLE_SCRIPT_URL_USER = 'https://script.google.com/macros/s/AKfycbwAfHYrTED_uAyCCqDc7z8qBuRVvfhuqbFm0e55v9Yaqm4XDlLe4r0NSVVvW-e2305Q/exec'; // ¡¡¡REEMPLAZA ESTA URL!!!
+        const GOOGLE_SCRIPT_URL_USER = 'https://script.google.com/macros/s/AKfycbwAfHYrTED_uAyCCqDc7z8qBuRVvfhuqbFm0e55v9Yaqm4XDlLe4r0NSVVvW-e2305Q/exec'; 
         const LOGGED_IN_CLIENT_KEY = 'cafeteriaVipClientLoggedIn_v8';
         const PRODUCTS_USER_CACHE_KEY = 'cafeteriaUserProductsCache_v8';
         const USER_CART_KEY = 'cafeteriaUserCart_v5';
         const REWARDS_USER_CACHE_KEY = 'cafeteriaUserRewardsCache_v3';
         const MENU_CACHE_EXPIRY_KEY = 'cafeteriaMenuCacheExpiry_v1';
-        const CACHE_DURATION_MS = 60 * 60 * 1000; // 1 hora de caché para el menú
+        const CACHE_DURATION_MS = 60 * 60 * 1000; 
 
-        const MAX_AVATAR_DIMENSION = 200; // Píxeles (para ancho o alto máximo)
-        const AVATAR_JPEG_QUALITY = 0.75; // Calidad para JPEG (0.0 - 1.0)
+        const MAX_AVATAR_DIMENSION = 200; 
+        const AVATAR_JPEG_QUALITY = 0.75; 
         const LOCAL_AVATAR_DATA_KEY = 'localAvatarDataUrl_v1';
+
+        const DOWNLOAD_MODAL_DISMISSED_KEY = 'downloadModalDismissed_DL_v2'; 
+        const DOWNLOAD_BANNER_DISMISSED_KEY = 'downloadBannerDismissed_DL_v1';
+
 
         let clientData = null;
         let menuItems = [];
@@ -544,7 +640,7 @@ body {
         let currentFilterCategory = 'all';
 
         const loadingSpinnerUser = document.getElementById('loadingSpinnerUser');
-        let registrationModalInstance, loginModalInstance, cartModalInstance;
+        let registrationModalInstance, loginModalInstance, cartModalInstance, downloadAppModalInstance;
 
         document.addEventListener('DOMContentLoaded', async function() {
             initializeModals();
@@ -553,20 +649,76 @@ body {
             updateClientDisplayAndUI();
             await loadMenuItems();
             setupEventListeners();
+            handleAppDownloadPromotion(); 
         });
 
         function initializeModals() {
             try {
-                ['registerUserModal', 'loginModal', 'cartModal'].forEach(id => {
+                ['registerUserModal', 'loginModal', 'cartModal', 'downloadAppModal'].forEach(id => {
                     const el = document.getElementById(id);
                     if (el) {
                         if (id === 'registerUserModal') registrationModalInstance = new bootstrap.Modal(el);
                         else if (id === 'loginModal') loginModalInstance = new bootstrap.Modal(el);
                         else if (id === 'cartModal') cartModalInstance = new bootstrap.Modal(el);
+                        else if (id === 'downloadAppModal') downloadAppModalInstance = new bootstrap.Modal(el);
                     } else { console.warn(`Modal con ID '${id}' no encontrado.`); }
                 });
             } catch (error) { console.error("Error inicializando modales:", error); }
         }
+
+        function handleAppDownloadPromotion() {
+            const dontShowCheckbox = document.getElementById('dontShowDownloadModalAgain');
+            const downloadModalEl = document.getElementById('downloadAppModal');
+
+            if (!localStorage.getItem(DOWNLOAD_MODAL_DISMISSED_KEY) && downloadAppModalInstance) {
+                setTimeout(() => {
+                    if (!localStorage.getItem(DOWNLOAD_MODAL_DISMISSED_KEY)) { 
+                        downloadAppModalInstance.show();
+                    }
+                }, 1500); 
+            }
+
+            if (downloadModalEl && dontShowCheckbox) {
+                downloadModalEl.addEventListener('hidden.bs.modal', function () {
+                    if (dontShowCheckbox.checked) {
+                        localStorage.setItem(DOWNLOAD_MODAL_DISMISSED_KEY, 'true');
+                    }
+                });
+            }
+
+            const bannerEl = document.getElementById('downloadAppBanner');
+            const bannerDismissed = localStorage.getItem(DOWNLOAD_BANNER_DISMISSED_KEY);
+            const bodyEl = document.body;
+
+            if (bannerEl && !bannerDismissed) {
+                let bannerDelay = 2500; 
+                if (!localStorage.getItem(DOWNLOAD_MODAL_DISMISSED_KEY)) {
+                    bannerDelay = 8000; 
+                }
+                
+                setTimeout(() => {
+                    if (!localStorage.getItem(DOWNLOAD_BANNER_DISMISSED_KEY)) { 
+                        bannerEl.style.display = 'block';
+                        bannerEl.classList.add('animate__animated', 'animate__fadeInUp');
+                        bodyEl.style.paddingBottom = (bannerEl.offsetHeight + 20) + 'px'; 
+                    }
+                }, bannerDelay);
+
+                const closeBannerButton = bannerEl.querySelector('.btn-close');
+                if (closeBannerButton) {
+                    closeBannerButton.addEventListener('click', () => {
+                        bannerEl.style.display = 'none';
+                        localStorage.setItem(DOWNLOAD_BANNER_DISMISSED_KEY, 'true');
+                        bodyEl.style.paddingBottom = '0'; 
+                    });
+                }
+
+            } else if (bannerEl && bannerDismissed) {
+                 bannerEl.style.display = 'none'; 
+                 bodyEl.style.paddingBottom = '0'; 
+            }
+        }
+
 
         function setupEventListeners() {
             document.getElementById('registerUserModal')?.addEventListener('hidden.bs.modal', () => clearFormAndFeedback('newUserRegistrationForm', 'registration-feedback'));
@@ -707,7 +859,6 @@ body {
                 el('client-status').textContent = `Nivel: ${(clientData.puntos||0)>=150?"Oro":(clientData.puntos||0)>=75?"Plata":"Bronce"}`;
                 el('client-phone-display').textContent = clientData.telefono ? `Tel: ${clientData.telefono}` : '';
                 el('vip-status-badge').style.display = 'inline-block';
-                if(userAvatarImg) userAvatarImg.style.display = 'inline-block';
 
                 if (userAvatarImg) {
                     if (clientData[LOCAL_AVATAR_DATA_KEY] && typeof clientData[LOCAL_AVATAR_DATA_KEY] === 'string') {
@@ -718,7 +869,6 @@ body {
                         userAvatarImg.src = 'https://via.placeholder.com/80/FFFFFF/2C3E50?Text=VIP';
                     }
                 }
-                if (changeAvatarBtn) changeAvatarBtn.style.display = 'block';
                 if(authNavContainer) authNavContainer.innerHTML = `<span class="navbar-text text-light me-2 small">Hola, ${clientData.nombre ? clientData.nombre.split(' ')[0] : 'VIP'}</span>`;
                 if(logoutNavButton) logoutNavButton.style.display = 'inline-block';
                 if(vipCardContainer) vipCardContainer.style.display = 'block';
@@ -729,9 +879,7 @@ body {
                 el('client-status').textContent = "Inicia sesión o regístrate.";
                 el('client-phone-display').textContent = '';
                 el('vip-status-badge').style.display = 'none';
-                if(userAvatarImg) userAvatarImg.style.display = 'none';
                 if (userAvatarImg) userAvatarImg.src = 'https://via.placeholder.com/80/FFFFFF/2C3E50?Text=VIP';
-                if (changeAvatarBtn) changeAvatarBtn.style.display = 'none';
                 if(authNavContainer) authNavContainer.innerHTML = `<button class="btn btn-sm btn-outline-light me-2" data-bs-toggle="modal" data-bs-target="#loginModal"><i class="bi bi-box-arrow-in-right"></i> Login</button><button class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#registerUserModal"><i class="bi bi-person-plus"></i> Registro</button>`;
                 if(logoutNavButton) logoutNavButton.style.display = 'none';
                 if(vipCardContainer) vipCardContainer.style.display = 'none';
@@ -754,6 +902,7 @@ body {
             localStorage.removeItem(REWARDS_USER_CACHE_KEY);
             updateClientDisplayAndUI();
             showGlobalFeedback('Sesión cerrada. ¡Vuelve pronto!', 'info');
+            handleAppDownloadPromotion(); 
 
             const activeTab = document.querySelector('.nav-pills .nav-link.active');
             if (activeTab) {
@@ -995,9 +1144,9 @@ body {
             const categories = [...new Set(menuItems.map(item => item.category || "Otros"))].sort((a,b) => a.localeCompare(b));
             
             const allButton = filterContainer.querySelector('.btn-filter[onclick*="all"]');
-            filterContainer.innerHTML = ''; // Limpiar todo
-            if (allButton) filterContainer.appendChild(allButton); // Re-agregar el botón "Todos"
-            else { // Si no existe, crearlo
+            filterContainer.innerHTML = ''; 
+            if (allButton) filterContainer.appendChild(allButton); 
+            else { 
                 const newAllButton = document.createElement('button');
                 newAllButton.className = 'btn btn-sm btn-filter active';
                 newAllButton.textContent = 'Todos';
@@ -1013,7 +1162,7 @@ body {
                 btn.onclick = () => filterMenuByCategory(category);
                 filterContainer.appendChild(btn);
             });
-            // Asegurar que el filtro actual se aplique visualmente
+            
              const currentActiveButton = filterContainer.querySelector(`.btn-filter.active`);
              if(currentActiveButton) currentActiveButton.classList.remove('active');
              const newActiveButton = Array.from(filterContainer.querySelectorAll('.btn-filter')).find(
@@ -1396,7 +1545,7 @@ body {
             if (!toastPlacement) { alert(`${type.toUpperCase()}: ${msg}`); return; }
             const toastId = 'liveToast-' + Date.now();
             
-            let tbc = 'bg-primary text-white', bcc = 'btn-close-white'; // Default para info
+            let tbc = 'bg-primary text-white', bcc = 'btn-close-white'; 
             if (type === 'danger') { tbc = 'bg-danger text-white'; }
             else if (type === 'success') { tbc = 'bg-success text-white'; }
             else if (type === 'warning') { tbc = 'bg-warning text-dark'; bcc = 'btn-close-dark';}
