@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -332,7 +333,7 @@
 
  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
  <script>
-    const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby2a0TdrlDqtZI_NucSP9q2xcHV9fKYWe1OMpvlMx3vfS8b_2s2fS7zNMBsVHaHFC-JVw/exec';
+          const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby2a0TdrlDqtZI_NucSP9q2xcHV9fKYWe1OMpvlMx3vfS8b_2s2fS7zNMBsVHaHFC-JVw/exec'; // ¡ASEGÚRATE DE QUE ESTA URL SEA LA CORRECTA Y FUNCIONAL!
 
     let allClients = [], displayedClients = [];
     let allProducts = [], displayedProducts = [];
@@ -354,20 +355,20 @@
         if (payloadData && httpMethod === 'POST') console.log(`Admin fetchData Payload: ${JSON.stringify(payloadData).substring(0,300)}`);
 
 
-        if(loadingSpinner) loadingSpinner.style.display = 'flex'; // CAMBIO: Usar flex para centrar
+        if(loadingSpinner) loadingSpinner.style.display = 'flex';
         try {
             let url = GOOGLE_SCRIPT_URL;
             const options = { method: httpMethod, headers: {}, mode: 'cors', redirect: 'follow' };
+
             if (httpMethod === 'GET') {
                 const params = new URLSearchParams({ action: action, cacheBuster: new Date().getTime() });
                 if (payloadData) { for (const key in payloadData) { params.append(key, payloadData[key]); } }
                 url += (url.includes('?') ? '&' : '?') + params.toString();
-            } else {
-                options.headers['Content-Type'] = 'application/x-www-form-urlencoded';
-                const formBody = new URLSearchParams();
-                formBody.append("data", JSON.stringify({ action, payload: payloadData }));
-                options.body = formBody.toString();
+            } else { // Para POST y otros métodos que envían cuerpo
+                options.headers['Content-Type'] = 'application/json'; // CAMBIO: Usar application/json
+                options.body = JSON.stringify({ action: action, payload: payloadData }); // CAMBIO: Enviar el objeto directamente como JSON string
             }
+
             const res = await fetch(url, options);
             const responseText = await res.text();
             console.log(`Respuesta bruta para '${action}': ${responseText.substring(0, 500)}`);
@@ -446,9 +447,9 @@
             const productForm = document.getElementById('productForm');
 
             if (productIdField.value) {
-                modalTitle.textContent = 'Editar Producto/Combo'; // CAMBIO: Título
+                modalTitle.textContent = 'Editar Producto/Combo';
             } else {
-                modalTitle.textContent = 'Añadir Nuevo Producto/Combo'; // CAMBIO: Título
+                modalTitle.textContent = 'Añadir Nuevo Producto/Combo';
                 productForm.reset();
                 productIdField.value = '';
                 document.getElementById('productActive').checked = true;
@@ -484,7 +485,6 @@
             mainContentCol.classList.remove('offset-lg-2');
         } else if (mainContentCol) {
             mainContentCol.style.marginLeft = '0';
-            // No es necesario añadir offset-lg-2 si el sidebar está oculto o es offcanvas
         }
     }
 
@@ -518,7 +518,7 @@
     function renderClientsTable() {
         const tb = document.getElementById('clients-table'); tb.innerHTML = '';
         if (displayedClients.length === 0) {
-            tb.innerHTML = '<tr><td colspan="8" class="text-center">No hay clientes (compradores) para mostrar.</td></tr>'; // CAMBIO: Texto
+            tb.innerHTML = '<tr><td colspan="8" class="text-center">No hay clientes (compradores) para mostrar.</td></tr>';
             updateBulkEmailClientsButtonState();
             const selectAllClientsCheckbox = document.getElementById('select-all-clients');
             if (selectAllClientsCheckbox) selectAllClientsCheckbox.checked = false;
@@ -684,7 +684,7 @@
         let btns='';
         if(!c.verificado){btns=`<button class="btn btn-success btn-sm" onclick="manuallyMarkVerified('${c.id}'); bootstrap.Modal.getInstance(document.getElementById('clientModal')).hide();">Verificar Manualmente</button>`;}
         const telefonoDisplay = c.telefono && String(c.telefono).trim() !== "" ? c.telefono : 'N/A';
-        document.getElementById('client-details').innerHTML=`<h5>${c.nombre||'S/N'} <span class="badge bg-${c.verificado?'success':'warning text-dark'}">${c.verificado?'Verificado':'No Verificado'}</span></h5><p><strong>ID:</strong> ${c.id||'N/A'}</p><p><strong>Tel (Comprador):</strong> ${telefonoDisplay}</p><p><strong>Email:</strong> ${c.email||'N/A'}</p><p><strong>Puntos:</strong> <span class="badge points-badge fs-6">${c.puntos||0}</span></p><p><strong>Desde:</strong> ${c.fecharegistro||'N/A'}</p><p><strong>Últ. Actividad:</strong> ${c.ultimavisita||'N/A'}</p><p><strong>Envíos Realizados:</strong> ${c.compras||0}</p><hr>${btns}`; // CAMBIO: Etiquetas
+        document.getElementById('client-details').innerHTML=`<h5>${c.nombre||'S/N'} <span class="badge bg-${c.verificado?'success':'warning text-dark'}">${c.verificado?'Verificado':'No Verificado'}</span></h5><p><strong>ID:</strong> ${c.id||'N/A'}</p><p><strong>Tel (Comprador):</strong> ${telefonoDisplay}</p><p><strong>Email:</strong> ${c.email||'N/A'}</p><p><strong>Puntos:</strong> <span class="badge points-badge fs-6">${c.puntos||0}</span></p><p><strong>Desde:</strong> ${c.fecharegistro||'N/A'}</p><p><strong>Últ. Actividad:</strong> ${c.ultimavisita||'N/A'}</p><p><strong>Envíos Realizados:</strong> ${c.compras||0}</p><hr>${btns}`;
         (bootstrap.Modal.getInstance(document.getElementById('clientModal'))||new bootstrap.Modal(document.getElementById('clientModal'))).show();
     }
     function showAddPointsModal(id) { const c=allClients.find(x=>x.id===id); if(!c){alert('Cliente no hallado.');return;} document.getElementById('currentClientIdPoints').value=id; document.getElementById('addPointsForm').reset(); document.getElementById('pointsAmount').value=10; (bootstrap.Modal.getInstance(document.getElementById('addPointsModal'))||new bootstrap.Modal(document.getElementById('addPointsModal'))).show(); }
@@ -708,12 +708,12 @@
     // --- PRODUCT FUNCTIONS ---
     async function loadProducts(force=false) {
         if(!force&&allProducts.length){renderProductsTable(); return;}
-        const res=await fetchData('getProducts','GET'); // Esta función en el script ya devuelve todos los productos
+        const res=await fetchData('getProducts','GET');
         if(res && res.success && Array.isArray(res.data)){
             allProducts=res.data.map(p=>({...p,price:parseFloat(p.price)||0,points:parseInt(p.points)||0,active:p.active===true||String(p.active).toLowerCase()==='true', imageurl: p.imageurl || ''}));
             filterProducts();
         }else{
-            document.getElementById('products-table').innerHTML=`<tr><td colspan="9" class="text-center text-danger">Error: ${res.message||'No se cargaron productos/combos.'}</td></tr>`; // CAMBIO: Texto
+            document.getElementById('products-table').innerHTML=`<tr><td colspan="9" class="text-center text-danger">Error: ${res.message||'No se cargaron productos/combos.'}</td></tr>`;
             updateBulkDeleteButtonState();
             const selectAllCheckbox = document.getElementById('select-all-products');
             if (selectAllCheckbox) selectAllCheckbox.checked = false;
@@ -726,7 +726,7 @@
         tb.innerHTML = '';
 
         if (displayedProducts.length === 0) {
-            tb.innerHTML = `<tr><td colspan="9" class="text-center">No hay productos o combos para mostrar.</td></tr>`; // CAMBIO: Texto
+            tb.innerHTML = `<tr><td colspan="9" class="text-center">No hay productos o combos para mostrar.</td></tr>`;
         } else {
              displayedProducts.sort((a, b) => (a.name || "").localeCompare(b.name || "")).forEach(p => {
                 const imageUrl = p.imageurl ? p.imageurl : 'https://via.placeholder.com/50?text=No+Img';
@@ -737,7 +737,7 @@
                     <td>${p.id || 'N/A'}</td>
                     <td>${p.name || 'S/N'}</td>
                     <td class="d-none d-md-table-cell">${p.category || 'N/A'}</td>
-                    <td>${(p.price || 0).toFixed(2)} USD</td> <!-- CAMBIO: Moneda -->
+                    <td>${(p.price || 0).toFixed(2)} USD</td>
                     <td>${p.points || 0}</td>
                     <td><span class="badge bg-${p.active ? 'success' : 'secondary'}">${p.active ? 'Sí' : 'No'}</span></td>
                     <td>
@@ -839,7 +839,7 @@
     function showBulkDeleteModal() {
         if (selectedProductIds.size === 0) return;
         itemToDeleteType = 'products_bulk';
-        document.getElementById('delete-item-type').textContent = `los ${selectedProductIds.size} productos/combos seleccionados`; // CAMBIO: Texto
+        document.getElementById('delete-item-type').textContent = `los ${selectedProductIds.size} productos/combos seleccionados`;
         document.getElementById('item-to-delete').innerHTML = `IDs: <small>${Array.from(selectedProductIds).slice(0, 5).join(', ')}${selectedProductIds.size > 5 ? '...' : ''}</small>`;
 
         const deleteModal = bootstrap.Modal.getInstance(document.getElementById('deleteModal')) || new bootstrap.Modal(document.getElementById('deleteModal'));
@@ -849,7 +849,7 @@
 
     function editProduct(id) {
         const p=allProducts.find(x=>x.id===id);
-        if(!p){alert('Producto/Combo no hallado.');return;} // CAMBIO: Texto
+        if(!p){alert('Producto/Combo no hallado.');return;}
         document.getElementById('productId').value=p.id;
         document.getElementById('productName').value=p.name;
         document.getElementById('productDescription').value=p.description||'';
@@ -862,11 +862,11 @@
     }
     async function saveProduct() {
         const data={id:document.getElementById('productId').value,name:document.getElementById('productName').value.trim(),description:document.getElementById('productDescription').value.trim(),price:parseFloat(document.getElementById('productPrice').value),points:parseInt(document.getElementById('productPoints').value)||0,category:document.getElementById('productCategory').value.trim(),imageurl:document.getElementById('productImageUrl').value.trim(),active:document.getElementById('productActive').checked};
-        if(!data.name||isNaN(data.price)||data.price<0){alert('Nombre y Precio (USD) requeridos.');return;} // CAMBIO: Texto
+        if(!data.name||isNaN(data.price)||data.price<0){alert('Nombre y Precio (USD) requeridos.');return;}
         const action=data.id?'updateProduct':'addProduct';
         const res=await fetchData(action,'POST',{product:data});
         if(res && res.success && res.data){
-            alert(res.message||`Producto/Combo guardado.`); // CAMBIO: Texto
+            alert(res.message||`Producto/Combo guardado.`);
             selectedProductIds.clear();
             await loadProducts(true);
             bootstrap.Modal.getInstance(document.getElementById('addProductModal')).hide();
@@ -874,43 +874,36 @@
     }
 
     // --- ORDER FUNCTIONS (ahora ENVIOS) ---
-    async function loadOrders(force = false) { // Esta función ahora carga ENVIOS
+    async function loadOrders(force = false) {
         if (!force && allOrders.length > 0) { renderOrdersTable(); return; }
         const result = await fetchData('getAdminOrders', 'GET');
         if (result && result.success && Array.isArray(result.data)) {
             allOrders = result.data.map(o => ({
                 ...o,
                 totalamount: parseFloat(o.totalamount) || 0,
-                // El backend ahora debería devolver orderdateiso si orderdate es una fecha válida.
-                // Si orderdate es un string dd/mm/yyyy, orderdateiso podría ser igual a orderdate.
-                orderdateiso: o.orderdateiso || o.orderdate // Usar orderdateiso si existe, sino el original
+                orderdateiso: o.orderdateiso || o.orderdate
             })).sort((a,b) => {
-                // Ordenar por orderdateiso que debería ser un string ISO o la fecha original.
-                // Si es un string ISO, new Date() lo parseará bien.
-                // Si es "dd/mm/yyyy", el parseo directo con new Date() puede ser inconsistente.
-                // El script de GAS ahora intenta crear 'orderdateiso' de forma más robusta.
                 const dateA = a.orderdateiso ? new Date(a.orderdateiso) : new Date(0);
                 const dateB = b.orderdateiso ? new Date(b.orderdateiso) : new Date(0);
                 if (isNaN(dateA.getTime()) || isNaN(dateB.getTime())) {
-                     // Si las fechas son inválidas, se puede optar por no ordenar o tratar de usar el original
-                    return String(b.orderdate).localeCompare(String(a.orderdate)); // fallback
+                    return String(b.orderdate).localeCompare(String(a.orderdate));
                 }
                 return dateB - dateA;
             });
             filterOrders();
         } else {
-             document.getElementById('orders-table').innerHTML = `<tr><td colspan="6" class="text-center text-danger">Error al cargar envíos: ${result.message || 'Error.'}</td></tr>`; // CAMBIO: Texto
+             document.getElementById('orders-table').innerHTML = `<tr><td colspan="6" class="text-center text-danger">Error al cargar envíos: ${result.message || 'Error.'}</td></tr>`;
         }
         updateDashboard();
     }
     function renderOrdersTable() {
         const tb = document.getElementById('orders-table'); tb.innerHTML = '';
-        if (displayedOrders.length === 0) { tb.innerHTML = '<tr><td colspan="6" class="text-center">No hay envíos para mostrar.</td></tr>'; return; } // CAMBIO: Texto
+        if (displayedOrders.length === 0) { tb.innerHTML = '<tr><td colspan="6" class="text-center">No hay envíos para mostrar.</td></tr>'; return; }
         
         displayedOrders.forEach(order => {
             let sClass='';
             let statusText = order.status || 'N/A';
-            switch(String(order.status).toLowerCase().replace(/\s+/g, '-')) { // Normalizar estado para clase CSS
+            switch(String(order.status).toLowerCase().replace(/\s+/g, '-')) {
                 case 'pendiente-de-pago': sClass='status-pendiente-de-pago'; statusText = "Pend. Pago (Zelle)"; break;
                 case 'pendiente': sClass='status-pendiente'; statusText = "Pago Recibido"; break;
                 case 'procesado': case 'en-preparacion': sClass='status-procesado'; statusText = "En Preparación"; break;
@@ -918,7 +911,6 @@
                 case 'cancelado': sClass='status-cancelado'; break;
                 default: sClass='bg-secondary text-white';
             }
-            // Formatear la fecha para mostrarla
             let displayDate = order.orderdate || 'N/A';
             if (order.orderdateiso) {
                 try {
@@ -933,7 +925,7 @@
                 <td>${order.orderid?String(order.orderid).substr(-8):'N/A'}</td>
                 <td>${order.clientname||'N/A'}<small class="d-block text-muted">${order.clientid||''}</small></td>
                 <td class="d-none d-md-table-cell">${displayDate}</td>
-                <td>${(order.totalamount||0).toFixed(2)} USD</td> <!-- CAMBIO: Moneda -->
+                <td>${(order.totalamount||0).toFixed(2)} USD</td>
                 <td><span class="status-badge ${sClass}">${statusText}</span></td>
                 <td><button class="btn btn-sm btn-outline-primary" onclick="viewOrderDetails('${order.orderid}')"><i class="bi bi-eye"></i></button></td>
             </tr>`;
@@ -946,19 +938,18 @@
     }
     function viewOrderDetails(id) {
         const o=allOrders.find(x=>x.orderid===id);
-        if(!o){alert('Envío no hallado.');return;} // CAMBIO: Texto
+        if(!o){alert('Envío no hallado.');return;}
         const content=document.getElementById('order-details-content');
         document.getElementById('order-id-to-update').value=id;
         let items='<p class="text-muted small">No hay ítems.</p>';
         if(o.itemsjson&&Array.isArray(o.itemsjson)&&o.itemsjson.length>0){
             items='<ul class="order-details-list">';
             o.itemsjson.forEach(i=>{
-                items+=`<li>${i.quantity}x <strong>${i.name||'N/A'}</strong> (@ ${(parseFloat(i.price)||0).toFixed(2)} USD) = ${(i.quantity*(parseFloat(i.price)||0)).toFixed(2)} USD</li>`; // CAMBIO: Moneda
+                items+=`<li>${i.quantity}x <strong>${i.name||'N/A'}</strong> (@ ${(parseFloat(i.price)||0).toFixed(2)} USD) = ${(i.quantity*(parseFloat(i.price)||0)).toFixed(2)} USD</li>`;
             });
             items+='</ul>';
         }
 
-        // CAMBIO: Mostrar info del destinatario si existe
         let recipientDetailsHTML = "";
         if (o.recipientname || o.recipientphone || o.deliveryaddress) {
             recipientDetailsHTML += "<hr><h5>Información del Destinatario (Cuba):</h5>";
@@ -967,7 +958,6 @@
             if (o.deliveryaddress) recipientDetailsHTML += `<p><strong>Dirección:</strong> ${o.deliveryaddress}</p>`;
         }
         
-        // Formatear la fecha para mostrarla
         let displayDateModal = o.orderdate || 'N/A';
         if (o.orderdateiso) {
             try {
@@ -980,7 +970,7 @@
             <p><strong>Comprador (USA):</strong> ${o.clientname||'N/A'} (ID: ${o.clientid||'N/A'})</p>
             ${recipientDetailsHTML}
             <p><strong>Fecha:</strong> ${displayDateModal}</p>
-            <p><strong>Total:</strong> ${(parseFloat(o.totalamount)||0).toFixed(2)} USD</p> <!-- CAMBIO: Moneda -->
+            <p><strong>Total:</strong> ${(parseFloat(o.totalamount)||0).toFixed(2)} USD</p>
             <p><strong>Puntos Otorgados (al comprador):</strong> ${o.totalpointsawarded||0}</p>
             <p><strong>Estado:</strong> <span class="fw-bold">${o.status||'N/A'}</span></p>
             <p><strong>Puntos Ya Entregados (al comprador):</strong> <span class="badge bg-${o.pointsgiven ? 'success' : 'secondary'}">${o.pointsgiven ? 'Sí' : 'No'}</span></p>
@@ -993,7 +983,7 @@
     // --- REWARD FUNCTIONS ---
     async function loadRewards(force = false) {
         if (!force && allRewards.length) { renderRewardsTable(); return; }
-        const res = await fetchData('getAvailableRewards', 'GET'); // En el script, esta función devuelve todas para el admin implicitamente si no se filtra por activa.
+        const res = await fetchData('getAvailableRewards', 'GET');
         if (res && res.success && Array.isArray(res.data)) {
             allRewards = res.data.map(r => ({
                 ...r,
@@ -1016,7 +1006,7 @@
         }
         displayedRewards.sort((a, b) => (a.name || "").localeCompare(b.name || "")).forEach(r => {
             let displayValue = r.value !== undefined ? String(r.value) : 'N/A';
-            if (r.type === 'DescuentoFijo') displayValue += ' USD'; // CAMBIO: Añadir USD para descuento fijo
+            if (r.type === 'DescuentoFijo') displayValue += ' USD';
 
             tb.innerHTML += `<tr>
                 <td>${r.rewardid || 'N/A'}</td>
@@ -1083,7 +1073,6 @@
              alert('El stock debe ser un número válido (0 o más). Use 9999 para ilimitado.');
             return;
         }
-        // Validar valor para descuentos
         if ((rewardData.type === 'DescuentoFijo' || rewardData.type === 'DescuentoPorcentaje') && (isNaN(parseFloat(rewardData.value)) || parseFloat(rewardData.value) <=0) ) {
             alert(`El valor para ${rewardData.type} debe ser un número positivo.`);
             return;
@@ -1107,8 +1096,8 @@
         itemToDeleteId=id;
         itemToDeleteType=type;
         let itemTypeDisplay = 'elemento';
-        if (type === 'client') itemTypeDisplay = 'cliente (comprador)'; // CAMBIO: Texto
-        else if (type === 'product') itemTypeDisplay = 'producto/combo'; // CAMBIO: Texto
+        if (type === 'client') itemTypeDisplay = 'cliente (comprador)';
+        else if (type === 'product') itemTypeDisplay = 'producto/combo';
         else if (type === 'reward') itemTypeDisplay = 'recompensa';
 
         document.getElementById('delete-item-type').textContent= itemTypeDisplay;
@@ -1128,13 +1117,13 @@
                 bootstrap.Modal.getInstance(document.getElementById('deleteModal'))?.hide();
                 return;
             }
-            itemTypeDisplayForAlert = `${idsToDelete.length} producto(s)/combo(s)`; // CAMBIO: Texto
+            itemTypeDisplayForAlert = `${idsToDelete.length} producto(s)/combo(s)`;
             res = await fetchData('bulkDeleteProducts', 'POST', { productIds: idsToDelete });
             loadFn = () => loadProducts(true);
         } else {
             let action, key;
             if(itemToDeleteType==='client'){action='deleteClient';key='clientId';loadFn=()=>loadClients(true); itemTypeDisplayForAlert = 'Cliente';}
-            else if(itemToDeleteType==='product'){action='deleteProduct';key='productId';loadFn=()=>loadProducts(true); itemTypeDisplayForAlert = 'Producto/Combo';} // CAMBIO: Texto
+            else if(itemToDeleteType==='product'){action='deleteProduct';key='productId';loadFn=()=>loadProducts(true); itemTypeDisplayForAlert = 'Producto/Combo';}
             else if(itemToDeleteType==='reward'){action='deleteReward';key='rewardId';loadFn=()=>loadRewards(true); itemTypeDisplayForAlert = 'Recompensa';}
             else {
                  bootstrap.Modal.getInstance(document.getElementById('deleteModal'))?.hide();
