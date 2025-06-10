@@ -1,0 +1,2113 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Cuenta VIP - Envíos DL Cumanayagua</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <meta name="description" content="Con DL USD Cumanayagua, compra fácil y seguro productos, alimentos y regalos para tus seres queridos en Cumanayagua, Cuba. Paga cómodamente desde USA con Zelle.">
+    <meta property="og:title" content="DL USD Cumanayagua: ¡Sorprende a tu Familia en Cuba!" />
+    <meta property="og:description" content="Envía amor comprando productos en Cumanayagua. Compra online desde USA para tu familia en Cuba y paga con Zelle. ¡Fácil, rápido y con cariño!" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://erick890406.github.io/TheDo-aLuc-aGroup/portal-cliente-usd.html" /> 
+    <meta property="og:site_name" content="DL USD Cumanayagua" />
+    <meta property="og:image" content="https://i.postimg.cc/x8hj4gKx/Dl-Usd-2-cuamanayagua.png" />
+    <meta property="og:image:secure_url" content="https://i.postimg.cc/x8hj4gKx/Dl-Usd-2-cuamanayagua.png" />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="628" />
+    <meta property="og:image:alt" content="Envía productos a Cuba - DL USD Cumanayagua" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Envía a Cuba con DL USD Cumanayagua" />
+    <meta name="twitter:description" content="Compra para tu familia en Cumanayagua desde USA. Paga con Zelle. Alimentos, regalos y más. ¡Visítanos!" />
+    <meta name="twitter:image" content="https://i.postimg.cc/jjNmrcyw/Meta-Etiqueta.png" />
+    <meta name="twitter:image:alt" content="Promoción DL USD Cumanayagua para compras familiares en Cuba" />
+    <style>
+        :root {
+            --primary-color: #F1C40F; 
+            --accent-color: #E67E22; 
+            --bg-dark: #141E30; 
+            --bg-card: #1f2c4a; 
+            --text-light: #FAFAFA;
+            --text-muted: #B0B0B0;
+            --radius-lg: 1rem; 
+            --shadow-lg: 0 8px 20px rgba(0,0,0,0.2);
+            --transition-fast: all 0.3s ease-in-out;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: linear-gradient(135deg, var(--bg-dark) 0%, #102030 100%);
+            color: var(--text-light);
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            overflow-x: hidden;
+            padding-bottom: 120px; 
+        }
+
+        .navbar-custom {
+            background: rgba(16, 32, 48, 0.85); 
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(241,196,15,0.2); 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            z-index: 1030;
+            position: sticky; 
+            top: 0;
+        }
+
+        .navbar-brand {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary-color) !important;
+            text-shadow: 0 0 5px rgba(241,196,15,0.5);
+        }
+
+        .navbar .nav-link,
+        .navbar-text {
+            color: var(--text-light) !important;
+            transition: var(--transition-fast);
+        }
+        .navbar .nav-link:hover {
+            color: var(--primary-color) !important;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            border: none;
+            color: var(--bg-dark) !important; 
+            font-weight: 600;
+            transition: var(--transition-fast);
+            box-shadow: 0 2px 5px rgba(241,196,15,0.3);
+        }
+        .btn-primary:hover {
+            background-color: #d4ac0d; 
+            box-shadow: 0 4px 10px rgba(241,196,15,0.5);
+        }
+
+        .btn-outline-secondary {
+            border-color: var(--accent-color);
+            color: var(--accent-color) !important;
+        }
+        .btn-outline-secondary:hover {
+            background-color: var(--accent-color);
+            color: white !important;
+        }
+         .btn-outline-light {
+            border-color: rgba(250,250,250,0.7);
+            color: rgba(250,250,250,0.9) !important;
+        }
+        .btn-outline-light:hover {
+            background-color: rgba(250,250,250,0.1);
+            color: var(--primary-color) !important;
+            border-color: var(--primary-color);
+        }
+        .btn-warning { 
+            background-color: var(--accent-color);
+            border-color: var(--accent-color);
+            color: white !important;
+        }
+         .btn-warning:hover {
+            background-color: #c06a1a; 
+            border-color: #c06a1a;
+        }
+
+        .menu-item-card,
+        .reward-card {
+            background: var(--bg-card);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-lg);
+            border: 1px solid rgba(255,255,255,0.05); 
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            transition: var(--transition-fast);
+            overflow: hidden; 
+        }
+        .menu-item-card:hover,
+        .reward-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 12px 30px rgba(0,0,0,0.4), 0 0 15px rgba(241,196,15,0.2);
+        }
+
+        .product-image,
+        .reward-image {
+            height: 250px; 
+            object-fit: cover; 
+            width: 100%;
+            border-bottom: 3px solid var(--primary-color);
+            cursor: pointer; 
+            transition: transform 0.3s ease;
+        }
+        .product-image:hover, .reward-image:hover {
+            transform: scale(1.05);
+        }
+
+        .card-body {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 1.25rem; 
+        }
+
+        .card-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem; 
+            font-weight: bold;
+            color: var(--text-light);
+            margin-bottom: 0.5rem;
+        }
+
+        .card-text { 
+            color: #e0e0e0; 
+            font-size: 0.9rem;
+            flex-grow: 1;
+            line-height: 1.5;
+        }
+
+        .price-points-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 1rem;
+            padding-top: 0.75rem;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .badge {
+            font-size: 0.8rem;
+            padding: 0.4em 0.6em;
+            border-radius: 0.75rem;
+        }
+
+        #filter-container .btn-filter {
+            margin: 0.25rem;
+            background: transparent;
+            border: 1px solid var(--primary-color);
+            color: var(--primary-color);
+            transition: var(--transition-fast);
+            border-radius: 20px; 
+            padding: 0.3rem 0.8rem;
+        }
+        #filter-container .btn-filter.active,
+        #filter-container .btn-filter:hover {
+            background: var(--primary-color);
+            color: var(--bg-dark);
+            box-shadow: 0 0 10px rgba(241,196,15,0.4);
+        }
+
+        .toast {
+            border-radius: var(--radius-lg);
+            font-weight: 500;
+            background-color: var(--bg-card); 
+            color: var(--text-light);
+            border: 1px solid var(--primary-color);
+        }
+        .toast-header {
+            background-color: rgba(241,196,15,0.1);
+            color: var(--primary-color);
+            border-bottom: 1px solid rgba(241,196,15,0.2);
+        }
+        .btn-close-white-toast { 
+            filter: invert(1) grayscale(100%) brightness(200%);
+        }
+
+        .loading-spinner {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background: rgba(16, 32, 48, 0.9); 
+            display: none; align-items: center; justify-content: center;
+            z-index: 2000; transition: opacity 0.3s ease;
+        }
+        .loading-spinner.show { display: flex !important; }
+
+        .luxury-spinner-inner {
+            border: 5px solid rgba(241,196,15,0.2); 
+            border-top: 5px solid var(--primary-color); 
+            border-radius: 50%; width: 60px; height: 60px;
+            animation: spin 1s linear infinite;
+            box-shadow: 0 0 15px rgba(241,196,15,0.3);
+        }
+        .luxury-spinner-text { margin-top: 1rem; color: var(--text-muted); font-weight: bold; }
+        @keyframes spin { 0% { transform: rotate(0deg);} 100% { transform: rotate(360deg);} }
+
+        .modal-content {
+            background-color: var(--bg-card); 
+            color: var(--text-light);
+            border-radius: var(--radius-lg);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            border: 1px solid rgba(241,196,15,0.2); 
+        }
+        .modal-header {
+            border-bottom: 1px solid rgba(241,196,15,0.2);
+        }
+        .modal-footer {
+            border-top: 1px solid rgba(241,196,15,0.2);
+        }
+        .btn-close-white { filter: invert(1) grayscale(100%) brightness(200%); }
+
+        .form-control {
+            background-color: rgba(44,62,80,0.7); 
+            border: 1px solid #3b4a5a;
+            color: white;
+            border-radius: 0.5rem; 
+        }
+        .form-control:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.2rem rgba(241, 196, 15, 0.25);
+            background-color: rgba(44,62,80,0.9);
+            color: white;
+        }
+        .input-group-append .btn-outline-secondary, .input-group-prepend .btn-outline-secondary {
+            border-color: #3b4a5a;
+        }
+        .input-group-append .btn-outline-secondary:hover, .input-group-prepend .btn-outline-secondary:hover {
+            background-color: var(--primary-color);
+            color: var(--bg-dark) !important;
+            border-color: var(--primary-color);
+        }
+
+        .nav-pills {
+            background-color: rgba(0,0,0,0.2); padding: 0.5rem; border-radius: 1rem;
+            display: flex; flex-wrap: wrap; gap: 0.5rem; justify-content: center;
+            box-shadow: inset 0 2px 8px rgba(0,0,0,0.3);
+        }
+        .nav-pills .nav-item { flex-grow: 1; flex-basis: 0; min-width: 100px; }
+        .nav-pills .nav-link {
+            background-color: var(--bg-card); color: var(--text-light);
+            border-radius: 0.75rem; transition: var(--transition-fast);
+            padding: 0.6rem 0.5rem; font-size: 0.85rem; text-align: center;
+            display: block; width: 100%; border: 1px solid transparent;
+        }
+        .nav-pills .nav-link:hover { background-color: #2a3f5f; border-color: rgba(241,196,15,0.3); }
+        .nav-pills .nav-link.active {
+            background-color: var(--primary-color); color: var(--bg-dark);
+            font-weight: 600; box-shadow: 0 2px 8px rgba(241,196,15,0.3);
+            border-color: var(--primary-color);
+        }
+
+        .accordion-button {
+            background-color: var(--bg-card); color: var(--text-light); border: none;
+            box-shadow: none !important;
+        }
+        .accordion-button:not(.collapsed) {
+            color: var(--primary-color); background-color: #1a2535;
+        }
+        .accordion-item {
+            background-color: var(--bg-card);
+            border: 1px solid rgba(255,255,255,0.1);
+            margin-bottom: 0.5rem;
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+        }
+        .accordion-body { 
+            background-color: var(--bg-card);
+            color: #ffffff; 
+            font-size: 0.9rem;
+        }
+        .accordion-body ul li {
+            color: #e0e0e0; 
+        }
+
+        #vip-card-container {
+            background: linear-gradient(145deg, #1a1a2e, #16213e);
+            border: 2px solid rgba(241, 196, 15, 0.6);
+            box-shadow: 0 0 25px rgba(241, 196, 15, 0.2), 0 0 60px rgba(0,0,0,0.4);
+            border-radius: var(--radius-lg); color: var(--text-light);
+            position: relative; overflow: hidden; transition: all 0.4s ease;
+            padding: 2rem; backdrop-filter: blur(10px);
+        }
+        #vip-card-container:hover {
+            transform: scale(1.02);
+            box-shadow: 0 0 35px rgba(241, 196, 15, 0.4), 0 0 80px rgba(0,0,0,0.5);
+        }
+        #vip-card-container::before {
+            content: ""; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+            background: radial-gradient(circle at center, rgba(241,196,15,0.08), transparent 70%);
+            transform: rotate(25deg); z-index: 0;
+        }
+        #vip-card-container * { position: relative; z-index: 1; }
+        #vip-status-badge {
+            background: linear-gradient(45deg, var(--primary-color), var(--accent-color));
+            color: var(--bg-dark); font-size: 0.9rem; padding: 0.4em 0.8em;
+            border-radius: 2rem; font-weight: 700; text-shadow: 0 0 3px rgba(0,0,0,0.5);
+        }
+        #user-avatar {
+            border: 3px solid var(--primary-color); box-shadow: 0 0 15px rgba(241, 196, 15, 0.5);
+            transition: transform 0.3s ease; object-fit: cover;
+        }
+        #user-avatar:hover { transform: scale(1.05); cursor: pointer; }
+        #client-name {
+            font-family: 'Playfair Display', serif; font-size: 2rem; font-weight: bold;
+            color: var(--primary-color); margin-top: 0.5rem;
+        }
+        #client-status { font-size: 1rem; color: var(--text-muted); margin-bottom: 0.5rem; }
+        .points-display { font-size: 1.8rem; font-weight: bold; color: var(--primary-color); }
+        #client-phone-display { font-size: 0.9rem; color: var(--text-muted); }
+        #changeAvatarButton {
+            background: var(--primary-color); color: var(--bg-dark);
+            box-shadow: 0 0 5px rgba(241,196,15,0.6); border: none;
+        }
+
+        #floatingCartButton {
+            position: fixed;
+            bottom: 20px; 
+            right: 20px;
+            width: 70px; 
+            height: 70px;
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            color: var(--bg-dark);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem; 
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3), 0 0 20px rgba(241,196,15,0.3);
+            z-index: 1045; 
+            transition: all 0.3s ease;
+            border: 2px solid rgba(255,255,255,0.5);
+            cursor: pointer;
+        }
+        #floatingCartButton:hover {
+            transform: scale(1.1);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.4), 0 0 30px rgba(241,196,15,0.5);
+        }
+        .cart-count-badge { 
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background-color: var(--bg-dark);
+            color: var(--primary-color);
+            font-size: 0.8rem;
+            padding: 0.3em 0.6em;
+            border-radius: 50%;
+            border: 1px solid var(--primary-color);
+            font-weight: bold;
+            display: flex; 
+            align-items: center;
+            justify-content: center;
+            min-width: 20px; 
+            height: 20px;
+        }
+      
+        #downloadAppBanner {
+            border-top: 3px solid var(--primary-color);
+            animation-duration: 0.6s;
+            background: #0d1726; 
+            padding-bottom: env(safe-area-inset-bottom); 
+        }
+
+        .footer {
+            background-color: #0d1726; 
+            color: var(--text-muted);
+            padding: 30px 0;
+            font-size: 0.9rem;
+            border-top: 1px solid rgba(241,196,15,0.1);
+        }
+        .footer h5 {
+            color: var(--primary-color);
+            font-family: 'Playfair Display', serif;
+            margin-bottom: 15px;
+        }
+        .footer a {
+            color: var(--text-light);
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+        .footer a:hover {
+            color: var(--primary-color);
+        }
+        .footer .social-icons a {
+            font-size: 1.5rem;
+            margin: 0 10px;
+            color: var(--text-light);
+        }
+        .footer .social-icons a:hover {
+            color: var(--primary-color);
+        }
+
+        #productDetailModalImage {
+            max-height: 70vh;
+            width: auto;
+            max-width: 100%;
+            object-fit: contain;
+            border-radius: var(--radius-lg);
+            border: 2px solid var(--primary-color);
+        }
+        #productDetailModal .modal-content {
+            background: rgba(16, 32, 48, 0.95); 
+            backdrop-filter: blur(5px);
+        }
+        #productDetailModalRecommendations .card {
+            background: var(--bg-card); 
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+         #productDetailModalRecommendations .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(0,0,0,0.3);
+        }
+        #productDetailModalRecommendations .product-image-recommendation {
+            height: 120px;
+            object-fit: cover;
+            width: 100%;
+            border-top-left-radius: var(--radius-lg);
+            border-top-right-radius: var(--radius-lg);
+        }
+
+        .featured-products-section {
+            padding: 40px 0;
+            background: linear-gradient(rgba(16, 32, 48, 0.7), rgba(16, 32, 48, 0.9)), url('https://www.transparenttextures.com/patterns/black-felt.png'); 
+            border-top: 2px solid var(--primary-color);
+            border-bottom: 2px solid var(--primary-color);
+        }
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            color: var(--primary-color);
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2.2rem;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
+        }
+        .featured-products-section .menu-item-card {
+            border: 1px solid rgba(241,196,15,0.3);
+        }
+
+        @media (max-width: 1024px) {
+            .product-image, .reward-image { height: 220px; }
+            .card-title { font-size: 1.1rem; }
+        }
+        @media (max-width: 768px) {
+            .navbar-brand { font-size: 1.25rem; }
+            .product-image, .reward-image { height: 200px; }
+            .card-text { font-size: 0.85rem; }
+            .btn { font-size: 0.85rem; }
+            .card-body { padding: 1rem; }
+            #downloadAppBanner .container { flex-direction: column; text-align: center; }
+            #downloadAppBanner .me-3.mb-2.mb-md-0 { margin-bottom: 0.75rem !important; }
+            .footer { text-align: center; }
+            .footer .social-icons { margin-top: 15px; }
+            #floatingCartButton { width: 60px; height: 60px; font-size: 1.5rem; bottom: 80px; } 
+            .section-title { font-size: 1.8rem; }
+        }
+        @media (max-width: 576px) {
+            .product-image, .reward-image { height: 180px; }
+            .card-title { font-size: 1rem; }
+            .price-points-row { flex-direction: column; gap: 0.25rem; align-items: flex-start; }
+            .btn { font-size: 0.8rem; }
+            #client-name { font-size: 1.5rem; }
+            .points-display { font-size: 1.5rem; }
+            .nav-pills .nav-link { font-size: 0.8rem; padding: 0.5rem; }
+            .nav-pills .nav-item { min-width: 90px; }
+            .footer { padding: 20px 0; }
+        }
+    </style>
+</head>
+<body>
+    <input type="file" id="avatarUploadInput" accept="image/jpeg, image/png, image/gif" style="display: none;">
+
+    <nav class="navbar navbar-expand-sm navbar-custom">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center" data-bs-toggle="modal" data-bs-target="#downloadAppModal" style="cursor:pointer;">
+                <img src="https://i.postimg.cc/bwc5SzJG/striking-app-icon-the-letters-dl-in-a-custom-l-1.png" alt="Doña Lucía Logo" style="height: 30px; margin-right: 8px;">
+                DL Cumanayagua
+            </a>
+            <div class="ms-auto d-flex align-items-center">
+                <div id="auth-buttons-nav" class="d-flex align-items-center">
+                    <!-- Botones login/registro o nombre de usuario -->
+                </div>
+                <button id="logoutButtonNav" class="btn btn-sm btn-outline-warning ms-2" style="display:none;" onclick="logoutClient()"><i class="bi bi-box-arrow-right"></i> Salir</button>
+            </div>
+        </div>
+    </nav>
+
+    <button id="floatingCartButton" type="button" class="btn" data-bs-toggle="modal" data-bs-target="#cartModal" style="display: none;">
+        <i class="bi bi-cart-fill"></i>
+        <span class="badge cart-count-badge" id="cart-count-floating">0</span>
+    </button>
+
+    <div class="container mt-4 pt-4 pb-5"> 
+        <div id="vip-card-container" class="vip-card p-md-4 p-3 mb-4 position-relative animate__animated animate__fadeInDown" style="display: none;">
+            <span class="position-absolute top-0 start-0 m-3 badge" id="vip-status-badge">VIP</span>
+            <div class="text-center text-md-start">
+                <div class="position-relative d-inline-block">
+                    <img id="user-avatar" src="https://via.placeholder.com/80/CCCCCC/FFFFFF?Text=VIP" alt="User Avatar" class="rounded-circle mb-2 shadow-sm" width="80" height="80" style="cursor:pointer; display:none;" title="Haz clic para cambiar tu avatar">
+                    <button id="changeAvatarButton" class="btn btn-sm position-absolute bottom-0 end-0 mb-2 me-0 rounded-circle p-1 lh-1" title="Cambiar avatar" style="display:none; transform: translate(25%, 25%);">
+                        <i class="bi bi-pencil-square"></i>
+                    </button>
+                </div>
+                <h2 class="mb-1 mt-2 mt-md-0" id="client-name">¡Hola!</h2>
+            </div>
+            <div class="text-center text-md-start mt-2">
+                <p class="mb-1 opacity-75" id="client-status">Miembro DL</p>
+                <div class="points-display mb-2" id="client-points">0.00</div>
+                <small id="client-phone-display" class="text-light opacity-75"></small>
+            </div>
+        </div>
+
+         <div id="guest-prompt" class="alert alert-info text-center shadow-sm animate__animated animate__fadeInUp" style="display: block; background-color: var(--bg-card); border-color: var(--primary-color); color: var(--text-light);">
+            <h4><i class="bi bi-gift-fill me-2 text-primary"></i>¡Envía alegría a Cuba con DL Cumanayagua!</h4>
+            <p class="lead mb-2">Compra para tus familiares y amigos en Cumanayagua desde cualquier parte del mundo. Paga fácilmente con Zelle.</p>
+            <p>Inicia sesión o regístrate para gestionar tus envíos y acumular puntos para futuras compras.</p>
+        </div>
+
+        <ul class="nav nav-pills mb-4">
+            <li class="nav-item" role="presentation"><a class="nav-link active" id="menu-tab-link" data-bs-toggle="pill" href="#menu-tab" role="tab" aria-controls="menu-tab" aria-selected="true"><i class="bi bi-card-list me-1"></i>Menú y Combos</a></li>
+            <li class="nav-item" role="presentation"><a class="nav-link" id="rewards-tab-link" data-bs-toggle="pill" href="#rewards-tab" role="tab" aria-controls="rewards-tab" aria-selected="false"><i class="bi bi-gift me-1"></i>Recompensas</a></li>
+            <li class="nav-item" role="presentation"><a class="nav-link" id="my-orders-tab-link" data-bs-toggle="pill" href="#my-orders-tab" role="tab" aria-controls="my-orders-tab" aria-selected="false"><i class="bi bi-receipt me-1"></i>Mis Envíos</a></li>
+        </ul>
+
+        <div class="tab-content" id="pills-tabContent">
+            <div class="tab-pane fade show active" id="menu-tab" role="tabpanel" aria-labelledby="menu-tab-link">
+                <div class="d-flex justify-content-center align-items-center mb-4">
+                    <h3 class="mb-0 me-3 text-center section-title" style="margin-bottom:0 !important; font-size:1.8rem;"><i class="bi bi-cup-straw me-2"></i>Menú y Combos para Enviar</h3>
+                    <button class="btn btn-sm btn-outline-secondary" id="refreshMenuButton" onclick="forceLoadMenuItems()" title="Actualizar menú">
+                        <i class="bi bi-arrow-clockwise"></i>
+                    </button>
+                </div>
+                <div id="filter-container" class="d-flex flex-wrap justify-content-center align-items-center mb-3">
+                    <button class="btn btn-sm btn-filter active" onclick="filterMenuByCategory('all')">Todos</button>
+                </div>
+                <div class="row g-3 g-md-4" id="menu-container">
+                    <div class="col-12 text-center p-5">
+                        <div class="spinner-border" style="width: 3rem; height: 3rem; color: var(--primary-color);" role="status">
+                            <span class="visually-hidden">Cargando...</span>
+                        </div>
+                        <p class="mt-2 fs-5">Cargando menú y combos...</p>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane fade" id="rewards-tab" role="tabpanel" aria-labelledby="rewards-tab-link">
+                <div class="d-flex justify-content-center align-items-center mb-4">
+                    <h3 class="mb-0 me-3 text-center section-title" style="margin-bottom:0 !important; font-size:1.8rem;"><i class="bi bi-stars me-2"></i>Recompensas para tus Envíos</h3>
+                    <button class="btn btn-sm btn-outline-secondary" id="refreshRewardsButton" onclick="forceLoadAvailableRewards()" title="Actualizar recompensas">
+                        <i class="bi bi-arrow-clockwise"></i>
+                    </button>
+                </div>
+                <div class="row g-3 g-md-4" id="rewards-container"><div class="col-12 text-center p-5"><div class="spinner-border" style="width: 3rem; height: 3rem; color: var(--primary-color);" role="status"></div><p class="mt-2 fs-5">Cargando recompensas...</p></div></div>
+            </div>
+            <div class="tab-pane fade" id="my-orders-tab" role="tabpanel" aria-labelledby="my-orders-tab-link">
+                <h3 class="mb-4 text-center section-title" style="font-size:1.8rem;"><i class="bi bi-clock-history me-2"></i>Historial de Envíos</h3>
+                <div id="orders-history-container"><div class="col-12 text-center p-5"><p class="fs-5">Inicia sesión para ver tus envíos.</p></div></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="featured-products-section my-5">
+        <div class="container">
+            <h2 class="section-title"><i class="bi bi-fire me-2"></i>Populares Esta Semana</h2>
+            <div class="row g-3 g-md-4" id="featured-products-container">
+                <div class="col-12 text-center p-4">
+                    <div class="spinner-border text-primary" role="status"><span class="visually-hidden">Cargando...</span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="loadingSpinnerUser" class="loading-spinner">
+      <div class="luxury-spinner">
+        <div class="luxury-spinner-inner"></div>
+        <span class="luxury-spinner-text">Cargando...</span>
+      </div>
+    </div>
+
+    <div id="downloadAppBanner" class="fixed-bottom p-3 text-light shadow-lg" style="z-index: 1040; display:none; background-color: #0d1726;">
+        <div class="container d-flex justify-content-between align-items-center flex-wrap">
+            <div class="me-3 mb-2 mb-md-0">
+                <strong class="d-block fs-5"><i class="bi bi-star-fill me-1 text-warning"></i> ¡Nuestra App para tu familia en Cuba!</strong>
+                <span class="small">Permite que gestionen sus pedidos y beneficios fácilmente.</span>
+            </div>
+            <div class="d-flex align-items-center">
+                <a href="https://drive.google.com/file/d/1X6943Eb9nBGAsAaizDRPPkolg4apUmHS/view?usp=drive_link" download="DonaLucia_Cumanayagua.apk" class="btn btn-warning btn-sm me-3 py-2">
+                    <i class="bi bi-android2 me-1"></i> Descargar App
+                </a>
+                <button type="button" class="btn-close btn-close-white" aria-label="Cerrar banner"></button>
+            </div>
+        </div>
+    </div>
+
+    <div class="toast-container position-fixed bottom-0 end-0 p-3" id="toastPlacement" style="z-index: 2050"> </div>
+
+    <div class="modal fade" id="registerUserModal" tabindex="-1" aria-labelledby="registerUserModalLabel" aria-hidden="true"><div class="modal-dialog modal-dialog-centered"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="registerUserModalLabel">Crear Cuenta para Envíos</h5><button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button></div><div class="modal-body"><form id="newUserRegistrationForm"><div class="mb-3"><label for="newUserName" class="form-label">Nombre Completo (Tuyo) <span class="text-danger">*</span></label><input type="text" class="form-control" id="newUserName" required autocomplete="name"></div><div class="mb-3"><label for="newUserPhone" class="form-label">Teléfono (Tuyo, con código de país si es de USA) <span class="text-danger">*</span></label><input type="tel" class="form-control" id="newUserPhone" required placeholder="Ej: +1 XXX XXX XXXX" autocomplete="tel"></div>
+    <div class="mb-3"><label for="newUserEmail" class="form-label">Correo (Tuyo) <span class="text-danger">*</span></label><input type="email" class="form-control" id="newUserEmail" autocomplete="email" required></div>
+    <div class="mb-3"><label for="newUserPassword" class="form-label">Contraseña <span class="text-danger">*</span></label><div class="input-group"><input type="password" class="form-control" id="newUserPassword" required autocomplete="new-password"><button class="btn btn-outline-secondary" type="button" onclick="togglePasswordVisibility('newUserPassword', this)"><i class="bi bi-eye-slash"></i></button></div></div>
+    <div class="mb-3"><label for="newUserConfirmPassword" class="form-label">Confirmar Contraseña <span class="text-danger">*</span></label><div class="input-group"><input type="password" class="form-control" id="newUserConfirmPassword" required autocomplete="new-password"><button class="btn btn-outline-secondary" type="button" onclick="togglePasswordVisibility('newUserConfirmPassword', this)"><i class="bi bi-eye-slash"></i></button></div></div>
+    <div id="registration-feedback" class="mt-3"></div></form></div><div class="modal-footer"><button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button><button type="button" class="btn btn-primary" onclick="handleUserRegistrationAttempt()">Registrarme</button></div></div></div></div>
+    
+    <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true"><div class="modal-dialog modal-dialog-centered"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="loginModalLabel">Iniciar Sesión para Envíos</h5><button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button></div><div class="modal-body"><form id="loginForm"><div class="mb-3"><label for="loginPhone" class="form-label">Teléfono (Tuyo)</label><input type="tel" class="form-control" id="loginPhone" required autocomplete="username tel"></div>
+    <div class="mb-3"><label for="loginPassword" class="form-label">Contraseña</label><div class="input-group"><input type="password" class="form-control" id="loginPassword" required autocomplete="current-password"><button class="btn btn-outline-secondary" type="button" onclick="togglePasswordVisibility('loginPassword', this)"><i class="bi bi-eye-slash"></i></button></div></div>
+    <div id="login-feedback" class="mt-3"></div></form></div><div class="modal-footer"><button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button><button type="button" class="btn btn-primary" onclick="handleLoginAttempt()">Acceder</button></div></div></div></div>
+    
+    <div class="modal fade" id="cartModal" tabindex="-1" aria-labelledby="cartModalLabel" aria-hidden="true"><div class="modal-dialog modal-lg modal-dialog-scrollable modal-dialog-centered"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="cartModalLabel"><i class="bi bi-cart3 me-2"></i>Mi Carrito de Envío</h5><button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button></div><div class="modal-body" id="cart-items-container"><p class="text-center">Tu carrito está vacío.</p></div><div class="modal-footer justify-content-between flex-wrap"><div><small class="text-muted d-block">Puntos a ganar: <span id="cart-points-to-earn" class="fw-bold">0.00</span></small><strong class="fs-5">Total: <span id="cart-total-price" style="color: var(--primary-color);">0.00</span> USD</strong><br><small class="text-warning"><i class="bi bi-credit-card-2-front-fill"></i> Pagos por Zelle.</small></div><div class="d-flex mt-2 mt-sm-0"><button type="button" class="btn btn-outline-danger me-2" onclick="clearCart()"><i class="bi bi-trash3 me-1"></i>Vaciar</button><button type="button" class="btn btn-success" onclick="showRecipientInfoModal()"><i class="bi bi-check-circle me-1"></i>Siguiente</button></div></div><div id="order-placement-feedback" class="m-3"></div></div></div></div>
+
+    <div class="modal fade" id="recipientInfoModal" tabindex="-1" aria-labelledby="recipientInfoModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="recipientInfoModalLabel"><i class="bi bi-person-check-fill me-2"></i>Datos del Destinatario en Cuba</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="recipientForm">
+                        <div class="mb-3">
+                            <label for="recipientName" class="form-label">Nombre Completo del Destinatario <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="recipientName" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="recipientPhone" class="form-label">Teléfono del Destinatario (Cuba) <span class="text-danger">*</span></label>
+                            <input type="tel" class="form-control" id="recipientPhone" placeholder="Ej: 5xxxxxxx" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="recipientAddress" class="form-label">Dirección Completa de Entrega <span class="text-danger">*</span></label>
+                            <textarea class="form-control" id="recipientAddress" rows="3" required></textarea>
+                            <small class="form-text text-muted">Incluye calle, número, entrecalles, reparto, municipio.</small>
+                        </div>
+                        <div class="mb-3">
+                            <label for="deliveryNotes" class="form-label">Notas Adicionales para la Entrega (Opcional)</label>
+                            <textarea class="form-control" id="deliveryNotes" rows="2"></textarea>
+                        </div>
+                    </form>
+                    <div class="modal-feedback-area mt-3"></div> <!-- Área para feedback dentro de este modal -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" onclick="confirmAndPlaceOrderWithRecipientInfo()">Confirmar Envío</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="productDetailModal" tabindex="-1" aria-labelledby="productDetailModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="productDetailModalLabel">Detalles del Producto</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6 text-center mb-3 mb-md-0">
+                            <img src="" id="productDetailModalImage" class="img-fluid" alt="Producto">
+                        </div>
+                        <div class="col-md-6">
+                            <h3 id="productDetailModalName" class="text-primary"></h3>
+                            <p id="productDetailModalDescription" class="text-light"></p>
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <span class="fw-bold fs-4" id="productDetailModalPrice" style="color: var(--accent-color);"></span>
+                                <span class="badge bg-success text-white" id="productDetailModalPoints"></span>
+                            </div>
+                            <button class="btn btn-primary w-100" id="productDetailModalAddToCartBtn">
+                                <i class="bi bi-cart-plus-fill me-2"></i>Añadir al Envío
+                            </button>
+                        </div>
+                    </div>
+                    <hr class="my-4 border-secondary">
+                    <h4 class="text-center mb-3" style="color:var(--primary-color);">También te podría interesar:</h4>
+                    <div class="row g-3" id="productDetailModalRecommendations">
+                        <!-- Recomendaciones se cargarán aquí -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="downloadAppModal" tabindex="-1" aria-labelledby="downloadAppModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="downloadAppModalLabel"><i class="bi bi-phone-vibrate-fill me-2" style="color:var(--primary-color);"></i> ¡App para tu Familia en Cuba!</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <img src="https://i.postimg.cc/XJxYzHZW/striking-app-icon-the-letters-dl-in-a-custom-l.png" alt="Doña Lucía App Icon" class="img-fluid rounded-circle mb-3 shadow" style="width: 100px; height: 100px; border: 3px solid var(--primary-color);">
+                    <p class="lead mb-2">Permite que tus seres queridos en Cumanayagua gestionen sus pedidos y beneficios directamente.</p>
+                    <p>Con la app, podrán ver el menú, canjear puntos y estar al tanto de las novedades. ¡Una forma fácil de conectar!</p>
+                    <a href="https://drive.google.com/file/d/1X6943Eb9nBGAsAaizDRPPkolg4apUmHS/view?usp=drive_link" download="DonaLucia_Cumanayagua.apk" class="btn btn-primary btn-lg mt-3 w-100 animate__animated animate__pulse animate__infinite animate__slower">
+                        <i class="bi bi-android2 me-2"></i> Descargar para Android
+                    </a>
+                    <p class="mt-3 mb-1"><small class="text-muted">Si su dispositivo lo solicita, deben habilitar "Instalar apps desconocidas" en Ajustes para poder instalarla.</small></p>
+                </div>
+                <div class="modal-footer justify-content-center border-0 pt-0">
+                     <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="" id="dontShowDownloadModalAgain">
+                        <label class="form-check-label small" for="dontShowDownloadModalAgain">
+                            No volver a mostrar este mensaje (al inicio)
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer mt-auto py-4">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 mb-3 mb-md-0">
+                    <h5>DL Cumanayagua Envíos</h5>
+                    <p>Conectando familias, entregando sonrisas. Envíos seguros y rápidos a Cumanayagua, Cuba, pagando desde USA con Zelle.</p>
+                </div>
+                <div class="col-md-4 mb-3 mb-md-0">
+                    <h5>Enlaces Rápidos</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="#" onclick="document.getElementById('menu-tab-link').click(); return false;">Menú y Combos</a></li>
+                        <li><a href="#" onclick="document.getElementById('rewards-tab-link').click(); return false;">Recompensas</a></li>
+                        <li><a href="#" onclick="document.getElementById('my-orders-tab-link').click(); return false;">Mis Envíos</a></li>
+                        <li><a href="#" data-bs-toggle="modal" data-bs-target="#downloadAppModal">Descargar App (Cuba)</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4">
+                    <h5>Contacto Directo (Admin)</h5>
+                    <p><i class="bi bi-envelope-fill me-2"></i><a href="mailto:erick890406@gmail.com">erick890406@gmail.com</a></p>
+                    <p><i class="bi bi-whatsapp me-2"></i><a href="https://wa.me/TU_NUMERO_DE_WHATSAPP_CON_CODIGO_PAIS_SIN_MAS" target="_blank">Chatea con nosotros</a></p> <!-- REEMPLAZA con tu número real -->
+                </div>
+            </div>
+            <hr class="my-3" style="border-color: rgba(241,196,15,0.2);">
+            <p class="text-center small mb-0">&copy; <span id="currentYear"></span> DL Cumanayagua Envíos. Todos los derechos reservados. Diseñado con <i class="bi bi-heart-fill text-danger"></i>.</p>
+        </div>
+    </footer>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script> 
+    <script>
+        const GOOGLE_SCRIPT_URL_USER = 'https://script.google.com/macros/s/AKfycbyjjG12iuYS16uP0tD-2verkHSZw3zsBTflGy-nOCqzz_LTqoQykFhWLCpdfYsA4V5O/exec';
+         const LOGGED_IN_CLIENT_KEY = 'dlEnviosClientLoggedIn_v9_2'; // Incrementa versión si hay cambios en estructura de clientData
+    const PRODUCTS_USER_CACHE_KEY = 'dlEnviosUserProductsCache_v9_2';
+    const USER_CART_KEY = 'dlEnviosUserCart_v6_2';
+    const REWARDS_USER_CACHE_KEY = 'dlEnviosUserRewardsCache_v4_2';
+    const MENU_CACHE_EXPIRY_KEY = 'dlEnviosMenuCacheExpiry_v2_2';
+    const REWARDS_CACHE_EXPIRY_KEY = 'dlEnviosRewardsCacheExpiry_v1_2';
+    const CACHE_DURATION_MS = 30 * 60 * 1000; // 30 minutos
+
+    const MAX_AVATAR_DIMENSION = 200;
+    const AVATAR_JPEG_QUALITY = 0.75;
+    const LOCAL_AVATAR_DATA_KEY = 'localAvatarDataUrl_v2_2';
+
+    const DOWNLOAD_MODAL_DISMISSED_KEY = 'downloadModalDismissed_DL_v3_2';
+    const DOWNLOAD_BANNER_DISMISSED_KEY = 'downloadBannerDismissed_DL_v2_2';
+
+    let clientData = null;
+    let menuItems = [];
+    let availableRewards = [];
+    let shoppingCart = [];
+    let currentFilterCategory = 'all';
+    let featuredProducts = [];
+
+    const loadingSpinnerUser = document.getElementById('loadingSpinnerUser');
+    let registrationModalInstance, loginModalInstance, cartModalInstance, downloadAppModalInstance, recipientInfoModalInstance, productDetailModalInstance;
+
+    document.addEventListener('DOMContentLoaded', async function() {
+        initializeModals();
+        loadCartFromStorage();
+        loadClientDataFromStorage();
+        updateClientDisplayAndUI();
+        await loadInitialData();
+        setupEventListeners();
+        handleAppDownloadPromotion();
+        loadFeaturedProducts();
+        if(document.getElementById('currentYear')) {
+            document.getElementById('currentYear').textContent = new Date().getFullYear();
+        }
+    });
+
+    function initializeModals() {
+        try {
+            ['registerUserModal', 'loginModal', 'cartModal', 'downloadAppModal', 'recipientInfoModal', 'productDetailModal'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el && typeof bootstrap !== 'undefined') { // Verificar que bootstrap esté definido
+                    if (id === 'registerUserModal') registrationModalInstance = new bootstrap.Modal(el);
+                    else if (id === 'loginModal') loginModalInstance = new bootstrap.Modal(el);
+                    else if (id === 'cartModal') cartModalInstance = new bootstrap.Modal(el);
+                    else if (id === 'downloadAppModal') downloadAppModalInstance = new bootstrap.Modal(el);
+                    else if (id === 'recipientInfoModal') recipientInfoModalInstance = new bootstrap.Modal(el);
+                    else if (id === 'productDetailModal') productDetailModalInstance = new bootstrap.Modal(el);
+                } else if (!el) {
+                     console.warn(`Modal con ID '${id}' no encontrado en el DOM.`);
+                } else if (typeof bootstrap === 'undefined') {
+                    console.error("Error crítico: La biblioteca de Bootstrap (bootstrap.js) no se ha cargado antes de intentar inicializar los modales. Asegúrate de que el script de Bootstrap esté incluido y se cargue ANTES que este script personalizado.");
+                }
+            });
+        } catch (error) { console.error("Error inicializando modales:", error); }
+    }
+    
+    async function loadInitialData() {
+        const menuContainer = document.getElementById('menu-container');
+        if (menuContainer) {
+            const cachedProducts = localStorage.getItem(PRODUCTS_USER_CACHE_KEY);
+            const menuCacheExpiryString = localStorage.getItem(MENU_CACHE_EXPIRY_KEY);
+            const now = new Date().getTime();
+            const menuCacheExpiry = menuCacheExpiryString ? parseInt(menuCacheExpiryString) : 0;
+
+            if (cachedProducts && menuCacheExpiry && now < menuCacheExpiry) {
+                try {
+                    menuItems = JSON.parse(cachedProducts);
+                    generateCategoryFilters();
+                    filterMenuByCategory(currentFilterCategory);
+                } catch(e) {
+                    console.error("Error parseando productos cacheados:", e);
+                    localStorage.removeItem(PRODUCTS_USER_CACHE_KEY);
+                    localStorage.removeItem(MENU_CACHE_EXPIRY_KEY);
+                    await loadMenuItems(true);
+                }
+            } else {
+                await loadMenuItems(true);
+            }
+        }
+
+        if (clientData && clientData.id) {
+            const rewardsContainer = document.getElementById('rewards-container');
+             if (rewardsContainer) {
+                const cachedRewards = localStorage.getItem(REWARDS_USER_CACHE_KEY);
+                const rewardsCacheExpiryString = localStorage.getItem(REWARDS_CACHE_EXPIRY_KEY);
+                const now = new Date().getTime();
+                const rewardsCacheExpiry = rewardsCacheExpiryString ? parseInt(rewardsCacheExpiryString) : 0;
+
+                if (cachedRewards && rewardsCacheExpiry && now < rewardsCacheExpiry) {
+                    try {
+                        availableRewards = JSON.parse(cachedRewards);
+                        generateRewardsList();
+                    } catch(e) {
+                        console.error("Error parseando recompensas cacheadas:", e);
+                        localStorage.removeItem(REWARDS_USER_CACHE_KEY);
+                        localStorage.removeItem(REWARDS_CACHE_EXPIRY_KEY);
+                        await loadAvailableRewards(true);
+                    }
+                } else {
+                     await loadAvailableRewards(true);
+                }
+            }
+        } else {
+            const rewardsContainer = document.getElementById('rewards-container');
+            if(rewardsContainer) rewardsContainer.innerHTML = '<div class="col-12 text-center p-5"><p class="fs-5">Inicia sesión para ver y canjear recompensas para tus envíos.</p></div>';
+        }
+    }
+
+    function handleAppDownloadPromotion() {
+        const dontShowCheckbox = document.getElementById('dontShowDownloadModalAgain');
+        const downloadModalEl = document.getElementById('downloadAppModal');
+
+        if (!localStorage.getItem(DOWNLOAD_MODAL_DISMISSED_KEY) && downloadAppModalInstance) {
+            setTimeout(() => {
+                if (!localStorage.getItem(DOWNLOAD_MODAL_DISMISSED_KEY) && downloadAppModalInstance && typeof downloadAppModalInstance.show === 'function' ) {
+                    const existingModal = bootstrap.Modal.getInstance(downloadModalEl); // Obtener instancia actual por si acaso
+                    if (!(existingModal && existingModal._isShown)) {
+                        try { downloadAppModalInstance.show(); } catch(e){ console.warn("Error mostrando modal de descarga (handleAppDownloadPromotion):", e); }
+                    }
+                }
+            }, 3500); // Aumentado el delay
+        }
+
+        if (downloadModalEl && dontShowCheckbox) {
+            downloadModalEl.addEventListener('hidden.bs.modal', function () {
+                if (dontShowCheckbox.checked) {
+                    localStorage.setItem(DOWNLOAD_MODAL_DISMISSED_KEY, 'true');
+                }
+                // Bootstrap debería quitar aria-hidden="true" solo, pero si hay problemas, se podría forzar aquí.
+                // downloadModalEl.setAttribute('aria-hidden', 'true'); // Asegurar después de ocultar
+            });
+            // Al mostrar, Bootstrap debería poner aria-hidden="false"
+            downloadModalEl.addEventListener('shown.bs.modal', function () {
+                downloadModalEl.setAttribute('aria-hidden', 'false');
+            });
+        }
+
+        const bannerEl = document.getElementById('downloadAppBanner');
+        const bannerDismissed = localStorage.getItem(DOWNLOAD_BANNER_DISMISSED_KEY);
+        const bodyEl = document.body;
+        const floatingCartBtn = document.getElementById('floatingCartButton');
+        const footerEl = document.querySelector('.footer');
+
+
+        const adjustPagePaddingForBanner = (showBanner) => {
+            const footerHeight = footerEl ? footerEl.offsetHeight : 0;
+            let totalBottomPadding = footerHeight + 20; 
+
+            if (showBanner && bannerEl && bannerEl.style.display !== 'none') {
+                const bannerHeight = bannerEl.offsetHeight;
+                totalBottomPadding += bannerHeight; 
+                if (floatingCartBtn) floatingCartBtn.style.bottom = (bannerHeight + 20) + 'px'; 
+            } else {
+                if (floatingCartBtn) floatingCartBtn.style.bottom = '20px'; 
+            }
+            bodyEl.style.paddingBottom = totalBottomPadding + 'px';
+        };
+
+
+        if (bannerEl && !bannerDismissed) {
+            let bannerDelay = 4500; 
+            if (!localStorage.getItem(DOWNLOAD_MODAL_DISMISSED_KEY)) {
+                bannerDelay = 9000; // Si el modal inicial se muestra, retrasar más el banner
+            }
+            
+            setTimeout(() => {
+                if (!localStorage.getItem(DOWNLOAD_BANNER_DISMISSED_KEY)) {
+                    bannerEl.style.display = 'block'; 
+                    bannerEl.classList.add('animate__animated', 'animate__fadeInUp');
+                    adjustPagePaddingForBanner(true);
+                }
+            }, bannerDelay);
+
+            const closeBannerButton = bannerEl.querySelector('.btn-close');
+            if (closeBannerButton) {
+                closeBannerButton.addEventListener('click', () => {
+                    bannerEl.style.display = 'none';
+                    localStorage.setItem(DOWNLOAD_BANNER_DISMISSED_KEY, 'true');
+                    adjustPagePaddingForBanner(false);
+                });
+            }
+        } else if (bannerEl && bannerDismissed) {
+             bannerEl.style.display = 'none';
+             adjustPagePaddingForBanner(false);
+        } else {
+             adjustPagePaddingForBanner(false); 
+        }
+    }
+
+    function setupEventListeners() {
+        document.getElementById('registerUserModal')?.addEventListener('hidden.bs.modal', () => clearFormAndFeedback('newUserRegistrationForm', 'registration-feedback'));
+        document.getElementById('loginModal')?.addEventListener('hidden.bs.modal', () => clearFormAndFeedback('loginForm', 'login-feedback'));
+        document.getElementById('cartModal')?.addEventListener('show.bs.modal', renderCartItems);
+        document.getElementById('recipientInfoModal')?.addEventListener('hidden.bs.modal', () => {
+            // No limpiar el formulario aquí automáticamente
+        });
+
+        const avatarUploadInputEl = document.getElementById('avatarUploadInput');
+        const userAvatarImgEl = document.getElementById('user-avatar');
+        const changeAvatarBtnEl = document.getElementById('changeAvatarButton');
+
+        const triggerAvatarUpload = () => {
+            if (clientData && clientData.id && avatarUploadInputEl) {
+                avatarUploadInputEl.click();
+            } else if (!clientData || !clientData.id) {
+                showGlobalFeedback("Inicia sesión para cambiar tu avatar.", "warning");
+                if(loginModalInstance && typeof loginModalInstance.show === 'function') {
+                    const existingModal = bootstrap.Modal.getInstance(loginModalInstance._element);
+                    if (!(existingModal && existingModal._isShown)) { // Solo mostrar si no está ya visible
+                        try { loginModalInstance.show(); } catch(e) { console.warn("Error mostrando modal login (triggerAvatarUpload):", e); }
+                    }
+                }
+            }
+        };
+        if (userAvatarImgEl) userAvatarImgEl.addEventListener('click', triggerAvatarUpload);
+        if (changeAvatarBtnEl) changeAvatarBtnEl.addEventListener('click', triggerAvatarUpload);
+        if (avatarUploadInputEl) avatarUploadInputEl.addEventListener('change', handleAvatarFileSelect);
+
+        const rewardsTabEl = document.getElementById('rewards-tab-link');
+        if (rewardsTabEl) {
+            rewardsTabEl.addEventListener('shown.bs.tab', async event => {
+                if (!clientData || !clientData.id) {
+                    document.getElementById('rewards-container').innerHTML = '<div class="col-12 text-center p-5"><p class="fs-5">Inicia sesión para ver y canjear recompensas.</p></div>';
+                    return;
+                }
+                await loadAvailableRewards(); 
+            });
+        }
+        const ordersTabEl = document.getElementById('my-orders-tab-link');
+        if (ordersTabEl) {
+            ordersTabEl.addEventListener('shown.bs.tab', event => {
+                loadUserOrders();
+            });
+        }
+    }
+
+    function clearFormAndFeedback(formId, feedbackId) {
+        if (formId) {
+            const form = document.getElementById(formId);
+            if (form) form.reset();
+        }
+        if (feedbackId) {
+            const feedbackEl = document.getElementById(feedbackId);
+            if (feedbackEl) feedbackEl.innerHTML = '';
+        }
+    }
+
+    async function fetchDataFromGAS(action, method = 'POST', payloadData = null) {
+        console.log(`[fetchDataFromGAS] Acción: ${action}, Método: ${method}, Payload:`, payloadData ? JSON.stringify(payloadData).substring(0, 200) + "..." : null);
+        if (GOOGLE_SCRIPT_URL_USER === 'AQUI_VA_TU_URL_DEL_SCRIPT_DE_GOOGLE_APPS' || !GOOGLE_SCRIPT_URL_USER || GOOGLE_SCRIPT_URL_USER.length < 20 || !GOOGLE_SCRIPT_URL_USER.includes('script.google.com')) {
+            showGlobalFeedback("Error Configuración: URL script inválida.", "danger", null);
+            if (loadingSpinnerUser) loadingSpinnerUser.classList.remove('show');
+            return { success: false, message: 'URL script no configurada/inválida.' };
+        }
+        if (loadingSpinnerUser) loadingSpinnerUser.classList.add('show');
+        
+        try {
+            let url = GOOGLE_SCRIPT_URL_USER;
+            const options = { method: method, headers: {}, mode: 'cors', redirect: 'follow' };
+
+            if (method === 'GET') {
+                const params = new URLSearchParams({ action: action, cacheBuster: new Date().getTime() });
+                if (payloadData) {
+                    for (const key in payloadData) {
+                        if (payloadData.hasOwnProperty(key)) { params.append(key, payloadData[key]); }
+                    }
+                }
+                url += `?${params.toString()}`;
+            } else { 
+                options.headers['Content-Type'] = 'application/x-www-form-urlencoded';
+                const dataToSend = { action: action, payload: payloadData };
+                const formBody = new URLSearchParams();
+                formBody.append("data", JSON.stringify(dataToSend)); 
+                options.body = formBody.toString();
+            }
+            
+            const res = await fetch(url, options);
+            const responseText = await res.text();
+            
+            let responseData;
+            try {
+                responseData = JSON.parse(responseText);
+            } catch (parseError) {
+                console.error(`[fetchDataFromGAS] Error parseando JSON para ${action}:`, parseError, "Respuesta original:", responseText.substring(0,500));
+                let errorMessage = `Respuesta no es JSON válido del servidor.`;
+                if (responseText.toLowerCase().includes("<title>error</title>") || responseText.toLowerCase().includes("script function not found") || responseText.toLowerCase().includes("autorización necesaria")) {
+                     errorMessage = `Error en el servidor de Apps Script (acción '${action}'). Revisa logs del script o permisos.`;
+                }
+                throw new Error(errorMessage);
+            }
+            console.log(`[fetchDataFromGAS] Respuesta para ${action}:`, responseData);
+            return responseData;
+
+        } catch (error) {
+            console.error(`Excepción en fetchDataFromGAS (Acción: ${action}):`, error);
+            showGlobalFeedback(`Error conexión/servidor: ${error.message || 'Desconocido'}.`, "danger", 7000);
+            return { success: false, message: `Error conexión/servidor: ${error.message || 'Desconocido'}.` };
+        } finally {
+            if (loadingSpinnerUser) loadingSpinnerUser.classList.remove('show');
+        }
+    }
+
+    function loadClientDataFromStorage() {
+        const storedClientData = localStorage.getItem(LOGGED_IN_CLIENT_KEY);
+        if (storedClientData) {
+            try {
+                clientData = JSON.parse(storedClientData);
+            } catch (e) {
+                console.error("Error parseando clientData de localStorage:", e);
+                localStorage.removeItem(LOGGED_IN_CLIENT_KEY);
+                clientData = null;
+            }
+        } else {
+            clientData = null;
+        }
+    }
+
+    function updateClientDisplayAndUI() {
+        const el = id => document.getElementById(id);
+        const authNavContainer = el('auth-buttons-nav');
+        const logoutNavButton = el('logoutButtonNav');
+        const vipCardContainer = el('vip-card-container');
+        const guestPromptContainer = el('guest-prompt');
+        const userAvatarImg = el('user-avatar');
+        const changeAvatarBtn = el('changeAvatarButton');
+        const myOrdersTabLink = el('my-orders-tab-link');
+
+        if (clientData && clientData.id && (clientData.verificado === true || String(clientData.verificado).toLowerCase() === 'true')) {
+            el('client-name').textContent = `¡Hola, ${clientData.nombre ? clientData.nombre.split(' ')[0] : 'Cliente'}!`;
+            el('client-points').textContent = clientData.puntos !== undefined ? (parseFloat(clientData.puntos) || 0).toFixed(2) : '0.00';
+            el('client-status').textContent = `Nivel: ${(parseFloat(clientData.puntos)||0)>=150?"Oro":(parseFloat(clientData.puntos)||0)>=75?"Plata":"Bronce"}`;
+            el('client-phone-display').textContent = clientData.telefono ? `Tel: ${clientData.telefono}` : '';
+            if(el('vip-status-badge')) el('vip-status-badge').style.display = 'inline-block';
+
+            if (userAvatarImg) {
+                userAvatarImg.style.display = 'inline-block';
+                if (clientData[LOCAL_AVATAR_DATA_KEY] && typeof clientData[LOCAL_AVATAR_DATA_KEY] === 'string') {
+                    userAvatarImg.src = clientData[LOCAL_AVATAR_DATA_KEY];
+                } else if (clientData.avatarurl && typeof clientData.avatarurl === 'string' && clientData.avatarurl.trim() !== '') {
+                     userAvatarImg.src = clientData.avatarurl + (clientData.avatarurl.includes('?') ? '&t=' : '?t=') + new Date().getTime();
+                } else {
+                    userAvatarImg.src = 'https://via.placeholder.com/80/CCCCCC/FFFFFF?Text=VIP';
+                }
+            }
+            if(changeAvatarBtn) changeAvatarBtn.style.display = 'block';
+
+            if(authNavContainer) authNavContainer.innerHTML = `<span class="navbar-text text-light me-2 small">Hola, ${clientData.nombre ? clientData.nombre.split(' ')[0] : 'VIP'}</span>`;
+            if(logoutNavButton) logoutNavButton.style.display = 'inline-block';
+            if(vipCardContainer) vipCardContainer.style.display = 'block';
+            if(guestPromptContainer) guestPromptContainer.style.display = 'none';
+            if(myOrdersTabLink) myOrdersTabLink.innerHTML = `<i class="bi bi-receipt me-1"></i>Mis Envíos`;
+
+        } else { 
+            el('client-name').textContent = `¡Bienvenido!`;
+            el('client-points').textContent = '0.00';
+            el('client-status').textContent = "Inicia sesión o regístrate para enviar.";
+            el('client-phone-display').textContent = '';
+            if(el('vip-status-badge')) el('vip-status-badge').style.display = 'none';
+            if (userAvatarImg) {
+                userAvatarImg.style.display = 'none';
+                userAvatarImg.src = 'https://via.placeholder.com/80/CCCCCC/FFFFFF?Text=VIP'; // Reset placeholder
+            }
+            if (changeAvatarBtn) changeAvatarBtn.style.display = 'none';
+            if(authNavContainer) authNavContainer.innerHTML = `<button class="btn btn-sm btn-outline-light me-2" data-bs-toggle="modal" data-bs-target="#loginModal"><i class="bi bi-box-arrow-in-right"></i> Login</button><button class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#registerUserModal"><i class="bi bi-person-plus"></i> Registro</button>`;
+            if(logoutNavButton) logoutNavButton.style.display = 'none';
+            if(vipCardContainer) vipCardContainer.style.display = 'none';
+            if(guestPromptContainer) guestPromptContainer.style.display = 'block';
+            if(myOrdersTabLink) myOrdersTabLink.innerHTML = `<i class="bi bi-receipt me-1"></i>Mis Envíos`;
+            
+            const ordersHistoryContainer = el('orders-history-container');
+            if (ordersHistoryContainer) ordersHistoryContainer.innerHTML = '<div class="col-12 text-center p-5"><p class="fs-5">Inicia sesión para ver tus envíos.</p></div>';
+            const rewardsContainer = el('rewards-container');
+            if (rewardsContainer) rewardsContainer.innerHTML = '<div class="col-12 text-center p-5"><p class="fs-5">Inicia sesión para ver y canjear recompensas.</p></div>';
+        }
+        updateCartDisplay();
+    }
+
+    function logoutClient() {
+        clientData = null;
+        localStorage.removeItem(LOGGED_IN_CLIENT_KEY);
+        shoppingCart = [];
+        availableRewards = [];
+        localStorage.removeItem(USER_CART_KEY);
+        localStorage.removeItem(REWARDS_USER_CACHE_KEY);
+        localStorage.removeItem(REWARDS_CACHE_EXPIRY_KEY);
+        updateClientDisplayAndUI();
+        showGlobalFeedback('Sesión cerrada. ¡Vuelve pronto!', 'info');
+        handleAppDownloadPromotion();
+
+        const activeTab = document.querySelector('.nav-pills .nav-link.active');
+        if (activeTab) {
+            const activeTabHref = activeTab.getAttribute('href');
+            if (activeTabHref === '#my-orders-tab') {
+                 const ordersContainer = document.getElementById('orders-history-container');
+                 if(ordersContainer) ordersContainer.innerHTML = '<div class="col-12 text-center p-5"><p class="fs-5">Inicia sesión para ver tus envíos.</p></div>';
+            } else if (activeTabHref === '#rewards-tab') {
+                 const rewardsContainer = document.getElementById('rewards-container');
+                 if(rewardsContainer) rewardsContainer.innerHTML = '<div class="col-12 text-center p-5"><p class="fs-5">Inicia sesión para ver y canjear recompensas.</p></div>';
+            }
+        }
+    }
+
+    async function handleUserRegistrationAttempt() {
+        const nombre = document.getElementById('newUserName').value.trim();
+        const telefono = document.getElementById('newUserPhone').value.trim();
+        const email = document.getElementById('newUserEmail').value.trim();
+        const password = document.getElementById('newUserPassword').value;
+        const confirmPassword = document.getElementById('newUserConfirmPassword').value;
+        const feedbackElId = 'registration-feedback';
+        const modalElement = registrationModalInstance ? registrationModalInstance._element : null;
+
+        if (!nombre || !telefono || !email || !password || !confirmPassword) {
+            showFeedbackInModal(null, feedbackElId, 'Todos los campos marcados con * son requeridos.', 'danger', 4000, modalElement); return;
+        }
+        if (!/^\S+@\S+\.\S+$/.test(email)) {
+             showFeedbackInModal(null, feedbackElId, 'Ingresa un correo electrónico válido.', 'danger', 4000, modalElement); return;
+        }
+        if (password !== confirmPassword) {
+            showFeedbackInModal(null, feedbackElId, 'Las contraseñas no coinciden.', 'danger', 4000, modalElement); return;
+        }
+        if (!/^\+?\d{7,15}$/.test(telefono)) {
+            showFeedbackInModal(null, feedbackElId, 'Ingresa un teléfono válido (7-15 dígitos).', 'danger', 4000, modalElement); return;
+        }
+         if (password.length < 6) {
+            showFeedbackInModal(null, feedbackElId, 'La contraseña debe tener al menos 6 caracteres.', 'danger', 4000, modalElement); return;
+        }
+        showFeedbackInModal(null, feedbackElId, '<div class="spinner-border spinner-border-sm me-2"></div>Registrando...', 'info', null, modalElement);
+        const payload = { nombre, telefono, email, password };
+        const result = await fetchDataFromGAS('registerNewUser', 'POST', payload);
+
+        if (result.success) {
+            showFeedbackInModal(null, feedbackElId, `${result.message || '¡Registro exitoso!'} Ahora puedes iniciar sesión.`, 'success', 4000, modalElement);
+            document.getElementById('newUserRegistrationForm').reset();
+            setTimeout(() => {
+                registrationModalInstance?.hide();
+                if(loginModalInstance && typeof loginModalInstance.show === 'function') {
+                    const existingModal = bootstrap.Modal.getInstance(loginModalInstance._element);
+                    if (!(existingModal && existingModal._isShown)) {
+                       try { loginModalInstance.show(); } catch(e) { console.warn("Error mostrando modal login post-registro:", e); }
+                    }
+                }
+            }, 3000);
+        } else {
+            showFeedbackInModal(null, feedbackElId, result.message || 'Error al registrar. Intenta de nuevo.', 'danger', 6000, modalElement);
+        }
+    }
+
+    async function handleLoginAttempt() {
+        const telefono = document.getElementById('loginPhone').value.trim();
+        const password = document.getElementById('loginPassword').value;
+        const feedbackElId = 'login-feedback';
+        const modalElement = loginModalInstance ? loginModalInstance._element : null;
+
+        if (!telefono || !password) {
+            showFeedbackInModal(null, feedbackElId, 'Teléfono y contraseña son requeridos.', 'danger', 4000, modalElement); return;
+        }
+        showFeedbackInModal(null, feedbackElId, '<div class="spinner-border spinner-border-sm me-2"></div>Iniciando sesión...', 'info', null, modalElement);
+        const payload = { telefono, password };
+        const result = await fetchDataFromGAS('loginUser', 'POST', payload);
+
+        if (result.success && result.data) {
+            clientData = result.data;
+            localStorage.setItem(LOGGED_IN_CLIENT_KEY, JSON.stringify(clientData));
+            updateClientDisplayAndUI();
+            showFeedbackInModal(null, feedbackElId, `¡Bienvenido, ${clientData.nombre.split(' ')[0]}!`, 'success', 3000, modalElement);
+            setTimeout(() => loginModalInstance?.hide(), 2000);
+            
+            await loadMenuItems(true); 
+            await loadAvailableRewards(true);
+            loadUserOrders();
+        } else {
+            showFeedbackInModal(null, feedbackElId, result.message || 'Error al iniciar sesión.', 'danger', 6000, modalElement);
+        }
+    }
+
+    async function handleAvatarFileSelect(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+        if (!file.type.startsWith('image/')) {
+            showGlobalFeedback('Selecciona un archivo de imagen (JPEG, PNG, GIF).', 'warning');
+            event.target.value = null; return;
+        }
+        const maxSizeInBytes = 2 * 1024 * 1024; 
+        if (file.size > maxSizeInBytes) {
+            showGlobalFeedback('Imagen demasiado grande (máx 2MB).', 'warning');
+            event.target.value = null; return;
+        }
+        showGlobalFeedback('Procesando imagen...', 'info', null);
+        try {
+            const compressedDataUrl = await compressImage(file, file.type);
+            if (clientData && clientData.id) {
+                clientData[LOCAL_AVATAR_DATA_KEY] = compressedDataUrl;
+                localStorage.setItem(LOGGED_IN_CLIENT_KEY, JSON.stringify(clientData));
+                
+                const userAvatarImg = document.getElementById('user-avatar');
+                if(userAvatarImg) userAvatarImg.src = compressedDataUrl;
+                showGlobalFeedback('Avatar actualizado localmente. Subiendo...', 'info', 3000);
+
+                const parts = compressedDataUrl.split(';base64,');
+                const contentType = parts[0].split(':')[1];
+                const imageData = parts[1];
+                await uploadClientAvatar(imageData, contentType, file.name);
+            } else {
+                showGlobalFeedback('Error: No hay sesión activa.', 'danger');
+                event.target.value = null; return;
+            }
+        } catch (error) {
+            showGlobalFeedback(`Error al procesar imagen: ${error.message}`, 'danger');
+        } finally {
+            event.target.value = null;
+        }
+    }
+
+    function compressImage(file, originalMimeType) {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = (event) => {
+                const img = new Image();
+                img.src = event.target.result;
+                img.onload = () => {
+                    const canvas = document.createElement('canvas');
+                    let width = img.width;
+                    let height = img.height;
+
+                    if (width > height) {
+                        if (width > MAX_AVATAR_DIMENSION) {
+                            height = Math.round(height * MAX_AVATAR_DIMENSION / width);
+                            width = MAX_AVATAR_DIMENSION;
+                        }
+                    } else {
+                        if (height > MAX_AVATAR_DIMENSION) {
+                            width = Math.round(width * MAX_AVATAR_DIMENSION / height);
+                            height = MAX_AVATAR_DIMENSION;
+                        }
+                    }
+                    canvas.width = width;
+                    canvas.height = height;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, width, height);
+                    resolve(canvas.toDataURL('image/jpeg', AVATAR_JPEG_QUALITY));
+                };
+                img.onerror = () => reject(new Error("No se pudo cargar la imagen."));
+            };
+            reader.onerror = () => reject(new Error("Error leyendo archivo."));
+        });
+    }
+
+    async function uploadClientAvatar(imageData, contentType, filename) {
+        if (!clientData || !clientData.id) {
+            showGlobalFeedback('Debes iniciar sesión para cambiar tu avatar.', 'warning'); return;
+        }
+        const payload = {
+            clientId: clientData.id,
+            imageData: imageData, 
+            contentType: contentType, 
+            filename: "avatar_" + clientData.id + "_" + Date.now() + "." + (contentType.split('/')[1] || 'jpg')
+        };
+        const result = await fetchDataFromGAS('updateClientAvatar', 'POST', payload);
+        if (result.success && result.data && result.data.newAvatarUrl) {
+            if (result.data.clientData) {
+                const localAvatarTemp = clientData[LOCAL_AVATAR_DATA_KEY];
+                clientData = result.data.clientData;
+                if (localAvatarTemp && !clientData[LOCAL_AVATAR_DATA_KEY]) {
+                    clientData[LOCAL_AVATAR_DATA_KEY] = localAvatarTemp;
+                }
+                if (result.data.newAvatarUrl) clientData.avatarurl = result.data.newAvatarUrl;
+            } else {
+                 clientData.avatarurl = result.data.newAvatarUrl;
+            }
+            localStorage.setItem(LOGGED_IN_CLIENT_KEY, JSON.stringify(clientData));
+            showGlobalFeedback('¡Avatar guardado con éxito!', 'success');
+        } else {
+            showGlobalFeedback(result.message || 'Error al guardar avatar en servidor.', 'warning');
+        }
+    }
+
+    async function loadMenuItems(forceRefresh = false) {
+        const menuContainer = document.getElementById('menu-container');
+        if (!menuContainer) { return; }
+        
+        const cachedProducts = localStorage.getItem(PRODUCTS_USER_CACHE_KEY);
+        const cacheExpiryString = localStorage.getItem(MENU_CACHE_EXPIRY_KEY);
+        const now = new Date().getTime();
+        const cacheExpiry = cacheExpiryString ? parseInt(cacheExpiryString) : 0;
+
+        if (!forceRefresh && cachedProducts && cacheExpiry && now < cacheExpiry) {
+            try {
+                menuItems = JSON.parse(cachedProducts);
+                generateCategoryFilters();
+                filterMenuByCategory(currentFilterCategory);
+                return;
+            } catch(e) {
+                localStorage.removeItem(PRODUCTS_USER_CACHE_KEY);
+                localStorage.removeItem(MENU_CACHE_EXPIRY_KEY);
+            }
+        }
+        menuContainer.innerHTML = `<div class="col-12 text-center p-5"><div class="spinner-border" style="width: 3rem; height: 3rem; color: var(--primary-color);" role="status"></div><p class="mt-2 fs-5">${forceRefresh ? 'Actualizando' : 'Cargando'} menú y combos...</p></div>`;
+        const res = await fetchDataFromGAS('getPublicProducts', 'GET');
+        if (res.success && Array.isArray(res.data)) {
+            menuItems = res.data.map(p => ({
+                ...p,
+                price: parseFloat(p.price) || 0,
+                points: parseFloat(p.points) || 0,
+                id: String(p.id),
+                category: p.category || "Otros"
+            }));
+            localStorage.setItem(PRODUCTS_USER_CACHE_KEY, JSON.stringify(menuItems));
+            localStorage.setItem(MENU_CACHE_EXPIRY_KEY, (now + CACHE_DURATION_MS).toString());
+            generateCategoryFilters();
+            filterMenuByCategory(currentFilterCategory);
+            if (forceRefresh) showGlobalFeedback("Menú y combos actualizados.", "success", 2000);
+        } else {
+            menuContainer.innerHTML = `<div class="col-12 text-center p-5"><p class="text-danger fs-5">Error al ${forceRefresh ? 'actualizar' : 'cargar'} el menú: ${res.message || 'Desconocido.'}</p></div>`;
+            if (cachedProducts) {
+                try {
+                    menuItems = JSON.parse(cachedProducts);
+                    generateCategoryFilters(); filterMenuByCategory(currentFilterCategory);
+                    showGlobalFeedback("Mostrando menú anterior. No se pudo actualizar.", "warning", 4000);
+                } catch(e) { console.error("Error parseando productos de caché (fallback):", e); }
+            }
+        }
+    }
+
+    function forceLoadMenuItems() { loadMenuItems(true); }
+
+    function generateCategoryFilters() {
+        const filterContainer = document.getElementById('filter-container');
+        if (!filterContainer || !menuItems || menuItems.length === 0) {
+            if(filterContainer) filterContainer.innerHTML = '';
+            return;
+        }
+        const categories = [...new Set(menuItems.map(item => item.category || "Otros"))].sort((a,b) => a.localeCompare(b));
+        
+        const allButtonHTML = `<button class="btn btn-sm btn-filter ${currentFilterCategory === 'all' ? 'active' : ''}" onclick="filterMenuByCategory('all')">Todos</button>`;
+        let categoryButtonsHTML = categories.map(category =>
+            `<button class="btn btn-sm btn-filter ${currentFilterCategory === category ? 'active' : ''}" onclick="filterMenuByCategory('${category}')">${category}</button>`
+        ).join('');
+        
+        filterContainer.innerHTML = allButtonHTML + categoryButtonsHTML;
+    }
+
+    function filterMenuByCategory(category) {
+        currentFilterCategory = category;
+        const filterButtons = document.querySelectorAll('#filter-container .btn-filter');
+        filterButtons.forEach(btn => {
+            const btnCategoryText = btn.textContent.trim();
+            if (btnCategoryText.toLowerCase() === category.toLowerCase() || (category === 'all' && btnCategoryText.toLowerCase() === 'todos')) {
+                btn.classList.add('active');
+            } else {
+                btn.classList.remove('active');
+            }
+        });
+        generateMenu();
+    }
+
+    function generateMenu() {
+        const menuContainer = document.getElementById('menu-container');
+        if (!menuContainer) return;
+        menuContainer.innerHTML = '';
+        
+        const itemsToDisplay = currentFilterCategory === 'all' ?
+                               menuItems :
+                               menuItems.filter(item => (item.category || "Otros") === currentFilterCategory);
+        
+        if (!itemsToDisplay || itemsToDisplay.length === 0) {
+            menuContainer.innerHTML = `<div class="col-12 text-center p-5"><p class="fs-5">No hay productos o combos disponibles ${currentFilterCategory === 'all' ? '' : 'en la categoría "' + currentFilterCategory + '"'}.</p></div>`;
+            return;
+        }
+
+        itemsToDisplay.sort((a,b) => (a.name || "").localeCompare(b.name || "")).forEach(item => {
+            let placeholderText = encodeURIComponent(item.name || 'Producto');
+            if (item.category) {
+                const catLower = item.category.toLowerCase();
+                if (catLower.includes('pizza')) placeholderText = 'Pizza';
+                else if (catLower.includes('bebida')) placeholderText = 'Bebida';
+                else if (catLower.includes('hamburguesa')) placeholderText = 'Hamburguesa';
+                else if (catLower.includes('combo')) placeholderText = 'Combo';
+            }
+            const itemId = String(item.id);
+
+            menuContainer.innerHTML += `
+            <div class="col-6 col-md-6 col-lg-4 d-flex align-items-stretch animate__animated animate__fadeInUp" style="animation-duration: 0.5s;">
+                <div class="menu-item-card card w-100 d-flex flex-column">
+                    <img src="${item.imageurl || 'https://via.placeholder.com/350x250/CCCCCC/FFFFFF?text=' + placeholderText}" class="product-image card-img-top" alt="${item.name || 'Producto'}" onclick="showProductDetailModal('${itemId}')">
+                    <div class="card-body d-flex flex-column">
+                        <h5 class="card-title">${item.name || 'Sin Nombre'}</h5>
+                        <p class="card-text flex-grow-1">${item.description || 'Deliciosa opción de nuestro menú.'}</p>
+                        <div class="price-points-row d-flex justify-content-between align-items-center mt-auto pt-3">
+                            <span class="fw-bold fs-5" style="color: var(--primary-color);">USD ${(item.price || 0).toFixed(2)}</span>
+                            <span class="badge bg-success text-white">+${(parseFloat(item.points) || 0).toFixed(2)} Puntos</span>
+                        </div>
+                        <button class="btn btn-primary mt-3 w-100" onclick="addToCart('${itemId}')">
+                            <i class="bi bi-cart-plus-fill me-2"></i>Añadir al Envío
+                        </button>
+                    </div>
+                </div>
+            </div>`;
+        });
+    }
+
+    function loadCartFromStorage(){ 
+        const storedCart = localStorage.getItem(USER_CART_KEY); 
+        shoppingCart = storedCart ? (JSON.parse(storedCart) || []) : [];
+        updateCartDisplay();
+    }
+    
+    function saveCartToStorage(){ 
+        try {
+            localStorage.setItem(USER_CART_KEY, JSON.stringify(shoppingCart));
+        } catch(e) {
+            showGlobalFeedback("No se pudo guardar el carrito. ¿Almacenamiento lleno?", "danger");
+        }
+    }
+
+    function addToCart(productId) {
+        if (!clientData || !clientData.id) {
+            showGlobalFeedback('Inicia sesión para añadir productos a tu envío.', 'warning');
+            if(loginModalInstance && typeof loginModalInstance.show === 'function') {
+                 const existingModal = bootstrap.Modal.getInstance(loginModalInstance._element);
+                 if (!(existingModal && existingModal._isShown)) loginModalInstance.show();
+            }
+            return;
+        }
+        if (!menuItems || menuItems.length === 0) {
+            showGlobalFeedback("Error: El menú no está cargado. Intenta recargar.", "danger"); return;
+        }
+        const product = menuItems.find(item => item.id === productId); 
+        if (!product) {
+            showGlobalFeedback("Producto no encontrado.", "danger"); return;
+        }
+
+        const existingItem = shoppingCart.find(item => item.productId === productId);
+        if (existingItem) {
+            existingItem.quantity = (existingItem.quantity || 0) + 1;
+        } else {
+            shoppingCart.push({
+                productId: product.id, name: product.name, 
+                price:parseFloat(product.price)||0, quantity:1, points:parseFloat(product.points)||0
+            });
+        }
+        saveCartToStorage(); updateCartDisplay(); renderCartItems();
+        showGlobalFeedback(`${product.name} añadido a tu envío!`, 'success', 2000);
+    }
+
+    function updateCartQuantity(productId, change) {
+        const itemInCart = shoppingCart.find(item => item.productId === productId);
+        if (itemInCart) {
+            itemInCart.quantity += change;
+            if (itemInCart.quantity <= 0) {
+                shoppingCart = shoppingCart.filter(item => item.productId !== productId);
+            }
+        }
+        saveCartToStorage(); renderCartItems(); updateCartDisplay();
+    }
+
+    function removeFromCart(productId) {
+        shoppingCart = shoppingCart.filter(item => item.productId !== productId);
+        saveCartToStorage(); renderCartItems(); updateCartDisplay();
+        showGlobalFeedback("Producto eliminado del envío.", "info", 1500);
+    }
+
+    function clearCart() {
+        if (shoppingCart.length === 0) {
+            showFeedbackInModal(null, 'order-placement-feedback', 'El carrito de envío ya está vacío.', 'info', 2000, cartModalInstance ? cartModalInstance._element : null); return;
+        }
+        if (confirm("¿Estás seguro de que quieres vaciar tu carrito de envío?")) {
+            shoppingCart = []; saveCartToStorage(); renderCartItems(); updateCartDisplay();
+            showFeedbackInModal(null, 'order-placement-feedback', 'Carrito de envío vaciado.', 'info', 2000, cartModalInstance ? cartModalInstance._element : null);
+        }
+    }
+
+    function updateCartDisplay() {
+        const cartCountNavEl = document.getElementById('cart-count-nav-navbar');
+        const floatingCartButton = document.getElementById('floatingCartButton');
+        const floatingCartCountEl = document.getElementById('cart-count-floating');
+
+        let totalItems = Array.isArray(shoppingCart) ? shoppingCart.reduce((s, i) => s + (i.quantity || 0), 0) : 0;
+        
+        if (cartCountNavEl) cartCountNavEl.textContent = totalItems;
+
+        if (floatingCartCountEl) floatingCartCountEl.textContent = totalItems;
+        if (floatingCartButton) {
+            floatingCartButton.style.display = (clientData && clientData.id) ? 'flex' : 'none'; 
+             if (totalItems === 0) { 
+                if(floatingCartCountEl) floatingCartCountEl.style.display = 'none';
+            } else {
+                if(floatingCartCountEl) floatingCartCountEl.style.display = 'flex'; 
+            }
+        }
+        
+        const pointsEl = document.getElementById('cart-points-to-earn');
+        if(pointsEl) pointsEl.textContent = Array.isArray(shoppingCart) ? shoppingCart.reduce((s,i)=>s+((parseFloat(i.points)||0)*(i.quantity||0)),0).toFixed(2) : '0.00';
+    }
+
+    function renderCartItems() {
+        const container = document.getElementById('cart-items-container');
+        const totalPriceEl = document.getElementById('cart-total-price');
+        const pointsToEarnEl = document.getElementById('cart-points-to-earn');
+
+        if (!container || !totalPriceEl || !pointsToEarnEl) return;
+        container.innerHTML = ''; let currentTotal = 0; let totalPoints = 0;
+
+        if (!Array.isArray(shoppingCart) || shoppingCart.length === 0) {
+            container.innerHTML = '<p class="text-center py-4 fs-5">Tu carrito de envío está vacío.</p>';
+            totalPriceEl.textContent = '0.00'; pointsToEarnEl.textContent = '0.00';
+            updateCartDisplay(); return;
+        }
+
+        const ul = document.createElement('ul'); 
+        ul.className = 'list-group list-group-flush';
+        
+        shoppingCart.forEach(item => {
+            const itemTotal = (parseFloat(item.price) || 0) * (item.quantity || 0);
+            const itemPoints = (parseFloat(item.points) || 0) * (item.quantity || 0);
+            currentTotal += itemTotal; totalPoints += itemPoints;
+            const itemProductId = String(item.productId);
+
+            const li = document.createElement('li'); 
+            li.className = 'list-group-item d-flex justify-content-between align-items-center flex-wrap gap-2 py-3 bg-transparent text-light border-secondary';
+            li.innerHTML = `
+                <div class="me-auto">
+                    <strong class="d-block">${item.name || 'Desconocido'}</strong>
+                    <small class="text-muted">${item.quantity||0} x USD ${(parseFloat(item.price)||0).toFixed(2)}</small>
+                </div>
+                <div class="fw-bold me-3 fs-5">USD ${itemTotal.toFixed(2)}</div>
+                <div class="btn-group btn-group-sm">
+                    <button class="btn btn-outline-secondary px-2 py-1" onclick="updateCartQuantity('${itemProductId}',-1)"><i class="bi bi-dash-lg"></i></button>
+                    <span class="btn btn-light disabled px-3 py-1 border-secondary text-dark">${item.quantity||0}</span>
+                    <button class="btn btn-outline-secondary px-2 py-1" onclick="updateCartQuantity('${itemProductId}',1)"><i class="bi bi-plus-lg"></i></button>
+                    <button class="btn btn-outline-danger ms-2 px-2 py-1" onclick="removeFromCart('${itemProductId}')"><i class="bi bi-trash"></i></button>
+                </div>`;
+            ul.appendChild(li);
+        });
+        container.appendChild(ul); 
+        totalPriceEl.textContent = currentTotal.toFixed(2);
+        pointsToEarnEl.textContent = totalPoints.toFixed(2);
+        updateCartDisplay();
+    }
+
+    function showRecipientInfoModal() {
+        if (!Array.isArray(shoppingCart) || shoppingCart.length === 0) { 
+            showFeedbackInModal(null, 'order-placement-feedback', "Tu carrito está vacío.", "warning", 4000, cartModalInstance ? cartModalInstance._element : null); return; 
+        }
+        if (!clientData || !clientData.id) { 
+            showFeedbackInModal(null, 'order-placement-feedback', 'Inicia sesión para continuar.', 'warning', 4000, cartModalInstance ? cartModalInstance._element : null); 
+            cartModalInstance?.hide(); 
+            if(loginModalInstance && typeof loginModalInstance.show === 'function') {
+                 const existingModal = bootstrap.Modal.getInstance(loginModalInstance._element);
+                 if (!(existingModal && existingModal._isShown)) loginModalInstance.show();
+            }
+            return; 
+        }
+        document.getElementById('recipientForm').reset();
+        if(cartModalInstance && typeof cartModalInstance.hide === 'function') cartModalInstance.hide();
+        if(recipientInfoModalInstance && typeof recipientInfoModalInstance.show === 'function') {
+            const existingModal = bootstrap.Modal.getInstance(recipientInfoModalInstance._element);
+            if (!(existingModal && existingModal._isShown)) recipientInfoModalInstance.show();
+        }
+    }
+    
+    async function confirmAndPlaceOrderWithRecipientInfo() {
+        const recipientName = document.getElementById('recipientName').value.trim();
+        const recipientPhone = document.getElementById('recipientPhone').value.trim();
+        const recipientAddress = document.getElementById('recipientAddress').value.trim();
+        const deliveryNotes = document.getElementById('deliveryNotes').value.trim();
+        const modalElementContext = recipientInfoModalInstance ? recipientInfoModalInstance._element : null;
+
+
+        if (!recipientName || !recipientPhone || !recipientAddress) {
+            showGlobalFeedback("Completa los datos del destinatario (*).", "warning", 5000, modalElementContext);
+            return;
+        }
+        if (!/^(5\d{7}|[2-4|7]\d{6,7})$/.test(recipientPhone.replace(/\s+/g, ''))) {
+             showGlobalFeedback("Ingresa un teléfono cubano válido.", "warning", 6000, modalElementContext);
+             return;
+        }
+
+        if(recipientInfoModalInstance && typeof recipientInfoModalInstance.hide === 'function') recipientInfoModalInstance.hide();
+        
+        if(cartModalInstance && typeof cartModalInstance.show === 'function') {
+            const existingModal = bootstrap.Modal.getInstance(cartModalInstance._element);
+            if (!(existingModal && existingModal._isShown)) cartModalInstance.show();
+        }
+        showFeedbackInModal(null, 'order-placement-feedback', '<div class="spinner-border spinner-border-sm me-2"></div>Procesando envío...', 'info', null, cartModalInstance ? cartModalInstance._element : null);
+        
+        const cartPayload = shoppingCart.map(item => ({ productId: String(item.productId), quantity: item.quantity || 0 }));
+        const recipientInfo = { 
+            name: recipientName, 
+            phone: recipientPhone, 
+            address: recipientAddress,
+            notes: deliveryNotes
+        };
+
+        const result = await fetchDataFromGAS('placeOrder', 'POST', { 
+            clientId: String(clientData.id), 
+            cartItems: cartPayload,
+            recipientInfo: recipientInfo
+        });
+        
+        const feedbackContainer = document.getElementById('order-placement-feedback');
+        if (feedbackContainer) feedbackContainer.innerHTML = ''; 
+
+        if (result.success && result.data) {
+            let successMessage = `${result.message || '¡Envío programado!'} ID: ${result.data.orderId}.<br>Revisa tu correo para instrucciones de pago Zelle.`;
+            
+            if (result.data.adminWhatsApp && result.data.adminWhatsApp !== "TU_NUMERO_DE_WHATSAPP_AQUI" && result.data.adminWhatsApp.trim() !== "") {
+                const whatsappMessage = `Hola, acabo de realizar el envío #${result.data.orderId} por ${result.data.totalAmount.toFixed(2)} USD. Dest: ${recipientName}. ¿Instrucciones Zelle?`;
+                const whatsappLink = `https://wa.me/${result.data.adminWhatsApp}?text=${encodeURIComponent(whatsappMessage)}`;
+                successMessage += ` <br><a href="${whatsappLink}" target="_blank" class="btn btn-sm btn-success mt-2 py-2"><i class="bi bi-whatsapp"></i> Confirmar Pago por WhatsApp</a>`;
+            }
+
+            showFeedbackInModal(null, 'order-placement-feedback', successMessage, 'success', null, cartModalInstance ? cartModalInstance._element : null);
+            shoppingCart = []; saveCartToStorage();
+            
+            if (result.data.updatedClient) {
+                const localAvatar = clientData[LOCAL_AVATAR_DATA_KEY];
+                clientData = result.data.updatedClient;
+                if (localAvatar && !clientData[LOCAL_AVATAR_DATA_KEY]) clientData[LOCAL_AVATAR_DATA_KEY] = localAvatar;
+                localStorage.setItem(LOGGED_IN_CLIENT_KEY, JSON.stringify(clientData));
+                updateClientDisplayAndUI(); 
+            }
+            loadUserOrders(); 
+            renderCartItems(); 
+        } else {
+            showFeedbackInModal(null, 'order-placement-feedback', result.message || 'Error al programar el envío.', 'danger', 7000, cartModalInstance ? cartModalInstance._element : null);
+        }
+    }
+
+    async function loadUserOrders() {
+        const container = document.getElementById('orders-history-container'); 
+        if (!container) return;
+        if (!clientData || !clientData.id) { 
+            container.innerHTML = '<div class="col-12 text-center p-5"><p class="fs-5">Inicia sesión para ver tu historial.</p></div>'; return; 
+        }
+        container.innerHTML = `<div class="col-12 text-center p-5"><div class="spinner-border" style="width: 3rem; height: 3rem; color: var(--primary-color);"></div><p class="mt-2 fs-5">Cargando historial...</p></div>`;
+        
+        const result = await fetchDataFromGAS('getUserOrders', 'POST', { clientId: String(clientData.id) });
+        
+        if (result.success && Array.isArray(result.data)) {
+            if (result.data.length === 0) { 
+                container.innerHTML = '<div class="col-12 text-center p-5"><p class="fs-5">Aún no has realizado envíos.</p></div>'; return; 
+            }
+            let html = '<div class="accordion shadow-sm" id="ordersAccordion">';
+            result.data.forEach((order, index) => { 
+                const items = order.itemsjson; 
+                let itemsHtml = '<ul class="list-unstyled small ms-3 mt-1" style="color: #e0e0e0;">';
+                if (Array.isArray(items) && items.length > 0) {
+                    items.forEach(item => { 
+                        itemsHtml += `<li>${item.quantity}x ${item.name} (USD ${((parseFloat(item.price)||0) * (item.quantity||0)).toFixed(2)})</li>`; 
+                    });
+                } else { itemsHtml += '<li>No hay detalles de ítems.</li>'; }
+                itemsHtml += '</ul>';
+                
+                let sbc = 'bg-secondary'; const os = String(order.status || '').toLowerCase();
+                if (os === 'pendiente de pago') { sbc = 'bg-warning text-dark'; }
+                else if (os === 'pendiente') { sbc = 'bg-info text-dark'; }
+                else if (os === 'procesado' || os === 'en preparación') { sbc = 'bg-primary'; }
+                else if (os === 'entregado' || os === 'completado') { sbc = 'bg-success'; }
+                else if (os === 'cancelado') { sbc = 'bg-danger'; }
+                
+                const dateStr = order.orderdateiso || order.orderdate;
+                let odf = 'Fecha N/A';
+                if(dateStr) {
+                    try { odf = new Date(dateStr).toLocaleDateString('es-ES', { year: 'numeric', month: 'short', day: 'numeric', hour:'2-digit', minute:'2-digit' }); }
+                    catch(e) { odf = String(dateStr); }
+                }
+
+                html += `
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="hO${order.orderid}"><button class="accordion-button ${index>0?'collapsed':''}" type="button" data-bs-toggle="collapse" data-bs-target="#cO${order.orderid}" aria-expanded="${index===0}" aria-controls="cO${order.orderid}"><span class="me-auto">${odf} - Envío #${String(order.orderid).substr(-6)} - USD ${(parseFloat(order.totalamount)||0).toFixed(2)}</span><span class="badge ${sbc} text-uppercase">${order.status||'N/A'}</span></button></h2>
+                        <div id="cO${order.orderid}" class="accordion-collapse collapse ${index===0?'show':''}" aria-labelledby="hO${order.orderid}" data-bs-parent="#ordersAccordion"><div class="accordion-body"><strong>Puntos ${order.pointsgiven?'Otorgados':'A Otorgar'}:</strong> ${(parseFloat(order.totalpointsawarded)||0).toFixed(2)}<br><strong>Ítems:</strong>${itemsHtml}</div></div>
+                    </div>`;
+            });
+            html += '</div>'; container.innerHTML = html;
+        } else {
+            container.innerHTML = `<div class="col-12 text-center p-5"><p class="text-danger fs-5">Error al cargar historial: ${result.message || 'Error.'}</p></div>`;
+        }
+    }
+
+    async function loadAvailableRewards(forceRefresh = false) {
+        const rc = document.getElementById('rewards-container'); 
+        if (!rc) return;
+        if (!clientData || !clientData.id) { 
+            rc.innerHTML = '<div class="col-12 text-center p-5"><p class="fs-5">Inicia sesión para ver recompensas.</p></div>'; return; 
+        }
+
+        const cachedRewards = localStorage.getItem(REWARDS_USER_CACHE_KEY);
+        const cacheExpiryString = localStorage.getItem(REWARDS_CACHE_EXPIRY_KEY);
+        const now = new Date().getTime();
+        const cacheExpiry = cacheExpiryString ? parseInt(cacheExpiryString) : 0;
+
+        if (!forceRefresh && cachedRewards && cacheExpiry && now < cacheExpiry) {
+            try { 
+                availableRewards = JSON.parse(cachedRewards); 
+                generateRewardsList(); 
+                return; 
+            }
+            catch(e) { 
+                console.error("Error parseando recompensas cacheadas (loadAvailableRewards):", e);
+                localStorage.removeItem(REWARDS_USER_CACHE_KEY); 
+                localStorage.removeItem(REWARDS_CACHE_EXPIRY_KEY);
+            }
+        }
+        
+        rc.innerHTML = `<div class="col-12 text-center p-5"><div class="spinner-border" style="width: 3rem; height: 3rem; color: var(--primary-color);"></div><p class="mt-2 fs-5">${forceRefresh ? 'Actualizando' : 'Cargando'} recompensas...</p></div>`;
+        const res = await fetchDataFromGAS('getAvailableRewards', 'GET'); // GAS debe filtrar por activas para cliente
+        
+        if (res.success && Array.isArray(res.data)) {
+            availableRewards = res.data.map(r => ({...r, rewardid: String(r.rewardid), pointsrequired:parseFloat(r.pointsrequired)||0, stock:parseInt(r.stock) }));
+            localStorage.setItem(REWARDS_USER_CACHE_KEY, JSON.stringify(availableRewards));
+            localStorage.setItem(REWARDS_CACHE_EXPIRY_KEY, (now + CACHE_DURATION_MS).toString());
+            generateRewardsList();
+            if (forceRefresh) showGlobalFeedback("Recompensas actualizadas.", "success", 2000);
+        } else {
+            rc.innerHTML = `<div class="col-12 text-center p-5"><p class="text-danger fs-5">No se pudo cargar recompensas: ${res.message||'Error.'}</p></div>`;
+             if (cachedRewards) {
+                try { 
+                    availableRewards = JSON.parse(cachedRewards); 
+                    generateRewardsList(); 
+                    showGlobalFeedback("Mostrando recompensas anteriores. No se pudo actualizar.", "warning", 4000);
+                } catch(e) { console.error("Error parseando recompensas de caché (fallback):", e); }
+            }
+        }
+    }
+    function forceLoadAvailableRewards() { loadAvailableRewards(true); }
+
+    function generateRewardsList() {
+        const rc = document.getElementById('rewards-container'); 
+        if (!rc) return; rc.innerHTML = '';
+        
+        if (!clientData || !clientData.id) { 
+            rc.innerHTML = '<div class="col-12 text-center p-5"><p class="fs-5">Inicia sesión para ver recompensas.</p></div>'; return;
+        }
+        if (!availableRewards || availableRewards.length === 0) { 
+            rc.innerHTML = '<div class="col-12 text-center p-5"><p class="fs-5">No hay recompensas disponibles.</p></div>'; return; 
+        }
+
+        const cp = clientData ? (parseFloat(clientData.puntos) || 0) : 0;
+        availableRewards.sort((a,b) => (a.pointsrequired||0)-(b.pointsrequired||0));
+        
+        availableRewards.forEach(reward => {
+            const ca = cp >= reward.pointsrequired;
+            const hs = isNaN(reward.stock) || reward.stock === 9999 || reward.stock > 0; 
+            const cr = ca && hs;
+            const rid = String(reward.rewardid);
+
+            rc.innerHTML += `
+            <div class="col-6 col-md-6 col-lg-4 d-flex align-items-stretch animate__animated animate__fadeInUp" style="animation-duration: 0.5s;">
+                <div class="reward-card card w-100 ${!cr ? 'opacity-75' : ''}">
+                    <img src="${reward.imageurl || 'https://via.placeholder.com/350x250/CCCCCC/FFFFFF?text=' + encodeURIComponent(reward.name||'Recompensa')}" 
+                         class="reward-image card-img-top" 
+                         alt="${reward.name||'Recompensa'}"
+                         onclick="showProductDetailModal('${rid}', true)">
+                    <div class="card-body d-flex flex-column">
+                        <h5 class="card-title mb-1">${reward.name||'N/A'}</h5>
+                        <p class="card-text small flex-grow-1 mb-3">${reward.description||'Beneficio para tus envíos.'}</p>
+                        <div class="price-points-row d-flex justify-content-between align-items-center mt-auto pt-3">
+                            <span class="fw-bold fs-5" style="color: var(--accent-color);">${(reward.pointsrequired || 0).toFixed(2)} Pts</span>
+                            ${!isNaN(reward.stock) && reward.stock !== 9999 ? `<span class="small text-muted">Disp: ${reward.stock}</span>` : '<span class="small text-muted">Ilimitado</span>'}
+                        </div>
+                        <button class="btn btn-warning w-100 mt-3" onclick="attemptRedeemReward('${rid}')" ${!cr?'disabled':''}>
+                            <i class="bi bi-award-fill me-2"></i> ${cr ? 'Canjear' : (ca&&!hs ? 'Agotado' : 'Puntos Insuf.')}
+                        </button>
+                    </div>
+                </div>
+            </div>`;
+        });
+    }
+
+    async function attemptRedeemReward(rewardId) {
+        if (!clientData || !clientData.id) { 
+            showGlobalFeedback("Debes iniciar sesión para canjear.", "warning"); 
+            if(loginModalInstance && typeof loginModalInstance.show === 'function') {
+                 const existingModal = bootstrap.Modal.getInstance(loginModalInstance._element);
+                 if (!(existingModal && existingModal._isShown)) loginModalInstance.show();
+            }
+            return; 
+        }
+        const reward = availableRewards.find(r => r.rewardid === rewardId);
+        if (!reward) { showGlobalFeedback("Recompensa no encontrada.", "danger"); return; }
+        if (!confirm(`¿Canjear "${reward.name}" por ${reward.pointsrequired.toFixed(2)} puntos?`)) return;
+        
+        showGlobalFeedback("Procesando canje...", "info", null);
+        const result = await fetchDataFromGAS('redeemReward', 'POST', { clientId: String(clientData.id), rewardId: rewardId });
+        
+        if (result.success && result.data) {
+            showGlobalFeedback(result.message || "¡Recompensa canjeada!", "success", 5000);
+            if (result.data.updatedClient) {
+                const localAvatar = clientData[LOCAL_AVATAR_DATA_KEY];
+                clientData = result.data.updatedClient;
+                if(localAvatar && !clientData[LOCAL_AVATAR_DATA_KEY]) clientData[LOCAL_AVATAR_DATA_KEY] = localAvatar;
+                localStorage.setItem(LOGGED_IN_CLIENT_KEY, JSON.stringify(clientData));
+                updateClientDisplayAndUI();
+            }
+            loadAvailableRewards(true); 
+        } else {
+            showGlobalFeedback(result.message || "No se pudo canjear.", "danger", 7000);
+        }
+    }
+
+    function showFeedbackInModal(modalIdUnused, elId, msg, type='info', dur=4000, contextModalElement = null) {
+        const div = document.getElementById(elId); 
+        
+        let targetDiv = div;
+        if (!targetDiv && contextModalElement) {
+            targetDiv = contextModalElement.querySelector('.modal-feedback-area');
+            if (!targetDiv) {
+                targetDiv = document.createElement('div');
+                targetDiv.className = 'modal-feedback-area mt-3 px-3';
+                const modalBody = contextModalElement.querySelector('.modal-body');
+                const modalFooter = contextModalElement.querySelector('.modal-footer');
+                if (modalBody) modalBody.appendChild(targetDiv);
+                else if (modalFooter) modalFooter.parentNode.insertBefore(targetDiv, modalFooter);
+                else { showGlobalFeedback(msg, type, dur); return; }
+            }
+        }
+        if (!targetDiv) {showGlobalFeedback(msg, type, dur); return; }
+
+        let btnCloseClass = 'btn-close-white'; // Por defecto para fondos oscuros de Bootstrap
+        if (type === 'warning' || type === 'light' || (type === 'info' && bgc === 'bg-light')) { // bgc no está definido aquí, ajustar lógica si es necesario
+            btnCloseClass = ''; // Usar default de Bootstrap (oscuro) para fondos claros
+        }
+        targetDiv.innerHTML = `<div class="alert alert-${type} alert-dismissible fade show small py-2 mb-0" role="alert">${msg}<button type="button" class="btn-close ${btnCloseClass} btn-sm py-2" data-bs-dismiss="alert" aria-label="Close"></button></div>`;
+        
+        if (dur !== null && type !== 'info' && !(String(msg).includes('spinner-border'))) {
+             setTimeout(() => { 
+                if (targetDiv && targetDiv.firstChild && typeof targetDiv.firstChild.innerHTML === 'string' && targetDiv.firstChild.innerHTML.includes(msg.substring(0,50))) {
+                    targetDiv.innerHTML = ''; 
+                }
+            }, dur);
+        }
+    }
+
+    function showGlobalFeedback(msg, type = 'info', dur = 4000, contextElement = null) {
+        const toastPlacementId = 'toastPlacement';
+        let toastPlacement = document.getElementById(toastPlacementId);
+        
+        if (!toastPlacement && !contextElement) { alert(`${type.toUpperCase()}: ${msg}`); return; }
+
+        const toastId = 'liveToast-' + Date.now();
+        let tbc = 'text-dark', bgc = 'bg-light', bcc = 'btn-close-dark'; 
+        if (type === 'danger') { tbc = 'text-white'; bgc = 'bg-danger'; bcc = 'btn-close-white-toast';}
+        else if (type === 'success') { tbc = 'text-white'; bgc = 'bg-success'; bcc = 'btn-close-white-toast';}
+        else if (type === 'warning') { tbc = 'text-dark'; bgc = 'bg-warning'; } // bcc default (dark)
+        else if (type === 'info') { tbc = 'text-white'; bgc = 'bg-primary'; bcc = 'btn-close-white-toast'; }
+
+        const toastHTML = `
+            <div class="toast align-items-center ${tbc} ${bgc} border-0 shadow-lg" role="alert" aria-live="assertive" aria-atomic="true" id="${toastId}" data-bs-delay="${dur === null ? 500000 : dur}">
+                <div class="d-flex">
+                    <div class="toast-body">${msg}</div>
+                    <button type="button" class="btn-close ${bcc} me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                </div>
+            </div>`;
+        
+        let targetPlacement = toastPlacement;
+        if (contextElement && contextElement.classList.contains('modal')) {
+            let modalToastContainer = contextElement.querySelector('.modal-toast-container');
+            if (!modalToastContainer) {
+                modalToastContainer = document.createElement('div');
+                modalToastContainer.className = 'toast-container position-fixed top-0 start-50 translate-middle-x p-3';
+                modalToastContainer.style.zIndex = '1090'; 
+                contextElement.appendChild(modalToastContainer);
+            }
+            targetPlacement = modalToastContainer;
+        }
+
+        if(targetPlacement) {
+            targetPlacement.insertAdjacentHTML('beforeend', toastHTML);
+            const toastEl = document.getElementById(toastId);
+            if (toastEl && typeof bootstrap !== 'undefined') {
+                const toastInstance = new bootstrap.Toast(toastEl, { 
+                    autohide: (dur !== null && !String(msg).includes('spinner-border')), 
+                });
+                toastInstance.show();
+                toastEl.addEventListener('hidden.bs.toast', () => toastEl.remove());
+            } else if (!toastEl) {
+                console.warn("Toast element no encontrado después de insertarlo:", toastId);
+            } else if (typeof bootstrap === 'undefined') {
+                console.warn("Bootstrap no está definido, no se puede mostrar el toast:", toastId);
+            }
+        } else { 
+            alert(`${type.toUpperCase()}: ${msg}`);
+        }
+    }
+
+    function showProductDetailModal(itemId, isReward = false) {
+        const item = isReward 
+            ? availableRewards.find(r => String(r.rewardid) === String(itemId)) 
+            : menuItems.find(p => String(p.id) === String(itemId));
+
+        if (!item) {
+            showGlobalFeedback("Detalle no encontrado.", "warning");
+            return;
+        }
+
+        document.getElementById('productDetailModalImage').src = item.imageurl || `https://via.placeholder.com/400x300/CCCCCC/FFFFFF?text=${encodeURIComponent(item.name || 'Detalle')}`;
+        document.getElementById('productDetailModalImage').alt = item.name || (isReward ? 'Recompensa' : 'Producto');
+        document.getElementById('productDetailModalName').textContent = item.name || (isReward ? 'Recompensa' : 'Producto');
+        document.getElementById('productDetailModalDescription').textContent = item.description || (isReward ? 'Canjea este beneficio.' : 'Detalles de esta opción.');
+        
+        const addToCartBtn = document.getElementById('productDetailModalAddToCartBtn');
+        const priceEl = document.getElementById('productDetailModalPrice');
+        const pointsEl = document.getElementById('productDetailModalPoints');
+
+        if (isReward) {
+            priceEl.textContent = `${(parseFloat(item.pointsrequired) || 0).toFixed(2)} Pts`;
+            pointsEl.style.display = 'none';
+            addToCartBtn.innerHTML = '<i class="bi bi-award-fill me-2"></i>Canjear Recompensa';
+            addToCartBtn.onclick = (event) => { event.stopPropagation(); attemptRedeemReward(item.rewardid); productDetailModalInstance.hide(); };
+            const cp = clientData ? (parseFloat(clientData.puntos) || 0) : 0;
+            const canRedeem = cp >= item.pointsrequired && (isNaN(item.stock) || item.stock === 9999 || item.stock > 0);
+            addToCartBtn.disabled = !canRedeem;
+            if (!canRedeem) {
+                if (!(cp >= item.pointsrequired)) addToCartBtn.innerHTML = '<i class="bi bi-x-circle-fill me-2"></i>Puntos Insuficientes';
+                else if (!hs) addToCartBtn.innerHTML = '<i class="bi bi-slash-circle-fill me-2"></i>Agotado'; // hs no está definido aquí, corregir
+            }
+        } else { 
+            priceEl.textContent = `USD ${(parseFloat(item.price) || 0).toFixed(2)}`;
+            pointsEl.textContent = `+${(parseFloat(item.points) || 0).toFixed(2)} Puntos`;
+            pointsEl.style.display = 'inline-block';
+            addToCartBtn.innerHTML = '<i class="bi bi-cart-plus-fill me-2"></i>Añadir al Envío';
+            addToCartBtn.onclick = (event) => { event.stopPropagation(); addToCart(item.id); productDetailModalInstance.hide(); };
+            addToCartBtn.disabled = false;
+        }
+
+        loadProductRecommendations(item.id || item.rewardid, item.category, isReward);
+        if(productDetailModalInstance && typeof productDetailModalInstance.show === 'function') {
+            const existingModal = bootstrap.Modal.getInstance(productDetailModalInstance._element);
+            if (!(existingModal && existingModal._isShown)) {
+                try{ productDetailModalInstance.show(); } catch(e){ console.warn("Error mostrando modal detalle producto:", e); }
+            }
+        }
+    }
+
+    function loadProductRecommendations(currentItemId, currentItemCategory, isCurrentItemReward) {
+        const recommendationsContainer = document.getElementById('productDetailModalRecommendations');
+        recommendationsContainer.innerHTML = '<div class="col text-center"><div class="spinner-border text-primary" role="status"></div></div>';
+        
+        let potentialRecommendations = menuItems.filter(p => String(p.id) !== String(currentItemId));
+
+        if (potentialRecommendations.length === 0) {
+            recommendationsContainer.innerHTML = '<div class="col"><p class="text-center text-muted">No hay otras recomendaciones.</p></div>';
+            return;
+        }
+        const shuffled = potentialRecommendations.sort(() => 0.5 - Math.random());
+        const recommendations = shuffled.slice(0, 4);
+
+        let recommendationsHTML = '';
+        recommendations.forEach(rec => {
+            recommendationsHTML += `
+                <div class="col-6 col-md-3 mb-3">
+                    <div class="card menu-item-card h-100" onclick="productDetailModalInstance.hide(); setTimeout(() => showProductDetailModal('${rec.id}'), 250);" style="cursor:pointer;">
+                        <img src="${rec.imageurl || 'https://via.placeholder.com/150x100/CCCCCC/FFFFFF?text=' + encodeURIComponent(rec.name)}" class="product-image-recommendation card-img-top" alt="${rec.name}">
+                        <div class="card-body p-2 text-center">
+                            <h6 class="card-title small mb-1" style="font-size:0.8rem;">${rec.name}</h6>
+                            <p class="card-text small fw-bold" style="color:var(--primary-color);">USD ${rec.price.toFixed(2)}</p>
+                        </div>
+                    </div>
+                </div>`;
+        });
+        recommendationsContainer.innerHTML = recommendationsHTML || '<div class="col"><p class="text-center text-muted">No hay recomendaciones.</p></div>';
+    }
+
+    function togglePasswordVisibility(fieldId, button) {
+        const passwordField = document.getElementById(fieldId);
+        const icon = button.querySelector('i');
+        if (passwordField.type === "password") {
+            passwordField.type = "text";
+            icon.classList.remove('bi-eye-slash');
+            icon.classList.add('bi-eye');
+        } else {
+            passwordField.type = "password";
+            icon.classList.remove('bi-eye');
+            icon.classList.add('bi-eye-slash');
+        }
+    }
+
+    async function loadFeaturedProducts() {
+        const container = document.getElementById('featured-products-container');
+        if (!container) return;
+        container.innerHTML = '<div class="col-12 text-center p-4"><div class="spinner-border text-primary" role="status"><span class="visually-hidden">Cargando...</span></div></div>';
+
+        const res = await fetchDataFromGAS('getMostSoldProducts', 'GET', { limit: 4 });
+
+        if (res.success && Array.isArray(res.data) && res.data.length > 0) {
+            featuredProducts = res.data.map(p => ({
+                ...p,
+                price: parseFloat(p.price) || 0,
+                points: parseFloat(p.points) || 0,
+                id: String(p.id)
+            }));
+        } else {
+            if (menuItems.length > 0) { 
+                featuredProducts = menuItems.sort(() => 0.5 - Math.random()).slice(0, 4);
+            } else {
+                setTimeout(async () => {
+                    if(menuItems.length > 0) { // Re-chequear si el menú cargó mientras tanto
+                        featuredProducts = menuItems.sort(() => 0.5 - Math.random()).slice(0, 4);
+                        renderFeaturedProducts();
+                    } else {
+                         container.innerHTML = '<div class="col-12 text-center"><p class="text-muted">Pronto tendremos recomendaciones especiales.</p></div>';
+                    }
+                }, 2000); 
+                return; 
+            }
+        }
+        renderFeaturedProducts();
+    }
+
+    function renderFeaturedProducts() {
+        const container = document.getElementById('featured-products-container');
+        if(!container) return;
+        container.innerHTML = '';
+
+        if (featuredProducts.length === 0) {
+            container.innerHTML = '<div class="col-12 text-center"><p class="text-muted">Descubre nuestros productos destacados pronto.</p></div>';
+            return;
+        }
+
+        featuredProducts.forEach(item => {
+            let placeholderText = encodeURIComponent(item.name || 'Producto');
+            container.innerHTML += `
+            <div class="col-6 col-md-3 d-flex align-items-stretch">
+                <div class="menu-item-card card w-100" onclick="showProductDetailModal('${item.id}')">
+                    <img src="${item.imageurl || 'https://via.placeholder.com/350x250/CCCCCC/FFFFFF?text=' + placeholderText}" class="product-image card-img-top" alt="${item.name || 'Producto'}">
+                    <div class="card-body text-center p-2">
+                        <h5 class="card-title small mb-1" style="font-size:0.9rem;">${item.name || 'Sin Nombre'}</h5>
+                        <p class="card-text fw-bold mb-2" style="color:var(--primary-color); font-size:0.95rem;">USD ${(item.price || 0).toFixed(2)}</p>
+                        <button class="btn btn-sm btn-primary w-100" onclick="event.stopPropagation(); addToCart('${item.id}')"><i class="bi bi-cart-plus"></i> Añadir</button>
+                    </div>
+                </div>
+            </div>`;
+        });
+    }
+    </script>
+</body>
+</html>
