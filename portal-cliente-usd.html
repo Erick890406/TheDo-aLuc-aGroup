@@ -56,6 +56,11 @@ main {
     flex-grow: 1;
 }
 
+/* ===== CAMBIO CLAVE: Visibilidad del texto muted ===== */
+.text-muted {
+    color: var(--text-muted) !important;
+}
+
 .navbar-custom {
     background: #0f1c2d;
     border-bottom: 1px solid rgba(255,255,255,0.1);
@@ -593,16 +598,21 @@ main {
 }
 
 .footer-refresh-btn {
-    background: none;
-    border: none;
+    width: 35px;
+    height: 35px;
+    background-color: rgba(33, 37, 61, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
     color: var(--text-muted);
-    opacity: 0.6;
     transition: var(--transition-fast);
-    padding: 0.2rem 0.5rem;
+    padding: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
 }
 .footer-refresh-btn:hover {
-    opacity: 1;
     color: var(--accent-color);
+    background-color: var(--bg-card);
 }
 
 #quick-nav-buttons {
@@ -644,10 +654,10 @@ main {
     .card-body { padding: 0.75rem; }
     #downloadAppBanner .container { flex-direction: column; text-align: center; }
     #downloadAppBanner .me-3.mb-2.mb-md-0 { margin-bottom: 0.75rem !important; }
-    .floating-buttons-container { bottom: 20px; right: 20px; }
+    .floating-buttons-container { bottom: 25px; right: 20px; }
     .floating-button { width: 60px; height: 60px; font-size: 1.6rem; }
     .floating-cart-count { font-size: 0.75rem; min-width: 22px; height: 22px; top: -6px; right: -6px; }
-    #quick-nav-buttons { bottom: 90px; right: 20px; }
+    #quick-nav-buttons { bottom: 95px; right: 20px; }
     .quick-nav-btn { width: 40px; height: 40px; font-size: 1.2rem; }
 }
 
@@ -659,11 +669,15 @@ main {
     .points-display { font-size: 1.5rem; }
     .nav-pills .nav-link { font-size: 0.8rem; padding: 0.5rem; }
     .nav-pills .nav-item { min-width: 90px; }
-    .floating-buttons-container { bottom: 15px; right: 15px; }
+    .floating-buttons-container { bottom: 20px; right: 15px; }
     .floating-button { width: 55px; height: 55px; font-size: 1.5rem; }
     .floating-cart-count { font-size: 0.7rem; min-width: 20px; height: 20px; top: -5px; right: -5px; }
-    #quick-nav-buttons { bottom: 80px; right: 15px; }
+    #quick-nav-buttons { bottom: 85px; right: 15px; }
     .quick-nav-btn { width: 38px; height: 38px; font-size: 1.1rem; }
+    .footer-copyright-container {
+        flex-direction: column;
+        gap: 0.75rem;
+    }
 }
 </style>
 
@@ -764,7 +778,7 @@ main {
                 <span class="small">Permite que gestionen sus pedidos y beneficios fácilmente.</span>
             </div>
             <div class="d-flex align-items-center">
-                <a href="https://drive.google.com/file/d/1JN1qbrX2JB7P5apVzzhtBy5x2hBPxCWa/view?usp=drive_link" download="DonaLucia_Cumanayagua.apk" class="btn btn-warning btn-sm me-3 py-2">
+                <a href="https://drive.google.com/file/d/1X6943Eb9nBGAsAaizDRPPkolg4apUmHS/view?usp=drive_link" download="DonaLucia_Cumanayagua.apk" class="btn btn-warning btn-sm me-3 py-2">
                     <i class="bi bi-android2 me-1"></i> Descargar App
                 </a>
                 <button type="button" class="btn-close btn-close-white" aria-label="Cerrar banner"></button>
@@ -776,7 +790,7 @@ main {
     <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true"><div class="modal-dialog modal-dialog-centered"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="loginModalLabel">Iniciar Sesión para Envíos</h5><button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button></div><div class="modal-body"><form id="loginForm"><div class="mb-3"><label for="loginPhone" class="form-label">Teléfono (Tuyo)</label><input type="tel" class="form-control" id="loginPhone" required autocomplete="username tel"></div><div class="mb-3"><label for="loginPassword" class="form-label">Contraseña</label><input type="password" class="form-control" id="loginPassword" required autocomplete="current-password"></div><div id="login-feedback" class="mt-3"></div></form></div><div class="modal-footer"><button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button><button type="button" class="btn btn-primary" onclick="handleLoginAttempt()">Acceder</button></div></div></div></div>
     <div class="modal fade" id="cartModal" tabindex="-1" aria-labelledby="cartModalLabel" aria-hidden="true"><div class="modal-dialog modal-lg modal-dialog-scrollable modal-dialog-centered"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="cartModalLabel"><i class="bi bi-cart3 me-2"></i>Mi Carrito de Envío</h5><button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button></div><div class="modal-body" id="cart-items-container"><p class="text-center">Tu carrito está vacío.</p></div><div class="modal-footer justify-content-between flex-wrap"><div id="cart-footer-info"><small class="text-muted d-block">Puntos a ganar: <span id="cart-points-to-earn" class="fw-bold">0</span></small><strong class="fs-5">Total: <span id="cart-total-price" style="color: var(--primary-color);">0.00</span> USD</strong><br><small class="text-warning"><i class="bi bi-credit-card-2-front-fill"></i> Pagos por Zelle.</small></div><div class="d-flex mt-2 mt-sm-0" id="cart-footer-buttons"><button type="button" class="btn btn-outline-danger me-2" onclick="clearCart()"><i class="bi bi-trash3 me-1"></i>Vaciar</button><button type="button" class="btn btn-success" onclick="confirmAndPlaceOrder()"><i class="bi bi-check-circle me-1"></i>Confirmar Envío</button></div></div><div id="order-placement-feedback" class="m-3"></div></div></div></div>
     <div class="modal fade" id="downloadAppModal" tabindex="-1" aria-labelledby="downloadAppModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
-        <div class="modal-dialog modal-dialog-centered"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="downloadAppModalLabel"><i class="bi bi-phone-vibrate-fill me-2" style="color:var(--primary-color);"></i> ¡App para tu Familia en Cuba!</h5><button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button></div><div class="modal-body text-center"><img src="https://i.postimg.cc/XJxYzHZW/striking-app-icon-the-letters-dl-in-a-custom-l.png" alt="Doña Lucía App Icon" class="img-fluid rounded-circle mb-3 shadow" style="width: 100px; height: 100px; border: 3px solid var(--primary-color);"><p class="lead mb-2">Permite que tus seres queridos en Cumanayagua gestionen sus pedidos y beneficios directamente.</p><p>Con la app, podrán ver el menú, canjear puntos y estar al tanto de las novedades. ¡Una forma fácil de conectar!</p><a href="https://drive.google.com/file/d/1JN1qbrX2JB7P5apVzzhtBy5x2hBPxCWa/view?usp=drive_link" download="DonaLucia_Cumanayagua.apk" class="btn btn-primary btn-lg mt-3 w-100 animate__animated animate__pulse animate__infinite animate__slower"><i class="bi bi-android2 me-2"></i> Descargar para Android</a><p class="mt-3 mb-1"><small class="text-muted">Si su dispositivo lo solicita, deben habilitar "Instalar apps desconocidas" en Ajustes para poder instalarla.</small></p></div><div class="modal-footer justify-content-center border-0 pt-0"><div class="form-check"><input class="form-check-input" type="checkbox" value="" id="dontShowDownloadModalAgain"><label class="form-check-label small" for="dontShowDownloadModalAgain">No volver a mostrar este mensaje (al inicio)</label></div></div></div></div>
+        <div class="modal-dialog modal-dialog-centered"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="downloadAppModalLabel"><i class="bi bi-phone-vibrate-fill me-2" style="color:var(--primary-color);"></i> ¡App para tu Familia en Cuba!</h5><button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button></div><div class="modal-body text-center"><img src="https://i.postimg.cc/XJxYzHZW/striking-app-icon-the-letters-dl-in-a-custom-l.png" alt="Doña Lucía App Icon" class="img-fluid rounded-circle mb-3 shadow" style="width: 100px; height: 100px; border: 3px solid var(--primary-color);"><p class="lead mb-2">Permite que tus seres queridos en Cumanayagua gestionen sus pedidos y beneficios directamente.</p><p>Con la app, podrán ver el menú, canjear puntos y estar al tanto de las novedades. ¡Una forma fácil de conectar!</p><a href="https://drive.google.com/file/d/1X6943Eb9nBGAsAaizDRPPkolg4apUmHS/view?usp=drive_link" download="DonaLucia_Cumanayagua.apk" class="btn btn-primary btn-lg mt-3 w-100 animate__animated animate__pulse animate__infinite animate__slower"><i class="bi bi-android2 me-2"></i> Descargar para Android</a><p class="mt-3 mb-1"><small class="text-muted">Si su dispositivo lo solicita, deben habilitar "Instalar apps desconocidas" en Ajustes para poder instalarla.</small></p></div><div class="modal-footer justify-content-center border-0 pt-0"><div class="form-check"><input class="form-check-input" type="checkbox" value="" id="dontShowDownloadModalAgain"><label class="form-check-label small" for="dontShowDownloadModalAgain">No volver a mostrar este mensaje (al inicio)</label></div></div></div></div>
     </div>
     <div class="modal fade" id="productDetailModal" tabindex="-1" aria-labelledby="productDetailModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg modal-dialog-centered"><div class="modal-content"><div class="modal-header border-0"><h5 class="modal-title" id="productDetailModalLabel">Detalles del Producto</h5><button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button></div><div class="modal-body pt-0"><div class="row g-4"><div class="col-md-6"><img src="https://via.placeholder.com/500x600" id="modal-product-image" class="img-fluid" alt="Imagen del producto"></div><div class="col-md-6 d-flex flex-column"><h2 id="modal-product-name" class="mb-2">Nombre del Producto</h2><p id="modal-product-description" class="text-muted flex-grow-1">Descripción detallada del producto...</p><div class="d-flex justify-content-between align-items-center mb-3"><span id="modal-product-price">USD 0.00</span><span class="badge bg-success" id="modal-product-points">+0 Puntos</span></div><div id="modal-add-to-cart-button-container" class="mb-4"></div><div id="modal-recommendations-container"></div></div></div></div></div></div>
@@ -803,7 +817,6 @@ main {
                 <div class="col-lg-4 col-md-12 mb-4 mb-md-0">
                     <div class="d-flex align-items-center justify-content-center justify-content-md-start mb-3">
                          <img src="https://i.postimg.cc/rsFSGFt2/Generated-Image-June-11-2025-1-22-AM.jpg" alt="Erick Olivera" class="footer-avatar me-3">
-                         
                          <div>
                             <h5 class="text-uppercase fw-bold mb-1" style="color: var(--primary-color);">DL Cumanayagua</h5>
                             <p class="footer-name mb-0">Erick Olivera</p>
@@ -830,17 +843,17 @@ main {
                 <div class="col-lg-3 col-md-4">
                     <h5 class="text-uppercase fw-bold mb-4">Síguenos</h5>
                     <div class="social-icons">
-                        <a href="https://wa.me/5355189657?text=Hola,%20tengo%20una%20consulta%20sobre%20DL%20Cumanayagua." class="social-icon-link me-3 fs-4" title="WhatsApp"><i class="bi bi-whatsapp"></i></a>
+                        <a href="#!" class="social-icon-link me-3 fs-4" title="WhatsApp"><i class="bi bi-whatsapp"></i></a>
                         <a href="#!" class="social-icon-link me-3 fs-4" title="Facebook"><i class="bi bi-facebook"></i></a>
                         <a href="#!" class="social-icon-link fs-4" title="Instagram"><i class="bi bi-instagram"></i></a>
                     </div>
                 </div>
             </div>
             <hr class="my-4" style="border-color: rgba(255,255,255,0.1);">
-            <div class="d-flex justify-content-center align-items-center">
+            <div class="footer-copyright-container d-flex justify-content-center align-items-center">
                 <span class="small text-muted">© 2024 DL Cumanayagua. Todos los derechos reservados.</span>
                 <button class="footer-refresh-btn ms-3" onclick="forceFullCacheRefresh()" title="Actualizar datos de la página">
-                    <i class="bi bi-cloud-arrow-down-fill"></i>
+                    <i class="bi bi-cloud-arrow-down-fill fs-5"></i>
                 </button>
             </div>
         </div>
@@ -902,16 +915,13 @@ main {
         async function forceFullCacheRefresh() {
             if (confirm("Esto borrará TODOS los datos de navegación (incluyendo sesión iniciada, carrito, etc.) y recargará la página desde cero para obtener la versión más reciente. ¿Deseas continuar?")) {
                 showGlobalFeedback("Limpiando datos y actualizando...", "info", null);
-
                 try {
                     console.log("Limpiando localStorage...");
                     localStorage.clear();
                     console.log("localStorage limpiado.");
-                    
                     console.log("Limpiando sessionStorage...");
                     sessionStorage.clear();
                     console.log("sessionStorage limpiado.");
-                    
                     if ('serviceWorker' in navigator) {
                         console.log("Intentando desregistrar Service Workers...");
                         const registrations = await navigator.serviceWorker.getRegistrations();
@@ -920,19 +930,16 @@ main {
                             console.log('Service Worker desregistrado:', registration);
                         }
                     }
-
                     if (window.caches) {
                         console.log("Intentando limpiar caché de la API de Cache...");
                         const keys = await window.caches.keys();
                         await Promise.all(keys.map(key => window.caches.delete(key)));
                         console.log("Cachés de la API eliminados.");
                     }
-
                 } catch (error) {
                     console.error("Error durante la limpieza de caché:", error);
                     showGlobalFeedback("Error al limpiar algunos datos.", "warning");
                 }
-                
                 setTimeout(() => {
                     location.reload(true);
                 }, 1500);
@@ -958,6 +965,11 @@ main {
             document.getElementById('registerUserModal')?.addEventListener('hidden.bs.modal', () => clearFormAndFeedback('newUserRegistrationForm', 'registration-feedback'));
             document.getElementById('loginModal')?.addEventListener('hidden.bs.modal', () => clearFormAndFeedback('loginForm', 'login-feedback'));
             document.getElementById('cartModal')?.addEventListener('show.bs.modal', renderCartItems);
+            document.getElementById('cartModal')?.addEventListener('hidden.bs.modal', () => {
+                document.getElementById('order-placement-feedback').innerHTML = '';
+                document.getElementById('cart-footer-info').style.display = 'block';
+                document.getElementById('cart-footer-buttons').style.display = 'flex';
+            });
             const avatarUploadInputEl = document.getElementById('avatarUploadInput');
             const userAvatarImgEl = document.getElementById('user-avatar');
             const changeAvatarBtnEl = document.getElementById('changeAvatarButton');
@@ -1682,7 +1694,7 @@ main {
         }
 
         function generateWhatsAppMessage(orderId, cart, total) {
-            let message = `¡Hola! 👋 He realizado un nuevo pedido desde DL Cumanayagua.\n\n`;
+            let message = `¡Hola! 👋 He realizado un nuevo pedido desde la página.\n\n`;
             message += `*Nro. de Envío:* ${orderId}\n\n`;
             message += "*Resumen del pedido:*\n";
             cart.forEach(item => {
@@ -1697,9 +1709,6 @@ main {
             showGlobalFeedback("Serás redirigido a WhatsApp. Una vez enviado el mensaje, puedes cerrar esta ventana.", "info", 8000);
             setTimeout(() => {
                 cartModalInstance?.hide();
-                clearFormAndFeedback(null, 'order-placement-feedback');
-                document.getElementById('cart-footer-info').style.display = 'block';
-                document.getElementById('cart-footer-buttons').style.display = 'flex';
             }, 5000);
         }
 
