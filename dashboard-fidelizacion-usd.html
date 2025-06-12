@@ -1,10 +1,9 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Panel Admin - Envíos DL Cumanayagua</title> <!-- CAMBIO: Título -->
+    <title>Panel Admin - Envíos DL Cumanayagua</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
     <style>
@@ -82,7 +81,7 @@
           filter: drop-shadow(0 0 5px rgba(255, 152, 0, 0.7));
         }
         .luxury-spinner-text {
-          color: #FFF; /* CAMBIO: Color de texto del spinner para mejor contraste */
+          color: #FFF;
           font-family: 'Arial', sans-serif;
           font-size: 1rem;
           letter-spacing: 1px;
@@ -103,7 +102,7 @@
           pointer-events: none;
         }
         .status-badge { padding: 0.3em 0.6em; font-size: 0.8rem; border-radius: 0.25rem; }
-        .status-pendiente-de-pago { background-color: #fd7e14; color: #fff; } /* CAMBIO: Nuevo estado */
+        .status-pendiente-de-pago { background-color: #fd7e14; color: #fff; }
         .status-pendiente { background-color: #ffc107; color: #000; }
         .status-procesado { background-color: #198754; color: #fff; }
         .status-cancelado { background-color: #dc3545; color: #fff; }
@@ -114,12 +113,23 @@
         .product-image-table { max-width: 50px; max-height: 50px; border-radius: 4px; object-fit: cover; }
         th.checkbox-column { width: 1%; text-align: center; }
         td.checkbox-column { text-align: center; }
+        .input-group input.filter-active {
+            border-color: var(--primary);
+            /* box-shadow: 0 0 0 0.25rem rgba(230, 57, 70, 0.25); */ /* var(--bs-primary-rgb) no está definido así */
+             box-shadow: 0 0 0 0.25rem rgba(230, 57, 70, 0.25);
+        }
+        .filter-active-text {
+            font-size: 0.75rem;
+            color: var(--primary);
+            margin-left: 0.5rem;
+            line-height: normal; /* Para alinear mejor con el input group sm */
+        }
     </style>
 </head>
 <body>
     <!-- Header móvil -->
     <div class="mobile-header d-flex d-lg-none justify-content-between align-items-center">
-        <button class="btn btn-outline-light btn-sm" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebarMobile"><i class="bi bi-list fs-5"></i></button>
+        <button class="btn btn-outline-light btn-sm" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebarMobile" aria-label="Abrir menú"><i class="bi bi-list fs-5"></i></button>
         <h5 class="mb-0">Panel Admin</h5> <div style="width: 30px;"></div>
     </div>
 
@@ -128,9 +138,9 @@
         <div class="offcanvas-header"><h5 class="offcanvas-title">Menú Admin</h5><button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"></button></div>
         <div class="offcanvas-body d-flex flex-column">
             <ul class="nav flex-column">
-                <li class="nav-item"><a class="nav-link" href="#" onclick="navigateToSection('clients')"><i class="bi bi-people-fill me-2"></i> Clientes (Compradores)</a></li> <!-- CAMBIO: Etiqueta -->
-                <li class="nav-item"><a class="nav-link" href="#" onclick="navigateToSection('products')"><i class="bi bi-egg-fried me-2"></i> Productos y Combos</a></li> <!-- CAMBIO: Etiqueta -->
-                <li class="nav-item"><a class="nav-link" href="#" onclick="navigateToSection('orders')"><i class="bi bi-truck me-2"></i> Envíos</a></li> <!-- CAMBIO: Etiqueta e icono -->
+                <li class="nav-item"><a class="nav-link" href="#" onclick="navigateToSection('clients')"><i class="bi bi-people-fill me-2"></i> Clientes (Compradores)</a></li>
+                <li class="nav-item"><a class="nav-link" href="#" onclick="navigateToSection('products')"><i class="bi bi-egg-fried me-2"></i> Productos y Combos</a></li>
+                <li class="nav-item"><a class="nav-link" href="#" onclick="navigateToSection('orders')"><i class="bi bi-truck me-2"></i> Envíos</a></li>
                 <li class="nav-item"><a class="nav-link" href="#" onclick="navigateToSection('rewards')"><i class="bi bi-gift-fill me-2"></i> Recompensas</a></li>
                 <li class="nav-item"><a class="nav-link" href="#"><i class="bi bi-graph-up me-2"></i> Estadísticas (Próx.)</a></li>
             </ul>
@@ -140,11 +150,11 @@
 
     <!-- Sidebar para desktop -->
     <div class="d-none d-lg-flex col-lg-2 bg-dark text-white vh-100 position-fixed p-3 flex-column">
-        <div> <h3 class="text-center mb-4"><i class="bi bi-star-fill text-warning"></i> Panel Envíos USD</h3><hr class="border-light-subtle"> <!-- CAMBIO: Título -->
+        <div> <h3 class="text-center mb-4"><i class="bi bi-star-fill text-warning"></i> Panel Envíos USD</h3><hr class="border-light-subtle">
             <ul class="nav flex-column">
-                <li class="nav-item"><a class="nav-link" href="#" onclick="navigateToSection('clients')"><i class="bi bi-people-fill me-2"></i> Clientes (Compradores)</a></li> <!-- CAMBIO: Etiqueta -->
-                <li class="nav-item"><a class="nav-link" href="#" onclick="navigateToSection('products')"><i class="bi bi-egg-fried me-2"></i> Productos y Combos</a></li> <!-- CAMBIO: Etiqueta -->
-                <li class="nav-item"><a class="nav-link" href="#" onclick="navigateToSection('orders')"><i class="bi bi-truck me-2"></i> Envíos</a></li> <!-- CAMBIO: Etiqueta e icono -->
+                <li class="nav-item"><a class="nav-link" href="#" onclick="navigateToSection('clients')"><i class="bi bi-people-fill me-2"></i> Clientes (Compradores)</a></li>
+                <li class="nav-item"><a class="nav-link" href="#" onclick="navigateToSection('products')"><i class="bi bi-egg-fried me-2"></i> Productos y Combos</a></li>
+                <li class="nav-item"><a class="nav-link" href="#" onclick="navigateToSection('orders')"><i class="bi bi-truck me-2"></i> Envíos</a></li>
                 <li class="nav-item"><a class="nav-link" href="#" onclick="navigateToSection('rewards')"><i class="bi bi-gift-fill me-2"></i> Recompensas</a></li>
                 <li class="nav-item"><a class="nav-link" href="#"><i class="bi bi-graph-up me-2"></i> Estadísticas (Próx.)</a></li>
             </ul>
@@ -160,8 +170,8 @@
                 <div id="clients-section" style="display: none;">
                     <div class="d-flex justify-content-between align-items-center mb-3">
                         <div>
-                            <h1 class="h4 mb-0 d-none d-lg-block"><i class="bi bi-people-fill"></i> Gestión de Clientes (Compradores USA)</h1> <!-- CAMBIO: Título -->
-                            <h1 class="h5 mb-0 d-lg-none"><i class="bi bi-people-fill"></i> Clientes (USA)</h1> <!-- CAMBIO: Título -->
+                            <h1 class="h4 mb-0 d-none d-lg-block"><i class="bi bi-people-fill"></i> Gestión de Clientes (Compradores USA)</h1>
+                            <h1 class="h5 mb-0 d-lg-none"><i class="bi bi-people-fill"></i> Clientes (USA)</h1>
                         </div>
                         <div>
                             <button class="btn btn-info btn-sm me-2" id="bulk-email-clients-btn" onclick="showBulkEmailClientsModal()" disabled>
@@ -173,42 +183,43 @@
                         </div>
                     </div>
                     <div class="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-3 mb-3">
-                        <div class="col"><div class="stats-card bg-primary"><h5 class="card-title">Clientes Compradores</h5><h2 class="card-text" id="total-clients-stat">0</h2></div></div> <!-- CAMBIO: Título stat -->
-                        <div class="col"><div class="stats-card bg-success"><h5 class="card-title">Puntos Acumulados (Compradores)</h5><h2 class="card-text" id="total-points-stat">0</h2></div></div> <!-- CAMBIO: Título stat -->
+                        <div class="col"><div class="stats-card bg-primary"><h5 class="card-title">Clientes Compradores</h5><h2 class="card-text" id="total-clients-stat">0</h2></div></div>
+                        <div class="col"><div class="stats-card bg-success"><h5 class="card-title">Puntos Acumulados (Compradores)</h5><h2 class="card-text" id="total-points-stat">0</h2></div></div>
                         <div class="col"><div class="stats-card bg-warning text-dark"><h5 class="card-title">Recompensas Activas</h5><h2 class="card-text" id="total-rewards-stat">0</h2></div></div>
                     </div>
-                    <div class="card mb-3"> <div class="card-body py-2"> <div class="d-flex flex-column flex-md-row gap-2"> <div class="input-group input-group-sm flex-grow-1"> <span class="input-group-text"><i class="bi bi-search"></i></span> <input type="text" id="search-client-input" class="form-control" placeholder="Buscar cliente (Nombre, Teléfono USA, ID)..."> </div> <button class="btn btn-outline-secondary btn-sm" onclick="resetFilterAndLoadClients()"><i class="bi bi-arrow-counterclockwise"></i> Limpiar</button> </div> </div> </div>
+                    <div class="card mb-3"> <div class="card-body py-2"> <div class="d-flex flex-column flex-md-row gap-2 align-items-center"> <div class="input-group input-group-sm flex-grow-1"> <span class="input-group-text"><i class="bi bi-search"></i></span> <input type="text" id="search-client-input" class="form-control" placeholder="Buscar cliente (Nombre, Teléfono USA, ID)..."> </div> <span id="search-client-input-indicator" class="filter-active-text d-none">Filtro activo</span> <button class="btn btn-outline-secondary btn-sm" onclick="resetFilterAndLoadClients()"><i class="bi bi-arrow-counterclockwise"></i> Limpiar</button> </div> </div> </div>
                     <div class="card"> <div class="card-body p-0"> <div class="table-responsive"> <table class="table table-hover align-middle mb-0">
                         <thead class="table-light">
                             <tr>
                                 <th class="checkbox-column"><input type="checkbox" class="form-check-input" id="select-all-clients"></th>
                                 <th>ID</th>
-                                <th>Nombre (Comprador)</th> <!-- CAMBIO: Etiqueta -->
-                                <th class="d-none d-md-table-cell">Teléfono (Comprador)</th> <!-- CAMBIO: Etiqueta -->
+                                <th>Nombre (Comprador)</th>
+                                <th class="d-none d-md-table-cell">Teléfono (Comprador)</th>
                                 <th>Email</th>
                                 <th>Puntos</th>
-                                <th class="d-none d-sm-table-cell">Últ. Actividad</th> <!-- CAMBIO: Etiqueta -->
+                                <th class="d-none d-sm-table-cell">Últ. Actividad</th>
                                 <th>Acciones</th>
                             </tr>
                         </thead>
-                        <tbody id="clients-table"></tbody>
+                        <tbody id="clients-table" aria-live="polite"></tbody>
                     </table> </div> </div> </div>
+                     <div id="clients-pagination-controls" class="d-flex justify-content-center pt-3"></div>
                 </div>
 
 
                 <div id="products-section" style="display: none;">
                     <div class="d-flex justify-content-between align-items-center mb-3">
-                        <div> <h1 class="h4 mb-0 d-none d-lg-block"><i class="bi bi-egg-fried"></i> Gestión de Productos y Combos</h1> <h1 class="h5 mb-0 d-lg-none"><i class="bi bi-egg-fried"></i> Productos y Combos</h1> </div> <!-- CAMBIO: Título -->
+                        <div> <h1 class="h4 mb-0 d-none d-lg-block"><i class="bi bi-egg-fried"></i> Gestión de Productos y Combos</h1> <h1 class="h5 mb-0 d-lg-none"><i class="bi bi-egg-fried"></i> Productos y Combos</h1> </div>
                         <div>
                             <button class="btn btn-danger btn-sm me-2" id="bulk-delete-products-btn" onclick="showBulkDeleteModal()" disabled>
                                 <i class="bi bi-trash-fill"></i> <span class="d-none d-sm-inline">Eliminar Seleccionados</span>
                             </button>
                             <button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#addProductModal">
-                                <i class="bi bi-journal-plus"></i> <span class="d-none d-sm-inline">Nuevo Producto/Combo</span> <!-- CAMBIO: Etiqueta -->
+                                <i class="bi bi-journal-plus"></i> <span class="d-none d-sm-inline">Nuevo Producto/Combo</span>
                             </button>
                         </div>
                     </div>
-                    <div class="card mb-3"> <div class="card-body py-2"> <div class="d-flex flex-column flex-md-row gap-2"> <div class="input-group input-group-sm flex-grow-1"> <span class="input-group-text"><i class="bi bi-search"></i></span> <input type="text" id="search-product-input" class="form-control" placeholder="Buscar (Nombre, Categoría, ID)..."> </div> <button class="btn btn-outline-secondary btn-sm" onclick="resetFilterAndLoadProducts()"><i class="bi bi-arrow-counterclockwise"></i> Limpiar</button> </div> </div> </div>
+                    <div class="card mb-3"> <div class="card-body py-2"> <div class="d-flex flex-column flex-md-row gap-2 align-items-center"> <div class="input-group input-group-sm flex-grow-1"> <span class="input-group-text"><i class="bi bi-search"></i></span> <input type="text" id="search-product-input" class="form-control" placeholder="Buscar (Nombre, Categoría, ID)..."> </div> <span id="search-product-input-indicator" class="filter-active-text d-none">Filtro activo</span> <button class="btn btn-outline-secondary btn-sm" onclick="resetFilterAndLoadProducts()"><i class="bi bi-arrow-counterclockwise"></i> Limpiar</button> </div> </div> </div>
                     <div class="card"> <div class="card-body p-0"> <div class="table-responsive"> <table class="table table-hover align-middle mb-0">
                         <thead class="table-light">
                             <tr>
@@ -217,23 +228,40 @@
                                 <th>ID</th>
                                 <th>Nombre</th>
                                 <th class="d-none d-md-table-cell">Categoría</th>
-                                <th>Precio (USD)</th> <!-- CAMBIO: Etiqueta -->
+                                <th>Precio (USD)</th>
                                 <th>Puntos</th>
                                 <th>Activo</th>
                                 <th>Acciones</th>
                             </tr>
                         </thead>
-                        <tbody id="products-table"></tbody>
+                        <tbody id="products-table" aria-live="polite"></tbody>
                     </table> </div> </div> </div>
+                    <div id="products-pagination-controls" class="d-flex justify-content-center pt-3"></div>
                 </div>
 
-                <div id="orders-section" style="display: none;"> <!-- CAMBIO: ID para mantener consistencia con JS, pero el título cambia -->
+                <div id="orders-section" style="display: none;">
                     <div class="d-flex justify-content-between align-items-center mb-3">
-                        <div> <h1 class="h4 mb-0 d-none d-lg-block"><i class="bi bi-truck"></i> Gestión de Envíos</h1> <h1 class="h5 mb-0 d-lg-none"><i class="bi bi-truck"></i> Envíos</h1> </div> <!-- CAMBIO: Título e icono -->
+                        <div> <h1 class="h4 mb-0 d-none d-lg-block"><i class="bi bi-truck"></i> Gestión de Envíos</h1> <h1 class="h5 mb-0 d-lg-none"><i class="bi bi-truck"></i> Envíos</h1> </div>
                         <button class="btn btn-sm btn-outline-primary" onclick="loadOrders(true)"><i class="bi bi-arrow-clockwise"></i> Recargar</button>
                     </div>
-                    <div class="card mb-3"> <div class="card-body py-2"> <div class="d-flex flex-column flex-md-row gap-2"> <div class="input-group input-group-sm flex-grow-1"> <span class="input-group-text"><i class="bi bi-search"></i></span> <input type="text" id="search-order-input" class="form-control" placeholder="Buscar envío (ID, Comprador, Estado)..."></div></div></div></div> <!-- CAMBIO: Placeholder -->
-                    <div class="card"> <div class="card-body p-0"> <div class="table-responsive"> <table class="table table-hover align-middle mb-0"> <thead class="table-light"><tr><th>ID Envío</th><th>Comprador (USA)</th><th class="d-none d-md-table-cell">Fecha</th><th>Total (USD)</th><th>Estado</th><th>Acciones</th></tr></thead> <tbody id="orders-table"></tbody> </table> </div> </div> </div> <!-- CAMBIO: Títulos de columnas -->
+                    <div class="card mb-3"> <div class="card-body py-2"> <div class="d-flex flex-column flex-md-row gap-2 align-items-center">
+                        <div class="input-group input-group-sm flex-grow-1">
+                             <span class="input-group-text"><i class="bi bi-search"></i></span>
+                             <input type="text" id="search-order-input" class="form-control" placeholder="Buscar envío (ID, Comprador)...">
+                        </div>
+                        <span id="search-order-input-indicator" class="filter-active-text d-none">Filtro activo</span>
+                        <select id="filter-order-status" class="form-select form-select-sm" style="max-width: 200px;">
+                            <option value="">Todos los Estados</option>
+                            <option value="Pendiente de Pago">Pend. Pago (Zelle)</option>
+                            <option value="Pendiente">Pago Recibido</option>
+                            <option value="Procesado">En Preparación</option>
+                            <option value="Entregado">Entregado en Cuba</option>
+                            <option value="Cancelado">Cancelado</option>
+                        </select>
+                        <button class="btn btn-outline-secondary btn-sm" onclick="resetFilterAndLoadOrders()"><i class="bi bi-arrow-counterclockwise"></i> Limpiar</button>
+                    </div></div></div>
+                    <div class="card"> <div class="card-body p-0"> <div class="table-responsive"> <table class="table table-hover align-middle mb-0"> <thead class="table-light"><tr><th>ID Envío</th><th>Comprador (USA)</th><th class="d-none d-md-table-cell">Fecha</th><th>Total (USD)</th><th>Estado</th><th>Acciones</th></tr></thead> <tbody id="orders-table" aria-live="polite"></tbody> </table> </div> </div> </div>
+                    <div id="orders-pagination-controls" class="d-flex justify-content-center pt-3"></div>
                 </div>
 
                 <div id="rewards-section" style="display: none;">
@@ -241,29 +269,34 @@
                         <div> <h1 class="h4 mb-0 d-none d-lg-block"><i class="bi bi-gift-fill"></i> Gestión de Recompensas</h1> <h1 class="h5 mb-0 d-lg-none"><i class="bi bi-gift-fill"></i> Recompensas</h1> </div>
                         <button class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#addRewardModal"> <i class="bi bi-plus-circle-dotted"></i> <span class="d-none d-sm-inline">Nueva Recompensa</span> </button>
                     </div>
-                    <div class="card mb-3"> <div class="card-body py-2"> <div class="d-flex flex-column flex-md-row gap-2"> <div class="input-group input-group-sm flex-grow-1"> <span class="input-group-text"><i class="bi bi-search"></i></span> <input type="text" id="search-reward-input" class="form-control" placeholder="Buscar recompensa (Nombre, Tipo)..."> </div> <button class="btn btn-outline-secondary btn-sm" onclick="resetFilterAndLoadRewards()"><i class="bi bi-arrow-counterclockwise"></i> Limpiar</button> </div> </div> </div>
-                    <div class="card"> <div class="card-body p-0"> <div class="table-responsive"> <table class="table table-hover align-middle mb-0"> <thead class="table-light"><tr><th>ID</th><th>Nombre</th><th>Puntos Req.</th><th>Tipo</th><th>Valor</th><th>Stock</th><th>Activa</th><th>Acciones</th></tr></thead> <tbody id="rewards-table"></tbody> </table> </div> </div> </div>
+                    <div class="card mb-3"> <div class="card-body py-2"> <div class="d-flex flex-column flex-md-row gap-2 align-items-center"> <div class="input-group input-group-sm flex-grow-1"> <span class="input-group-text"><i class="bi bi-search"></i></span> <input type="text" id="search-reward-input" class="form-control" placeholder="Buscar recompensa (Nombre, Tipo)..."> </div> <span id="search-reward-input-indicator" class="filter-active-text d-none">Filtro activo</span> <button class="btn btn-outline-secondary btn-sm" onclick="resetFilterAndLoadRewards()"><i class="bi bi-arrow-counterclockwise"></i> Limpiar</button> </div> </div> </div>
+                    <div class="card"> <div class="card-body p-0"> <div class="table-responsive"> <table class="table table-hover align-middle mb-0"> <thead class="table-light"><tr><th>ID</th><th>Nombre</th><th>Puntos Req.</th><th>Tipo</th><th>Valor</th><th>Stock</th><th>Activa</th><th>Acciones</th></tr></thead> <tbody id="rewards-table" aria-live="polite"></tbody> </table> </div> </div> </div>
+                    <div id="rewards-pagination-controls" class="d-flex justify-content-center pt-3"></div>
                 </div>
             </div>
         </div>
     </div>
 
-   <div id="loadingSpinner" class="loading-spinner"> <!-- CAMBIO: ID del spinner -->
+   <div id="loadingSpinner" class="loading-spinner">
       <div class="luxury-spinner">
         <div class="luxury-spinner-inner"></div>
         <span class="luxury-spinner-text">Cargando...</span>
       </div>
     </div>
 
+    <!-- Contenedor para las notificaciones Toast -->
+    <div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 99999;">
+        <!-- Aquí se añadirán los toasts dinámicamente -->
+    </div>
+
     <!-- Modales -->
-    <div class="modal fade" id="addClientModal" tabindex="-1"><div class="modal-dialog"><div class="modal-content"><div class="modal-header"><h5 class="modal-title">Nuevo Cliente (Comprador)</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><form id="newClientForm"><div class="mb-3"><label for="clientName" class="form-label">Nombre Completo (Comprador) <span class="text-danger">*</span></label><input type="text" class="form-control" id="clientName" required></div><div class="mb-3"><label for="clientPhone" class="form-label">Teléfono (Comprador, ej: USA)</label><input type="tel" class="form-control" id="clientPhone"></div><div class="mb-3"><label for="clientEmail" class="form-label">Correo (Opcional)</label><input type="email" class="form-control" id="clientEmail"></div><div class="mb-3"><label for="clientInitialPoints" class="form-label">Puntos Iniciales</label><input type="number" class="form-control" id="clientInitialPoints" value="0" min="0"></div></form></div><div class="modal-footer"><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button><button type="button" class="btn btn-primary" onclick="addNewClient()">Guardar Cliente</button></div></div></div></div>
+    <div class="modal fade" id="addClientModal" tabindex="-1"><div class="modal-dialog"><div class="modal-content"><div class="modal-header"><h5 class="modal-title">Nuevo Cliente (Comprador)</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><form id="newClientForm"><div class="mb-3"><label for="clientName" class="form-label">Nombre Completo (Comprador) <span class="text-danger">*</span></label><input type="text" class="form-control" id="clientName" required></div><div class="mb-3"><label for="clientPhone" class="form-label">Teléfono (Comprador, ej: USA)</label><input type="tel" class="form-control" id="clientPhone"></div><div class="mb-3"><label for="clientEmail" class="form-label">Correo (Opcional)</label><input type="email" class="form-control" id="clientEmail"></div><div class="mb-3"><label for="clientInitialPoints" class="form-label">Puntos Iniciales</label><input type="number" class="form-control" id="clientInitialPoints" value="0" min="0"></div></form></div><div class="modal-footer"><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button><button type="button" class="btn btn-primary" id="saveNewClientBtn" onclick="addNewClient()">Guardar Cliente</button></div></div></div></div>
     <div class="modal fade" id="clientModal" tabindex="-1"><div class="modal-dialog modal-lg"><div class="modal-content"><div class="modal-header"><h5 class="modal-title">Detalles del Cliente (Comprador)</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body" id="client-details"></div><div class="modal-footer"><button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cerrar</button></div></div></div></div>
-    <div class="modal fade" id="addPointsModal" tabindex="-1"><div class="modal-dialog"><div class="modal-content"><div class="modal-header"><h5 class="modal-title">Añadir/Quitar Puntos</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><form id="addPointsForm"><div class="mb-3"><label for="pointsAmount" class="form-label">Cantidad de Puntos (negativo para quitar)</label><input type="number" class="form-control" id="pointsAmount" value="10" required></div><div class="mb-3"><label for="pointsReason" class="form-label">Razón (Opcional)</label><select class="form-select" id="pointsReason"><option value="compra_envio">Compra de Envío</option><option value="ajuste">Ajuste Manual</option><option value="promocion">Promoción</option><option value="recompensa_canjeada">Canje Recompensa</option><option value="correccion">Corrección</option><option value="otro">Otro</option></select></div><input type="hidden" id="currentClientIdPoints"></form></div><div class="modal-footer"><button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cancelar</button><button type="button" class="btn btn-primary btn-sm" onclick="confirmAddPoints()">Aplicar Puntos</button></div></div></div></div>
+    <div class="modal fade" id="addPointsModal" tabindex="-1"><div class="modal-dialog"><div class="modal-content"><div class="modal-header"><h5 class="modal-title">Añadir/Quitar Puntos</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><form id="addPointsForm"><div class="mb-3"><label for="pointsAmount" class="form-label">Cantidad de Puntos (negativo para quitar)</label><input type="number" class="form-control" id="pointsAmount" value="10" required></div><div class="mb-3"><label for="pointsReason" class="form-label">Razón (Opcional)</label><select class="form-select" id="pointsReason"><option value="compra_envio">Compra de Envío</option><option value="ajuste">Ajuste Manual</option><option value="promocion">Promoción</option><option value="recompensa_canjeada">Canje Recompensa</option><option value="correccion">Corrección</option><option value="otro">Otro</option></select></div><input type="hidden" id="currentClientIdPoints"></form></div><div class="modal-footer"><button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cancelar</button><button type="button" class="btn btn-primary btn-sm" id="confirmAddPointsBtn" onclick="confirmAddPoints()">Aplicar Puntos</button></div></div></div></div>
     <div class="modal fade" id="deleteModal" tabindex="-1"><div class="modal-dialog"><div class="modal-content"><div class="modal-header bg-danger text-white"><h5 class="modal-title">Confirmar Eliminación</h5><button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button></div><div class="modal-body"><p>¿Seguro que desea eliminar <strong id="delete-item-type">este elemento</strong>?</p><p>Detalles: <strong class="fw-bold" id="item-to-delete"></strong></p><p class="text-danger small">Esta acción no se puede deshacer.</p></div><div class="modal-footer"><button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cancelar</button><button type="button" class="btn btn-danger btn-sm" id="confirm-delete-btn">Eliminar</button></div></div></div></div>
-    <div class="modal fade" id="addProductModal" tabindex="-1"><div class="modal-dialog modal-lg"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="addProductModalTitle">Añadir Producto/Combo</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><form id="productForm"><input type="hidden" id="productId"><div class="mb-3"><label for="productName" class="form-label">Nombre <span class="text-danger">*</span></label><input type="text" class="form-control" id="productName" required></div><div class="mb-3"><label for="productDescription" class="form-label">Descripción</label><textarea class="form-control" id="productDescription" rows="2"></textarea></div><div class="row"><div class="col-md-6 mb-3"><label for="productPrice" class="form-label">Precio (USD) <span class="text-danger">*</span></label><input type="number" class="form-control" id="productPrice" step="0.01" min="0" required></div><div class="col-md-6 mb-3"><label for="productPoints" class="form-label">Puntos Otorga</label><input type="number" class="form-control" id="productPoints" min="0" value="0"></div></div><div class="mb-3"><label for="productCategory" class="form-label">Categoría (ej: Bebidas, Pizzas, Combos)</label><input type="text" class="form-control" id="productCategory"></div><div class="mb-3"><label for="productImageUrl" class="form-label">URL Imagen</label><input type="url" class="form-control" id="productImageUrl" placeholder="https://ejemplo.com/imagen.jpg"></div><div class="form-check mb-3"><input class="form-check-input" type="checkbox" id="productActive" checked><label class="form-check-label" for="productActive">Activo para la venta</label></div></form></div><div class="modal-footer"><button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cancelar</button><button type="button" class="btn btn-primary btn-sm" onclick="saveProduct()">Guardar Producto/Combo</button></div></div></div></div>
+    <div class="modal fade" id="addProductModal" tabindex="-1"><div class="modal-dialog modal-lg"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="addProductModalTitle">Añadir Producto/Combo</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><form id="productForm"><input type="hidden" id="productId"><div class="mb-3"><label for="productName" class="form-label">Nombre <span class="text-danger">*</span></label><input type="text" class="form-control" id="productName" required></div><div class="mb-3"><label for="productDescription" class="form-label">Descripción</label><textarea class="form-control" id="productDescription" rows="2"></textarea></div><div class="row"><div class="col-md-6 mb-3"><label for="productPrice" class="form-label">Precio (USD) <span class="text-danger">*</span></label><input type="number" class="form-control" id="productPrice" step="0.01" min="0" required></div><div class="col-md-6 mb-3"><label for="productPoints" class="form-label">Puntos Otorga</label><input type="number" class="form-control" id="productPoints" min="0" value="0"></div></div><div class="mb-3"><label for="productCategory" class="form-label">Categoría (ej: Bebidas, Pizzas, Combos)</label><input type="text" class="form-control" id="productCategory"></div><div class="mb-3"><label for="productImageUrl" class="form-label">URL Imagen</label><input type="url" class="form-control" id="productImageUrl" placeholder="https://ejemplo.com/imagen.jpg"></div><div class="form-check mb-3"><input class="form-check-input" type="checkbox" id="productActive" checked><label class="form-check-label" for="productActive">Activo para la venta</label></div></form></div><div class="modal-footer"><button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cancelar</button><button type="button" class="btn btn-primary btn-sm" id="saveProductBtn" onclick="saveProduct()">Guardar Producto/Combo</button></div></div></div></div>
     
-    <!-- CAMBIO: Modal de Detalles del Envío -->
-    <div class="modal fade" id="orderDetailsModal" tabindex="-1"><div class="modal-dialog modal-lg"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="orderDetailsModalLabel">Detalles del Envío</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body" id="order-details-content"><p>Cargando...</p></div><div class="modal-footer justify-content-between"><div><label for="orderStatusSelect" class="form-label-sm me-1">Estado:</label><select class="form-select form-select-sm d-inline-block w-auto" id="orderStatusSelect"><option value="Pendiente de Pago">Pendiente de Pago (Zelle)</option><option value="Pendiente">Pendiente (Pago Recibido)</option><option value="Procesado">En Preparación</option><option value="Entregado">Entregado en Cuba</option><option value="Cancelado">Cancelado</option></select><button type="button" class="btn btn-primary btn-sm ms-2" onclick="updateOrderStatusAttempt()">Actualizar</button></div><input type="hidden" id="order-id-to-update"><button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cerrar</button></div></div></div></div>
+    <div class="modal fade" id="orderDetailsModal" tabindex="-1"><div class="modal-dialog modal-lg"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="orderDetailsModalLabel">Detalles del Envío</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body" id="order-details-content"><p>Cargando...</p></div><div class="modal-footer justify-content-between"><div><label for="orderStatusSelect" class="form-label-sm me-1">Estado:</label><select class="form-select form-select-sm d-inline-block w-auto" id="orderStatusSelect"><option value="Pendiente de Pago">Pendiente de Pago (Zelle)</option><option value="Pendiente">Pendiente (Pago Recibido)</option><option value="Procesado">En Preparación</option><option value="Entregado">Entregado en Cuba</option><option value="Cancelado">Cancelado</option></select><button type="button" class="btn btn-primary btn-sm ms-2" id="updateOrderStatusBtn" onclick="updateOrderStatusAttempt()">Actualizar</button></div><input type="hidden" id="order-id-to-update"><button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cerrar</button></div></div></div></div>
     
     <div class="modal fade" id="addRewardModal" tabindex="-1"><div class="modal-dialog modal-lg"><div class="modal-content">
         <div class="modal-header"><h5 class="modal-title" id="addRewardModalTitle">Añadir Recompensa</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
@@ -276,7 +309,7 @@
                 <div class="col-md-6 mb-3"><label for="rewardStock" class="form-label">Stock (9999 para ilimitado)</label><input type="number" class="form-control" id="rewardStock" min="0" value="9999"></div>
             </div>
             <div class="row">
-                <div class="col-md-6 mb-3"><label for="rewardType" class="form-label">Tipo</label><select class="form-select" id="rewardType"><option value="Producto">Producto Gratis</option><option value="DescuentoPorcentaje">Descuento %</option><option value="DescuentoFijo">Descuento Fijo (USD)</option><option value="Otro">Otro</option></select></div> <!-- CAMBIO: Moneda en tipo de recompensa -->
+                <div class="col-md-6 mb-3"><label for="rewardType" class="form-label">Tipo</label><select class="form-select" id="rewardType"><option value="Producto">Producto Gratis</option><option value="DescuentoPorcentaje">Descuento %</option><option value="DescuentoFijo">Descuento Fijo (USD)</option><option value="Otro">Otro</option></select></div>
                 <div class="col-md-6 mb-3"><label for="rewardValue" class="form-label">Valor (Nombre prod. o Monto descuento)</label><input type="text" class="form-control" id="rewardValue" placeholder="Ej: Pizza Mediana o 10"></div>
             </div>
             <div class="mb-3"><label for="rewardImageUrl" class="form-label">URL Imagen</label><input type="url" class="form-control" id="rewardImageUrl" placeholder="https://ejemplo.com/imagen.jpg"></div>
@@ -284,11 +317,10 @@
         </form></div>
         <div class="modal-footer">
             <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cancelar</button>
-            <button type="button" class="btn btn-primary btn-sm" onclick="saveReward()">Guardar Recompensa</button>
+            <button type="button" class="btn btn-primary btn-sm" id="saveRewardBtn" onclick="saveReward()">Guardar Recompensa</button>
         </div>
     </div></div></div>
 
-    <!-- Modal para Enviar Email Masivo a Clientes -->
     <div class="modal fade" id="bulkEmailClientsModal" tabindex="-1" aria-labelledby="bulkEmailClientsModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
@@ -325,7 +357,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="button" class="btn btn-primary" onclick="confirmSendBulkEmailToClients()">Enviar Emails</button>
+                    <button type="button" class="btn btn-primary" id="sendBulkEmailBtn" onclick="confirmSendBulkEmailToClients()">Enviar Emails</button>
                 </div>
             </div>
         </div>
@@ -333,42 +365,155 @@
 
  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
  <script>
-          const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby2a0TdrlDqtZI_NucSP9q2xcHV9fKYWe1OMpvlMx3vfS8b_2s2fS7zNMBsVHaHFC-JVw/exec'; // ¡ASEGÚRATE DE QUE ESTA URL SEA LA CORRECTA Y FUNCIONAL!
+    const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby2a0TdrlDqtZI_NucSP9q2xcHV9fKYWe1OMpvlMx3vfS8b_2s2fS7zNMBsVHaHFC-JVw/exec'; // Mantén tu URL real aquí
 
     let allClients = [], displayedClients = [];
     let allProducts = [], displayedProducts = [];
     let allOrders = [], displayedOrders = [];
     let allRewards = [], displayedRewards = [];
+
+    let currentPageClients = 1;
+    const ITEMS_PER_PAGE_CLIENTS = 10;
+    let currentPageProducts = 1;
+    const ITEMS_PER_PAGE_PRODUCTS = 10;
+    let currentPageOrders = 1;
+    const ITEMS_PER_PAGE_ORDERS = 10;
+    let currentPageRewards = 1;
+    const ITEMS_PER_PAGE_REWARDS = 10;
+
+
     let itemToDeleteId = null, itemToDeleteType = null;
     const loadingSpinner = document.getElementById('loadingSpinner');
     let selectedProductIds = new Set();
     let selectedClientIds = new Set();
 
+    const DEBOUNCE_DELAY = 350; // Milisegundos de espera para debounce
+
+
+    // --- UTILITY FUNCTIONS ---
+    function showToast(message, type = 'info', delay = 5000) {
+        const toastContainer = document.querySelector('.toast-container');
+        if (!toastContainer) {
+            console.error('Toast container not found!');
+            alert(message); // Fallback
+            return;
+        }
+        const toastId = 'toast-' + Date.now();
+        let iconClass = 'bi-info-circle-fill';
+        let bgClass = 'bg-info text-white';
+        let title = 'Información';
+
+        switch (type) {
+            case 'success': iconClass = 'bi-check-circle-fill'; bgClass = 'bg-success text-white'; title = 'Éxito'; break;
+            case 'error': iconClass = 'bi-exclamation-triangle-fill'; bgClass = 'bg-danger text-white'; title = 'Error'; break;
+            case 'warning': iconClass = 'bi-exclamation-triangle-fill'; bgClass = 'bg-warning text-dark'; title = 'Advertencia'; break;
+        }
+
+        const toastHTML = `
+            <div id="${toastId}" class="toast align-items-center ${bgClass} border-0" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="${delay}">
+                <div class="d-flex">
+                    <div class="toast-body"><i class="bi ${iconClass} me-2"></i>${message}</div>
+                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                </div>
+            </div>`;
+        toastContainer.insertAdjacentHTML('beforeend', toastHTML);
+        const toastElement = document.getElementById(toastId);
+        const toastInstance = new bootstrap.Toast(toastElement);
+        toastElement.addEventListener('hidden.bs.toast', () => toastElement.remove());
+        toastInstance.show();
+    }
+
+    function debounce(func, delay) {
+        let timeoutId;
+        return function(...args) {
+            clearTimeout(timeoutId);
+            timeoutId = setTimeout(() => {
+                func.apply(this, args);
+            }, delay);
+        };
+    }
+
+    function setButtonLoading(button, isLoading, originalText = null) {
+        if (!button) return;
+        if (isLoading) {
+            button.dataset.originalText = originalText || button.innerHTML;
+            button.disabled = true;
+            button.innerHTML = `<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Cargando...`;
+        } else {
+            button.disabled = false;
+            button.innerHTML = button.dataset.originalText || 'Acción Completada';
+        }
+    }
+
+    function updateFilterIndicator(inputId, isActive) {
+        const inputElement = document.getElementById(inputId);
+        const indicatorElement = document.getElementById(inputId + '-indicator');
+        if (inputElement && indicatorElement) {
+            if (isActive) {
+                inputElement.classList.add('filter-active');
+                indicatorElement.classList.remove('d-none');
+            } else {
+                inputElement.classList.remove('filter-active');
+                indicatorElement.classList.add('d-none');
+            }
+        }
+    }
+    
+    function renderGenericPaginationControls(entityConfig) {
+        const { paginationContainerId, currentPage, totalItems, itemsPerPage, changePageFnName } = entityConfig;
+        const paginationContainer = document.getElementById(paginationContainerId);
+        paginationContainer.innerHTML = '';
+
+        const totalPages = Math.ceil(totalItems / itemsPerPage);
+        if (totalPages <= 1) return;
+
+        let paginationHTML = `<nav aria-label="Navegación de ${entityConfig.entityNameLabel}"><ul class="pagination pagination-sm">`;
+        paginationHTML += `<li class="page-item ${currentPage === 1 ? 'disabled' : ''}"><a class="page-link" href="#" onclick="${changePageFnName}(${currentPage - 1})" aria-label="Anterior"><span aria-hidden="true">«</span></a></li>`;
+
+        let startPage = Math.max(1, currentPage - 2);
+        let endPage = Math.min(totalPages, currentPage + 2);
+        if (currentPage <= 3) endPage = Math.min(totalPages, 5);
+        if (currentPage > totalPages - 3) startPage = Math.max(1, totalPages - 4);
+
+        if (startPage > 1) {
+            paginationHTML += `<li class="page-item"><a class="page-link" href="#" onclick="${changePageFnName}(1)">1</a></li>`;
+            if (startPage > 2) paginationHTML += `<li class="page-item disabled"><span class="page-link">...</span></li>`;
+        }
+        for (let i = startPage; i <= endPage; i++) {
+            paginationHTML += `<li class="page-item ${i === currentPage ? 'active' : ''}"><a class="page-link" href="#" onclick="${changePageFnName}(${i})">${i}</a></li>`;
+        }
+        if (endPage < totalPages) {
+            if (endPage < totalPages - 1) paginationHTML += `<li class="page-item disabled"><span class="page-link">...</span></li>`;
+            paginationHTML += `<li class="page-item"><a class="page-link" href="#" onclick="${changePageFnName}(${totalPages})">${totalPages}</a></li>`;
+        }
+        paginationHTML += `<li class="page-item ${currentPage === totalPages ? 'disabled' : ''}"><a class="page-link" href="#" onclick="${changePageFnName}(${currentPage + 1})" aria-label="Siguiente"><span aria-hidden="true">»</span></a></li>`;
+        paginationHTML += '</ul></nav>';
+        paginationContainer.innerHTML = paginationHTML;
+    }
+
 
     async function fetchData(action, httpMethod = 'POST', payloadData = null) {
         if (GOOGLE_SCRIPT_URL === 'AQUI_VA_TU_URL_DEL_SCRIPT_DE_GOOGLE_APPS' || !GOOGLE_SCRIPT_URL || GOOGLE_SCRIPT_URL.length < 20) {
-            alert("CONFIGURACIÓN REQUERIDA: URL de GOOGLE_SCRIPT_URL no es válida.");
+            showToast("CONFIGURACIÓN REQUERIDA: URL de GOOGLE_SCRIPT_URL no es válida.", "error");
             if(loadingSpinner) loadingSpinner.style.display = 'none';
             return { success: false, message: 'URL no configurada o inválida.' };
         }
         console.log(`Admin fetchData: Acción='${action}', Método='${httpMethod}'`);
         if (payloadData && httpMethod === 'POST') console.log(`Admin fetchData Payload: ${JSON.stringify(payloadData).substring(0,300)}`);
 
-
         if(loadingSpinner) loadingSpinner.style.display = 'flex';
         try {
             let url = GOOGLE_SCRIPT_URL;
             const options = { method: httpMethod, headers: {}, mode: 'cors', redirect: 'follow' };
-
             if (httpMethod === 'GET') {
                 const params = new URLSearchParams({ action: action, cacheBuster: new Date().getTime() });
                 if (payloadData) { for (const key in payloadData) { params.append(key, payloadData[key]); } }
                 url += (url.includes('?') ? '&' : '?') + params.toString();
-            } else { // Para POST y otros métodos que envían cuerpo
-                options.headers['Content-Type'] = 'application/json'; // CAMBIO: Usar application/json
-                options.body = JSON.stringify({ action: action, payload: payloadData }); // CAMBIO: Enviar el objeto directamente como JSON string
+            } else {
+                options.headers['Content-Type'] = 'application/x-www-form-urlencoded';
+                const jsonDataPayload = JSON.stringify({ action, payload: payloadData });
+                options.body = "data=" + encodeURIComponent(jsonDataPayload);
             }
-
             const res = await fetch(url, options);
             const responseText = await res.text();
             console.log(`Respuesta bruta para '${action}': ${responseText.substring(0, 500)}`);
@@ -377,23 +522,19 @@
                 console.error(`Error en Fetch (${res.status}) para ${action}: ${responseText}`);
                 throw new Error(`Error de red o servidor (${res.status}): ${responseText.substring(0,100)}...`);
             }
-
             let responseJson;
-            try {
-                responseJson = JSON.parse(responseText);
-            } catch (jsonError) {
+            try { responseJson = JSON.parse(responseText); } catch (jsonError) {
                 console.error(`Error al parsear JSON para '${action}': ${jsonError}. Respuesta recibida: ${responseText}`);
                 throw new Error(`Respuesta inválida del servidor (no es JSON): ${responseText.substring(0,100)}...`);
             }
-
             console.log(`Respuesta JSON parseada para '${action}':`, responseJson);
             if (responseJson && responseJson.success === false && responseJson.message && responseJson.message.includes("ScriptError: Autorización necesaria")) {
-                 alert("Error de autorización con Google Apps Script. Asegúrate de haber autorizado el script y desplegado la última versión correctamente.");
+                 showToast("Error de autorización con Google Apps Script. Asegúrate de haber autorizado el script y desplegado la última versión correctamente.", "error");
             }
             return responseJson;
         } catch (error) {
             console.error(`Error crítico en fetchData (Acción: ${action}):`, error);
-            alert(`Error de comunicación con el servidor: ${error.message}`);
+            showToast(`Error de comunicación con el servidor: ${error.message}`, "error");
             return { success: false, message: `Error: ${error.message || 'Desconocido'}` };
         } finally {
             if(loadingSpinner) loadingSpinner.style.display = 'none';
@@ -415,8 +556,10 @@
 
         if (sectionId === 'clients' && allClients.length === 0) loadClients(true);
         else if (sectionId === 'products' && allProducts.length === 0) loadProducts(true);
-        else if (sectionId === 'orders' && allOrders.length === 0) loadOrders(true); // 'orders' es el ID de la sección de envíos
+        else if (sectionId === 'orders' && allOrders.length === 0) loadOrders(true);
         else if (sectionId === 'rewards' && allRewards.length === 0) loadRewards(true);
+        
+        localStorage.setItem('lastAdminSectionDL', sectionId);
 
         const offcanvasEl = document.getElementById('sidebarMobile');
         if (offcanvasEl) {
@@ -428,48 +571,57 @@
     }
 
     document.addEventListener('DOMContentLoaded', function() {
-        navigateToSection('clients');
+        const lastSection = localStorage.getItem('lastAdminSectionDL');
+        if (lastSection && ['clients', 'products', 'orders', 'rewards'].includes(lastSection)) {
+            navigateToSection(lastSection);
+        } else {
+            navigateToSection('clients');
+        }
+
         document.getElementById('confirm-delete-btn').addEventListener('click', confirmDeleteItem);
-        ['search-client-input', 'search-product-input', 'search-order-input', 'search-reward-input'].forEach(id => {
-            const inputEl = document.getElementById(id);
+        
+        // Search inputs with debounce and Escape key
+        const searchInputsConfig = [
+            { id: 'search-client-input', filterFn: filterClients, resetFn: resetFilterAndLoadClients },
+            { id: 'search-product-input', filterFn: filterProducts, resetFn: resetFilterAndLoadProducts },
+            { id: 'search-order-input', filterFn: filterOrders, resetFn: resetFilterAndLoadOrders },
+            { id: 'search-reward-input', filterFn: filterRewards, resetFn: resetFilterAndLoadRewards }
+        ];
+
+        searchInputsConfig.forEach(config => {
+            const inputEl = document.getElementById(config.id);
             if (inputEl) {
-                inputEl.addEventListener('input', () => {
-                    if (id === 'search-client-input') filterClients();
-                    else if (id === 'search-product-input') filterProducts();
-                    else if (id === 'search-order-input') filterOrders();
-                    else if (id === 'search-reward-input') filterRewards();
+                inputEl.addEventListener('input', debounce(config.filterFn, DEBOUNCE_DELAY));
+                inputEl.addEventListener('keydown', (event) => {
+                    if (event.key === 'Escape') {
+                        inputEl.value = '';
+                        if (config.resetFn) config.resetFn();
+                        else config.filterFn(); // Fallback to just re-filtering
+                        updateFilterIndicator(config.id, false);
+                    }
                 });
             }
         });
+        
+        document.getElementById('filter-order-status')?.addEventListener('change', () => {
+            currentPageOrders = 1; 
+            filterOrders();
+        });
+
+
         document.getElementById('addProductModal').addEventListener('show.bs.modal', function(event) {
             const modalTitle = this.querySelector('.modal-title');
             const productIdField = document.getElementById('productId');
             const productForm = document.getElementById('productForm');
-
-            if (productIdField.value) {
-                modalTitle.textContent = 'Editar Producto/Combo';
-            } else {
-                modalTitle.textContent = 'Añadir Nuevo Producto/Combo';
-                productForm.reset();
-                productIdField.value = '';
-                document.getElementById('productActive').checked = true;
-            }
+            if (productIdField.value) modalTitle.textContent = 'Editar Producto/Combo';
+            else { modalTitle.textContent = 'Añadir Nuevo Producto/Combo'; productForm.reset(); productIdField.value = ''; document.getElementById('productActive').checked = true; }
         });
          document.getElementById('addRewardModal').addEventListener('show.bs.modal', function(event) {
             const modalTitle = this.querySelector('.modal-title');
             const rewardIdField = document.getElementById('rewardIdField');
             const rewardForm = document.getElementById('rewardForm');
-
-            if (rewardIdField.value) {
-                modalTitle.textContent = 'Editar Recompensa';
-            } else {
-                modalTitle.textContent = 'Añadir Nueva Recompensa';
-                rewardForm.reset();
-                rewardIdField.value = '';
-                document.getElementById('rewardIsActive').checked = true;
-                document.getElementById('rewardStock').value = '9999';
-                document.getElementById('rewardType').value = 'Producto';
-            }
+            if (rewardIdField.value) modalTitle.textContent = 'Editar Recompensa';
+            else { modalTitle.textContent = 'Añadir Nueva Recompensa'; rewardForm.reset(); rewardIdField.value = ''; document.getElementById('rewardIsActive').checked = true; document.getElementById('rewardStock').value = '9999'; document.getElementById('rewardType').value = 'Producto';}
         });
         document.getElementById('select-all-products').addEventListener('change', handleProductSelectAll);
         document.getElementById('select-all-clients').addEventListener('change', handleClientSelectAll);
@@ -498,16 +650,20 @@
 
     // --- CLIENT FUNCTIONS ---
     async function loadClients(force = false) {
-        if (!force && allClients.length) {
-            renderClientsTable();
-            return;
-        }
+        const tb = document.getElementById('clients-table');
+        if (!force && allClients.length) { filterClients(); return; }
+        
+        tb.innerHTML = `<tr><td colspan="8" class="text-center py-5"><div class="spinner-border text-primary" role="status"><span class="visually-hidden">Cargando...</span></div><p>Cargando clientes...</p></td></tr>`;
+        document.getElementById('clients-pagination-controls').innerHTML = '';
+
+
         const res = await fetchData('getClients', 'GET');
         if (res && res.success && Array.isArray(res.data)) {
             allClients = res.data.map(c => ({...c, puntos: parseInt(c.puntos)||0, compras: parseInt(c.compras)||0, verificado: c.verificado===true||String(c.verificado).toLowerCase()==='true'}));
+            currentPageClients = 1;
             filterClients();
         } else {
-            document.getElementById('clients-table').innerHTML = `<tr><td colspan="8" class="text-center text-danger">Error: ${res.message||'No se cargaron clientes.'}</td></tr>`;
+            tb.innerHTML = `<tr><td colspan="8" class="text-center text-danger">Error: ${res.message||'No se cargaron clientes.'} <button class="btn btn-sm btn-outline-primary ms-2" data-bs-toggle="modal" data-bs-target="#addClientModal"><i class="bi bi-person-plus"></i> Nuevo Cliente</button></td></tr>`;
             updateBulkEmailClientsButtonState();
             const selectAllClientsCheckbox = document.getElementById('select-all-clients');
             if (selectAllClientsCheckbox) selectAllClientsCheckbox.checked = false;
@@ -517,339 +673,278 @@
 
     function renderClientsTable() {
         const tb = document.getElementById('clients-table'); tb.innerHTML = '';
+        const startIndex = (currentPageClients - 1) * ITEMS_PER_PAGE_CLIENTS;
+        const endIndex = startIndex + ITEMS_PER_PAGE_CLIENTS;
+        const paginatedClients = displayedClients.slice(startIndex, endIndex);
+
+        if (paginatedClients.length === 0 && displayedClients.length > 0 && currentPageClients > 1) {
+             currentPageClients = Math.ceil(displayedClients.length / ITEMS_PER_PAGE_CLIENTS) || 1;
+             renderClientsTable(); return;
+        }
+        
         if (displayedClients.length === 0) {
-            tb.innerHTML = '<tr><td colspan="8" class="text-center">No hay clientes (compradores) para mostrar.</td></tr>';
+            tb.innerHTML = `<tr><td colspan="8" class="text-center">No hay clientes (compradores) para mostrar. <button class="btn btn-sm btn-outline-primary ms-2" data-bs-toggle="modal" data-bs-target="#addClientModal"><i class="bi bi-person-plus"></i> Nuevo Cliente</button></td></tr>`;
+            document.getElementById('clients-pagination-controls').innerHTML = '';
             updateBulkEmailClientsButtonState();
-            const selectAllClientsCheckbox = document.getElementById('select-all-clients');
-            if (selectAllClientsCheckbox) selectAllClientsCheckbox.checked = false;
+            document.getElementById('select-all-clients').checked = false;
             return;
         }
-        displayedClients.sort((a,b) => (a.nombre||"").localeCompare(b.nombre||"")).forEach(c => {
+
+        paginatedClients.sort((a,b) => (a.nombre||"").localeCompare(b.nombre||"")).forEach(c => {
             const vIcon = c.verificado ? '<i class="bi bi-check-circle-fill text-success" title="Verificado"></i>' : '<i class="bi bi-patch-question-fill text-warning" title="Pendiente"></i>';
             const telefonoDisplay = c.telefono && String(c.telefono).trim() !== "" ? c.telefono : 'N/A';
             const emailDisplay = c.email && String(c.email).trim() !== "" ? c.email : 'N/A';
             const isChecked = selectedClientIds.has(c.id);
-
-            tb.innerHTML += `<tr>
-                <td class="checkbox-column"><input type="checkbox" class="form-check-input client-select-checkbox" value="${c.id}" data-client-id="${c.id}" ${isChecked ? 'checked' : ''}></td>
-                <td>${c.id||'N/A'}</td>
-                <td>${c.nombre||'S/N'} ${vIcon}<small class="d-block d-md-none text-muted">${telefonoDisplay}</small></td>
-                <td class="d-none d-md-table-cell">${telefonoDisplay}</td>
-                <td>${emailDisplay}</td>
-                <td><span class="badge points-badge">${c.puntos}</span></td>
-                <td class="d-none d-sm-table-cell">${c.ultimavisita||'N/A'}</td>
-                <td><div class="btn-group btn-group-sm">
-                    <button class="btn btn-outline-primary" onclick="viewClientDetails('${c.id}')"><i class="bi bi-eye"></i></button>
-                    <button class="btn btn-outline-success" onclick="showAddPointsModal('${c.id}')"><i class="bi bi-plus-circle"></i></button>
-                    <button class="btn btn-outline-danger" onclick="showDeleteModal('${c.id}','${c.nombre}','client')"><i class="bi bi-trash"></i></button>
-                </div></td>
-            </tr>`;
+            tb.innerHTML += `<tr><td class="checkbox-column"><input type="checkbox" class="form-check-input client-select-checkbox" value="${c.id}" data-client-id="${c.id}" ${isChecked ? 'checked' : ''}></td><td>${c.id||'N/A'}</td><td>${c.nombre||'S/N'} ${vIcon}<small class="d-block d-md-none text-muted">${telefonoDisplay}</small></td><td class="d-none d-md-table-cell">${telefonoDisplay}</td><td>${emailDisplay}</td><td><span class="badge points-badge">${c.puntos}</span></td><td class="d-none d-sm-table-cell">${c.ultimavisita||'N/A'}</td><td><div class="btn-group btn-group-sm"><button class="btn btn-outline-primary" onclick="viewClientDetails('${c.id}')"><i class="bi bi-eye"></i></button><button class="btn btn-outline-success" onclick="showAddPointsModal('${c.id}')"><i class="bi bi-plus-circle"></i></button><button class="btn btn-outline-danger" onclick="showDeleteModal('${c.id}','${c.nombre}','client')"><i class="bi bi-trash"></i></button></div></td></tr>`;
         });
-
-        document.querySelectorAll('.client-select-checkbox').forEach(checkbox => {
-            checkbox.addEventListener('change', handleClientSelectSingle);
-        });
-
+        document.querySelectorAll('.client-select-checkbox').forEach(checkbox => checkbox.addEventListener('change', handleClientSelectSingle));
         updateSelectAllClientsCheckboxState();
         updateBulkEmailClientsButtonState();
+        renderGenericPaginationControls({
+            paginationContainerId: 'clients-pagination-controls',
+            currentPage: currentPageClients,
+            totalItems: displayedClients.length,
+            itemsPerPage: ITEMS_PER_PAGE_CLIENTS,
+            changePageFnName: 'changeClientsPage',
+            entityNameLabel: 'clientes'
+        });
     }
 
     function filterClients() {
         const term = document.getElementById('search-client-input').value.toLowerCase().trim();
         displayedClients = term ? allClients.filter(c => (c.nombre&&c.nombre.toLowerCase().includes(term))||(c.telefono&&String(c.telefono).includes(term))||(c.id&&String(c.id).toLowerCase().includes(term))||(c.email&&c.email.toLowerCase().includes(term))) : [...allClients];
+        currentPageClients = 1; 
         renderClientsTable();
+        updateFilterIndicator('search-client-input', term.length > 0);
     }
-
     async function resetFilterAndLoadClients() {
         document.getElementById('search-client-input').value = '';
         selectedClientIds.clear();
+        currentPageClients = 1;
+        updateFilterIndicator('search-client-input', false);
         await loadClients(true);
+    }
+    function changeClientsPage(newPage) {
+        if (newPage < 1 || newPage > Math.ceil(displayedClients.length / ITEMS_PER_PAGE_CLIENTS) && displayedClients.length > 0) return;
+        currentPageClients = newPage;
+        renderClientsTable();
+        document.getElementById('clients-table').scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
 
     function handleClientSelectAll(event) {
         const isChecked = event.target.checked;
-        const visibleClientCheckboxes = document.querySelectorAll('#clients-table .client-select-checkbox');
-
-        visibleClientCheckboxes.forEach(checkbox => {
+        document.querySelectorAll('#clients-table .client-select-checkbox').forEach(checkbox => {
             const clientId = checkbox.dataset.clientId;
             checkbox.checked = isChecked;
-            if (isChecked) {
-                selectedClientIds.add(clientId);
-            } else {
-                selectedClientIds.delete(clientId);
-            }
+            if (isChecked) selectedClientIds.add(clientId); else selectedClientIds.delete(clientId);
         });
         updateBulkEmailClientsButtonState();
     }
-
     function handleClientSelectSingle(event) {
         const clientId = event.target.dataset.clientId;
-        if (event.target.checked) {
-            selectedClientIds.add(clientId);
-        } else {
-            selectedClientIds.delete(clientId);
-        }
+        if (event.target.checked) selectedClientIds.add(clientId); else selectedClientIds.delete(clientId);
         updateSelectAllClientsCheckboxState();
         updateBulkEmailClientsButtonState();
     }
-
     function updateSelectAllClientsCheckboxState() {
-        const selectAllCheckbox = document.getElementById('select-all-clients');
-        if (!selectAllCheckbox) return;
+        const selectAllCheckbox = document.getElementById('select-all-clients'); if (!selectAllCheckbox) return;
         const allClientCheckboxes = document.querySelectorAll('#clients-table .client-select-checkbox');
-
-        if (allClientCheckboxes.length === 0) {
-            selectAllCheckbox.checked = false;
-            selectAllCheckbox.indeterminate = false;
-            return;
-        }
+        if (allClientCheckboxes.length === 0) { selectAllCheckbox.checked = false; selectAllCheckbox.indeterminate = false; return; }
         const checkedCount = Array.from(allClientCheckboxes).filter(cb => cb.checked).length;
-
-        if (checkedCount === 0) {
-            selectAllCheckbox.checked = false;
-            selectAllCheckbox.indeterminate = false;
-        } else if (checkedCount === allClientCheckboxes.length) {
-            selectAllCheckbox.checked = true;
-            selectAllCheckbox.indeterminate = false;
-        } else {
-            selectAllCheckbox.checked = false;
-            selectAllCheckbox.indeterminate = true;
-        }
+        if (checkedCount === 0) { selectAllCheckbox.checked = false; selectAllCheckbox.indeterminate = false; }
+        else if (checkedCount === allClientCheckboxes.length) { selectAllCheckbox.checked = true; selectAllCheckbox.indeterminate = false; }
+        else { selectAllCheckbox.checked = false; selectAllCheckbox.indeterminate = true; }
     }
-
     function updateBulkEmailClientsButtonState() {
-        const btn = document.getElementById('bulk-email-clients-btn');
-        if (!btn) return;
+        const btn = document.getElementById('bulk-email-clients-btn'); if (!btn) return;
         const btnTextSpan = btn.querySelector('span.d-none.d-sm-inline');
-
-        if (selectedClientIds.size > 0) {
-            btn.disabled = false;
-            if (btnTextSpan) btnTextSpan.textContent = `Enviar Email (${selectedClientIds.size})`;
-        } else {
-            btn.disabled = true;
-            if (btnTextSpan) btnTextSpan.textContent = `Enviar Email`;
-        }
-        const countSpan = document.getElementById('selectedClientsCountForEmail');
-        if (countSpan) countSpan.textContent = selectedClientIds.size;
+        if (selectedClientIds.size > 0) { btn.disabled = false; if (btnTextSpan) btnTextSpan.textContent = `Enviar Email (${selectedClientIds.size})`;}
+        else { btn.disabled = true; if (btnTextSpan) btnTextSpan.textContent = `Enviar Email`; }
+        const countSpan = document.getElementById('selectedClientsCountForEmail'); if (countSpan) countSpan.textContent = selectedClientIds.size;
     }
-
     function showBulkEmailClientsModal() {
-        if (selectedClientIds.size === 0) {
-            alert("Por favor, selecciona al menos un cliente.");
-            return;
-        }
+        if (selectedClientIds.size === 0) { showToast("Por favor, selecciona al menos un cliente.", 'warning'); return; }
         document.getElementById('bulkEmailClientsForm').reset();
         document.getElementById('selectedClientsCountForEmail').textContent = selectedClientIds.size;
-        const emailModal = bootstrap.Modal.getInstance(document.getElementById('bulkEmailClientsModal')) || new bootstrap.Modal(document.getElementById('bulkEmailClientsModal'));
-        emailModal.show();
+        (bootstrap.Modal.getInstance(document.getElementById('bulkEmailClientsModal')) || new bootstrap.Modal(document.getElementById('bulkEmailClientsModal'))).show();
     }
-
     async function confirmSendBulkEmailToClients() {
         const subject = document.getElementById('emailSubject').value.trim();
         const body = document.getElementById('emailBody').value.trim();
+        if (!subject || !body) { showToast("El asunto y el cuerpo del mensaje son obligatorios.", 'warning'); return; }
+        if (selectedClientIds.size === 0) { showToast("No hay clientes seleccionados.", 'warning'); return; }
 
-        if (!subject || !body) {
-            alert("El asunto y el cuerpo del mensaje son obligatorios.");
-            return;
-        }
-        if (selectedClientIds.size === 0) {
-            alert("No hay clientes seleccionados.");
-            return;
-        }
-
+        const sendButton = document.getElementById('sendBulkEmailBtn');
+        setButtonLoading(sendButton, true, "Enviar Emails");
         const clientIdsArray = Array.from(selectedClientIds);
         const payload = { clientIds: clientIdsArray, subject: subject, emailBody: body };
-
-        const sendButton = document.querySelector('#bulkEmailClientsModal .modal-footer .btn-primary');
-        sendButton.disabled = true;
-        sendButton.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Enviando...';
-
         const res = await fetchData('sendBulkEmailToClients', 'POST', payload);
-
-        sendButton.disabled = false;
-        sendButton.innerHTML = 'Enviar Emails';
+        setButtonLoading(sendButton, false);
 
         if (res && res.success) {
-            alert(res.message || "Proceso de envío de emails completado.");
+            showToast(res.message || "Proceso de envío de emails completado.", 'success');
             bootstrap.Modal.getInstance(document.getElementById('bulkEmailClientsModal')).hide();
-        } else {
-            alert(`Error al enviar emails: ${res ? res.message : 'Fallo desconocido o respuesta inesperada.'}`);
-        }
+        } else { showToast(`Error al enviar emails: ${res ? res.message : 'Fallo desconocido.'}`, 'error'); }
     }
-
-
     function viewClientDetails(id) {
-        const c=allClients.find(x=>x.id===id);
-        if(!c){alert('Cliente no hallado.');return;}
-        let btns='';
-        if(!c.verificado){btns=`<button class="btn btn-success btn-sm" onclick="manuallyMarkVerified('${c.id}'); bootstrap.Modal.getInstance(document.getElementById('clientModal')).hide();">Verificar Manualmente</button>`;}
+        const c=allClients.find(x=>x.id===id); if(!c){showToast('Cliente no hallado.','error');return;}
+        let btns=''; if(!c.verificado){btns=`<button class="btn btn-success btn-sm" onclick="manuallyMarkVerified('${c.id}'); bootstrap.Modal.getInstance(document.getElementById('clientModal')).hide();">Verificar Manualmente</button>`;}
         const telefonoDisplay = c.telefono && String(c.telefono).trim() !== "" ? c.telefono : 'N/A';
         document.getElementById('client-details').innerHTML=`<h5>${c.nombre||'S/N'} <span class="badge bg-${c.verificado?'success':'warning text-dark'}">${c.verificado?'Verificado':'No Verificado'}</span></h5><p><strong>ID:</strong> ${c.id||'N/A'}</p><p><strong>Tel (Comprador):</strong> ${telefonoDisplay}</p><p><strong>Email:</strong> ${c.email||'N/A'}</p><p><strong>Puntos:</strong> <span class="badge points-badge fs-6">${c.puntos||0}</span></p><p><strong>Desde:</strong> ${c.fecharegistro||'N/A'}</p><p><strong>Últ. Actividad:</strong> ${c.ultimavisita||'N/A'}</p><p><strong>Envíos Realizados:</strong> ${c.compras||0}</p><hr>${btns}`;
         (bootstrap.Modal.getInstance(document.getElementById('clientModal'))||new bootstrap.Modal(document.getElementById('clientModal'))).show();
     }
-    function showAddPointsModal(id) { const c=allClients.find(x=>x.id===id); if(!c){alert('Cliente no hallado.');return;} document.getElementById('currentClientIdPoints').value=id; document.getElementById('addPointsForm').reset(); document.getElementById('pointsAmount').value=10; (bootstrap.Modal.getInstance(document.getElementById('addPointsModal'))||new bootstrap.Modal(document.getElementById('addPointsModal'))).show(); }
-    async function manuallyMarkVerified(id) { if(!confirm(`Verificar cliente '${id}'?`))return; const res=await fetchData('markClientVerified','POST',{clientId:id}); if(res && res.success){alert(res.message||"Verificado.");await loadClients(true);}else{alert(`Error: ${res.message||'Error.'}`);}}
-    async function addNewClient() {
-        const data={
-            nombre:document.getElementById('clientName').value.trim(),
-            telefono:document.getElementById('clientPhone').value.trim(),
-            email:document.getElementById('clientEmail').value.trim(),
-            puntos:parseInt(document.getElementById('clientInitialPoints').value),
-            verificado:true
-        };
-        if(!data.nombre){alert('Nombre requerido.');return;}
-        if(isNaN(data.puntos)||data.puntos<0){alert('Puntos inválidos.');return;}
-        const res=await fetchData('addClient','POST',{client:data});
-        if(res && res.success && res.data){alert(res.message||`Cliente '${res.data.nombre}' añadido.`);await loadClients(true);bootstrap.Modal.getInstance(document.getElementById('addClientModal')).hide();document.getElementById('newClientForm').reset();}
-        else{alert(`Error: ${res.message||'Fallo.'}`);}
+    function showAddPointsModal(id) { const c=allClients.find(x=>x.id===id); if(!c){showToast('Cliente no hallado.','error');return;} document.getElementById('currentClientIdPoints').value=id; document.getElementById('addPointsForm').reset(); document.getElementById('pointsAmount').value=10; (bootstrap.Modal.getInstance(document.getElementById('addPointsModal'))||new bootstrap.Modal(document.getElementById('addPointsModal'))).show(); }
+    async function manuallyMarkVerified(id) { 
+        if(!confirm(`Verificar cliente '${id}'?`))return; 
+        const client = allClients.find(c => c.id === id);
+        const clientName = client ? client.nombre : `ID ${id}`;
+        // No hay botón específico para esto, pero si lo hubiera, usaríamos setButtonLoading
+        const res=await fetchData('markClientVerified','POST',{clientId:id}); 
+        if(res && res.success){showToast(res.message||`Cliente ${clientName} verificado.`, 'success');await loadClients(true);}
+        else{showToast(`Error al verificar ${clientName}: ${res.message||'Error.'}`, 'error');}
     }
-    async function confirmAddPoints() { const id=document.getElementById('currentClientIdPoints').value; const pts=parseInt(document.getElementById('pointsAmount').value); const rsn=document.getElementById('pointsReason').value; if(isNaN(pts)){alert("Cantidad de puntos inválida.");return;} const res=await fetchData('updateClientPoints','POST',{clientId:id,points:pts,reason:rsn}); if(res && res.success && res.data){alert(res.message||`Puntos actualizados.`);await loadClients(true);bootstrap.Modal.getInstance(document.getElementById('addPointsModal')).hide();}else{alert(`Error: ${res.message||'Fallo.'}`);}}
+    async function addNewClient() {
+        const data={ nombre:document.getElementById('clientName').value.trim(), telefono:document.getElementById('clientPhone').value.trim(), email:document.getElementById('clientEmail').value.trim(), puntos:parseInt(document.getElementById('clientInitialPoints').value), verificado:true };
+        if(!data.nombre){showToast('Nombre requerido.','warning');return;}
+        if(isNaN(data.puntos)||data.puntos<0){showToast('Puntos inválidos.','warning');return;}
+        
+        const saveBtn = document.getElementById('saveNewClientBtn');
+        setButtonLoading(saveBtn, true, "Guardar Cliente");
+        const res=await fetchData('addClient','POST',{client:data});
+        setButtonLoading(saveBtn, false);
+
+        if(res && res.success && res.data){showToast(res.message||`Cliente '${res.data.nombre}' añadido.`, 'success');await loadClients(true);bootstrap.Modal.getInstance(document.getElementById('addClientModal')).hide();document.getElementById('newClientForm').reset();}
+        else{showToast(`Error al añadir cliente: ${res.message||'Fallo.'}`,'error');}
+    }
+    async function confirmAddPoints() { 
+        const id=document.getElementById('currentClientIdPoints').value; const pts=parseInt(document.getElementById('pointsAmount').value); const rsn=document.getElementById('pointsReason').value; 
+        if(isNaN(pts)){showToast("Cantidad de puntos inválida.",'warning');return;}
+        const client = allClients.find(c => c.id === id);
+        const clientName = client ? client.nombre : `Cliente ID ${id}`;
+
+        const applyBtn = document.getElementById('confirmAddPointsBtn');
+        setButtonLoading(applyBtn, true, "Aplicar Puntos");
+        const res=await fetchData('updateClientPoints','POST',{clientId:id,points:pts,reason:rsn}); 
+        setButtonLoading(applyBtn, false);
+
+        if(res && res.success && res.data){showToast(res.message||`Puntos actualizados para ${clientName}.`, 'success');await loadClients(true);bootstrap.Modal.getInstance(document.getElementById('addPointsModal')).hide();}
+        else{showToast(`Error al actualizar puntos para ${clientName}: ${res.message||'Fallo.'}`, 'error');}
+    }
 
     // --- PRODUCT FUNCTIONS ---
     async function loadProducts(force=false) {
-        if(!force&&allProducts.length){renderProductsTable(); return;}
+        const tb = document.getElementById('products-table');
+        if(!force&&allProducts.length){ filterProducts(); return; }
+
+        tb.innerHTML = `<tr><td colspan="9" class="text-center py-5"><div class="spinner-border text-primary" role="status"><span class="visually-hidden">Cargando...</span></div><p>Cargando productos...</p></td></tr>`;
+        document.getElementById('products-pagination-controls').innerHTML = '';
+
         const res=await fetchData('getProducts','GET');
         if(res && res.success && Array.isArray(res.data)){
             allProducts=res.data.map(p=>({...p,price:parseFloat(p.price)||0,points:parseInt(p.points)||0,active:p.active===true||String(p.active).toLowerCase()==='true', imageurl: p.imageurl || ''}));
+            currentPageProducts = 1;
             filterProducts();
         }else{
-            document.getElementById('products-table').innerHTML=`<tr><td colspan="9" class="text-center text-danger">Error: ${res.message||'No se cargaron productos/combos.'}</td></tr>`;
+            tb.innerHTML=`<tr><td colspan="9" class="text-center text-danger">Error: ${res.message||'No se cargaron productos/combos.'} <button class="btn btn-sm btn-outline-success ms-2" data-bs-toggle="modal" data-bs-target="#addProductModal"><i class="bi bi-journal-plus"></i> Nuevo Producto/Combo</button></td></tr>`;
             updateBulkDeleteButtonState();
-            const selectAllCheckbox = document.getElementById('select-all-products');
-            if (selectAllCheckbox) selectAllCheckbox.checked = false;
+            document.getElementById('select-all-products').checked = false;
         }
         updateDashboard();
     }
-
     function renderProductsTable() {
-        const tb = document.getElementById('products-table');
-        tb.innerHTML = '';
+        const tb = document.getElementById('products-table'); tb.innerHTML = '';
+        const startIndex = (currentPageProducts - 1) * ITEMS_PER_PAGE_PRODUCTS;
+        const endIndex = startIndex + ITEMS_PER_PAGE_PRODUCTS;
+        const paginatedProducts = displayedProducts.slice(startIndex, endIndex);
 
-        if (displayedProducts.length === 0) {
-            tb.innerHTML = `<tr><td colspan="9" class="text-center">No hay productos o combos para mostrar.</td></tr>`;
-        } else {
-             displayedProducts.sort((a, b) => (a.name || "").localeCompare(b.name || "")).forEach(p => {
-                const imageUrl = p.imageurl ? p.imageurl : 'https://via.placeholder.com/50?text=No+Img';
-                const isChecked = selectedProductIds.has(p.id);
-                tb.innerHTML += `<tr>
-                    <td class="checkbox-column"><input type="checkbox" class="form-check-input product-select-checkbox" value="${p.id}" data-product-id="${p.id}" ${isChecked ? 'checked' : ''}></td>
-                    <td><img src="${imageUrl}" alt="${p.name || 'Producto'}" class="product-image-table" onerror="this.onerror=null; this.src='https://via.placeholder.com/50?text=Error';"></td>
-                    <td>${p.id || 'N/A'}</td>
-                    <td>${p.name || 'S/N'}</td>
-                    <td class="d-none d-md-table-cell">${p.category || 'N/A'}</td>
-                    <td>${(p.price || 0).toFixed(2)} USD</td>
-                    <td>${p.points || 0}</td>
-                    <td><span class="badge bg-${p.active ? 'success' : 'secondary'}">${p.active ? 'Sí' : 'No'}</span></td>
-                    <td>
-                        <div class="btn-group btn-group-sm">
-                            <button class="btn btn-outline-primary" onclick="editProduct('${p.id}')"><i class="bi bi-pencil"></i></button>
-                            <button class="btn btn-outline-danger" onclick="showDeleteModal('${p.id}','${p.name}','product')"><i class="bi bi-trash"></i></button>
-                        </div>
-                    </td>
-                </tr>`;
-            });
+        if (paginatedProducts.length === 0 && displayedProducts.length > 0 && currentPageProducts > 1) {
+             currentPageProducts = Math.ceil(displayedProducts.length / ITEMS_PER_PAGE_PRODUCTS) || 1;
+             renderProductsTable(); return;
         }
 
-        document.querySelectorAll('.product-select-checkbox').forEach(checkbox => {
-            checkbox.addEventListener('change', handleProductSelectSingle);
-        });
-
+        if (displayedProducts.length === 0) {
+            tb.innerHTML = `<tr><td colspan="9" class="text-center">No hay productos o combos para mostrar. <button class="btn btn-sm btn-outline-success ms-2" data-bs-toggle="modal" data-bs-target="#addProductModal"><i class="bi bi-journal-plus"></i> Nuevo Producto/Combo</button></td></tr>`;
+            document.getElementById('products-pagination-controls').innerHTML = '';
+            updateBulkDeleteButtonState();
+            document.getElementById('select-all-products').checked = false;
+        } else {
+             paginatedProducts.sort((a, b) => (a.name || "").localeCompare(b.name || "")).forEach(p => {
+                const imageUrl = p.imageurl ? p.imageurl : 'https://via.placeholder.com/50?text=No+Img';
+                const isChecked = selectedProductIds.has(p.id);
+                tb.innerHTML += `<tr><td class="checkbox-column"><input type="checkbox" class="form-check-input product-select-checkbox" value="${p.id}" data-product-id="${p.id}" ${isChecked ? 'checked' : ''}></td><td><img src="${imageUrl}" alt="${p.name || 'Producto'}" class="product-image-table" loading="lazy" onerror="this.onerror=null; this.src='https://via.placeholder.com/50?text=Error';"></td><td>${p.id || 'N/A'}</td><td>${p.name || 'S/N'}</td><td class="d-none d-md-table-cell">${p.category || 'N/A'}</td><td>${(p.price || 0).toFixed(2)} USD</td><td>${p.points || 0}</td><td><span class="badge bg-${p.active ? 'success' : 'secondary'}">${p.active ? 'Sí' : 'No'}</span></td><td><div class="btn-group btn-group-sm"><button class="btn btn-outline-primary" onclick="editProduct('${p.id}')"><i class="bi bi-pencil"></i></button><button class="btn btn-outline-danger" onclick="showDeleteModal('${p.id}','${p.name}','product')"><i class="bi bi-trash"></i></button></div></td></tr>`;
+            });
+        }
+        document.querySelectorAll('.product-select-checkbox').forEach(checkbox => checkbox.addEventListener('change', handleProductSelectSingle));
         updateSelectAllCheckboxState();
         updateBulkDeleteButtonState();
+        renderGenericPaginationControls({
+            paginationContainerId: 'products-pagination-controls',
+            currentPage: currentPageProducts,
+            totalItems: displayedProducts.length,
+            itemsPerPage: ITEMS_PER_PAGE_PRODUCTS,
+            changePageFnName: 'changeProductsPage',
+            entityNameLabel: 'productos'
+        });
     }
-
     function filterProducts() {
         const term=document.getElementById('search-product-input').value.toLowerCase().trim();
         displayedProducts=term?allProducts.filter(p=>(p.name&&p.name.toLowerCase().includes(term))||(p.category&&p.category.toLowerCase().includes(term))||(p.id&&String(p.id).toLowerCase().includes(term))):[...allProducts];
+        currentPageProducts = 1;
         renderProductsTable();
+        updateFilterIndicator('search-product-input', term.length > 0);
     }
-
     async function resetFilterAndLoadProducts() {
         document.getElementById('search-product-input').value='';
         selectedProductIds.clear();
+        currentPageProducts = 1;
+        updateFilterIndicator('search-product-input', false);
         await loadProducts(true);
     }
-
+    function changeProductsPage(newPage) {
+        if (newPage < 1 || newPage > Math.ceil(displayedProducts.length / ITEMS_PER_PAGE_PRODUCTS) && displayedProducts.length > 0) return;
+        currentPageProducts = newPage;
+        renderProductsTable();
+        document.getElementById('products-table').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
     function handleProductSelectAll(event) {
         const isChecked = event.target.checked;
-        const visibleProductCheckboxes = document.querySelectorAll('#products-table .product-select-checkbox');
-
-        visibleProductCheckboxes.forEach(checkbox => {
+        document.querySelectorAll('#products-table .product-select-checkbox').forEach(checkbox => {
             const productId = checkbox.dataset.productId;
             checkbox.checked = isChecked;
-            if (isChecked) {
-                selectedProductIds.add(productId);
-            } else {
-                selectedProductIds.delete(productId);
-            }
+            if (isChecked) selectedProductIds.add(productId); else selectedProductIds.delete(productId);
         });
         updateBulkDeleteButtonState();
     }
-
     function handleProductSelectSingle(event) {
         const productId = event.target.dataset.productId;
-        if (event.target.checked) {
-            selectedProductIds.add(productId);
-        } else {
-            selectedProductIds.delete(productId);
-        }
+        if (event.target.checked) selectedProductIds.add(productId); else selectedProductIds.delete(productId);
         updateSelectAllCheckboxState();
         updateBulkDeleteButtonState();
     }
-
     function updateSelectAllCheckboxState() {
-        const selectAllCheckbox = document.getElementById('select-all-products');
-        if (!selectAllCheckbox) return;
+        const selectAllCheckbox = document.getElementById('select-all-products'); if (!selectAllCheckbox) return;
         const allProductCheckboxes = document.querySelectorAll('#products-table .product-select-checkbox');
-
-        if (allProductCheckboxes.length === 0) {
-            selectAllCheckbox.checked = false;
-            selectAllCheckbox.indeterminate = false;
-            return;
-        }
-
+        if (allProductCheckboxes.length === 0) { selectAllCheckbox.checked = false; selectAllCheckbox.indeterminate = false; return; }
         const checkedCount = Array.from(allProductCheckboxes).filter(cb => cb.checked).length;
-
-        if (checkedCount === 0) {
-            selectAllCheckbox.checked = false;
-            selectAllCheckbox.indeterminate = false;
-        } else if (checkedCount === allProductCheckboxes.length) {
-            selectAllCheckbox.checked = true;
-            selectAllCheckbox.indeterminate = false;
-        } else {
-            selectAllCheckbox.checked = false;
-            selectAllCheckbox.indeterminate = true;
-        }
+        if (checkedCount === 0) { selectAllCheckbox.checked = false; selectAllCheckbox.indeterminate = false; }
+        else if (checkedCount === allProductCheckboxes.length) { selectAllCheckbox.checked = true; selectAllCheckbox.indeterminate = false; }
+        else { selectAllCheckbox.checked = false; selectAllCheckbox.indeterminate = true; }
     }
-
     function updateBulkDeleteButtonState() {
-        const btn = document.getElementById('bulk-delete-products-btn');
-        if (!btn) return;
+        const btn = document.getElementById('bulk-delete-products-btn'); if (!btn) return;
         const btnTextSpan = btn.querySelector('span.d-none.d-sm-inline');
-
-        if (selectedProductIds.size > 0) {
-            btn.disabled = false;
-            if (btnTextSpan) btnTextSpan.textContent = `Eliminar Seleccionados (${selectedProductIds.size})`;
-        } else {
-            btn.disabled = true;
-            if (btnTextSpan) btnTextSpan.textContent = `Eliminar Seleccionados`;
-        }
+        if (selectedProductIds.size > 0) { btn.disabled = false; if (btnTextSpan) btnTextSpan.textContent = `Eliminar Seleccionados (${selectedProductIds.size})`;}
+        else { btn.disabled = true; if (btnTextSpan) btnTextSpan.textContent = `Eliminar Seleccionados`;}
     }
-
     function showBulkDeleteModal() {
-        if (selectedProductIds.size === 0) return;
+        if (selectedProductIds.size === 0) { showToast("Selecciona productos para eliminar.", "warning"); return; }
         itemToDeleteType = 'products_bulk';
         document.getElementById('delete-item-type').textContent = `los ${selectedProductIds.size} productos/combos seleccionados`;
         document.getElementById('item-to-delete').innerHTML = `IDs: <small>${Array.from(selectedProductIds).slice(0, 5).join(', ')}${selectedProductIds.size > 5 ? '...' : ''}</small>`;
-
-        const deleteModal = bootstrap.Modal.getInstance(document.getElementById('deleteModal')) || new bootstrap.Modal(document.getElementById('deleteModal'));
-        deleteModal.show();
+        (bootstrap.Modal.getInstance(document.getElementById('deleteModal')) || new bootstrap.Modal(document.getElementById('deleteModal'))).show();
     }
-
-
     function editProduct(id) {
-        const p=allProducts.find(x=>x.id===id);
-        if(!p){alert('Producto/Combo no hallado.');return;}
+        const p=allProducts.find(x=>x.id===id); if(!p){showToast('Producto/Combo no hallado.','error');return;}
         document.getElementById('productId').value=p.id;
         document.getElementById('productName').value=p.name;
         document.getElementById('productDescription').value=p.description||'';
@@ -862,47 +957,61 @@
     }
     async function saveProduct() {
         const data={id:document.getElementById('productId').value,name:document.getElementById('productName').value.trim(),description:document.getElementById('productDescription').value.trim(),price:parseFloat(document.getElementById('productPrice').value),points:parseInt(document.getElementById('productPoints').value)||0,category:document.getElementById('productCategory').value.trim(),imageurl:document.getElementById('productImageUrl').value.trim(),active:document.getElementById('productActive').checked};
-        if(!data.name||isNaN(data.price)||data.price<0){alert('Nombre y Precio (USD) requeridos.');return;}
+        if(!data.name||isNaN(data.price)||data.price<0){showToast('Nombre y Precio (USD) requeridos.','warning');return;}
+        
+        const saveBtn = document.getElementById('saveProductBtn');
+        setButtonLoading(saveBtn, true, "Guardar Producto/Combo");
         const action=data.id?'updateProduct':'addProduct';
         const res=await fetchData(action,'POST',{product:data});
+        setButtonLoading(saveBtn, false);
+
         if(res && res.success && res.data){
-            alert(res.message||`Producto/Combo guardado.`);
+            showToast(res.message||`Producto/Combo '${data.name}' guardado.`, 'success');
             selectedProductIds.clear();
             await loadProducts(true);
             bootstrap.Modal.getInstance(document.getElementById('addProductModal')).hide();
-        }else{alert(`Error: ${res.message||'Fallo.'}`);}
+        }else{showToast(`Error al guardar '${data.name}': ${res.message||'Fallo.'}`, 'error');}
     }
 
-    // --- ORDER FUNCTIONS (ahora ENVIOS) ---
+    // --- ORDER FUNCTIONS (ENVIOS) ---
     async function loadOrders(force = false) {
-        if (!force && allOrders.length > 0) { renderOrdersTable(); return; }
+        const tb = document.getElementById('orders-table');
+        if (!force && allOrders.length > 0) { filterOrders(); return; }
+
+        tb.innerHTML = `<tr><td colspan="6" class="text-center py-5"><div class="spinner-border text-primary" role="status"><span class="visually-hidden">Cargando...</span></div><p>Cargando envíos...</p></td></tr>`;
+        document.getElementById('orders-pagination-controls').innerHTML = '';
+        
         const result = await fetchData('getAdminOrders', 'GET');
         if (result && result.success && Array.isArray(result.data)) {
-            allOrders = result.data.map(o => ({
-                ...o,
-                totalamount: parseFloat(o.totalamount) || 0,
-                orderdateiso: o.orderdateiso || o.orderdate
-            })).sort((a,b) => {
+            allOrders = result.data.map(o => ({ ...o, totalamount: parseFloat(o.totalamount) || 0, orderdateiso: o.orderdateiso || o.orderdate }))
+            .sort((a,b) => {
                 const dateA = a.orderdateiso ? new Date(a.orderdateiso) : new Date(0);
                 const dateB = b.orderdateiso ? new Date(b.orderdateiso) : new Date(0);
-                if (isNaN(dateA.getTime()) || isNaN(dateB.getTime())) {
-                    return String(b.orderdate).localeCompare(String(a.orderdate));
-                }
+                if (isNaN(dateA.getTime()) || isNaN(dateB.getTime())) return String(b.orderdate).localeCompare(String(a.orderdate));
                 return dateB - dateA;
             });
+            currentPageOrders = 1;
             filterOrders();
         } else {
-             document.getElementById('orders-table').innerHTML = `<tr><td colspan="6" class="text-center text-danger">Error al cargar envíos: ${result.message || 'Error.'}</td></tr>`;
+             tb.innerHTML = `<tr><td colspan="6" class="text-center text-danger">Error al cargar envíos: ${result.message || 'Error.'}</td></tr>`;
         }
         updateDashboard();
     }
     function renderOrdersTable() {
         const tb = document.getElementById('orders-table'); tb.innerHTML = '';
-        if (displayedOrders.length === 0) { tb.innerHTML = '<tr><td colspan="6" class="text-center">No hay envíos para mostrar.</td></tr>'; return; }
+        const startIndex = (currentPageOrders - 1) * ITEMS_PER_PAGE_ORDERS;
+        const endIndex = startIndex + ITEMS_PER_PAGE_ORDERS;
+        const paginatedOrders = displayedOrders.slice(startIndex, endIndex);
+
+        if (paginatedOrders.length === 0 && displayedOrders.length > 0 && currentPageOrders > 1) {
+             currentPageOrders = Math.ceil(displayedOrders.length / ITEMS_PER_PAGE_ORDERS) || 1;
+             renderOrdersTable(); return;
+        }
+
+        if (displayedOrders.length === 0) { tb.innerHTML = '<tr><td colspan="6" class="text-center">No hay envíos para mostrar.</td></tr>'; document.getElementById('orders-pagination-controls').innerHTML = ''; return; }
         
-        displayedOrders.forEach(order => {
-            let sClass='';
-            let statusText = order.status || 'N/A';
+        paginatedOrders.forEach(order => {
+            let sClass='', statusText = order.status || 'N/A';
             switch(String(order.status).toLowerCase().replace(/\s+/g, '-')) {
                 case 'pendiente-de-pago': sClass='status-pendiente-de-pago'; statusText = "Pend. Pago (Zelle)"; break;
                 case 'pendiente': sClass='status-pendiente'; statusText = "Pago Recibido"; break;
@@ -912,44 +1021,56 @@
                 default: sClass='bg-secondary text-white';
             }
             let displayDate = order.orderdate || 'N/A';
-            if (order.orderdateiso) {
-                try {
-                    displayDate = new Date(order.orderdateiso).toLocaleDateString('es-ES', { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
-                } catch(e) { /* usar order.orderdate original */ }
-            } else if (typeof order.orderdate === 'string' && order.orderdate.match(/^\d{1,2}\/\d{1,2}\/\d{4}$/)) {
-                // Mantenemos dd/mm/yyyy si no hay ISO
-            }
+            if (order.orderdateiso) { try { displayDate = new Date(order.orderdateiso).toLocaleDateString('es-ES', { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }); } catch(e) { /* usar original */ }}
+            else if (typeof order.orderdate === 'string' && order.orderdate.match(/^\d{1,2}\/\d{1,2}\/\d{4}$/)) { /* Mantenemos dd/mm/yyyy */ }
 
-
-            tb.innerHTML += `<tr>
-                <td>${order.orderid?String(order.orderid).substr(-8):'N/A'}</td>
-                <td>${order.clientname||'N/A'}<small class="d-block text-muted">${order.clientid||''}</small></td>
-                <td class="d-none d-md-table-cell">${displayDate}</td>
-                <td>${(order.totalamount||0).toFixed(2)} USD</td>
-                <td><span class="status-badge ${sClass}">${statusText}</span></td>
-                <td><button class="btn btn-sm btn-outline-primary" onclick="viewOrderDetails('${order.orderid}')"><i class="bi bi-eye"></i></button></td>
-            </tr>`;
+            tb.innerHTML += `<tr><td>${order.orderid?String(order.orderid).substr(-8):'N/A'}</td><td>${order.clientname||'N/A'}<small class="d-block text-muted">${order.clientid||''}</small></td><td class="d-none d-md-table-cell">${displayDate}</td><td>${(order.totalamount||0).toFixed(2)} USD</td><td><span class="status-badge ${sClass}">${statusText}</span></td><td><button class="btn btn-sm btn-outline-primary" onclick="viewOrderDetails('${order.orderid}')"><i class="bi bi-eye"></i></button></td></tr>`;
+        });
+        renderGenericPaginationControls({
+            paginationContainerId: 'orders-pagination-controls',
+            currentPage: currentPageOrders,
+            totalItems: displayedOrders.length,
+            itemsPerPage: ITEMS_PER_PAGE_ORDERS,
+            changePageFnName: 'changeOrdersPage',
+            entityNameLabel: 'envíos'
         });
     }
     function filterOrders() {
-        const term = document.getElementById('search-order-input').value.toLowerCase().trim();
-        displayedOrders = term ? allOrders.filter(o => (o.orderid&&String(o.orderid).toLowerCase().includes(term))||(o.clientname&&o.clientname.toLowerCase().includes(term))||(o.clientid&&String(o.clientid).toLowerCase().includes(term))||(o.status&&o.status.toLowerCase().includes(term))) : [...allOrders];
+        const searchTerm = document.getElementById('search-order-input').value.toLowerCase().trim();
+        const statusFilter = document.getElementById('filter-order-status').value;
+        currentPageOrders = 1;
+
+        displayedOrders = allOrders.filter(o => {
+            const matchesSearch = searchTerm ? (o.orderid&&String(o.orderid).toLowerCase().includes(searchTerm))||(o.clientname&&o.clientname.toLowerCase().includes(searchTerm))||(o.clientid&&String(o.clientid).toLowerCase().includes(searchTerm))||(o.status&&o.status.toLowerCase().includes(searchTerm)) : true;
+            const matchesStatus = statusFilter ? (o.status === statusFilter) : true;
+            return matchesSearch && matchesStatus;
+        });
         renderOrdersTable();
+        updateFilterIndicator('search-order-input', searchTerm.length > 0);
+    }
+    async function resetFilterAndLoadOrders() {
+        document.getElementById('search-order-input').value = '';
+        document.getElementById('filter-order-status').value = '';
+        currentPageOrders = 1;
+        updateFilterIndicator('search-order-input', false);
+        await loadOrders(true); // Esto llamará a filterOrders
+    }
+    function changeOrdersPage(newPage) {
+        if (newPage < 1 || newPage > Math.ceil(displayedOrders.length / ITEMS_PER_PAGE_ORDERS) && displayedOrders.length > 0) return;
+        currentPageOrders = newPage;
+        renderOrdersTable();
+        document.getElementById('orders-table').scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
     function viewOrderDetails(id) {
-        const o=allOrders.find(x=>x.orderid===id);
-        if(!o){alert('Envío no hallado.');return;}
+        const o=allOrders.find(x=>x.orderid===id); if(!o){showToast('Envío no hallado.','error');return;}
         const content=document.getElementById('order-details-content');
         document.getElementById('order-id-to-update').value=id;
         let items='<p class="text-muted small">No hay ítems.</p>';
         if(o.itemsjson&&Array.isArray(o.itemsjson)&&o.itemsjson.length>0){
             items='<ul class="order-details-list">';
-            o.itemsjson.forEach(i=>{
-                items+=`<li>${i.quantity}x <strong>${i.name||'N/A'}</strong> (@ ${(parseFloat(i.price)||0).toFixed(2)} USD) = ${(i.quantity*(parseFloat(i.price)||0)).toFixed(2)} USD</li>`;
-            });
+            o.itemsjson.forEach(i=>{ items+=`<li>${i.quantity}x <strong>${i.name||'N/A'}</strong> (@ ${(parseFloat(i.price)||0).toFixed(2)} USD) = ${(i.quantity*(parseFloat(i.price)||0)).toFixed(2)} USD</li>`; });
             items+='</ul>';
         }
-
         let recipientDetailsHTML = "";
         if (o.recipientname || o.recipientphone || o.deliveryaddress) {
             recipientDetailsHTML += "<hr><h5>Información del Destinatario (Cuba):</h5>";
@@ -957,90 +1078,94 @@
             if (o.recipientphone) recipientDetailsHTML += `<p><strong>Teléfono:</strong> ${o.recipientphone}</p>`;
             if (o.deliveryaddress) recipientDetailsHTML += `<p><strong>Dirección:</strong> ${o.deliveryaddress}</p>`;
         }
-        
         let displayDateModal = o.orderdate || 'N/A';
-        if (o.orderdateiso) {
-            try {
-                displayDateModal = new Date(o.orderdateiso).toLocaleString('es-ES', { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' });
-            } catch(e) { /* usar o.orderdate original */ }
-        }
-
-        content.innerHTML=`
-            <p><strong>ID Envío:</strong> ${o.orderid}</p>
-            <p><strong>Comprador (USA):</strong> ${o.clientname||'N/A'} (ID: ${o.clientid||'N/A'})</p>
-            ${recipientDetailsHTML}
-            <p><strong>Fecha:</strong> ${displayDateModal}</p>
-            <p><strong>Total:</strong> ${(parseFloat(o.totalamount)||0).toFixed(2)} USD</p>
-            <p><strong>Puntos Otorgados (al comprador):</strong> ${o.totalpointsawarded||0}</p>
-            <p><strong>Estado:</strong> <span class="fw-bold">${o.status||'N/A'}</span></p>
-            <p><strong>Puntos Ya Entregados (al comprador):</strong> <span class="badge bg-${o.pointsgiven ? 'success' : 'secondary'}">${o.pointsgiven ? 'Sí' : 'No'}</span></p>
-            <hr><h5>Ítems:</h5>${items}`;
+        if (o.orderdateiso) { try { displayDateModal = new Date(o.orderdateiso).toLocaleString('es-ES', { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' }); } catch(e) { /* usar original */ }}
+        content.innerHTML=`<p><strong>ID Envío:</strong> ${o.orderid}</p><p><strong>Comprador (USA):</strong> ${o.clientname||'N/A'} (ID: ${o.clientid||'N/A'})</p>${recipientDetailsHTML}<p><strong>Fecha:</strong> ${displayDateModal}</p><p><strong>Total:</strong> ${(parseFloat(o.totalamount)||0).toFixed(2)} USD</p><p><strong>Puntos Otorgados (al comprador):</strong> ${o.totalpointsawarded||0}</p><p><strong>Estado:</strong> <span class="fw-bold">${o.status||'N/A'}</span></p><p><strong>Puntos Ya Entregados (al comprador):</strong> <span class="badge bg-${o.pointsgiven ? 'success' : 'secondary'}">${o.pointsgiven ? 'Sí' : 'No'}</span></p><hr><h5>Ítems:</h5>${items}`;
         document.getElementById('orderStatusSelect').value=o.status||'Pendiente de Pago';
         (bootstrap.Modal.getInstance(document.getElementById('orderDetailsModal'))||new bootstrap.Modal(document.getElementById('orderDetailsModal'))).show();
     }
-    async function updateOrderStatusAttempt() { const id=document.getElementById('order-id-to-update').value; const status=document.getElementById('orderStatusSelect').value; if(!id||!status){alert("Datos inválidos.");return;} const res=await fetchData('updateOrderStatus','POST',{orderId:id,newStatus:status}); if(res && res.success){alert(res.message||"Estado actualizado.");await loadOrders(true);bootstrap.Modal.getInstance(document.getElementById('orderDetailsModal'))?.hide();}else{alert(`Error: ${res.message||'Fallo.'}`);}}
+    async function updateOrderStatusAttempt() { 
+        const id=document.getElementById('order-id-to-update').value; const status=document.getElementById('orderStatusSelect').value; 
+        if(!id||!status){showToast("Datos inválidos.", 'warning');return;}
+        
+        const updateBtn = document.getElementById('updateOrderStatusBtn');
+        setButtonLoading(updateBtn, true, "Actualizar");
+        const res=await fetchData('updateOrderStatus','POST',{orderId:id,newStatus:status}); 
+        setButtonLoading(updateBtn, false);
+
+        if(res && res.success){showToast(res.message||`Estado del envío ${id.substr(-6)} actualizado a ${status}.`, 'success');await loadOrders(true);bootstrap.Modal.getInstance(document.getElementById('orderDetailsModal'))?.hide();}
+        else{showToast(`Error al actualizar estado: ${res.message||'Fallo.'}`, 'error');}
+    }
 
     // --- REWARD FUNCTIONS ---
     async function loadRewards(force = false) {
-        if (!force && allRewards.length) { renderRewardsTable(); return; }
+        const tb = document.getElementById('rewards-table');
+        if (!force && allRewards.length) { filterRewards(); return; }
+
+        tb.innerHTML = `<tr><td colspan="8" class="text-center py-5"><div class="spinner-border text-primary" role="status"><span class="visually-hidden">Cargando...</span></div><p>Cargando recompensas...</p></td></tr>`;
+        document.getElementById('rewards-pagination-controls').innerHTML = '';
+
         const res = await fetchData('getAvailableRewards', 'GET');
         if (res && res.success && Array.isArray(res.data)) {
-            allRewards = res.data.map(r => ({
-                ...r,
-                pointsrequired: parseInt(r.pointsrequired) || 0,
-                stock: parseInt(r.stock) || 0,
-                isactive: r.isactive === true || String(r.isactive).toLowerCase() === 'true'
-            }));
+            allRewards = res.data.map(r => ({ ...r, pointsrequired: parseInt(r.pointsrequired) || 0, stock: parseInt(r.stock) || 0, isactive: r.isactive === true || String(r.isactive).toLowerCase() === 'true' }));
+            currentPageRewards = 1;
             filterRewards();
         } else {
-            document.getElementById('rewards-table').innerHTML = `<tr><td colspan="8" class="text-center text-danger">Error: ${res.message || 'No se cargaron recompensas.'}</td></tr>`;
+            tb.innerHTML = `<tr><td colspan="8" class="text-center text-danger">Error: ${res.message || 'No se cargaron recompensas.'} <button class="btn btn-sm btn-outline-info ms-2" data-bs-toggle="modal" data-bs-target="#addRewardModal"><i class="bi bi-plus-circle-dotted"></i> Nueva Recompensa</button></td></tr>`;
         }
         updateDashboard();
     }
     function renderRewardsTable() {
-        const tb = document.getElementById('rewards-table');
-        tb.innerHTML = '';
+        const tb = document.getElementById('rewards-table'); tb.innerHTML = '';
+        const startIndex = (currentPageRewards - 1) * ITEMS_PER_PAGE_REWARDS;
+        const endIndex = startIndex + ITEMS_PER_PAGE_REWARDS;
+        const paginatedRewards = displayedRewards.slice(startIndex, endIndex);
+
+        if (paginatedRewards.length === 0 && displayedRewards.length > 0 && currentPageRewards > 1) {
+             currentPageRewards = Math.ceil(displayedRewards.length / ITEMS_PER_PAGE_REWARDS) || 1;
+             renderRewardsTable(); return;
+        }
+
         if (displayedRewards.length === 0) {
-            tb.innerHTML = '<tr><td colspan="8" class="text-center">No hay recompensas para mostrar.</td></tr>';
+            tb.innerHTML = `<tr><td colspan="8" class="text-center">No hay recompensas para mostrar. <button class="btn btn-sm btn-outline-info ms-2" data-bs-toggle="modal" data-bs-target="#addRewardModal"><i class="bi bi-plus-circle-dotted"></i> Nueva Recompensa</button></td></tr>`;
+            document.getElementById('rewards-pagination-controls').innerHTML = '';
             return;
         }
-        displayedRewards.sort((a, b) => (a.name || "").localeCompare(b.name || "")).forEach(r => {
+        paginatedRewards.sort((a, b) => (a.name || "").localeCompare(b.name || "")).forEach(r => {
             let displayValue = r.value !== undefined ? String(r.value) : 'N/A';
             if (r.type === 'DescuentoFijo') displayValue += ' USD';
-
-            tb.innerHTML += `<tr>
-                <td>${r.rewardid || 'N/A'}</td>
-                <td>${r.name || 'S/N'}</td>
-                <td>${r.pointsrequired || 0}</td>
-                <td>${r.type || 'N/A'}</td>
-                <td>${displayValue}</td>
-                <td>${r.stock === 9999 ? 'Ilimitado' : (r.stock || 0)}</td>
-                <td><span class="badge bg-${r.isactive ? 'success' : 'secondary'}">${r.isactive ? 'Sí' : 'No'}</span></td>
-                <td>
-                    <div class="btn-group btn-group-sm">
-                        <button class="btn btn-outline-primary" onclick="editReward('${r.rewardid}')"><i class="bi bi-pencil"></i></button>
-                        <button class="btn btn-outline-danger" onclick="showDeleteModal('${r.rewardid}','${r.name}','reward')"><i class="bi bi-trash"></i></button>
-                    </div>
-                </td>
-            </tr>`;
+            tb.innerHTML += `<tr><td>${r.rewardid || 'N/A'}</td><td>${r.name || 'S/N'}</td><td>${r.pointsrequired || 0}</td><td>${r.type || 'N/A'}</td><td>${displayValue}</td><td>${r.stock === 9999 ? 'Ilimitado' : (r.stock || 0)}</td><td><span class="badge bg-${r.isactive ? 'success' : 'secondary'}">${r.isactive ? 'Sí' : 'No'}</span></td><td><div class="btn-group btn-group-sm"><button class="btn btn-outline-primary" onclick="editReward('${r.rewardid}')"><i class="bi bi-pencil"></i></button><button class="btn btn-outline-danger" onclick="showDeleteModal('${r.rewardid}','${r.name}','reward')"><i class="bi bi-trash"></i></button></div></td></tr>`;
+        });
+        renderGenericPaginationControls({
+            paginationContainerId: 'rewards-pagination-controls',
+            currentPage: currentPageRewards,
+            totalItems: displayedRewards.length,
+            itemsPerPage: ITEMS_PER_PAGE_REWARDS,
+            changePageFnName: 'changeRewardsPage',
+            entityNameLabel: 'recompensas'
         });
     }
     function filterRewards() {
         const term = document.getElementById('search-reward-input').value.toLowerCase().trim();
-        displayedRewards = term ? allRewards.filter(r =>
-            (r.name && r.name.toLowerCase().includes(term)) ||
-            (r.type && r.type.toLowerCase().includes(term)) ||
-            (r.rewardid && String(r.rewardid).toLowerCase().includes(term))
-        ) : [...allRewards];
+        displayedRewards = term ? allRewards.filter(r => (r.name && r.name.toLowerCase().includes(term)) || (r.type && r.type.toLowerCase().includes(term)) || (r.rewardid && String(r.rewardid).toLowerCase().includes(term))) : [...allRewards];
+        currentPageRewards = 1;
         renderRewardsTable();
+        updateFilterIndicator('search-reward-input', term.length > 0);
     }
     async function resetFilterAndLoadRewards() {
         document.getElementById('search-reward-input').value = '';
+        currentPageRewards = 1;
+        updateFilterIndicator('search-reward-input', false);
         await loadRewards(true);
     }
+    function changeRewardsPage(newPage) {
+        if (newPage < 1 || newPage > Math.ceil(displayedRewards.length / ITEMS_PER_PAGE_REWARDS) && displayedRewards.length > 0) return;
+        currentPageRewards = newPage;
+        renderRewardsTable();
+        document.getElementById('rewards-table').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
     function editReward(id) {
-        const r = allRewards.find(x => x.rewardid === id);
-        if (!r) { alert('Recompensa no hallada.'); return; }
+        const r = allRewards.find(x => x.rewardid === id); if (!r) { showToast('Recompensa no hallada.','error'); return; }
         document.getElementById('rewardIdField').value = r.rewardid;
         document.getElementById('rewardName').value = r.name;
         document.getElementById('rewardDescription').value = r.description || '';
@@ -1053,123 +1178,80 @@
         (bootstrap.Modal.getInstance(document.getElementById('addRewardModal'))||new bootstrap.Modal(document.getElementById('addRewardModal'))).show();
     }
     async function saveReward() {
-        const rewardData = {
-            rewardid: document.getElementById('rewardIdField').value,
-            name: document.getElementById('rewardName').value.trim(),
-            description: document.getElementById('rewardDescription').value.trim(),
-            pointsrequired: parseInt(document.getElementById('rewardPointsRequired').value),
-            stock: parseInt(document.getElementById('rewardStock').value),
-            type: document.getElementById('rewardType').value,
-            value: document.getElementById('rewardValue').value.trim(),
-            imageurl: document.getElementById('rewardImageUrl').value.trim(),
-            isactive: document.getElementById('rewardIsActive').checked
-        };
+        const rewardData = { rewardid: document.getElementById('rewardIdField').value, name: document.getElementById('rewardName').value.trim(), description: document.getElementById('rewardDescription').value.trim(), pointsrequired: parseInt(document.getElementById('rewardPointsRequired').value), stock: parseInt(document.getElementById('rewardStock').value), type: document.getElementById('rewardType').value, value: document.getElementById('rewardValue').value.trim(), imageurl: document.getElementById('rewardImageUrl').value.trim(), isactive: document.getElementById('rewardIsActive').checked };
+        if (!rewardData.name || isNaN(rewardData.pointsrequired) || rewardData.pointsrequired < 0) { showToast('Nombre y Puntos Requeridos son obligatorios y deben ser válidos.', 'warning'); return; }
+        if (isNaN(rewardData.stock) || rewardData.stock < 0) { showToast('El stock debe ser un número válido (0 o más). Use 9999 para ilimitado.', 'warning'); return; }
+        if ((rewardData.type === 'DescuentoFijo' || rewardData.type === 'DescuentoPorcentaje') && (isNaN(parseFloat(rewardData.value)) || parseFloat(rewardData.value) <=0) ) { showToast(`El valor para ${rewardData.type} debe ser un número positivo.`, 'warning'); return; }
 
-        if (!rewardData.name || isNaN(rewardData.pointsrequired) || rewardData.pointsrequired < 0) {
-            alert('Nombre y Puntos Requeridos son obligatorios y deben ser válidos.');
-            return;
-        }
-        if (isNaN(rewardData.stock) || rewardData.stock < 0) {
-             alert('El stock debe ser un número válido (0 o más). Use 9999 para ilimitado.');
-            return;
-        }
-        if ((rewardData.type === 'DescuentoFijo' || rewardData.type === 'DescuentoPorcentaje') && (isNaN(parseFloat(rewardData.value)) || parseFloat(rewardData.value) <=0) ) {
-            alert(`El valor para ${rewardData.type} debe ser un número positivo.`);
-            return;
-        }
-
-
+        const saveBtn = document.getElementById('saveRewardBtn');
+        setButtonLoading(saveBtn, true, "Guardar Recompensa");
         const action = rewardData.rewardid ? 'updateReward' : 'addReward';
         const res = await fetchData(action, 'POST', { reward: rewardData });
+        setButtonLoading(saveBtn, false);
 
         if (res && res.success && res.data) {
-            alert(res.message || `Recompensa guardada.`);
+            showToast(res.message || `Recompensa '${rewardData.name}' guardada.`, 'success');
             await loadRewards(true);
             bootstrap.Modal.getInstance(document.getElementById('addRewardModal')).hide();
-        } else {
-            alert(`Error: ${res.message || 'Fallo al guardar la recompensa.'}`);
-        }
+        } else { showToast(`Error al guardar recompensa '${rewardData.name}': ${res.message || 'Fallo.'}`, 'error');}
     }
 
     // --- GENERAL DELETE FUNCTIONS ---
     function showDeleteModal(id,name,type) {
-        itemToDeleteId=id;
-        itemToDeleteType=type;
+        itemToDeleteId=id; itemToDeleteType=type;
         let itemTypeDisplay = 'elemento';
         if (type === 'client') itemTypeDisplay = 'cliente (comprador)';
         else if (type === 'product') itemTypeDisplay = 'producto/combo';
         else if (type === 'reward') itemTypeDisplay = 'recompensa';
-
         document.getElementById('delete-item-type').textContent= itemTypeDisplay;
         document.getElementById('item-to-delete').textContent=`${name||'N/A'} (ID: ${id||'N/A'})`;
         (bootstrap.Modal.getInstance(document.getElementById('deleteModal'))||new bootstrap.Modal(document.getElementById('deleteModal'))).show();
     }
-
     async function confirmDeleteItem() {
         if (!itemToDeleteType) return;
-        let res;
-        let loadFn;
-        let itemTypeDisplayForAlert = 'Elemento(s)';
+        let res, loadFn, itemTypeDisplayForAlert = 'Elemento(s)', itemNameForAlert = itemToDeleteId;
+        const deleteBtn = document.getElementById('confirm-delete-btn');
+        setButtonLoading(deleteBtn, true, "Eliminar");
 
         if (itemToDeleteType === 'products_bulk') {
             const idsToDelete = Array.from(selectedProductIds);
-            if (idsToDelete.length === 0) {
-                bootstrap.Modal.getInstance(document.getElementById('deleteModal'))?.hide();
-                return;
-            }
+            if (idsToDelete.length === 0) { bootstrap.Modal.getInstance(document.getElementById('deleteModal'))?.hide(); setButtonLoading(deleteBtn, false); return; }
             itemTypeDisplayForAlert = `${idsToDelete.length} producto(s)/combo(s)`;
             res = await fetchData('bulkDeleteProducts', 'POST', { productIds: idsToDelete });
             loadFn = () => loadProducts(true);
         } else {
             let action, key;
+            const originalItem = itemToDeleteType === 'client' ? allClients.find(c => c.id === itemToDeleteId) :
+                                 itemToDeleteType === 'product' ? allProducts.find(p => p.id === itemToDeleteId) :
+                                 itemToDeleteType === 'reward' ? allRewards.find(r => r.rewardid === itemToDeleteId) : null;
+            itemNameForAlert = originalItem ? originalItem.name : itemToDeleteId;
+
             if(itemToDeleteType==='client'){action='deleteClient';key='clientId';loadFn=()=>loadClients(true); itemTypeDisplayForAlert = 'Cliente';}
             else if(itemToDeleteType==='product'){action='deleteProduct';key='productId';loadFn=()=>loadProducts(true); itemTypeDisplayForAlert = 'Producto/Combo';}
             else if(itemToDeleteType==='reward'){action='deleteReward';key='rewardId';loadFn=()=>loadRewards(true); itemTypeDisplayForAlert = 'Recompensa';}
-            else {
-                 bootstrap.Modal.getInstance(document.getElementById('deleteModal'))?.hide();
-                 return;
-            }
+            else { bootstrap.Modal.getInstance(document.getElementById('deleteModal'))?.hide(); setButtonLoading(deleteBtn, false); return; }
             res = await fetchData(action,'POST',{[key]:itemToDeleteId});
         }
-
+        setButtonLoading(deleteBtn, false);
         const deleteModalEl = document.getElementById('deleteModal');
         const modalInstance = bootstrap.Modal.getInstance(deleteModalEl);
 
         if (res && res.success) {
-            alert(res.message || `${itemTypeDisplayForAlert} eliminado(s) correctamente.`);
-            if (itemToDeleteType === 'products_bulk') {
-                selectedProductIds.clear();
-            }
+            showToast(res.message || `${itemTypeDisplayForAlert} '${itemNameForAlert}' eliminado(s) correctamente.`, 'success');
+            if (itemToDeleteType === 'products_bulk') selectedProductIds.clear();
             if (loadFn) await loadFn();
         } else {
-            const errorMessage = res ? (res.message || 'Fallo en la operación.') : 'Respuesta inesperada del servidor.';
-            alert(`Error al eliminar: ${errorMessage}`);
+            const errorMessage = res ? (res.message || 'Fallo en la operación.') : 'Respuesta inesperada.';
+            showToast(`Error al eliminar '${itemNameForAlert}': ${errorMessage}`, 'error');
         }
-
         if (modalInstance && modalInstance._isShown) {
              deleteModalEl.addEventListener('hidden.bs.modal', () => {
-                const bulkDeleteBtn = document.getElementById('bulk-delete-products-btn');
-                const bulkEmailBtn = document.getElementById('bulk-email-clients-btn');
-                if (bulkDeleteBtn && bulkDeleteBtn.offsetParent !== null) {
-                    bulkDeleteBtn.focus();
-                } else if (bulkEmailBtn && bulkEmailBtn.offsetParent !== null) {
-                    bulkEmailBtn.focus();
-                }
-                 else {
-                   const firstFocusableElement = document.querySelector('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
-                   if (firstFocusableElement) firstFocusableElement.focus();
-                   else document.body.focus();
-                }
+                const firstFocusableElement = document.querySelector('button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])');
+                if (firstFocusableElement) firstFocusableElement.focus(); else document.body.focus();
             }, { once: true });
             modalInstance.hide();
-        } else if (modalInstance && !modalInstance._isShown) {
-            const bulkDeleteBtn = document.getElementById('bulk-delete-products-btn');
-             if (bulkDeleteBtn && bulkDeleteBtn.offsetParent !== null) bulkDeleteBtn.focus(); else document.body.focus();
         }
-
-
-        itemToDeleteId = null;
-        itemToDeleteType = null;
+        itemToDeleteId = null; itemToDeleteType = null;
     }
 </script>
 </body>
