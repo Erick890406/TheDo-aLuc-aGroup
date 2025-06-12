@@ -56,7 +56,6 @@ main {
     flex-grow: 1;
 }
 
-/* ===== CAMBIO CLAVE: Visibilidad del texto muted ===== */
 .text-muted {
     color: var(--text-muted) !important;
 }
@@ -426,7 +425,7 @@ main {
     right: 25px;
     z-index: 1035;
     display: flex;
-    flex-direction: column; /* Cambiado para apilar los botones si hay muchos */
+    flex-direction: column;
     gap: 0.75rem;
 }
 
@@ -618,7 +617,7 @@ main {
 
 #quick-nav-buttons {
     position: fixed;
-    bottom: 100px;
+    bottom: 260px; /* Ajustado para estar encima de los FABs */
     right: 30px;
     z-index: 1034;
     display: none;
@@ -655,10 +654,15 @@ main {
     .card-body { padding: 0.75rem; }
     #downloadAppBanner .container { flex-direction: column; text-align: center; }
     #downloadAppBanner .me-3.mb-2.mb-md-0 { margin-bottom: 0.75rem !important; }
-    .floating-buttons-container { bottom: 25px; right: 20px; }
+
+    .floating-buttons-container { bottom: 20px; right: 20px; }
     .floating-button { width: 60px; height: 60px; font-size: 1.6rem; }
     .floating-cart-count { font-size: 0.75rem; min-width: 22px; height: 22px; top: -6px; right: -6px; }
-    #quick-nav-buttons { bottom: 95px; right: 20px; }
+
+    #quick-nav-buttons {
+        bottom: 235px; /* Ajustado para 768px */
+        right: 20px;
+    }
     .quick-nav-btn { width: 40px; height: 40px; font-size: 1.2rem; }
 }
 
@@ -670,11 +674,17 @@ main {
     .points-display { font-size: 1.5rem; }
     .nav-pills .nav-link { font-size: 0.8rem; padding: 0.5rem; }
     .nav-pills .nav-item { min-width: 90px; }
-    .floating-buttons-container { bottom: 20px; right: 15px; }
+
+    .floating-buttons-container { bottom: 15px; right: 15px; }
     .floating-button { width: 55px; height: 55px; font-size: 1.5rem; }
     .floating-cart-count { font-size: 0.7rem; min-width: 20px; height: 20px; top: -5px; right: -5px; }
-    #quick-nav-buttons { bottom: 85px; right: 15px; }
+
+    #quick-nav-buttons {
+        bottom: 210px; /* Ajustado para 576px */
+        right: 15px;
+    }
     .quick-nav-btn { width: 38px; height: 38px; font-size: 1.1rem; }
+
     .footer-copyright-container {
         flex-direction: column;
         gap: 0.75rem;
@@ -950,14 +960,25 @@ main {
             const quickNav = document.getElementById('quick-nav-buttons');
             const goDownBtn = document.getElementById('go-down-btn');
             if (!quickNav || !goDownBtn) return;
+
+            const floatingButtonsContainer = document.querySelector('.floating-buttons-container');
+            let fabContainerBottom = 25; // Default from CSS
+            if (floatingButtonsContainer) {
+                const style = window.getComputedStyle(floatingButtonsContainer);
+                fabContainerBottom = parseFloat(style.bottom) || fabContainerBottom;
+            }
+
+
             if (window.scrollY > 300) {
                 quickNav.style.display = 'flex';
             } else {
                 quickNav.style.display = 'none';
             }
-            const nearBottom = (window.innerHeight + window.scrollY) >= document.body.offsetHeight - 150;
+
+            const nearBottom = (window.innerHeight + window.scrollY) >= document.body.offsetHeight - (fabContainerBottom + 100); // 100 es un offset adicional
             goDownBtn.style.display = nearBottom ? 'none' : 'flex';
         }
+
 
         async function forceFullCacheRefresh() {
             if (confirm("Esto borrará TODOS los datos de navegación (incluyendo sesión iniciada, carrito, etc.) y recargará la página desde cero para obtener la versión más reciente. ¿Deseas continuar?")) {
@@ -1049,30 +1070,45 @@ main {
                 });
             }
             window.addEventListener('resize', adjustBodyPaddingAndFabPosition);
-            window.addEventListener('scroll', handleScroll);
+            window.addEventListener('scroll', handleScroll); // Asegurarse que handleScroll se llama en scroll
         }
 
         function adjustBodyPaddingAndFabPosition() {
             const bodyEl = document.body;
             const bannerEl = document.getElementById('downloadAppBanner');
+            const floatingButtonsContainer = document.querySelector('.floating-buttons-container');
+            const quickNavButtons = document.getElementById('quick-nav-buttons');
+
             let totalPaddingBottom = 0;
-            let fabBottomPosition = 25;
+            let fabContainerBottomOffset = 25; // Default
+            let quickNavBottomOffset = 260; // Default
+
             if (window.matchMedia("(max-width: 768px)").matches) {
-                fabBottomPosition = 20;
+                fabContainerBottomOffset = 20;
+                quickNavBottomOffset = 235;
             }
             if (window.matchMedia("(max-width: 576px)").matches) {
-                fabBottomPosition = 15;
+                fabContainerBottomOffset = 15;
+                quickNavBottomOffset = 210;
             }
+
             if (bannerEl && bannerEl.style.display !== 'none' && !bannerEl.classList.contains('animate__fadeOutDown')) {
-                totalPaddingBottom = bannerEl.offsetHeight + 20;
-                fabBottomPosition = bannerEl.offsetHeight + (window.matchMedia("(max-width: 576px)").matches ? 15 : window.matchMedia("(max-width: 768px)").matches ? 20 : 25) ;
+                const bannerHeight = bannerEl.offsetHeight;
+                totalPaddingBottom = bannerHeight + 20; // 20px de margen sobre el banner
+                fabContainerBottomOffset += bannerHeight;
+                quickNavBottomOffset += bannerHeight;
             }
+
             bodyEl.style.paddingBottom = totalPaddingBottom + 'px';
-            const floatingButtonsContainer = document.querySelector('.floating-buttons-container');
+
             if (floatingButtonsContainer) {
-                 floatingButtonsContainer.style.bottom = fabBottomPosition + 'px';
+                 floatingButtonsContainer.style.bottom = fabContainerBottomOffset + 'px';
+            }
+            if (quickNavButtons) {
+                quickNavButtons.style.bottom = quickNavBottomOffset + 'px';
             }
         }
+
 
         function handleAppDownloadPromotion() {
             const dontShowCheckbox = document.getElementById('dontShowDownloadModalAgain');
@@ -1103,7 +1139,7 @@ main {
                         bannerEl.style.display = 'block';
                         bannerEl.classList.remove('animate__fadeOutDown');
                         bannerEl.classList.add('animate__animated', 'animate__fadeInUp');
-                        adjustBodyPaddingAndFabPosition();
+                        adjustBodyPaddingAndFabPosition(); // Ajustar posiciones después de mostrar el banner
                     }
                 }, bannerDelay);
                 const closeBannerButton = bannerEl.querySelector('.btn-close');
@@ -1114,14 +1150,14 @@ main {
                         setTimeout(() => {
                             bannerEl.style.display = 'none';
                             localStorage.setItem(DOWNLOAD_BANNER_DISMISSED_KEY, 'true');
-                            adjustBodyPaddingAndFabPosition();
+                            adjustBodyPaddingAndFabPosition(); // Ajustar posiciones después de ocultar el banner
                         }, 500);
                     });
                 }
             } else if (bannerEl && bannerDismissed) {
                  bannerEl.style.display = 'none';
             }
-            adjustBodyPaddingAndFabPosition();
+            adjustBodyPaddingAndFabPosition(); // Llamada inicial para asegurar posiciones correctas
         }
 
         function clearFormAndFeedback(formId, feedbackId) {
@@ -2051,7 +2087,7 @@ main {
                 correctLevel : QRCode.CorrectLevel.H
             });
 
-            const shareText = encodeURIComponent(`¡Echa un vistazo a DL Cumanayagua para comprar productos a tus familiares en Cuba! ${pageUrl}`);
+            const shareText = encodeURIComponent(`¡Echa un vistazo a DL Cumanayagua para enviar productos a Cuba! ${pageUrl}`);
             const whatsappLink = `https://wa.me/?text=${shareText}`;
             const telegramLink = `https://t.me/share/url?url=${encodeURIComponent(pageUrl)}&text=${encodeURIComponent('¡Echa un vistazo a DL Cumanayagua!')}`;
 
