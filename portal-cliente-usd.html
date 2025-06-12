@@ -450,6 +450,25 @@ main {
     transform: scale(1.1) translateY(-3px);
 }
 
+.floating-button.clicked-animation {
+    animation: fabPulse 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+}
+
+@keyframes fabPulse {
+    0% {
+        transform: scale(1);
+        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
+    }
+    50% {
+        transform: scale(0.9);
+        box-shadow: 0 4px 12px rgba(var(--primary-color-rgb), 0.4);
+    }
+    100% {
+        transform: scale(1);
+        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
+    }
+}
+
 #floatingCartButton {
     background: linear-gradient(145deg, var(--accent-color), var(--primary-color));
     color: var(--bg-dark);
@@ -617,7 +636,7 @@ main {
 
 #quick-nav-buttons {
     position: fixed;
-    bottom: 260px; /* Ajustado para estar encima de los FABs */
+    bottom: 260px;
     right: 30px;
     z-index: 1034;
     display: none;
@@ -660,7 +679,7 @@ main {
     .floating-cart-count { font-size: 0.75rem; min-width: 22px; height: 22px; top: -6px; right: -6px; }
 
     #quick-nav-buttons {
-        bottom: 235px; /* Ajustado para 768px */
+        bottom: 235px;
         right: 20px;
     }
     .quick-nav-btn { width: 40px; height: 40px; font-size: 1.2rem; }
@@ -680,7 +699,7 @@ main {
     .floating-cart-count { font-size: 0.7rem; min-width: 20px; height: 20px; top: -5px; right: -5px; }
 
     #quick-nav-buttons {
-        bottom: 210px; /* Ajustado para 576px */
+        bottom: 210px;
         right: 15px;
     }
     .quick-nav-btn { width: 38px; height: 38px; font-size: 1.1rem; }
@@ -756,6 +775,12 @@ main {
                             <i class="bi bi-arrow-clockwise"></i>
                         </button>
                     </div>
+                    <div class="mb-4 position-relative">
+                        <input type="text" id="productSearchInput" class="form-control form-control-lg" placeholder="Buscar productos por nombre..." aria-label="Buscar productos">
+                        <button id="clearSearchButton" class="btn btn-sm position-absolute end-0 top-50 translate-middle-y me-2" style="display:none;" title="Limpiar búsqueda">
+                            <i class="bi bi-x-lg"></i>
+                        </button>
+                    </div>
                     <div id="filter-container" class="d-flex flex-wrap justify-content-center align-items-center mb-3"></div>
                     <div class="row g-3 g-md-4" id="menu-container"><div class="col-12 text-center p-5"><div class="spinner-border" style="width: 3rem; height: 3rem; color: var(--primary-color);" role="status"></div><p class="mt-2 fs-5">Cargando...</p></div></div>
                 </div>
@@ -801,7 +826,7 @@ main {
     <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true"><div class="modal-dialog modal-dialog-centered"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="loginModalLabel">Iniciar Sesión para Envíos</h5><button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button></div><div class="modal-body"><form id="loginForm"><div class="mb-3"><label for="loginPhone" class="form-label">Teléfono (Tuyo)</label><input type="tel" class="form-control" id="loginPhone" required autocomplete="username tel"></div><div class="mb-3"><label for="loginPassword" class="form-label">Contraseña</label><input type="password" class="form-control" id="loginPassword" required autocomplete="current-password"></div><div id="login-feedback" class="mt-3"></div></form></div><div class="modal-footer"><button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button><button type="button" class="btn btn-primary" onclick="handleLoginAttempt()">Acceder</button></div></div></div></div>
     <div class="modal fade" id="cartModal" tabindex="-1" aria-labelledby="cartModalLabel" aria-hidden="true"><div class="modal-dialog modal-lg modal-dialog-scrollable modal-dialog-centered"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="cartModalLabel"><i class="bi bi-cart3 me-2"></i>Mi Carrito de Envío</h5><button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button></div><div class="modal-body" id="cart-items-container"><p class="text-center">Tu carrito está vacío.</p></div><div class="modal-footer justify-content-between flex-wrap"><div id="cart-footer-info"><small class="text-muted d-block">Puntos a ganar: <span id="cart-points-to-earn" class="fw-bold">0</span></small><strong class="fs-5">Total: <span id="cart-total-price" style="color: var(--primary-color);">0.00</span> USD</strong><br><small class="text-warning"><i class="bi bi-credit-card-2-front-fill"></i> Pagos por Zelle.</small></div><div class="d-flex mt-2 mt-sm-0" id="cart-footer-buttons"><button type="button" class="btn btn-outline-danger me-2" onclick="clearCart()"><i class="bi bi-trash3 me-1"></i>Vaciar</button><button type="button" class="btn btn-success" onclick="confirmAndPlaceOrder()"><i class="bi bi-check-circle me-1"></i>Confirmar Envío</button></div></div><div id="order-placement-feedback" class="m-3"></div></div></div></div>
     <div class="modal fade" id="downloadAppModal" tabindex="-1" aria-labelledby="downloadAppModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
-        <div class="modal-dialog modal-dialog-centered"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="downloadAppModalLabel"><i class="bi bi-phone-vibrate-fill me-2" style="color:var(--primary-color);"></i> ¡App para tu Familia en Cuba!</h5><button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button></div><div class="modal-body text-center"><img src="https://i.postimg.cc/XJxYzHZW/striking-app-icon-the-letters-dl-in-a-custom-l.png" alt="Doña Lucía App Icon" class="img-fluid rounded-circle mb-3 shadow" style="width: 100px; height: 100px; border: 3px solid var(--primary-color);">
+        <div class="modal-dialog modal-dialog-centered"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="downloadAppModalLabel"><i class="bi bi-phone-vibrate-fill me-2" style="color:var(--primary-color);"></i> ¡App para facilitar tu compra en Cuba!</h5><button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button></div><div class="modal-body text-center"><img src="https://i.postimg.cc/XJxYzHZW/striking-app-icon-the-letters-dl-in-a-custom-l.png" alt="Doña Lucía App Icon" class="img-fluid rounded-circle mb-3 shadow" style="width: 100px; height: 100px; border: 3px solid var(--primary-color);">
             <p class="lead mb-2">Instalar la App te permite gestionar tus pedidos y beneficios directamente.</p>
             <p>Con la app, podrás ver el menú, canjear puntos,  obtener recompensas gratis y estar al tanto de las novedades. ¡Una forma fácil de conectar!</p>
             <a href="https://drive.google.com/file/d/1JN1qbrX2JB7P5apVzzhtBy5x2hBPxCWa/view?usp=drive_link" download="DonaLucia_Cumanayagua.apk" class="btn btn-primary btn-lg mt-3 w-100 animate__animated animate__pulse animate__infinite animate__slower">
@@ -846,6 +871,48 @@ main {
             </div>
         </div>
     </div>
+
+    <div class="modal fade" id="confirmClearCartModal" tabindex="-1" aria-labelledby="confirmClearCartModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="confirmClearCartModalLabel"><i class="bi bi-exclamation-triangle-fill text-danger me-2"></i>Confirmar Acción</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>¿Estás seguro de que quieres vaciar completamente tu carrito de envío? Esta acción no se puede deshacer.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-danger" id="confirmClearCartButton">
+                        <i class="bi bi-trash3-fill me-1"></i>Sí, Vaciar Carrito
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="confirmRedeemRewardModal" tabindex="-1" aria-labelledby="confirmRedeemRewardModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="confirmRedeemRewardModalLabel"><i class="bi bi-patch-check-fill text-warning me-2"></i>Confirmar Canje de Recompensa</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p id="confirmRedeemRewardText">¿Estás seguro de que quieres canjear esta recompensa?</p>
+                    <div id="redeemRewardFeedback" class="mt-3"></div>
+                </div>
+                <div class="modal-footer" id="confirmRedeemRewardFooter">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-warning" id="confirmRedeemRewardButton">
+                        <i class="bi bi-award-fill me-1"></i>Sí, Canjear Ahora
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 
     <div class="floating-buttons-container">
         <a id="whatsappButton" href="https://wa.me/5355189657?text=Hola,%20tengo%20una%20consulta%20sobre%20DL%20Cumanayagua." class="floating-button" target="_blank" title="Chatea con nosotros">
@@ -936,7 +1003,7 @@ main {
         let shoppingCart = [];
         let currentFilterCategory = 'all';
         const loadingSpinnerUser = document.getElementById('loadingSpinnerUser');
-        let registrationModalInstance, loginModalInstance, cartModalInstance, downloadAppModalInstance, productDetailModalInstance, sharePageModalInstance;
+        let registrationModalInstance, loginModalInstance, cartModalInstance, downloadAppModalInstance, productDetailModalInstance, sharePageModalInstance, confirmClearCartModalInstance, confirmRedeemRewardModalInstance;
         let floatingCartButtonEl;
         let floatingCartCountEl;
         let qrcodeInstance = null;
@@ -954,6 +1021,33 @@ main {
             handleScroll();
             initializeShareModal();
             setupShareEventListeners();
+            setupFloatingButtonFeedback();
+
+            const confirmClearCartBtn = document.getElementById('confirmClearCartButton');
+            if (confirmClearCartBtn) {
+                confirmClearCartBtn.addEventListener('click', performClearCartActions);
+            }
+
+            const productSearchInput = document.getElementById('productSearchInput');
+            const clearSearchButton = document.getElementById('clearSearchButton');
+
+            if (productSearchInput) {
+                productSearchInput.addEventListener('input', function() {
+                    filterMenuByCategory(currentFilterCategory); // This will call generateMenu which uses the search term
+                    if (this.value.length > 0 && clearSearchButton) {
+                        clearSearchButton.style.display = 'block';
+                    } else if (clearSearchButton) {
+                        clearSearchButton.style.display = 'none';
+                    }
+                });
+            }
+            if (clearSearchButton) {
+                clearSearchButton.addEventListener('click', function() {
+                    if(productSearchInput) productSearchInput.value = '';
+                    clearSearchButton.style.display = 'none';
+                    filterMenuByCategory(currentFilterCategory); // This will call generateMenu
+                });
+            }
         });
 
         function handleScroll() {
@@ -962,12 +1056,11 @@ main {
             if (!quickNav || !goDownBtn) return;
 
             const floatingButtonsContainer = document.querySelector('.floating-buttons-container');
-            let fabContainerBottom = 25; // Default from CSS
+            let fabContainerBottom = 25;
             if (floatingButtonsContainer) {
                 const style = window.getComputedStyle(floatingButtonsContainer);
                 fabContainerBottom = parseFloat(style.bottom) || fabContainerBottom;
             }
-
 
             if (window.scrollY > 300) {
                 quickNav.style.display = 'flex';
@@ -975,7 +1068,7 @@ main {
                 quickNav.style.display = 'none';
             }
 
-            const nearBottom = (window.innerHeight + window.scrollY) >= document.body.offsetHeight - (fabContainerBottom + 100); // 100 es un offset adicional
+            const nearBottom = (window.innerHeight + window.scrollY) >= document.body.offsetHeight - (fabContainerBottom + 100);
             goDownBtn.style.display = nearBottom ? 'none' : 'flex';
         }
 
@@ -1016,7 +1109,7 @@ main {
 
         function initializeModals() {
             try {
-                ['registerUserModal', 'loginModal', 'cartModal', 'downloadAppModal', 'productDetailModal', 'sharePageModal'].forEach(id => {
+                ['registerUserModal', 'loginModal', 'cartModal', 'downloadAppModal', 'productDetailModal', 'sharePageModal', 'confirmClearCartModal', 'confirmRedeemRewardModal'].forEach(id => {
                     const el = document.getElementById(id);
                     if (el) {
                         if (id === 'registerUserModal') registrationModalInstance = new bootstrap.Modal(el);
@@ -1025,6 +1118,8 @@ main {
                         else if (id === 'downloadAppModal') downloadAppModalInstance = new bootstrap.Modal(el);
                         else if (id === 'productDetailModal') productDetailModalInstance = new bootstrap.Modal(el);
                         else if (id === 'sharePageModal') sharePageModalInstance = new bootstrap.Modal(el);
+                        else if (id === 'confirmClearCartModal') confirmClearCartModalInstance = new bootstrap.Modal(el);
+                        else if (id === 'confirmRedeemRewardModal') confirmRedeemRewardModalInstance = new bootstrap.Modal(el);
                     } else { console.warn(`Modal con ID '${id}' no encontrado.`); }
                 });
             } catch (error) { console.error("Error inicializando modales:", error); }
@@ -1057,7 +1152,7 @@ main {
             if (rewardsTabEl) {
                 rewardsTabEl.addEventListener('shown.bs.tab', event => {
                     if (!clientData || !clientData.id) {
-                        document.getElementById('rewards-container').innerHTML = '<div class="col-12 text-center p-5"><p class="fs-5">Inicia sesión para ver y canjear recompensas para tus envíos.</p></div>';
+                         generateRewardsList();
                         return;
                     }
                     loadAvailableRewards();
@@ -1070,7 +1165,7 @@ main {
                 });
             }
             window.addEventListener('resize', adjustBodyPaddingAndFabPosition);
-            window.addEventListener('scroll', handleScroll); // Asegurarse que handleScroll se llama en scroll
+            window.addEventListener('scroll', handleScroll);
         }
 
         function adjustBodyPaddingAndFabPosition() {
@@ -1080,8 +1175,8 @@ main {
             const quickNavButtons = document.getElementById('quick-nav-buttons');
 
             let totalPaddingBottom = 0;
-            let fabContainerBottomOffset = 25; // Default
-            let quickNavBottomOffset = 260; // Default
+            let fabContainerBottomOffset = 25;
+            let quickNavBottomOffset = 260;
 
             if (window.matchMedia("(max-width: 768px)").matches) {
                 fabContainerBottomOffset = 20;
@@ -1094,7 +1189,7 @@ main {
 
             if (bannerEl && bannerEl.style.display !== 'none' && !bannerEl.classList.contains('animate__fadeOutDown')) {
                 const bannerHeight = bannerEl.offsetHeight;
-                totalPaddingBottom = bannerHeight + 20; // 20px de margen sobre el banner
+                totalPaddingBottom = bannerHeight + 20;
                 fabContainerBottomOffset += bannerHeight;
                 quickNavBottomOffset += bannerHeight;
             }
@@ -1139,7 +1234,7 @@ main {
                         bannerEl.style.display = 'block';
                         bannerEl.classList.remove('animate__fadeOutDown');
                         bannerEl.classList.add('animate__animated', 'animate__fadeInUp');
-                        adjustBodyPaddingAndFabPosition(); // Ajustar posiciones después de mostrar el banner
+                        adjustBodyPaddingAndFabPosition();
                     }
                 }, bannerDelay);
                 const closeBannerButton = bannerEl.querySelector('.btn-close');
@@ -1150,14 +1245,14 @@ main {
                         setTimeout(() => {
                             bannerEl.style.display = 'none';
                             localStorage.setItem(DOWNLOAD_BANNER_DISMISSED_KEY, 'true');
-                            adjustBodyPaddingAndFabPosition(); // Ajustar posiciones después de ocultar el banner
+                            adjustBodyPaddingAndFabPosition();
                         }, 500);
                     });
                 }
             } else if (bannerEl && bannerDismissed) {
                  bannerEl.style.display = 'none';
             }
-            adjustBodyPaddingAndFabPosition(); // Llamada inicial para asegurar posiciones correctas
+            adjustBodyPaddingAndFabPosition();
         }
 
         function clearFormAndFeedback(formId, feedbackId) {
@@ -1262,10 +1357,8 @@ main {
                 if(vipCardContainer) vipCardContainer.style.display = 'none';
                 if(guestPromptContainer) guestPromptContainer.style.display = 'block';
                 if(myOrdersTabLink) myOrdersTabLink.innerHTML = `<i class="bi bi-receipt me-1"></i>Mis Envíos`;
-                const ordersHistoryContainer = el('orders-history-container');
-                if (ordersHistoryContainer) ordersHistoryContainer.innerHTML = '<div class="col-12 text-center p-5"><p class="fs-5">Inicia sesión para ver tus envíos.</p></div>';
-                const rewardsContainer = el('rewards-container');
-                if (rewardsContainer) rewardsContainer.innerHTML = '<div class="col-12 text-center p-5"><p class="fs-5">Inicia sesión para ver y canjear recompensas para tus envíos.</p></div>';
+                loadUserOrders();
+                generateRewardsList();
             }
             updateCartDisplay();
         }
@@ -1281,17 +1374,6 @@ main {
             updateClientDisplayAndUI();
             showGlobalFeedback('Sesión cerrada. ¡Vuelve pronto!', 'info');
             handleAppDownloadPromotion();
-            const activeTab = document.querySelector('.nav-pills .nav-link.active');
-            if (activeTab) {
-                const activeTabHref = activeTab.getAttribute('href');
-                if (activeTabHref === '#my-orders-tab') {
-                     const ordersContainer = document.getElementById('orders-history-container');
-                     if(ordersContainer) ordersContainer.innerHTML = '<div class="col-12 text-center p-5"><p class="fs-5">Inicia sesión para ver tus envíos.</p></div>';
-                } else if (activeTabHref === '#rewards-tab') {
-                     const rewardsContainer = document.getElementById('rewards-container');
-                     if(rewardsContainer) rewardsContainer.innerHTML = '<div class="col-12 text-center p-5"><p class="fs-5">Inicia sesión para ver y canjear recompensas para tus envíos.</p></div>';
-                }
-            }
         }
 
         async function handleUserRegistrationAttempt() {
@@ -1539,6 +1621,7 @@ main {
 
         function filterMenuByCategory(category) {
             currentFilterCategory = category;
+            generateCategoryFilters();
             generateMenu();
         }
 
@@ -1546,18 +1629,49 @@ main {
             const menuContainer = document.getElementById('menu-container');
             if (!menuContainer) return;
             menuContainer.innerHTML = '';
-            const itemsToDisplay = currentFilterCategory === 'all' ? menuItems : menuItems.filter(item => (item.category || "Otros") === currentFilterCategory);
+
+            const searchTerm = document.getElementById('productSearchInput')?.value.toLowerCase().trim() || '';
+            let itemsToDisplay = menuItems;
+
+            if (currentFilterCategory !== 'all') {
+                itemsToDisplay = itemsToDisplay.filter(item => (item.category || "Otros") === currentFilterCategory);
+            }
+
+            if (searchTerm) {
+                itemsToDisplay = itemsToDisplay.filter(item =>
+                    (item.name || '').toLowerCase().includes(searchTerm) ||
+                    (item.description || '').toLowerCase().includes(searchTerm)
+                );
+            }
+
             if (!itemsToDisplay || itemsToDisplay.length === 0) {
-                menuContainer.innerHTML = `<div class="col-12 text-center p-5"><p class="fs-5">No hay productos disponibles ${currentFilterCategory === 'all' ? '' : 'en la categoría "' + currentFilterCategory + '"'}.</p></div>`;
+                let emptyMessage = `<div class="col-12 text-center p-md-5 p-4">`;
+                emptyMessage += `<i class="bi bi-search-heart display-1 text-muted opacity-50 mb-3"></i>`;
+                if (searchTerm && currentFilterCategory === 'all') {
+                    emptyMessage += `<h4 class="text-light mb-2">Sin resultados para "${searchTerm}"</h4><p class="text-muted mb-3">No encontramos productos que coincidan con tu búsqueda.</p>`;
+                } else if (searchTerm && currentFilterCategory !== 'all') {
+                     emptyMessage += `<h4 class="text-light mb-2">Sin resultados en "${currentFilterCategory}"</h4><p class="text-muted mb-3">No hay productos en esta categoría que coincidan con "${searchTerm}".</p>`;
+                } else if (!searchTerm && currentFilterCategory !== 'all') {
+                    emptyMessage += `<h4 class="text-light mb-2">Categoría Vacía</h4><p class="text-muted mb-3">No hay productos disponibles en la categoría "${currentFilterCategory}".</p>`;
+                } else {
+                    emptyMessage += `<h4 class="text-light mb-2">Menú Vacío</h4><p class="text-muted mb-3">No hay productos disponibles en el menú en este momento.</p>`;
+                }
+                emptyMessage += `<p class="text-muted">Intenta con otros términos o revisa todas las categorías.</p>`;
+                if (searchTerm || currentFilterCategory !== 'all') {
+                    emptyMessage += `<button class="btn btn-outline-primary mt-2" onclick="resetFiltersAndSearch()">Ver todo el menú</button>`;
+                }
+                emptyMessage += `</div>`;
+                menuContainer.innerHTML = emptyMessage;
                 return;
             }
+
             itemsToDisplay.sort((a,b) => (a.name || "").localeCompare(b.name || "")).forEach(item => {
                 const itemId = String(item.id);
                 menuContainer.innerHTML += `
                 <div class="col-6 col-md-6 col-lg-4 d-flex align-items-stretch animate__animated animate__fadeInUp" style="animation-duration: 0.5s;">
                     <div class="menu-item-card card w-100 d-flex flex-column">
                         <img src="${item.imageurl || 'https://via.placeholder.com/350x220/E74C3C/FFF?text=' + encodeURIComponent(item.name || 'Producto')}"
-                             class="product-image card-img-top" alt="${item.name || 'Producto'}" style="cursor: pointer;" onclick="showProductDetailModal('${itemId}')">
+                             class="product-image card-img-top" alt="${item.name || 'Producto'}" style="cursor: pointer;" onclick="showProductDetailModal('${itemId}')" loading="lazy">
                         <div class="card-body d-flex flex-column">
                             <h5 class="card-title">${item.name || 'Sin Nombre'}</h5>
                             <p class="card-text flex-grow-1">${item.description || 'Deliciosa opción de nuestro menú.'}</p>
@@ -1571,6 +1685,17 @@ main {
                 </div>`;
             });
         }
+
+        function resetFiltersAndSearch() {
+            const productSearchInput = document.getElementById('productSearchInput');
+            if (productSearchInput) productSearchInput.value = '';
+            const clearSearchButton = document.getElementById('clearSearchButton');
+            if (clearSearchButton) clearSearchButton.style.display = 'none';
+            currentFilterCategory = 'all';
+            generateCategoryFilters();
+            generateMenu();
+        }
+
 
         function showProductDetailModal(productId) {
             populateModalWithProduct(productId);
@@ -1617,7 +1742,7 @@ main {
                 recRow.innerHTML += `
                 <div class="col-4">
                     <div class="recommendation-card" onclick="switchProductInModal('${rec.id}')">
-                        <img src="${rec.imageurl || 'https://via.placeholder.com/150/21243D/FAFAFA?text=' + encodeURIComponent(rec.name)}" alt="${rec.name}">
+                        <img src="${rec.imageurl || 'https://via.placeholder.com/150/21243D/FAFAFA?text=' + encodeURIComponent(rec.name)}" alt="${rec.name}" loading="lazy">
                         <div class="p-2"><div class="rec-title">${rec.name}</div></div>
                     </div>
                 </div>`;
@@ -1698,16 +1823,39 @@ main {
         function clearCart() {
             if (shoppingCart.length === 0) {
                 showFeedbackInModal(null, 'order-placement-feedback', 'El carrito de envío ya está vacío.', 'info', 2000);
+                if (cartModalInstance && document.getElementById('cartModal').classList.contains('show')) {
+                    // Ya está abierto
+                } else if (cartModalInstance) {
+                    cartModalInstance.show();
+                }
                 return;
             }
-            if (confirm("¿Estás seguro de que quieres vaciar tu carrito de envío?")) {
-                shoppingCart = [];
-                saveCartToStorage();
-                renderCartItems();
-                updateCartDisplay();
-                showFeedbackInModal(null, 'order-placement-feedback', 'Carrito de envío vaciado.', 'info', 2000);
+
+            if (confirmClearCartModalInstance) {
+                confirmClearCartModalInstance.show();
+            } else {
+                if (confirm("¿Estás seguro de que quieres vaciar tu carrito de envío?")) {
+                    performClearCartActions();
+                }
             }
         }
+
+        function performClearCartActions() {
+            shoppingCart = [];
+            saveCartToStorage();
+            renderCartItems();
+            updateCartDisplay();
+            showFeedbackInModal(null, 'order-placement-feedback', 'Carrito de envío vaciado.', 'info', 2000);
+            if (cartModalInstance && document.getElementById('cartModal').classList.contains('show')) {
+                // Modal ya abierto
+            } else {
+                showGlobalFeedback('Carrito de envío vaciado.', 'info');
+            }
+            if (confirmClearCartModalInstance) {
+                 confirmClearCartModalInstance.hide();
+            }
+        }
+
 
         function updateCartDisplay() {
             let totalItems = Array.isArray(shoppingCart) ? shoppingCart.reduce((s, i) => s + (i.quantity || 0), 0) : 0;
@@ -1854,14 +2002,33 @@ main {
             const container = document.getElementById('orders-history-container');
             if (!container) return;
             if (!clientData || !clientData.id) {
-                container.innerHTML = '<div class="col-12 text-center p-5"><p class="fs-5">Inicia sesión para ver tu historial de envíos.</p></div>';
+                container.innerHTML = `
+                    <div class="col-12 text-center p-md-5 p-4">
+                        <i class="bi bi-person-fill-lock display-1 text-muted opacity-50 mb-3"></i>
+                        <h4 class="text-light mb-2">Acceso VIP Requerido</h4>
+                        <p class="text-muted mb-3">Inicia sesión o regístrate para ver tu historial de envíos.</p>
+                        <button class="btn btn-warning me-2" data-bs-toggle="modal" data-bs-target="#loginModal">
+                            <i class="bi bi-box-arrow-in-right me-2"></i>Iniciar Sesión
+                        </button>
+                        <button class="btn btn-outline-light" data-bs-toggle="modal" data-bs-target="#registerUserModal">
+                            <i class="bi bi-person-plus me-2"></i>Registrarme
+                        </button>
+                    </div>`;
                 return;
             }
             container.innerHTML = `<div class="col-12 text-center p-5"><div class="spinner-border" style="width: 3rem; height: 3rem; color: var(--primary-color);"></div><p class="mt-2 fs-5">Cargando historial de envíos...</p></div>`;
             const result = await fetchDataFromGAS('getUserOrders', 'POST', { clientId: String(clientData.id) });
             if (result.success && Array.isArray(result.data)) {
                 if (result.data.length === 0) {
-                    container.innerHTML = '<div class="col-12 text-center p-5"><p class="fs-5">Aún no has realizado ningún envío.</p></div>';
+                    container.innerHTML = `
+                        <div class="col-12 text-center p-md-5 p-4">
+                            <i class="bi bi-box-seam-fill display-1 text-muted opacity-50 mb-3"></i>
+                            <h4 class="text-light mb-2">Aún no tienes envíos registrados</h4>
+                            <p class="text-muted mb-3">Parece que todavía no has enviado nada. ¿Listo para sorprender a alguien?</p>
+                            <button class="btn btn-primary" onclick="document.getElementById('menu-tab-link').click(); new bootstrap.Tab(document.getElementById('menu-tab-link')).show()">
+                                <i class="bi bi-card-list me-2"></i>Explorar Menú y Combos
+                            </button>
+                        </div>`;
                     return;
                 }
                 let html = '<div class="accordion shadow-sm" id="ordersAccordion">';
@@ -1892,7 +2059,15 @@ main {
                 html += '</div>';
                 container.innerHTML = html;
             } else {
-                container.innerHTML = `<div class="col-12 text-center p-5"><p class="text-danger fs-5">Error al cargar historial de envíos: ${result.message || 'Error.'}</p></div>`;
+                 container.innerHTML = `
+                    <div class="col-12 text-center p-md-5 p-4">
+                        <i class="bi bi-emoji-frown display-1 text-danger opacity-75 mb-3"></i>
+                        <h4 class="text-light mb-2">Error al cargar envíos</h4>
+                        <p class="text-danger mb-3">${result.message || 'Ocurrió un problema al intentar obtener tu historial.'}</p>
+                        <button class="btn btn-outline-secondary" onclick="loadUserOrders()">
+                            <i class="bi bi-arrow-clockwise me-2"></i>Intentar de nuevo
+                        </button>
+                    </div>`;
             }
         }
 
@@ -1900,13 +2075,15 @@ main {
             const rc = document.getElementById('rewards-container');
             if (!rc) return;
             if (!clientData || !clientData.id) {
-                rc.innerHTML = '<div class="col-12 text-center p-5"><p class="fs-5">Inicia sesión para ver recompensas para tus envíos.</p></div>';
+                generateRewardsList();
                 return;
             }
+
             const cachedRewards = localStorage.getItem(REWARDS_USER_CACHE_KEY);
             const cacheExpiryString = localStorage.getItem(REWARDS_CACHE_EXPIRY_KEY);
             const now = new Date().getTime();
             const cacheExpiry = cacheExpiryString ? parseInt(cacheExpiryString) : 0;
+
             if (!forceReload && cachedRewards && cacheExpiry && now < cacheExpiry) {
                 try {
                     availableRewards = JSON.parse(cachedRewards);
@@ -1919,6 +2096,7 @@ main {
                     localStorage.removeItem(REWARDS_CACHE_EXPIRY_KEY);
                 }
             }
+
             rc.innerHTML = `<div class="col-12 text-center p-5"><div class="spinner-border" style="width: 3rem; height: 3rem; color: var(--primary-color);"></div><p class="mt-2 fs-5">${forceReload ? 'Actualizando' : 'Cargando'} recompensas...</p></div>`;
             const res = await fetchDataFromGAS('getAvailableRewards', 'GET');
             if (res.success && Array.isArray(res.data)) {
@@ -1934,8 +2112,16 @@ main {
                 generateRewardsList();
                 if (forceReload) showGlobalFeedback("Recompensas actualizadas.", "success", 2000);
             } else {
-                rc.innerHTML = `<div class="col-12 text-center p-5"><p class="text-danger fs-5">No se pudo cargar recompensas: ${res.message||'Error.'}</p></div>`;
-                 if (cachedRewards) {
+                rc.innerHTML = `
+                    <div class="col-12 text-center p-md-5 p-4">
+                        <i class="bi bi-cloud-slash-fill display-1 text-danger opacity-75 mb-3"></i>
+                        <h4 class="text-light mb-2">Error al cargar recompensas</h4>
+                        <p class="text-danger mb-3">${res.message || 'No pudimos obtener la lista de recompensas en este momento.'}</p>
+                        <button class="btn btn-outline-secondary" onclick="forceLoadRewards()">
+                            <i class="bi bi-arrow-clockwise me-2"></i>Reintentar
+                        </button>
+                    </div>`;
+                 if (cachedRewards && !forceReload) {
                     try {
                         availableRewards = JSON.parse(cachedRewards);
                         generateRewardsList();
@@ -1947,9 +2133,8 @@ main {
 
         function forceLoadRewards() {
             if (!clientData || !clientData.id) {
+                generateRewardsList();
                 showGlobalFeedback("Inicia sesión para ver y actualizar recompensas.", "warning");
-                const rc = document.getElementById('rewards-container');
-                if (rc) rc.innerHTML = '<div class="col-12 text-center p-5"><p class="fs-5">Inicia sesión para ver recompensas para tus envíos.</p></div>';
                 return;
             }
             loadAvailableRewards(true);
@@ -1960,11 +2145,30 @@ main {
             if (!rc) return;
             rc.innerHTML = '';
             if (!clientData || !clientData.id) {
-                rc.innerHTML = '<div class="col-12 text-center p-5"><p class="fs-5">Inicia sesión para ver recompensas para tus envíos.</p></div>';
+                rc.innerHTML = `
+                    <div class="col-12 text-center p-md-5 p-4">
+                        <i class="bi bi-person-fill-lock display-1 text-muted opacity-50 mb-3"></i>
+                        <h4 class="text-light mb-2">Acceso VIP Requerido</h4>
+                        <p class="text-muted mb-3">Inicia sesión o regístrate para descubrir y canjear recompensas exclusivas para tus envíos.</p>
+                        <button class="btn btn-warning me-2" data-bs-toggle="modal" data-bs-target="#loginModal">
+                            <i class="bi bi-box-arrow-in-right me-2"></i>Iniciar Sesión
+                        </button>
+                        <button class="btn btn-outline-light" data-bs-toggle="modal" data-bs-target="#registerUserModal">
+                            <i class="bi bi-person-plus me-2"></i>Registrarme
+                        </button>
+                    </div>`;
                 return;
             }
             if (!availableRewards || availableRewards.length === 0) {
-                rc.innerHTML = '<div class="col-12 text-center p-5"><p class="fs-5">No hay recompensas disponibles para canjear.</p></div>';
+                rc.innerHTML = `
+                    <div class="col-12 text-center p-md-5 p-4">
+                        <i class="bi bi-gift-fill display-1 text-muted opacity-50 mb-3"></i>
+                        <h4 class="text-light mb-2">Aún no hay recompensas disponibles</h4>
+                        <p class="text-muted mb-3">Sigue realizando envíos para acumular puntos y estate atento a nuevas recompensas. ¡Pronto podrías canjear grandes beneficios!</p>
+                        <button class="btn btn-primary" onclick="document.getElementById('menu-tab-link').click(); new bootstrap.Tab(document.getElementById('menu-tab-link')).show()">
+                            <i class="bi bi-bag-heart-fill me-2"></i>Hacer un Envío y Ganar Puntos
+                        </button>
+                    </div>`;
                 return;
             }
             const cp = clientData ? (parseInt(clientData.puntos) || 0) : 0;
@@ -1977,7 +2181,7 @@ main {
                 rc.innerHTML += `
                 <div class="col-6 col-md-6 col-lg-4 d-flex align-items-stretch animate__animated animate__fadeInUp" style="animation-duration: 0.5s;">
                     <div class="reward-card card w-100 ${!cr ? 'opacity-75' : ''}">
-                        <img src="${reward.imageurl || 'https://via.placeholder.com/350x220/F1C40F/2C3E50?text=' + encodeURIComponent(reward.name||'Recompensa')}" class="reward-image card-img-top" alt="${reward.name||'Recompensa'}">
+                        <img src="${reward.imageurl || 'https://via.placeholder.com/350x220/F1C40F/2C3E50?text=' + encodeURIComponent(reward.name||'Recompensa')}" class="reward-image card-img-top" alt="${reward.name||'Recompensa'}" loading="lazy">
                         <div class="card-body d-flex flex-column">
                             <h5 class="card-title mb-1">${reward.name||'N/A'}</h5>
                             <p class="card-text small flex-grow-1 mb-3">${reward.description||'Beneficio para tus envíos.'}</p>
@@ -1994,6 +2198,14 @@ main {
             });
         }
 
+        function generateRewardWhatsAppMessage(rewardName, clientName) {
+            let message = `¡Hola! 👋 Acabo de canjear una recompensa desde DL Cumanayagua.\n\n`;
+            message += `*Cliente:* ${clientName}\n`;
+            message += `*Recompensa Canjeada:* ${rewardName}\n\n`;
+            message += `Por favor, tomar nota para mi próximo envío. ¡Gracias!`;
+            return encodeURIComponent(message);
+        }
+
         async function attemptRedeemReward(rewardId) {
             if (!clientData || !clientData.id) {
                 showGlobalFeedback("Debes iniciar sesión para canjear.", "warning");
@@ -2005,23 +2217,90 @@ main {
                 showGlobalFeedback("Recompensa no encontrada.", "danger");
                 return;
             }
-            if (!confirm(`¿Canjear "${reward.name}" por ${reward.pointsrequired} puntos para un próximo envío?`)) return;
-            showGlobalFeedback("Procesando canje...", "info", null);
-            const result = await fetchDataFromGAS('redeemReward', 'POST', { clientId: String(clientData.id), rewardId: rewardId });
-            if (result.success && result.data) {
-                showGlobalFeedback(result.message || "¡Recompensa canjeada! Se aplicará en tu próximo envío o según se indique.", "success", 5000);
-                if (result.data.updatedClient) {
-                    const localAvatar = clientData[LOCAL_AVATAR_DATA_KEY];
-                    clientData = result.data.updatedClient;
-                    if(localAvatar && !clientData[LOCAL_AVATAR_DATA_KEY]) clientData[LOCAL_AVATAR_DATA_KEY] = localAvatar;
-                    localStorage.setItem(LOGGED_IN_CLIENT_KEY, JSON.stringify(clientData));
-                    updateClientDisplayAndUI();
+
+            const modalTextEl = document.getElementById('confirmRedeemRewardText');
+            const modalFeedbackEl = document.getElementById('redeemRewardFeedback');
+            const modalFooterEl = document.getElementById('confirmRedeemRewardFooter');
+            
+            if (modalTextEl) modalTextEl.innerHTML = `¿Estás seguro de que quieres canjear "<strong>${reward.name}</strong>" por <strong>${reward.pointsrequired} puntos</strong>?`;
+            if (modalFeedbackEl) modalFeedbackEl.innerHTML = '';
+            
+            if (modalFooterEl) {
+                modalFooterEl.innerHTML = `
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-warning" id="confirmRedeemRewardButtonDynamic">
+                        <i class="bi bi-award-fill me-1"></i>Sí, Canjear Ahora
+                    </button>`;
+                
+                const confirmButtonDynamic = document.getElementById('confirmRedeemRewardButtonDynamic');
+                if (confirmButtonDynamic) {
+                    confirmButtonDynamic.onclick = async () => {
+                        if (modalFeedbackEl) modalFeedbackEl.innerHTML = `<div class="alert alert-info py-2 small"><div class="spinner-border spinner-border-sm me-2"></div>Procesando canje...</div>`;
+                        confirmButtonDynamic.disabled = true;
+
+                        const result = await fetchDataFromGAS('redeemReward', 'POST', { clientId: String(clientData.id), rewardId: rewardId });
+
+                        if (result.success && result.data) {
+                            const pointsBefore = clientData.puntos;
+                            clientData.puntos = (clientData.puntos || 0) - (reward.pointsrequired || 0);
+                            if (clientData.puntos < 0) clientData.puntos = 0;
+
+                            if (result.data.updatedClient) {
+                                const serverPoints = result.data.updatedClient.puntos;
+                                const localAvatar = clientData[LOCAL_AVATAR_DATA_KEY];
+                                clientData = result.data.updatedClient;
+                                clientData.puntos = Math.min(pointsBefore - (reward.pointsrequired || 0), serverPoints);
+                                if(localAvatar && !clientData[LOCAL_AVATAR_DATA_KEY]) clientData[LOCAL_AVATAR_DATA_KEY] = localAvatar;
+                            }
+                            
+                            localStorage.setItem(LOGGED_IN_CLIENT_KEY, JSON.stringify(clientData));
+                            updateClientDisplayAndUI();
+
+                            const whatsappMessage = generateRewardWhatsAppMessage(reward.name, clientData.nombre);
+                            const whatsappUrl = `https://wa.me/5355189657?text=${whatsappMessage}`;
+                            if (modalFeedbackEl) {
+                                modalFeedbackEl.innerHTML = `
+                                    <div class="alert alert-success py-2 small">
+                                        ${result.message || "¡Recompensa canjeada con éxito!"}
+                                        <hr class="my-2">
+                                        <a href="${whatsappUrl}" target="_blank" class="btn btn-sm btn-success w-100" onclick="if(confirmRedeemRewardModalInstance) confirmRedeemRewardModalInstance.hide();">
+                                            <i class="bi bi-whatsapp me-2"></i>Notificar Canje por WhatsApp
+                                        </a>
+                                    </div>`;
+                            }
+                            if (modalFooterEl) modalFooterEl.innerHTML = `<button type="button" class="btn btn-primary" data-bs-dismiss="modal">Cerrar</button>`;
+                            loadAvailableRewards(true);
+                        } else {
+                            if (modalFeedbackEl) modalFeedbackEl.innerHTML = `<div class="alert alert-danger py-2 small">${result.message || "No se pudo canjear. Intenta de nuevo."}</div>`;
+                            if(confirmButtonDynamic) confirmButtonDynamic.disabled = false;
+                        }
+                    };
                 }
-                loadAvailableRewards(true);
+            }
+
+            if (confirmRedeemRewardModalInstance) {
+                confirmRedeemRewardModalInstance.show();
             } else {
-                showGlobalFeedback(result.message || "No se pudo canjear. Intenta de nuevo.", "danger", 7000);
+                if (confirm(`¿Canjear "${reward.name}" por ${reward.pointsrequired} puntos para un próximo envío?`)) {
+                     showGlobalFeedback("Procesando canje...", "info", null);
+                     const resultFallback = await fetchDataFromGAS('redeemReward', 'POST', { clientId: String(clientData.id), rewardId: rewardId });
+                     if (resultFallback.success && resultFallback.data) {
+                        showGlobalFeedback(resultFallback.message || "¡Recompensa canjeada!", "success", 5000);
+                         if (resultFallback.data.updatedClient) {
+                            const localAvatar = clientData[LOCAL_AVATAR_DATA_KEY];
+                            clientData = resultFallback.data.updatedClient;
+                            if(localAvatar && !clientData[LOCAL_AVATAR_DATA_KEY]) clientData[LOCAL_AVATAR_DATA_KEY] = localAvatar;
+                            localStorage.setItem(LOGGED_IN_CLIENT_KEY, JSON.stringify(clientData));
+                            updateClientDisplayAndUI();
+                        }
+                        loadAvailableRewards(true);
+                     } else {
+                        showGlobalFeedback(resultFallback.message || "No se pudo canjear. Intenta de nuevo.", "danger", 7000);
+                     }
+                }
             }
         }
+
 
         function showFeedbackInModal(modalIdUnused, elId, msg, type='info', dur=4000) {
             const div = document.getElementById(elId);
@@ -2062,7 +2341,6 @@ main {
         function initializeShareModal() {
              const shareModalEl = document.getElementById('sharePageModal');
              if (shareModalEl) {
-                // sharePageModalInstance ya se inicializa en initializeModals()
                 shareModalEl.addEventListener('shown.bs.modal', generateQrCodeForSharing);
              }
         }
@@ -2110,6 +2388,37 @@ main {
                         showGlobalFeedback('Error al copiar el enlace.', 'danger', 3000);
                         console.error('Error al copiar: ', err);
                     });
+                });
+            }
+        }
+
+        function setupFloatingButtonFeedback() {
+            if (floatingCartButtonEl) {
+                floatingCartButtonEl.addEventListener('click', function() {
+                    floatingCartButtonEl.classList.add('clicked-animation');
+                    setTimeout(() => {
+                        floatingCartButtonEl.classList.remove('clicked-animation');
+                    }, 400);
+                });
+            }
+
+            const floatingShareButtonEl = document.getElementById('floatingShareButton');
+            if (floatingShareButtonEl) {
+                floatingShareButtonEl.addEventListener('click', function() {
+                    floatingShareButtonEl.classList.add('clicked-animation');
+                    setTimeout(() => {
+                        floatingShareButtonEl.classList.remove('clicked-animation');
+                    }, 400);
+                });
+            }
+
+            const whatsappButtonEl = document.getElementById('whatsappButton');
+            if (whatsappButtonEl) {
+                whatsappButtonEl.addEventListener('click', function(event) {
+                    whatsappButtonEl.classList.add('clicked-animation');
+                    setTimeout(() => {
+                        whatsappButtonEl.classList.remove('clicked-animation');
+                    }, 400);
                 });
             }
         }
