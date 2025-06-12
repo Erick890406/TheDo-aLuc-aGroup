@@ -255,6 +255,10 @@ main {
     background-color: #2c3e50;
     color: white;
 }
+.form-select.bg-dark { /* Para que el select de ordenamiento se vea bien */
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23f1c40f' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e");
+}
+
 
 .nav-pills {
     background-color: rgba(0,0,0,0.2);
@@ -775,13 +779,34 @@ main {
                             <i class="bi bi-arrow-clockwise"></i>
                         </button>
                     </div>
+
+                    <div id="popular-items-section" class="mb-5">
+                        <h4 class="mb-3 text-center"><i class="bi bi-star-fill text-warning me-2"></i>¡Lo Popular Hoy!</h4>
+                        <div class="row g-3 g-md-4" id="popular-items-container">
+                            <div class="col-12 text-center p-3"><div class="spinner-border spinner-border-sm text-primary" role="status"></div><span class="ms-2">Cargando populares...</span></div>
+                        </div>
+                        <hr class="my-4 border-secondary">
+                    </div>
+
                     <div class="mb-4 position-relative">
                         <input type="text" id="productSearchInput" class="form-control form-control-lg" placeholder="Buscar productos por nombre..." aria-label="Buscar productos">
                         <button id="clearSearchButton" class="btn btn-sm position-absolute end-0 top-50 translate-middle-y me-2" style="display:none;" title="Limpiar búsqueda">
                             <i class="bi bi-x-lg"></i>
                         </button>
                     </div>
-                    <div id="filter-container" class="d-flex flex-wrap justify-content-center align-items-center mb-3"></div>
+                    <div class="d-flex flex-wrap justify-content-between align-items-center mb-3 gap-3">
+                        <div id="filter-container" class="d-flex flex-wrap justify-content-center align-items-center">
+                        </div>
+                        <div class="ms-auto">
+                            <select id="sortProductsSelect" class="form-select form-select-sm bg-dark text-light border-secondary" style="min-width: 200px;">
+                                <option value="default" selected>Ordenar por...</option>
+                                <option value="name-asc">Nombre (A-Z)</option>
+                                <option value="name-desc">Nombre (Z-A)</option>
+                                <option value="price-asc">Precio (Menor a Mayor)</option>
+                                <option value="price-desc">Precio (Mayor a Menor)</option>
+                            </select>
+                        </div>
+                    </div>
                     <div class="row g-3 g-md-4" id="menu-container"><div class="col-12 text-center p-5"><div class="spinner-border" style="width: 3rem; height: 3rem; color: var(--primary-color);" role="status"></div><p class="mt-2 fs-5">Cargando...</p></div></div>
                 </div>
                 <div class="tab-pane fade" id="rewards-tab" role="tabpanel" aria-labelledby="rewards-tab-link">
@@ -826,7 +851,7 @@ main {
     <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true"><div class="modal-dialog modal-dialog-centered"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="loginModalLabel">Iniciar Sesión para Envíos</h5><button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button></div><div class="modal-body"><form id="loginForm"><div class="mb-3"><label for="loginPhone" class="form-label">Teléfono (Tuyo)</label><input type="tel" class="form-control" id="loginPhone" required autocomplete="username tel"></div><div class="mb-3"><label for="loginPassword" class="form-label">Contraseña</label><input type="password" class="form-control" id="loginPassword" required autocomplete="current-password"></div><div id="login-feedback" class="mt-3"></div></form></div><div class="modal-footer"><button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button><button type="button" class="btn btn-primary" onclick="handleLoginAttempt()">Acceder</button></div></div></div></div>
     <div class="modal fade" id="cartModal" tabindex="-1" aria-labelledby="cartModalLabel" aria-hidden="true"><div class="modal-dialog modal-lg modal-dialog-scrollable modal-dialog-centered"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="cartModalLabel"><i class="bi bi-cart3 me-2"></i>Mi Carrito de Envío</h5><button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button></div><div class="modal-body" id="cart-items-container"><p class="text-center">Tu carrito está vacío.</p></div><div class="modal-footer justify-content-between flex-wrap"><div id="cart-footer-info"><small class="text-muted d-block">Puntos a ganar: <span id="cart-points-to-earn" class="fw-bold">0</span></small><strong class="fs-5">Total: <span id="cart-total-price" style="color: var(--primary-color);">0.00</span> USD</strong><br><small class="text-warning"><i class="bi bi-credit-card-2-front-fill"></i> Pagos por Zelle.</small></div><div class="d-flex mt-2 mt-sm-0" id="cart-footer-buttons"><button type="button" class="btn btn-outline-danger me-2" onclick="clearCart()"><i class="bi bi-trash3 me-1"></i>Vaciar</button><button type="button" class="btn btn-success" onclick="confirmAndPlaceOrder()"><i class="bi bi-check-circle me-1"></i>Confirmar Envío</button></div></div><div id="order-placement-feedback" class="m-3"></div></div></div></div>
     <div class="modal fade" id="downloadAppModal" tabindex="-1" aria-labelledby="downloadAppModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
-        <div class="modal-dialog modal-dialog-centered"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="downloadAppModalLabel"><i class="bi bi-phone-vibrate-fill me-2" style="color:var(--primary-color);"></i> ¡App para facilitar tu compra en Cuba!</h5><button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button></div><div class="modal-body text-center"><img src="https://i.postimg.cc/XJxYzHZW/striking-app-icon-the-letters-dl-in-a-custom-l.png" alt="Doña Lucía App Icon" class="img-fluid rounded-circle mb-3 shadow" style="width: 100px; height: 100px; border: 3px solid var(--primary-color);">
+        <div class="modal-dialog modal-dialog-centered"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="downloadAppModalLabel"><i class="bi bi-phone-vibrate-fill me-2" style="color:var(--primary-color);"></i> ¡App para tu Familia en Cuba!</h5><button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button></div><div class="modal-body text-center"><img src="https://i.postimg.cc/XJxYzHZW/striking-app-icon-the-letters-dl-in-a-custom-l.png" alt="Doña Lucía App Icon" class="img-fluid rounded-circle mb-3 shadow" style="width: 100px; height: 100px; border: 3px solid var(--primary-color);">
             <p class="lead mb-2">Instalar la App te permite gestionar tus pedidos y beneficios directamente.</p>
             <p>Con la app, podrás ver el menú, canjear puntos,  obtener recompensas gratis y estar al tanto de las novedades. ¡Una forma fácil de conectar!</p>
             <a href="https://drive.google.com/file/d/1JN1qbrX2JB7P5apVzzhtBy5x2hBPxCWa/view?usp=drive_link" download="DonaLucia_Cumanayagua.apk" class="btn btn-primary btn-lg mt-3 w-100 animate__animated animate__pulse animate__infinite animate__slower">
@@ -905,7 +930,7 @@ main {
                 </div>
                 <div class="modal-footer" id="confirmRedeemRewardFooter">
                     <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="button" class="btn btn-warning" id="confirmRedeemRewardButton">
+                    <button type="button" class="btn btn-warning" id="confirmRedeemRewardButton"> {{-- ID Estático, el listener se re-asigna --}}
                         <i class="bi bi-award-fill me-1"></i>Sí, Canjear Ahora
                     </button>
                 </div>
@@ -1002,6 +1027,7 @@ main {
         let availableRewards = [];
         let shoppingCart = [];
         let currentFilterCategory = 'all';
+        let currentSortOption = 'default';
         const loadingSpinnerUser = document.getElementById('loadingSpinnerUser');
         let registrationModalInstance, loginModalInstance, cartModalInstance, downloadAppModalInstance, productDetailModalInstance, sharePageModalInstance, confirmClearCartModalInstance, confirmRedeemRewardModalInstance;
         let floatingCartButtonEl;
@@ -1015,7 +1041,7 @@ main {
             loadCartFromStorage();
             loadClientDataFromStorage();
             updateClientDisplayAndUI();
-            await loadMenuItems();
+            await loadMenuItems(); // Esto ahora también llamará a generatePopularItems()
             setupEventListeners();
             handleAppDownloadPromotion();
             handleScroll();
@@ -1030,10 +1056,11 @@ main {
 
             const productSearchInput = document.getElementById('productSearchInput');
             const clearSearchButton = document.getElementById('clearSearchButton');
+            const sortProductsSelect = document.getElementById('sortProductsSelect');
 
             if (productSearchInput) {
                 productSearchInput.addEventListener('input', function() {
-                    filterMenuByCategory(currentFilterCategory); // This will call generateMenu which uses the search term
+                    generateMenu(); // El filtrado de búsqueda se hace en generateMenu
                     if (this.value.length > 0 && clearSearchButton) {
                         clearSearchButton.style.display = 'block';
                     } else if (clearSearchButton) {
@@ -1045,7 +1072,13 @@ main {
                 clearSearchButton.addEventListener('click', function() {
                     if(productSearchInput) productSearchInput.value = '';
                     clearSearchButton.style.display = 'none';
-                    filterMenuByCategory(currentFilterCategory); // This will call generateMenu
+                    generateMenu();
+                });
+            }
+            if (sortProductsSelect) {
+                sortProductsSelect.addEventListener('change', function() {
+                    currentSortOption = this.value;
+                    generateMenu();
                 });
             }
         });
@@ -1543,6 +1576,7 @@ main {
             if (!forceRefresh && cachedProducts && cacheExpiry && now < cacheExpiry) {
                 try {
                     menuItems = JSON.parse(cachedProducts);
+                    generatePopularItems();
                     generateCategoryFilters();
                     filterMenuByCategory(currentFilterCategory);
                     return;
@@ -1552,6 +1586,8 @@ main {
                 }
             }
             menuContainer.innerHTML = `<div class="col-12 text-center p-5"><div class="spinner-border" style="width: 3rem; height: 3rem; color: var(--primary-color);" role="status"></div><p class="mt-2 fs-5">${forceRefresh ? 'Actualizando' : 'Cargando'} menú y combos...</p></div>`;
+            document.getElementById('popular-items-container').innerHTML = '<div class="col-12 text-center p-3"><div class="spinner-border spinner-border-sm text-primary" role="status"></div><span class="ms-2">Cargando populares...</span></div>';
+
             const res = await fetchDataFromGAS('getPublicProducts', 'GET');
             if (res.success && Array.isArray(res.data)) {
                 menuItems = res.data.map(p => ({
@@ -1563,14 +1599,17 @@ main {
                 }));
                 localStorage.setItem(PRODUCTS_USER_CACHE_KEY, JSON.stringify(menuItems));
                 localStorage.setItem(MENU_CACHE_EXPIRY_KEY, (now + CACHE_DURATION_MS).toString());
+                generatePopularItems();
                 generateCategoryFilters();
                 filterMenuByCategory(currentFilterCategory);
                 if (forceRefresh) showGlobalFeedback("Menú y combos actualizados.", "success", 2000);
             } else {
                 menuContainer.innerHTML = `<div class="col-12 text-center p-5"><p class="text-danger fs-5">Error al ${forceRefresh ? 'actualizar' : 'cargar'} el menú y combos: ${res.message || 'Desconocido.'}</p></div>`;
+                document.getElementById('popular-items-container').innerHTML = '<div class="col-12 text-center p-3"><p class="text-danger">Error al cargar populares.</p></div>';
                 if (cachedProducts) {
                     try {
                         menuItems = JSON.parse(cachedProducts);
+                        generatePopularItems();
                         generateCategoryFilters(); filterMenuByCategory(currentFilterCategory);
                         showGlobalFeedback("No se pudo actualizar el menú, mostrando última versión disponible.", "warning", 4000);
                     } catch(e) {}
@@ -1621,8 +1660,46 @@ main {
 
         function filterMenuByCategory(category) {
             currentFilterCategory = category;
-            generateCategoryFilters();
-            generateMenu();
+            generateCategoryFilters(); // Actualiza el estado visual de los botones de filtro
+            generateMenu(); // Llama a generateMenu que ahora considera la categoría y la búsqueda
+        }
+
+        function generatePopularItems() {
+            const popularContainer = document.getElementById('popular-items-container');
+            if (!popularContainer) return;
+
+            if (!menuItems || menuItems.length === 0) {
+                popularContainer.innerHTML = '<div class="col-12 text-center p-3"><p class="text-muted">No hay productos para mostrar como populares aún.</p></div>';
+                return;
+            }
+            let popularToShow = [...menuItems];
+            popularToShow.sort(() => 0.5 - Math.random());
+            popularToShow = popularToShow.slice(0, 3);
+
+            if (popularToShow.length === 0) {
+                 popularContainer.innerHTML = '<div class="col-12 text-center p-3"><p class="text-muted">No hay productos destacados en este momento.</p></div>';
+                 return;
+            }
+            popularContainer.innerHTML = '';
+            popularToShow.forEach(item => {
+                const itemId = String(item.id);
+                popularContainer.innerHTML += `
+                <div class="col-12 col-md-4 d-flex align-items-stretch animate__animated animate__fadeInUp" style="animation-duration: 0.6s;">
+                    <div class="menu-item-card card w-100 d-flex flex-column">
+                        <img src="${item.imageurl || 'https://via.placeholder.com/350x220/E74C3C/FFF?text=' + encodeURIComponent(item.name || 'Producto')}"
+                             class="product-image card-img-top" alt="${item.name || 'Producto'}" style="cursor: pointer;" onclick="showProductDetailModal('${itemId}')" loading="lazy">
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title">${item.name || 'Sin Nombre'}</h5>
+                            <p class="card-text small flex-grow-1">${(item.description || 'Deliciosa opción de nuestro menú.').substring(0,70)}${(item.description || '').length > 70 ? '...' : ''}</p>
+                            <div class="price-points-row d-flex justify-content-between align-items-center mt-auto pt-2">
+                                <span class="fw-bold fs-6" style="color: var(--primary-color);">USD ${(item.price || 0).toFixed(2)}</span>
+                                <span class="badge bg-success text-white small">+${item.points || 0} Pts</span>
+                            </div>
+                            <button class="btn btn-sm btn-primary mt-2 w-100" onclick="addToCart('${itemId}')"><i class="bi bi-cart-plus-fill me-1"></i>Añadir</button>
+                        </div>
+                    </div>
+                </div>`;
+            });
         }
 
         function generateMenu() {
@@ -1631,7 +1708,7 @@ main {
             menuContainer.innerHTML = '';
 
             const searchTerm = document.getElementById('productSearchInput')?.value.toLowerCase().trim() || '';
-            let itemsToDisplay = menuItems;
+            let itemsToDisplay = [...menuItems];
 
             if (currentFilterCategory !== 'all') {
                 itemsToDisplay = itemsToDisplay.filter(item => (item.category || "Otros") === currentFilterCategory);
@@ -1642,6 +1719,25 @@ main {
                     (item.name || '').toLowerCase().includes(searchTerm) ||
                     (item.description || '').toLowerCase().includes(searchTerm)
                 );
+            }
+
+            switch (currentSortOption) {
+                case 'name-asc':
+                    itemsToDisplay.sort((a, b) => (a.name || "").localeCompare(b.name || ""));
+                    break;
+                case 'name-desc':
+                    itemsToDisplay.sort((a, b) => (b.name || "").localeCompare(a.name || ""));
+                    break;
+                case 'price-asc':
+                    itemsToDisplay.sort((a, b) => (parseFloat(a.price) || 0) - (parseFloat(b.price) || 0));
+                    break;
+                case 'price-desc':
+                    itemsToDisplay.sort((a, b) => (parseFloat(b.price) || 0) - (parseFloat(a.price) || 0));
+                    break;
+                case 'default':
+                default:
+                    itemsToDisplay.sort((a,b) => (a.name || "").localeCompare(b.name || ""));
+                    break;
             }
 
             if (!itemsToDisplay || itemsToDisplay.length === 0) {
@@ -1665,7 +1761,7 @@ main {
                 return;
             }
 
-            itemsToDisplay.sort((a,b) => (a.name || "").localeCompare(b.name || "")).forEach(item => {
+            itemsToDisplay.forEach(item => {
                 const itemId = String(item.id);
                 menuContainer.innerHTML += `
                 <div class="col-6 col-md-6 col-lg-4 d-flex align-items-stretch animate__animated animate__fadeInUp" style="animation-duration: 0.5s;">
@@ -1692,6 +1788,9 @@ main {
             const clearSearchButton = document.getElementById('clearSearchButton');
             if (clearSearchButton) clearSearchButton.style.display = 'none';
             currentFilterCategory = 'all';
+            currentSortOption = 'default';
+            const sortSelect = document.getElementById('sortProductsSelect');
+            if (sortSelect) sortSelect.value = 'default';
             generateCategoryFilters();
             generateMenu();
         }
@@ -1824,7 +1923,6 @@ main {
             if (shoppingCart.length === 0) {
                 showFeedbackInModal(null, 'order-placement-feedback', 'El carrito de envío ya está vacío.', 'info', 2000);
                 if (cartModalInstance && document.getElementById('cartModal').classList.contains('show')) {
-                    // Ya está abierto
                 } else if (cartModalInstance) {
                     cartModalInstance.show();
                 }
@@ -1847,7 +1945,6 @@ main {
             updateCartDisplay();
             showFeedbackInModal(null, 'order-placement-feedback', 'Carrito de envío vaciado.', 'info', 2000);
             if (cartModalInstance && document.getElementById('cartModal').classList.contains('show')) {
-                // Modal ya abierto
             } else {
                 showGlobalFeedback('Carrito de envío vaciado.', 'info');
             }
@@ -2280,7 +2377,7 @@ main {
 
             if (confirmRedeemRewardModalInstance) {
                 confirmRedeemRewardModalInstance.show();
-            } else {
+            } else { // Fallback
                 if (confirm(`¿Canjear "${reward.name}" por ${reward.pointsrequired} puntos para un próximo envío?`)) {
                      showGlobalFeedback("Procesando canje...", "info", null);
                      const resultFallback = await fetchDataFromGAS('redeemReward', 'POST', { clientId: String(clientData.id), rewardId: rewardId });
@@ -2290,6 +2387,8 @@ main {
                             const localAvatar = clientData[LOCAL_AVATAR_DATA_KEY];
                             clientData = resultFallback.data.updatedClient;
                             if(localAvatar && !clientData[LOCAL_AVATAR_DATA_KEY]) clientData[LOCAL_AVATAR_DATA_KEY] = localAvatar;
+                            clientData.puntos = (clientData.puntos || 0) - (reward.pointsrequired || 0); // Asegurar descuento local
+                            if (clientData.puntos < 0) clientData.puntos = 0;
                             localStorage.setItem(LOGGED_IN_CLIENT_KEY, JSON.stringify(clientData));
                             updateClientDisplayAndUI();
                         }
