@@ -47,7 +47,7 @@ body {
     padding: 0;
     min-height: 100vh;
     overflow-x: hidden;
-    padding-bottom: 0px;
+    padding-bottom: 0px; /* Será ajustado por JS */
     display: flex;
     flex-direction: column;
 }
@@ -78,6 +78,37 @@ main {
 .navbar-text {
     color: var(--text-light);
 }
+.navbar-toggler {
+    border-color: rgba(241, 196, 15, 0.5);
+}
+.navbar-toggler-icon {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28241, 196, 15, 0.9%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+}
+.navbar-collapse {
+    background-color: #0f1c2d; 
+}
+@media (max-width: 575.98px) { 
+    .navbar-collapse {
+        position: absolute;
+        top: 100%; 
+        left: 0;
+        right: 0;
+        padding: 1rem;
+        box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+        border-top: 1px solid rgba(255,255,255,0.1);
+    }
+    .navbar-nav .nav-item {
+        margin-bottom: 0.5rem;
+    }
+    .navbar-nav .nav-link {
+        padding: 0.75rem 1rem;
+        border-radius: 0.5rem;
+    }
+    .navbar-nav .nav-link:hover {
+        background-color: rgba(255,255,255,0.1);
+    }
+}
+
 
 .btn-primary {
     background-color: var(--primary-color);
@@ -242,6 +273,26 @@ main {
     border-radius: var(--radius-lg);
     box-shadow: var(--shadow-lg);
 }
+
+#helpModal .accordion-button {
+    background-color: #2c3e50; 
+    color: var(--text-light);
+}
+#helpModal .accordion-button:not(.collapsed) {
+    color: var(--primary-color);
+    background-color: #1f2a3d; 
+}
+#helpModal .accordion-body {
+    background-color: var(--bg-card); 
+    font-size: 0.95rem;
+}
+#helpModal .accordion-item {
+    border: 1px solid rgba(255,255,255,0.1);
+    margin-bottom: 0.5rem;
+    border-radius: 0.5rem;
+    overflow: hidden; 
+}
+
 
 .form-control {
     background-color: #2c3e50;
@@ -640,7 +691,7 @@ main {
 
 #quick-nav-buttons {
     position: fixed;
-    bottom: 260px;
+    bottom: 260px; /* Será ajustado por JS */
     right: 30px;
     z-index: 1034;
     display: none;
@@ -674,16 +725,12 @@ main {
     max-width: 95vw;
 }
 #presentationVideoContent {
-    /* background-color: transparent !important;
-    border: none !important;
-    box-shadow: none !important;  Ya está inline */
 }
 #introVideo {
     display: block;
     width: 100%;
     height: auto;
     max-height: 90vh;
-    /* border-radius: var(--radius-lg); */
 }
 
 
@@ -695,12 +742,12 @@ main {
     #downloadAppBanner .container { flex-direction: column; text-align: center; }
     #downloadAppBanner .me-3.mb-2.mb-md-0 { margin-bottom: 0.75rem !important; }
 
-    .floating-buttons-container { bottom: 20px; right: 20px; }
+    .floating-buttons-container { bottom: 20px; right: 20px; } 
     .floating-button { width: 60px; height: 60px; font-size: 1.6rem; }
     .floating-cart-count { font-size: 0.75rem; min-width: 22px; height: 22px; top: -6px; right: -6px; }
 
     #quick-nav-buttons {
-        bottom: 235px;
+        bottom: 235px; 
         right: 20px;
     }
     .quick-nav-btn { width: 40px; height: 40px; font-size: 1.2rem; }
@@ -715,12 +762,12 @@ main {
     .nav-pills .nav-link { font-size: 0.8rem; padding: 0.5rem; }
     .nav-pills .nav-item { min-width: 90px; }
 
-    .floating-buttons-container { bottom: 15px; right: 15px; }
+    .floating-buttons-container { bottom: 15px; right: 15px; } 
     .floating-button { width: 55px; height: 55px; font-size: 1.5rem; }
     .floating-cart-count { font-size: 0.7rem; min-width: 20px; height: 20px; top: -5px; right: -5px; }
 
     #quick-nav-buttons {
-        bottom: 210px;
+        bottom: 210px; 
         right: 15px;
     }
     .quick-nav-btn { width: 38px; height: 38px; font-size: 1.1rem; }
@@ -736,28 +783,62 @@ main {
 <body id="top">
     <input type="file" id="avatarUploadInput" accept="image/jpeg, image/png, image/gif" style="display: none;">
 
-       <nav class="navbar navbar-expand-sm navbar-custom fixed-top">
+    <nav class="navbar navbar-expand-sm navbar-custom fixed-top">
         <div class="container">
-            <a class="navbar-brand d-flex align-items-center" data-bs-toggle="modal" data-bs-target="#downloadAppModal" style="cursor:pointer;">
+            <a class="navbar-brand d-flex align-items-center" href="#top"> 
                 <img src="https://i.postimg.cc/bwc5SzJG/striking-app-icon-the-letters-dl-in-a-custom-l-1.png" alt="Doña Lucía Logo" style="height: 30px; margin-right: 8px;">
                 DL Cumanayagua
             </a>
-            <div class="ms-auto d-flex align-items-center">
-                <div id="auth-buttons-nav" class="d-flex align-items-center">
-                </div>
-                <button id="logoutButtonNav" class="btn btn-sm btn-outline-warning ms-2" style="display:none;" onclick="logoutClient()"><i class="bi bi-box-arrow-right"></i> Salir</button>
-                <div class="nav-item ms-2" id="cartNavItem" style="display: none !important;">
-                    <button class="btn cart-nav-button p-0" type="button" data-bs-toggle="modal" data-bs-target="#cartModal">
-                        <i class="bi bi-cart-fill"></i>
-                        <span class="badge rounded-pill cart-count-nav" id="cart-count-nav">0</span>
-                    </button>
-                </div>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavContent" aria-controls="navbarNavContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNavContent">
+                <ul class="navbar-nav ms-auto mb-2 mb-sm-0 align-items-sm-center">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" onclick="showTabAndScroll('menu-tab-link')"><i class="bi bi-card-list me-1"></i>Menú</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" onclick="showTabAndScroll('rewards-tab-link')"><i class="bi bi-gift me-1"></i>Recompensas</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" onclick="showTabAndScroll('my-orders-tab-link')"><i class="bi bi-receipt me-1"></i>Mis Envíos</a>
+                    </li>
+                     <li class="nav-item">
+                        <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#helpModal"><i class="bi bi-question-circle me-1"></i>Ayuda</a>
+                    </li>
+                    <!-- MODIFICADO: Submenú "Más Opciones" con Video y Compartir -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="moreOptionsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="bi bi-three-dots-vertical me-1"></i>Más
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end" aria-labelledby="moreOptionsDropdown">
+                            <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#presentationVideoModal"><i class="bi bi-play-btn-fill me-2"></i>Ver Video Intro</a></li>
+                            <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#sharePageModal"><i class="bi bi-share-fill me-2"></i>Compartir Página/App</a></li>
+                            <li><hr class="dropdown-divider border-secondary"></li>
+                            <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#downloadAppModal"><i class="bi bi-phone-vibrate-fill me-2"></i>Descargar App (Cuba)</a></li>
+                        </ul>
+                    </li>
+                     <li class="nav-item d-block d-sm-none my-2"> 
+                        <hr class="border-secondary">
+                    </li>
+                    <li class="nav-item d-flex align-items-center" id="auth-buttons-nav-container">
+                        <div id="auth-buttons-nav" class="d-flex align-items-center">
+                        </div>
+                         <button id="logoutButtonNav" class="btn btn-sm btn-outline-warning ms-2" style="display:none;" onclick="logoutClient()"><i class="bi bi-box-arrow-right"></i> Salir</button>
+                    </li>
+                     <li class="nav-item ms-sm-2" id="cartNavItem" style="display: none !important;"> 
+                        <button class="btn cart-nav-button p-0" type="button" data-bs-toggle="modal" data-bs-target="#cartModal">
+                            <i class="bi bi-cart-fill"></i>
+                            <span class="badge rounded-pill cart-count-nav" id="cart-count-nav">0</span>
+                        </button>
+                    </li>
+                </ul>
             </div>
         </div>
     </nav>
 
     <main>
-        <div class="container mt-5 pt-4 pb-5">
+        <div class="container mt-5 pt-4 pb-5"> 
             <div id="vip-card-container" class="vip-card p-md-4 p-3 mb-4 position-relative animate__animated animate__fadeInDown" style="display: none;">
                 <span class="position-absolute top-0 start-0 m-3 badge" id="vip-status-badge">VIP</span>
                 <div class="text-center text-md-start">
@@ -856,25 +937,28 @@ main {
                 <span class="small">Permite que gestiones tus pedidos y beneficios fácilmente.</span>
             </div>
             <div class="d-flex align-items-center">
-                <a href="https://drive.google.com/file/d/1JN1qbrX2JB7P5apVzzhtBy5x2hBPxCWa/view?usp=drive_link" download="DonaLucia_Cumanayagua.apk" class="btn btn-warning btn-sm me-3 py-2">
+                <a href="https://drive.google.com/file/d/1JN1qbrX2JB7P5apVzzhtBy5x2hBPxCWa/view?usp=drive_link" download="DonaLucia_Cumanayagua.apk" class="btn btn-warning btn-sm me-2 py-2">
                     <i class="bi bi-android2 me-1"></i> Descargar App
                 </a>
+                <button class="btn btn-outline-warning btn-sm me-3 py-2" onclick="shareAppLinkViaCopy()" title="Copiar enlace de descarga de la App">
+                    <i class="bi bi-share-fill me-1"></i> Compartir App
+                </button>
                 <button type="button" class="btn-close btn-close-white" aria-label="Cerrar banner"></button>
             </div>
         </div>
     </div>
     <div class="toast-container position-fixed bottom-0 start-0 p-3" id="toastPlacement" style="z-index: 2050"> </div>
-    <div class="modal fade" id="registerUserModal" tabindex="-1" aria-labelledby="registerUserModalLabel" aria-hidden="true"><div class="modal-dialog modal-dialog-centered"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="registerUserModalLabel">Crear Cuenta para Envíos</h5><button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button></div><div class="modal-body"><form id="newUserRegistrationForm"><div class="mb-3"><label for="newUserName" class="form-label">Nombre Completo (Tuyo) <span class="text-danger">*</span></label><input type="text" class="form-control" id="newUserName" required autocomplete="name"></div><div class="mb-3"><label for="newUserPhone" class="form-label">Teléfono (Tuyo, con código de país si es de USA) <span class="text-danger">*</span></label><input type="tel" class="form-control" id="newUserPhone" required placeholder="Ej: +1 XXX XXX XXXX" autocomplete="tel"></div><div class="mb-3"><label for="newUserEmail" class="form-label">Correo (Tuyo, Opcional)</label><input type="email" class="form-control" id="newUserEmail" autocomplete="email"></div><div class="mb-3"><label for="newUserPassword" class="form-label">Contraseña <span class="text-danger">*</span></label><input type="password" class="form-control" id="newUserPassword" required autocomplete="new-password"></div><div class="mb-3"><label for="newUserConfirmPassword" class="form-label">Confirmar Contraseña <span class="text-danger">*</span></label><input type="password" class="form-control" id="newUserConfirmPassword" required autocomplete="new-password"></div><div id="registration-feedback" class="mt-3"></div></form></div><div class="modal-footer"><button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button><button type="button" class="btn btn-primary" onclick="handleUserRegistrationAttempt()">Registrarme</button></div></div></div></div>
+    <!-- MODIFICADO: Correo ahora es obligatorio -->
+    <div class="modal fade" id="registerUserModal" tabindex="-1" aria-labelledby="registerUserModalLabel" aria-hidden="true"><div class="modal-dialog modal-dialog-centered"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="registerUserModalLabel">Crear Cuenta para Envíos</h5><button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button></div><div class="modal-body"><form id="newUserRegistrationForm"><div class="mb-3"><label for="newUserName" class="form-label">Nombre Completo (Tuyo) <span class="text-danger">*</span></label><input type="text" class="form-control" id="newUserName" required autocomplete="name"></div><div class="mb-3"><label for="newUserPhone" class="form-label">Teléfono (Tuyo, con código de país si es de USA) <span class="text-danger">*</span></label><input type="tel" class="form-control" id="newUserPhone" required placeholder="Ej: +1 XXX XXX XXXX" autocomplete="tel"></div><div class="mb-3"><label for="newUserEmail" class="form-label">Correo (Tuyo) <span class="text-danger">*</span></label><input type="email" class="form-control" id="newUserEmail" required autocomplete="email"></div><div class="mb-3"><label for="newUserPassword" class="form-label">Contraseña <span class="text-danger">*</span></label><input type="password" class="form-control" id="newUserPassword" required autocomplete="new-password"></div><div class="mb-3"><label for="newUserConfirmPassword" class="form-label">Confirmar Contraseña <span class="text-danger">*</span></label><input type="password" class="form-control" id="newUserConfirmPassword" required autocomplete="new-password"></div><div id="registration-feedback" class="mt-3"></div></form></div><div class="modal-footer"><button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button><button type="button" class="btn btn-primary" onclick="handleUserRegistrationAttempt()">Registrarme</button></div></div></div></div>
     <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true"><div class="modal-dialog modal-dialog-centered"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="loginModalLabel">Iniciar Sesión para Envíos</h5><button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button></div><div class="modal-body"><form id="loginForm"><div class="mb-3"><label for="loginPhone" class="form-label">Teléfono (Tuyo)</label><input type="tel" class="form-control" id="loginPhone" required autocomplete="username tel"></div><div class="mb-3"><label for="loginPassword" class="form-label">Contraseña</label><input type="password" class="form-control" id="loginPassword" required autocomplete="current-password"></div><div id="login-feedback" class="mt-3"></div></form></div><div class="modal-footer"><button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button><button type="button" class="btn btn-primary" onclick="handleLoginAttempt()">Acceder</button></div></div></div></div>
     <div class="modal fade" id="cartModal" tabindex="-1" aria-labelledby="cartModalLabel" aria-hidden="true"><div class="modal-dialog modal-lg modal-dialog-scrollable modal-dialog-centered"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="cartModalLabel"><i class="bi bi-cart3 me-2"></i>Mi Carrito de Envío</h5><button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button></div><div class="modal-body" id="cart-items-container"><p class="text-center">Tu carrito está vacío.</p></div><div class="modal-footer justify-content-between flex-wrap"><div id="cart-footer-info"><small class="text-muted d-block">Puntos a ganar: <span id="cart-points-to-earn" class="fw-bold">0</span></small><strong class="fs-5">Total: <span id="cart-total-price" style="color: var(--primary-color);">0.00</span> USD</strong><br><small class="text-warning"><i class="bi bi-credit-card-2-front-fill"></i> Pagos por Zelle.</small></div><div class="d-flex mt-2 mt-sm-0" id="cart-footer-buttons"><button type="button" class="btn btn-outline-danger me-2" onclick="clearCart()"><i class="bi bi-trash3 me-1"></i>Vaciar</button><button type="button" class="btn btn-success" onclick="confirmAndPlaceOrder()"><i class="bi bi-check-circle me-1"></i>Confirmar Envío</button></div></div><div id="order-placement-feedback" class="m-3"></div></div></div></div>
     <div class="modal fade" id="downloadAppModal" tabindex="-1" aria-labelledby="downloadAppModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
         <div class="modal-dialog modal-dialog-centered"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="downloadAppModalLabel"><i class="bi bi-phone-vibrate-fill me-2" style="color:var(--primary-color);"></i> ¡App para tu Familia en Cuba!</h5><button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button></div><div class="modal-body text-center"><img src="https://i.postimg.cc/XJxYzHZW/striking-app-icon-the-letters-dl-in-a-custom-l.png" alt="Doña Lucía App Icon" class="img-fluid rounded-circle mb-3 shadow" style="width: 100px; height: 100px; border: 3px solid var(--primary-color);">
-            <p class="lead mb-2">Instalar la App te permite gestionar tus pedidos y beneficios directamente.</p>
-            <p>Con la app, podrás ver el menú, canjear puntos,  obtener recompensas gratis y estar al tanto de las novedades. ¡Una forma fácil de conectar!</p>
+            <p class="lead mb-2">Instala la App para que tu familia en Cuba pueda ver el menú, canjear puntos, obtener recompensas y estar al tanto de las novedades. ¡Una forma fácil de conectar!</p>
+            <p><strong>Nota:</strong> Esta app es para que tus familiares en Cuba exploren. Las compras y pagos se realizan desde esta página web.</p>
             <a href="https://drive.google.com/file/d/1JN1qbrX2JB7P5apVzzhtBy5x2hBPxCWa/view?usp=drive_link" download="DonaLucia_Cumanayagua.apk" class="btn btn-primary btn-lg mt-3 w-100 animate__animated animate__pulse animate__infinite animate__slower">
-                <i class="bi bi-android2 me-2">
-
-                </i> Descargar para Android</a>
+                <i class="bi bi-android2 me-2"></i> Descargar para Android
+            </a>
                 <p class="mt-3 mb-1">
                     <small class="text-muted">Si su dispositivo lo solicita, deben habilitar "Instalar apps desconocidas" en Ajustes para poder instalarla.</small></p></div>
                     <div class="modal-footer justify-content-center border-0 pt-0"><div class="form-check">
@@ -889,25 +973,44 @@ main {
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="sharePageModalLabel"><i class="bi bi-share-fill me-2" style="color:var(--primary-color);"></i>Compartir esta Página</h5>
+                    <h5 class="modal-title" id="sharePageModalLabel"><i class="bi bi-share-fill me-2" style="color:var(--primary-color);"></i>Compartir</h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body text-center">
-                    <p class="mb-3">Comparte el enlace a DL Cumanayagua con tus amigos y familiares:</p>
-                    <div id="qrcodeCanvas" class="mx-auto mb-4 border border-secondary p-2 rounded" style="width: 200px; height: 200px; background-color: white;">
+                    <h6 class="text-light">Compartir esta Página Web:</h6>
+                    <p class="mb-1 small text-muted">Para que otros puedan realizar compras y envíos.</p>
+                    <div id="qrcodeCanvas" class="mx-auto mb-3 border border-secondary p-2 rounded" style="width: 150px; height: 150px; background-color: white;">
+                    </div>
+                    <div class="d-grid gap-2 mb-4">
+                        <button class="btn btn-primary btn-sm" id="copyLinkButton">
+                            <i class="bi bi-clipboard-check-fill me-2"></i>Copiar Enlace de Página
+                        </button>
+                        <a id="shareViaWhatsAppButton" class="btn btn-success btn-sm" href="#" target="_blank">
+                            <i class="bi bi-whatsapp me-2"></i>Página por WhatsApp
+                        </a>
+                        <a id="shareViaTelegramButton" class="btn btn-info btn-sm text-dark" href="#" target="_blank">
+                            <i class="bi bi-telegram me-2"></i>Página por Telegram
+                        </a>
+                    </div>
+
+                    <hr style="border-color: rgba(255,255,255,0.2);">
+                    
+                    <h6 class="text-light mt-3">Compartir la App (para familia en Cuba):</h6>
+                    <p class="mb-1 small text-muted">Para que tus familiares en Cuba vean el catálogo.</p>
+                     <div id="qrcodeAppCanvas" class="mx-auto mb-3 border border-secondary p-2 rounded" style="width: 150px; height: 150px; background-color: white;">
                     </div>
                     <div class="d-grid gap-2">
-                        <button class="btn btn-primary" id="copyLinkButton">
-                            <i class="bi bi-clipboard-check-fill me-2"></i>Copiar Enlace
+                        <button class="btn btn-primary btn-sm" onclick="shareAppLinkViaCopy()">
+                            <i class="bi bi-clipboard-check-fill me-2"></i>Copiar Enlace de App
                         </button>
-                        <a id="shareViaWhatsAppButton" class="btn btn-success" href="#" target="_blank">
-                            <i class="bi bi-whatsapp me-2"></i>Compartir por WhatsApp
+                        <a id="shareAppViaWhatsAppButtonModal" class="btn btn-success btn-sm" href="#" target="_blank"> 
+                            <i class="bi bi-whatsapp me-2"></i>App por WhatsApp
                         </a>
-                        <a id="shareViaTelegramButton" class="btn btn-info text-dark" href="#" target="_blank">
-                            <i class="bi bi-telegram me-2"></i>Compartir por Telegram
+                         <a id="shareAppViaTelegramButtonModal" class="btn btn-info btn-sm text-dark" href="#" target="_blank"> 
+                            <i class="bi bi-telegram me-2"></i>App por Telegram
                         </a>
                     </div>
-                    <small class="d-block mt-3 text-muted">También puedes mostrar el código QR para que lo escaneen directamente.</small>
+                    <small class="d-block mt-3 text-muted">Muestra los códigos QR para escanear directamente.</small>
                 </div>
             </div>
         </div>
@@ -978,6 +1081,116 @@ main {
         </div>
     </div>
 
+    <div class="modal fade" id="helpModal" tabindex="-1" aria-labelledby="helpModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="helpModalLabel"><i class="bi bi-question-circle-fill me-2" style="color:var(--primary-color);"></i>Ayuda y Cómo Funciona DL Cumanayagua</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p class="lead">¡Bienvenido a DL Cumanayagua! Aquí te explicamos cómo funciona nuestra plataforma para que puedas enviar productos y cariño a tus seres queridos en Cumanayagua, Cuba, de forma fácil y segura.</p>
+                    
+                    <div class="accordion" id="helpAccordion">
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingOneHelp">
+                                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOneHelp" aria-expanded="true" aria-controls="collapseOneHelp">
+                                    <i class="bi bi-person-circle me-2"></i>Tu Cuenta (Cliente Comprador)
+                                </button>
+                            </h2>
+                            <div id="collapseOneHelp" class="accordion-collapse collapse show" aria-labelledby="headingOneHelp" data-bs-parent="#helpAccordion">
+                                <div class="accordion-body">
+                                    <p>Esta página web es para ti, el cliente que realiza la compra desde fuera de Cuba (ej. USA) para enviar a Cumanayagua.</p>
+                                    <ul>
+                                        <li><strong>Registro e Inicio de Sesión:</strong> Crea una cuenta o inicia sesión con tu número de teléfono, correo y contraseña. Esto te permitirá guardar tu historial de envíos, acumular puntos y acceder a recompensas.</li>
+                                        <li><strong>Información Personal:</strong> Tu nombre, teléfono y correo son para gestionar tus pedidos y comunicarnos contigo.</li>
+                                        <li><strong>Avatar:</strong> Puedes personalizar tu perfil subiendo una foto de avatar.</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingTwoHelp">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwoHelp" aria-expanded="false" aria-controls="collapseTwoHelp">
+                                   <i class="bi bi-card-list me-2"></i> Menú y Combos (Realizar un Envío)
+                                </button>
+                            </h2>
+                            <div id="collapseTwoHelp" class="accordion-collapse collapse" aria-labelledby="headingTwoHelp" data-bs-parent="#helpAccordion">
+                                <div class="accordion-body">
+                                    <p>Explora nuestro catálogo de productos y combos disponibles para enviar.</p>
+                                    <ul>
+                                        <li><strong>Añadir al Carrito:</strong> Selecciona los productos que deseas enviar y añádelos a tu carrito de envío.</li>
+                                        <li><strong>Ver Detalles:</strong> Haz clic en la imagen de un producto para ver más detalles, descripción y recomendaciones.</li>
+                                        <li><strong>Carrito de Envío:</strong> Revisa tu selección, ajusta cantidades y ve el total en USD.</li>
+                                        <li><strong>Confirmar Envío:</strong> Una vez listo, confirma tu envío. Se generará un número de pedido.</li>
+                                        <li><strong>Pago con Zelle:</strong> Tras confirmar, te proporcionaremos instrucciones para realizar el pago mediante Zelle. Deberás notificarnos por WhatsApp una vez realizado el pedido para coordinar el pago.</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingThreeHelp">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThreeHelp" aria-expanded="false" aria-controls="collapseThreeHelp">
+                                    <i class="bi bi-star-fill me-2"></i>Puntos y Recompensas
+                                </button>
+                            </h2>
+                            <div id="collapseThreeHelp" class="accordion-collapse collapse" aria-labelledby="headingThreeHelp" data-bs-parent="#helpAccordion">
+                                <div class="accordion-body">
+                                    <p>¡Premiamos tu fidelidad!</p>
+                                    <ul>
+                                        <li><strong>Acumular Puntos:</strong> Con cada compra que realices (y una vez confirmado el pago), acumularás puntos en tu cuenta. La cantidad de puntos por producto se indica en el menú.</li>
+                                        <li><strong>Ver tus Puntos:</strong> El total de tus puntos disponibles se muestra en tu tarjeta VIP al iniciar sesión.</li>
+                                        <li><strong>Sección Recompensas:</strong> Aquí encontrarás productos o beneficios especiales que puedes canjear utilizando tus puntos acumulados.</li>
+                                        <li><strong>Canjear Recompensas:</strong> Si tienes suficientes puntos, podrás canjear una recompensa. Esta se aplicará a un futuro envío o según se especifique. Deberás notificarnos por WhatsApp al canjear para coordinar.</li>
+                                        <!-- MODIFICADO: Mención sobre no dar puntos iniciales -->
+                                        <li><strong>Puntos de Bienvenida:</strong> Actualmente, no se otorgan puntos de bienvenida al registrarse. Los puntos se ganan a través de las compras.</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingFourHelp">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFourHelp" aria-expanded="false" aria-controls="collapseFourHelp">
+                                    <i class="bi bi-receipt-cutoff me-2"></i>Mis Envíos
+                                </button>
+                            </h2>
+                            <div id="collapseFourHelp" class="accordion-collapse collapse" aria-labelledby="headingFourHelp" data-bs-parent="#helpAccordion">
+                                <div class="accordion-body">
+                                    <p>En esta sección podrás ver un historial de todos los envíos que has realizado, su estado (Pendiente, Procesado, Entregado, Cancelado), los productos incluidos y los puntos otorgados.</p>
+                                </div>
+                            </div>
+                        </div>
+                         <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingFiveHelp">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFiveHelp" aria-expanded="false" aria-controls="collapseFiveHelp">
+                                    <i class="bi bi-phone-fill me-2"></i>App DL Cumanayagua (Para tu familia en Cuba)
+                                </button>
+                            </h2>
+                            <div id="collapseFiveHelp" class="accordion-collapse collapse" aria-labelledby="headingFiveHelp" data-bs-parent="#helpAccordion">
+                                <div class="accordion-body">
+                                    <p>Ofrecemos una aplicación Android (.apk) que puedes descargar y compartir con tus familiares en Cumanayagua.</p>
+                                    <ul>
+                                        <li><strong>Propósito de la App:</strong> Esta app permite a tus seres queridos en Cuba ver el catálogo de productos y las recompensas disponibles. Así, pueden decirte qué les gustaría recibir.</li>
+                                        <li><strong>¿Cómo Compartirla?:</strong> Puedes usar los botones de "Compartir Página/App" en el menú superior o el botón flotante <i class="bi bi-share-fill"></i> para obtener enlaces de descarga y QR.</li>
+                                        <li><strong>Instalación:</strong> Deberán descargar el archivo .apk e instalarlo en su teléfono Android. Es posible que necesiten habilitar "Instalar apps desconocidas" en los ajustes de su teléfono.</li>
+                                        <li><strong>Importante:</strong> La app es solo para visualización. Las compras, pagos y gestión de tu cuenta de cliente (acumulación de puntos, etc.) se realizan siempre a través de esta página web por ti, el comprador.</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="mt-4">Si tienes más preguntas, no dudes en contactarnos a través del botón de WhatsApp flotante. ¡Estamos para ayudarte!</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Entendido</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 
     <div class="floating-buttons-container">
         <a id="whatsappButton" href="https://wa.me/5355189657?text=Hola,%20tengo%20una%20consulta%20sobre%20DL%20Cumanayagua." class="floating-button" target="_blank" title="Chatea con nosotros">
@@ -1015,10 +1228,11 @@ main {
                 <div class="col-lg-2 col-md-4">
                     <h5 class="text-uppercase fw-bold mb-4">Navegación</h5>
                     <ul class="list-unstyled">
-                        <li><a href="#menu-tab" class="footer-link">Menú</a></li>
-                        <li><a href="#rewards-tab" class="footer-link">Recompensas</a></li>
-                        <li><a href="#my-orders-tab" class="footer-link">Mis Envíos</a></li>
-                        <li><a href="https://drive.google.com/file/d/1JN1qbrX2JB7P5apVzzhtBy5x2hBPxCWa/view?usp=drive_link" data-bs-toggle="modal" data-bs-target="#downloadAppModal" class="footer-link">App para Cuba</a></li>
+                        <li><a href="#" onclick="showTabAndScroll('menu-tab-link'); return false;" class="footer-link">Menú</a></li>
+                        <li><a href="#" onclick="showTabAndScroll('rewards-tab-link'); return false;" class="footer-link">Recompensas</a></li>
+                        <li><a href="#" onclick="showTabAndScroll('my-orders-tab-link'); return false;" class="footer-link">Mis Envíos</a></li>
+                        <li><a href="#" data-bs-toggle="modal" data-bs-target="#downloadAppModal" class="footer-link">App para Cuba</a></li>
+                         <li><a href="#" data-bs-toggle="modal" data-bs-target="#helpModal" class="footer-link">Ayuda</a></li>
                     </ul>
                 </div>
                 <div class="col-lg-3 col-md-4">
@@ -1049,7 +1263,7 @@ main {
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script>
-        const GOOGLE_SCRIPT_URL_USER = 'https://script.google.com/macros/s/AKfycby2a0TdrlDqtZI_NucSP9q2xcHV9fKYWe1OMpvlMx3vfS8b_2s2fS7zNMBsVHaHFC-JVw/exec';
+        const GOOGLE_SCRIPT_URL_USER = 'https://script.google.com/macros/s/AKfycbwHgP1l0c26jRoQ5UG8ua3TFzV-AEW_1xfWyy6DcAP597rvpMxvjQexFhz1mSkWUYJqNA/exec';
         const LOGGED_IN_CLIENT_KEY = 'cafeteriaVipClientLoggedIn_v8';
         const PRODUCTS_USER_CACHE_KEY = 'cafeteriaUserProductsCache_v8';
         const USER_CART_KEY = 'cafeteriaUserCart_v5';
@@ -1063,6 +1277,8 @@ main {
         const DOWNLOAD_MODAL_DISMISSED_KEY = 'downloadModalDismissed_DL_v2';
         const DOWNLOAD_BANNER_DISMISSED_KEY = 'downloadBannerDismissed_DL_v1';
         const PRESENTATION_VIDEO_SHOWN_KEY = 'presentationVideoShown_v1';
+        const APP_DOWNLOAD_LINK = "https://drive.google.com/file/d/1JN1qbrX2JB7P5apVzzhtBy5x2hBPxCWa/view?usp=drive_link";
+
         let clientData = null;
         let menuItems = [];
         let availableRewards = [];
@@ -1070,10 +1286,12 @@ main {
         let currentFilterCategory = 'all';
         let currentSortOption = 'default';
         const loadingSpinnerUser = document.getElementById('loadingSpinnerUser');
-        let registrationModalInstance, loginModalInstance, cartModalInstance, downloadAppModalInstance, productDetailModalInstance, sharePageModalInstance, confirmClearCartModalInstance, confirmRedeemRewardModalInstance, presentationVideoModalInstance;
+        let registrationModalInstance, loginModalInstance, cartModalInstance, downloadAppModalInstance, productDetailModalInstance, sharePageModalInstance, confirmClearCartModalInstance, confirmRedeemRewardModalInstance, presentationVideoModalInstance, helpModalInstance;
         let floatingCartButtonEl;
         let floatingCartCountEl;
-        let qrcodeInstance = null;
+        let qrcodePageInstance = null; 
+        let qrcodeAppInstance = null; 
+
 
         document.addEventListener('DOMContentLoaded', async function() {
             floatingCartButtonEl = document.getElementById('floatingCartButton');
@@ -1084,12 +1302,13 @@ main {
             updateClientDisplayAndUI();
             await loadMenuItems();
             setupEventListeners();
-            handleAppDownloadPromotion(); // Debe ir después de handlePresentationVideo si el video afecta su lógica de tiempo
+            handleAppDownloadPromotion(); 
             handleScroll();
-            initializeShareModal();
+            initializeShareModal(); 
             setupShareEventListeners();
             setupFloatingButtonFeedback();
-            handlePresentationVideo(); // Llamada para el video de presentación
+            handlePresentationVideo(); 
+            setupNavbarToggler(); 
 
             const confirmClearCartBtn = document.getElementById('confirmClearCartButton');
             if (confirmClearCartBtn) {
@@ -1123,7 +1342,70 @@ main {
                     generateMenu();
                 });
             }
+
+            // Para asegurar que los IDs del acordeón de ayuda son únicos
+            const helpAccordionItems = document.querySelectorAll('#helpAccordion .accordion-collapse');
+            helpAccordionItems.forEach((item, index) => {
+                const newId = `collapseHelp${index}`;
+                const button = item.previousElementSibling.querySelector('button');
+                item.id = newId;
+                if (button) {
+                    button.setAttribute('data-bs-target', `#${newId}`);
+                    button.setAttribute('aria-controls', newId);
+                }
+            });
         });
+
+        function setupNavbarToggler() {
+            const navLinks = document.querySelectorAll('#navbarNavContent .nav-link, #navbarNavContent .dropdown-item');
+            const navbarToggler = document.querySelector('.navbar-toggler');
+            const navbarCollapseEl = document.getElementById('navbarNavContent'); // Elemento del DOM
+            let navbarCollapseInstance = null; // Instancia de Bootstrap Collapse
+
+            if (navbarCollapseEl) {
+                navbarCollapseInstance = bootstrap.Collapse.getOrCreateInstance(navbarCollapseEl, {toggle: false});
+            }
+        
+            navLinks.forEach(link => {
+                link.addEventListener('click', (event) => {
+                    // Solo colapsar si el menú está visible (en modo hamburguesa) y el toggler está visible
+                    const isTogglerVisible = getComputedStyle(navbarToggler).display !== 'none';
+                    const isMenuExpanded = navbarCollapseEl.classList.contains('show');
+
+                    if (isMenuExpanded && isTogglerVisible) {
+                         // Evitar que un dropdown se cierre al hacer clic en un item que abre un modal,
+                         // o si el propio enlace es un dropdown-toggle
+                        const opensModal = link.getAttribute('data-bs-toggle') === 'modal';
+                        const isDropdownToggle = link.classList.contains('dropdown-toggle');
+                        
+                        if (!opensModal && !isDropdownToggle) {
+                            if (navbarCollapseInstance) {
+                                navbarCollapseInstance.hide();
+                            }
+                        }
+                    }
+                });
+            });
+        }
+        
+        function showTabAndScroll(tabLinkId) {
+            const tabLink = document.getElementById(tabLinkId);
+            if (tabLink) {
+                const tabInstance = bootstrap.Tab.getOrCreateInstance(tabLink);
+                tabInstance.show();
+                
+                const tabPaneId = tabLink.getAttribute('href'); 
+                if (tabPaneId) {
+                    const tabPane = document.querySelector(tabPaneId);
+                    if (tabPane) {
+                        setTimeout(() => {
+                            tabPane.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        }, 150);
+                    }
+                }
+            }
+        }
+
 
         function handleScroll() {
             const quickNav = document.getElementById('quick-nav-buttons');
@@ -1131,10 +1413,10 @@ main {
             if (!quickNav || !goDownBtn) return;
 
             const floatingButtonsContainer = document.querySelector('.floating-buttons-container');
-            let fabContainerBottom = 25;
-            if (floatingButtonsContainer) {
+            let fabContainerBottom = 25; 
+             if (floatingButtonsContainer) {
                 const style = window.getComputedStyle(floatingButtonsContainer);
-                fabContainerBottom = parseFloat(style.bottom) || fabContainerBottom;
+                fabContainerBottom = parseFloat(style.bottom) || fabContainerBottom; 
             }
 
             if (window.scrollY > 300) {
@@ -1142,8 +1424,12 @@ main {
             } else {
                 quickNav.style.display = 'none';
             }
+            
+            let pageBottomOffset = 100; 
+            const footer = document.getElementById('bottom');
+            if (footer) pageBottomOffset += footer.offsetHeight;
 
-            const nearBottom = (window.innerHeight + window.scrollY) >= document.body.offsetHeight - (fabContainerBottom + 100);
+            const nearBottom = (window.innerHeight + window.scrollY) >= (document.body.offsetHeight - pageBottomOffset);
             goDownBtn.style.display = nearBottom ? 'none' : 'flex';
         }
 
@@ -1184,7 +1470,7 @@ main {
 
         function initializeModals() {
             try {
-                ['registerUserModal', 'loginModal', 'cartModal', 'downloadAppModal', 'productDetailModal', 'sharePageModal', 'confirmClearCartModal', 'confirmRedeemRewardModal', 'presentationVideoModal'].forEach(id => {
+                ['registerUserModal', 'loginModal', 'cartModal', 'downloadAppModal', 'productDetailModal', 'sharePageModal', 'confirmClearCartModal', 'confirmRedeemRewardModal', 'presentationVideoModal', 'helpModal'].forEach(id => {
                     const el = document.getElementById(id);
                     if (el) {
                         if (id === 'registerUserModal') registrationModalInstance = new bootstrap.Modal(el);
@@ -1196,6 +1482,7 @@ main {
                         else if (id === 'confirmClearCartModal') confirmClearCartModalInstance = new bootstrap.Modal(el);
                         else if (id === 'confirmRedeemRewardModal') confirmRedeemRewardModalInstance = new bootstrap.Modal(el);
                         else if (id === 'presentationVideoModal') presentationVideoModalInstance = new bootstrap.Modal(el);
+                        else if (id === 'helpModal') helpModalInstance = new bootstrap.Modal(el); 
                     } else { console.warn(`Modal con ID '${id}' no encontrado.`); }
                 });
             } catch (error) { console.error("Error inicializando modales:", error); }
@@ -1249,13 +1536,14 @@ main {
             const bannerEl = document.getElementById('downloadAppBanner');
             const floatingButtonsContainer = document.querySelector('.floating-buttons-container');
             const quickNavButtons = document.getElementById('quick-nav-buttons');
+            const navbarEl = document.querySelector('.navbar-custom.fixed-top');
 
             let totalPaddingBottom = 0;
-            let fabContainerBottomOffset = 25;
-            let quickNavBottomOffset = 260;
+            let fabContainerBottomOffset = 25; 
+            let quickNavBottomOffset = 260; 
 
             if (window.matchMedia("(max-width: 768px)").matches) {
-                fabContainerBottomOffset = 20;
+                fabContainerBottomOffset = 20; 
                 quickNavBottomOffset = 235;
             }
             if (window.matchMedia("(max-width: 576px)").matches) {
@@ -1265,19 +1553,28 @@ main {
 
             if (bannerEl && bannerEl.style.display !== 'none' && !bannerEl.classList.contains('animate__fadeOutDown')) {
                 const bannerHeight = bannerEl.offsetHeight;
-                totalPaddingBottom = bannerHeight + 20;
+                totalPaddingBottom = bannerHeight + 10; 
                 fabContainerBottomOffset += bannerHeight;
                 quickNavBottomOffset += bannerHeight;
             }
-
+            
             bodyEl.style.paddingBottom = totalPaddingBottom + 'px';
+            
+            if (navbarEl) { 
+                const navbarHeight = navbarEl.offsetHeight;
+                // Solo aplicar paddingTop si no se ha aplicado antes o si la altura del navbar ha cambiado
+                if (parseFloat(bodyEl.style.paddingTop) !== navbarHeight) {
+                    bodyEl.style.paddingTop = navbarHeight + 'px';
+                }
+            }
 
             if (floatingButtonsContainer) {
                  floatingButtonsContainer.style.bottom = fabContainerBottomOffset + 'px';
             }
-            if (quickNavButtons) {
+            if (quickNavButtons && quickNavButtons.style.display !== 'none') { 
                 quickNavButtons.style.bottom = quickNavBottomOffset + 'px';
             }
+             handleScroll(); 
         }
 
 
@@ -1295,7 +1592,7 @@ main {
                            downloadAppModalInstance.show();
                         }
                     }
-                }, (videoAlreadyShown !== 'true' && !videoAlreadyShown) ? 6000 : 1500);
+                }, (videoAlreadyShown !== 'true' && !videoAlreadyShown) ? 7000 : 2500); // Aumentado delay si el video no se ha mostrado
             }
 
             if (downloadModalEl && dontShowCheckbox) {
@@ -1307,9 +1604,9 @@ main {
             }
             const bannerDismissed = localStorage.getItem(DOWNLOAD_BANNER_DISMISSED_KEY);
             if (bannerEl && !bannerDismissed) {
-                let bannerDelay = 2500;
+                let bannerDelay = 3500; // Delay base banner
                 if (!localStorage.getItem(DOWNLOAD_MODAL_DISMISSED_KEY) || (videoAlreadyShown !== 'true' && !videoAlreadyShown) ) {
-                    bannerDelay = 10000;
+                    bannerDelay = 12000; // Mayor delay si modal de app o video no se han visto/ignorado
                 }
                 setTimeout(() => {
                     const presentationModalIsActive = document.getElementById('presentationVideoModal')?.classList.contains('show');
@@ -1347,9 +1644,17 @@ main {
 
             if (!videoAlreadyShown || videoAlreadyShown === 'false') {
                 if (presentationVideoModalInstance && videoElement) {
-                    presentationVideoModalInstance.show();
+                    // Solo mostrar automáticamente si no hay otro modal principal activo
+                    const anyMajorModalActive = ['loginModal', 'registerUserModal', 'cartModal', 'downloadAppModal', 'helpModal'].some(id => {
+                        const modal = document.getElementById(id);
+                        return modal && modal.classList.contains('show');
+                    });
+
+                    if (!anyMajorModalActive) {
+                        setTimeout(() => presentationVideoModalInstance.show(), 1000); // Ligero delay
+                    }
                 } else {
-                    console.warn("Modal de video o elemento de video no encontrado para mostrar.");
+                    console.warn("Modal de video o elemento de video no encontrado para mostrar automáticamente.");
                 }
             }
 
@@ -1440,12 +1745,13 @@ main {
 
         function updateClientDisplayAndUI() {
             const el = id => document.getElementById(id);
-            const authNavContainer = el('auth-buttons-nav');
+            const authNavContainer = el('auth-buttons-nav'); 
             const logoutNavButton = el('logoutButtonNav');
             const vipCardContainer = el('vip-card-container');
             const guestPromptContainer = el('guest-prompt');
             const userAvatarImg = el('user-avatar');
-            const myOrdersTabLink = el('my-orders-tab-link');
+            const myOrdersTabLink = el('my-orders-tab-link'); 
+            
             if (clientData && clientData.id && (clientData.verificado === true || String(clientData.verificado).toLowerCase() === 'true')) {
                 el('client-name').textContent = `¡Hola, ${clientData.nombre ? clientData.nombre.split(' ')[0] : 'Cliente'}!`;
                 el('client-points').textContent = clientData.puntos !== undefined ? clientData.puntos : 0;
@@ -1497,6 +1803,7 @@ main {
             handleAppDownloadPromotion();
         }
 
+        // <!-- MODIFICADO: Validación para correo obligatorio -->
         async function handleUserRegistrationAttempt() {
             const nombre = document.getElementById('newUserName').value.trim();
             const telefono = document.getElementById('newUserPhone').value.trim();
@@ -1504,8 +1811,12 @@ main {
             const password = document.getElementById('newUserPassword').value;
             const confirmPassword = document.getElementById('newUserConfirmPassword').value;
             const feedbackElId = 'registration-feedback';
-            if (!nombre || !telefono || !password || !confirmPassword) {
+            
+            if (!nombre || !telefono || !email || !password || !confirmPassword) { // Añadido !email
                 showFeedbackInModal(null, feedbackElId, 'Todos los campos marcados con * son requeridos.', 'danger'); return;
+            }
+            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { // Validación básica de formato de email
+                showFeedbackInModal(null, feedbackElId, 'Por favor, ingresa un correo electrónico válido.', 'danger'); return;
             }
             if (password !== confirmPassword) {
                 showFeedbackInModal(null, feedbackElId, 'Las contraseñas no coinciden.', 'danger'); return;
@@ -1669,7 +1980,7 @@ main {
                     menuItems = JSON.parse(cachedProducts);
                     generatePopularItems();
                     generateCategoryFilters();
-                    generateMenu(); // No filterMenuByCategory, sino generateMenu directamente
+                    generateMenu(); 
                     return;
                 } catch(e) {
                     localStorage.removeItem(PRODUCTS_USER_CACHE_KEY);
@@ -1692,7 +2003,7 @@ main {
                 localStorage.setItem(MENU_CACHE_EXPIRY_KEY, (now + CACHE_DURATION_MS).toString());
                 generatePopularItems();
                 generateCategoryFilters();
-                generateMenu(); // Llama a generateMenu directamente
+                generateMenu(); 
                 if (forceRefresh) showGlobalFeedback("Menú y combos actualizados.", "success", 2000);
             } else {
                 menuContainer.innerHTML = `<div class="col-12 text-center p-5"><p class="text-danger fs-5">Error al ${forceRefresh ? 'actualizar' : 'cargar'} el menú y combos: ${res.message || 'Desconocido.'}</p></div>`;
@@ -2015,14 +2326,14 @@ main {
                 showFeedbackInModal(null, 'order-placement-feedback', 'El carrito de envío ya está vacío.', 'info', 2000);
                 if (cartModalInstance && document.getElementById('cartModal').classList.contains('show')) {
                 } else if (cartModalInstance) {
-                    cartModalInstance.show();
+                    cartModalInstance.show(); 
                 }
                 return;
             }
 
             if (confirmClearCartModalInstance) {
                 confirmClearCartModalInstance.show();
-            } else {
+            } else { 
                 if (confirm("¿Estás seguro de que quieres vaciar tu carrito de envío?")) {
                     performClearCartActions();
                 }
@@ -2058,16 +2369,16 @@ main {
                     floatingCartButtonEl.classList.remove('animate__zoomIn');
                     floatingCartButtonEl.classList.add('animate__animated', 'animate__zoomOut');
                     setTimeout(() => {
-                        if ( !(totalItems > 0 && clientData && clientData.id) ) {
+                        if ( !(totalItems > 0 && clientData && clientData.id) ) { 
                            floatingCartButtonEl.style.display = 'none';
                         }
-                    }, 500);
+                    }, 500); 
                 }
                 floatingCartCountEl.textContent = totalItems;
             }
             const pointsEl = document.getElementById('cart-points-to-earn');
             if(pointsEl) pointsEl.textContent = Array.isArray(shoppingCart) ? shoppingCart.reduce((s,i)=>s+((i.points||0)*(i.quantity||0)),0) : 0;
-            adjustBodyPaddingAndFabPosition();
+            adjustBodyPaddingAndFabPosition(); 
         }
 
         function renderCartItems() {
@@ -2213,7 +2524,7 @@ main {
                             <i class="bi bi-box-seam-fill display-1 text-muted opacity-50 mb-3"></i>
                             <h4 class="text-light mb-2">Aún no tienes envíos registrados</h4>
                             <p class="text-muted mb-3">Parece que todavía no has enviado nada. ¿Listo para sorprender a alguien?</p>
-                            <button class="btn btn-primary" onclick="document.getElementById('menu-tab-link').click(); new bootstrap.Tab(document.getElementById('menu-tab-link')).show()">
+                            <button class="btn btn-primary" onclick="showTabAndScroll('menu-tab-link')">
                                 <i class="bi bi-card-list me-2"></i>Explorar Menú y Combos
                             </button>
                         </div>`;
@@ -2353,7 +2664,7 @@ main {
                         <i class="bi bi-gift-fill display-1 text-muted opacity-50 mb-3"></i>
                         <h4 class="text-light mb-2">Aún no hay recompensas disponibles</h4>
                         <p class="text-muted mb-3">Sigue realizando envíos para acumular puntos y estate atento a nuevas recompensas. ¡Pronto podrías canjear grandes beneficios!</p>
-                        <button class="btn btn-primary" onclick="document.getElementById('menu-tab-link').click(); new bootstrap.Tab(document.getElementById('menu-tab-link')).show()">
+                        <button class="btn btn-primary" onclick="showTabAndScroll('menu-tab-link')">
                             <i class="bi bi-bag-heart-fill me-2"></i>Hacer un Envío y Ganar Puntos
                         </button>
                     </div>`;
@@ -2457,7 +2768,7 @@ main {
                                     </div>`;
                             }
                             if (modalFooterEl) modalFooterEl.innerHTML = `<button type="button" class="btn btn-primary" data-bs-dismiss="modal">Cerrar</button>`;
-                            loadAvailableRewards(true);
+                            loadAvailableRewards(true); 
                         } else {
                             if (modalFeedbackEl) modalFeedbackEl.innerHTML = `<div class="alert alert-danger py-2 small">${result.message || "No se pudo canjear. Intenta de nuevo."}</div>`;
                             if(confirmButtonDynamic) confirmButtonDynamic.disabled = false;
@@ -2468,7 +2779,7 @@ main {
 
             if (confirmRedeemRewardModalInstance) {
                 confirmRedeemRewardModalInstance.show();
-            } else {
+            } else { 
                 if (confirm(`¿Canjear "${reward.name}" por ${reward.pointsrequired} puntos para un próximo envío?`)) {
                      showGlobalFeedback("Procesando canje...", "info", null);
                      const resultFallback = await fetchDataFromGAS('redeemReward', 'POST', { clientId: String(clientData.id), rewardId: rewardId });
@@ -2483,7 +2794,7 @@ main {
                             localStorage.setItem(LOGGED_IN_CLIENT_KEY, JSON.stringify(clientData));
                             updateClientDisplayAndUI();
                         }
-                        loadAvailableRewards(true);
+                        loadAvailableRewards(true); 
                      } else {
                         showGlobalFeedback(resultFallback.message || "No se pudo canjear. Intenta de nuevo.", "danger", 7000);
                      }
@@ -2531,40 +2842,61 @@ main {
         function initializeShareModal() {
              const shareModalEl = document.getElementById('sharePageModal');
              if (shareModalEl) {
-                shareModalEl.addEventListener('shown.bs.modal', generateQrCodeForSharing);
+                shareModalEl.addEventListener('shown.bs.modal', generateQrCodesForSharing); 
              }
         }
 
-        function generateQrCodeForSharing() {
-            const qrCanvas = document.getElementById('qrcodeCanvas');
-            if (!qrCanvas) return;
+        function generateQrCodesForSharing() {
+            const qrPageCanvas = document.getElementById('qrcodeCanvas');
+            const qrAppCanvas = document.getElementById('qrcodeAppCanvas'); 
+            
+            if (qrPageCanvas) {
+                qrPageCanvas.innerHTML = '';
+                if (qrcodePageInstance) {
+                    qrcodePageInstance.clear();
+                    qrcodePageInstance = null;
+                }
+                const pageUrl = window.location.href;
+                qrcodePageInstance = new QRCode(qrPageCanvas, {
+                    text: pageUrl, width: 130, height: 130, 
+                    colorDark : "#000000", colorLight : "#ffffff", correctLevel : QRCode.CorrectLevel.H
+                });
 
-            qrCanvas.innerHTML = '';
-            if (qrcodeInstance) {
-                qrcodeInstance.clear();
-                qrcodeInstance = null;
+                const sharePageText = encodeURIComponent(`¡Echa un vistazo a DL Cumanayagua para enviar productos a Cuba! ${pageUrl}`);
+                document.getElementById('shareViaWhatsAppButton').href = `https://wa.me/?text=${sharePageText}`;
+                document.getElementById('shareViaTelegramButton').href = `https://t.me/share/url?url=${encodeURIComponent(pageUrl)}&text=${encodeURIComponent('¡Visita DL Cumanayagua!')}`;
             }
 
-            const pageUrl = window.location.href;
-            qrcodeInstance = new QRCode(qrCanvas, {
-                text: pageUrl,
-                width: 180,
-                height: 180,
-                colorDark : "#000000",
-                colorLight : "#ffffff",
-                correctLevel : QRCode.CorrectLevel.H
-            });
-
-            const shareText = encodeURIComponent(`¡Echa un vistazo a DL Cumanayagua para enviar productos a Cuba! ${pageUrl}`);
-            const whatsappLink = `https://wa.me/?text=${shareText}`;
-            const telegramLink = `https://t.me/share/url?url=${encodeURIComponent(pageUrl)}&text=${encodeURIComponent('¡Echa un vistazo a DL Cumanayagua!')}`;
-
-            const shareViaWhatsAppButton = document.getElementById('shareViaWhatsAppButton');
-            if(shareViaWhatsAppButton) shareViaWhatsAppButton.href = whatsappLink;
-
-            const shareViaTelegramButton = document.getElementById('shareViaTelegramButton');
-            if(shareViaTelegramButton) shareViaTelegramButton.href = telegramLink;
+            if (qrAppCanvas) {
+                qrAppCanvas.innerHTML = '';
+                 if (qrcodeAppInstance) {
+                    qrcodeAppInstance.clear();
+                    qrcodeAppInstance = null;
+                }
+                qrcodeAppInstance = new QRCode(qrAppCanvas, {
+                    text: APP_DOWNLOAD_LINK, width: 130, height: 130, 
+                    colorDark : "#000000", colorLight : "#ffffff", correctLevel : QRCode.CorrectLevel.H
+                });
+                const shareAppText = encodeURIComponent(`Descarga la app de DL Cumanayagua para que tu familia en Cuba vea el catálogo: ${APP_DOWNLOAD_LINK}`);
+                document.getElementById('shareAppViaWhatsAppButtonModal').href = `https://wa.me/?text=${shareAppText}`;
+                document.getElementById('shareAppViaTelegramButtonModal').href = `https://t.me/share/url?url=${encodeURIComponent(APP_DOWNLOAD_LINK)}&text=${encodeURIComponent('Descarga la app DL Cumanayagua')}`;
+            }
         }
+
+        function shareAppLinkViaCopy() {
+            navigator.clipboard.writeText(APP_DOWNLOAD_LINK).then(() => {
+                showGlobalFeedback('¡Enlace de descarga de la App copiado!', 'success', 2500);
+            }, (err) => {
+                showGlobalFeedback('Error al copiar enlace de la App.', 'danger');
+                console.error('Error al copiar enlace de la App: ', err);
+            });
+        }
+
+        function shareAppLinkViaWhatsApp() {
+            const message = encodeURIComponent(`Te comparto el enlace para descargar la App de DL Cumanayagua, para que tu familia en Cuba pueda ver el catálogo de productos: ${APP_DOWNLOAD_LINK}`);
+            window.open(`https://wa.me/?text=${message}`, '_blank');
+        }
+
 
         function setupShareEventListeners() {
             const copyLinkButton = document.getElementById('copyLinkButton');
@@ -2572,10 +2904,9 @@ main {
                 copyLinkButton.addEventListener('click', function() {
                     const pageUrl = window.location.href;
                     navigator.clipboard.writeText(pageUrl).then(function() {
-                        showGlobalFeedback('¡Enlace copiado al portapapeles!', 'success', 2000);
-                        if (sharePageModalInstance) sharePageModalInstance.hide();
+                        showGlobalFeedback('¡Enlace de la página copiado!', 'success', 2000);
                     }, function(err) {
-                        showGlobalFeedback('Error al copiar el enlace.', 'danger', 3000);
+                        showGlobalFeedback('Error al copiar el enlace de la página.', 'danger', 3000);
                         console.error('Error al copiar: ', err);
                     });
                 });
