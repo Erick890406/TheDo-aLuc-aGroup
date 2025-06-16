@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="es" style="scroll-behavior: smooth;">
 <head>
@@ -806,7 +807,6 @@ main {
                      <li class="nav-item">
                         <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#helpModal"><i class="bi bi-question-circle me-1"></i>Ayuda</a>
                     </li>
-                    <!-- MODIFICADO: Submenú "Más Opciones" con Video y Compartir -->
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="moreOptionsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             <i class="bi bi-three-dots-vertical me-1"></i>Más
@@ -948,7 +948,6 @@ main {
         </div>
     </div>
     <div class="toast-container position-fixed bottom-0 start-0 p-3" id="toastPlacement" style="z-index: 2050"> </div>
-    <!-- MODIFICADO: Correo ahora es obligatorio -->
     <div class="modal fade" id="registerUserModal" tabindex="-1" aria-labelledby="registerUserModalLabel" aria-hidden="true"><div class="modal-dialog modal-dialog-centered"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="registerUserModalLabel">Crear Cuenta para Envíos</h5><button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button></div><div class="modal-body"><form id="newUserRegistrationForm"><div class="mb-3"><label for="newUserName" class="form-label">Nombre Completo (Tuyo) <span class="text-danger">*</span></label><input type="text" class="form-control" id="newUserName" required autocomplete="name"></div><div class="mb-3"><label for="newUserPhone" class="form-label">Teléfono (Tuyo, con código de país si es de USA) <span class="text-danger">*</span></label><input type="tel" class="form-control" id="newUserPhone" required placeholder="Ej: +1 XXX XXX XXXX" autocomplete="tel"></div><div class="mb-3"><label for="newUserEmail" class="form-label">Correo (Tuyo) <span class="text-danger">*</span></label><input type="email" class="form-control" id="newUserEmail" required autocomplete="email"></div><div class="mb-3"><label for="newUserPassword" class="form-label">Contraseña <span class="text-danger">*</span></label><input type="password" class="form-control" id="newUserPassword" required autocomplete="new-password"></div><div class="mb-3"><label for="newUserConfirmPassword" class="form-label">Confirmar Contraseña <span class="text-danger">*</span></label><input type="password" class="form-control" id="newUserConfirmPassword" required autocomplete="new-password"></div><div id="registration-feedback" class="mt-3"></div></form></div><div class="modal-footer"><button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button><button type="button" class="btn btn-primary" onclick="handleUserRegistrationAttempt()">Registrarme</button></div></div></div></div>
     <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true"><div class="modal-dialog modal-dialog-centered"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="loginModalLabel">Iniciar Sesión para Envíos</h5><button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button></div><div class="modal-body"><form id="loginForm"><div class="mb-3"><label for="loginPhone" class="form-label">Teléfono (Tuyo)</label><input type="tel" class="form-control" id="loginPhone" required autocomplete="username tel"></div><div class="mb-3"><label for="loginPassword" class="form-label">Contraseña</label><input type="password" class="form-control" id="loginPassword" required autocomplete="current-password"></div><div id="login-feedback" class="mt-3"></div></form></div><div class="modal-footer"><button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button><button type="button" class="btn btn-primary" onclick="handleLoginAttempt()">Acceder</button></div></div></div></div>
     <div class="modal fade" id="cartModal" tabindex="-1" aria-labelledby="cartModalLabel" aria-hidden="true"><div class="modal-dialog modal-lg modal-dialog-scrollable modal-dialog-centered"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="cartModalLabel"><i class="bi bi-cart3 me-2"></i>Mi Carrito de Envío</h5><button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button></div><div class="modal-body" id="cart-items-container"><p class="text-center">Tu carrito está vacío.</p></div><div class="modal-footer justify-content-between flex-wrap"><div id="cart-footer-info"><small class="text-muted d-block">Puntos a ganar: <span id="cart-points-to-earn" class="fw-bold">0</span></small><strong class="fs-5">Total: <span id="cart-total-price" style="color: var(--primary-color);">0.00</span> USD</strong><br><small class="text-warning"><i class="bi bi-credit-card-2-front-fill"></i> Pagos por Zelle.</small></div><div class="d-flex mt-2 mt-sm-0" id="cart-footer-buttons"><button type="button" class="btn btn-outline-danger me-2" onclick="clearCart()"><i class="bi bi-trash3 me-1"></i>Vaciar</button><button type="button" class="btn btn-success" onclick="confirmAndPlaceOrder()"><i class="bi bi-check-circle me-1"></i>Confirmar Envío</button></div></div><div id="order-placement-feedback" class="m-3"></div></div></div></div>
@@ -967,6 +966,42 @@ main {
     </div>
     <div class="modal fade" id="productDetailModal" tabindex="-1" aria-labelledby="productDetailModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg modal-dialog-centered"><div class="modal-content"><div class="modal-header border-0"><h5 class="modal-title" id="productDetailModalLabel">Detalles del Producto</h5><button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button></div><div class="modal-body pt-0"><div class="row g-4"><div class="col-md-6"><img src="https://via.placeholder.com/500x600" id="modal-product-image" class="img-fluid" alt="Imagen del producto"></div><div class="col-md-6 d-flex flex-column"><h2 id="modal-product-name" class="mb-2">Nombre del Producto</h2><p id="modal-product-description" class="text-muted flex-grow-1">Descripción detallada del producto...</p><div class="d-flex justify-content-between align-items-center mb-3"><span id="modal-product-price">USD 0.00</span><span class="badge bg-success" id="modal-product-points">+0 Puntos</span></div><div id="modal-add-to-cart-button-container" class="mb-4"></div><div id="modal-recommendations-container"></div></div></div></div></div></div>
+    </div>
+
+    <div class="modal fade" id="rewardDetailModal" tabindex="-1" aria-labelledby="rewardDetailModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header border-0">
+                    <h5 class="modal-title" id="rewardDetailModalLabel">Detalles de la Recompensa</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body pt-0">
+                    <div class="row g-4">
+                        <div class="col-md-5">
+                            <img src="https://via.placeholder.com/500x600" id="modal-reward-image" class="img-fluid" alt="Imagen de la recompensa" style="aspect-ratio: 4 / 5; object-fit: cover; border-radius: 1rem; border: 2px solid var(--accent-color);">
+                        </div>
+                        <div class="col-md-7 d-flex flex-column">
+                            <h2 id="modal-reward-name" class="mb-2" style="font-family: 'Playfair Display', serif; color: var(--accent-color);">Nombre de la Recompensa</h2>
+                            <p id="modal-reward-description" class="text-muted">Descripción detallada de la recompensa...</p>
+                            <div class="d-flex justify-content-between align-items-center my-3">
+                                <span id="modal-reward-points-required" style="color: var(--accent-color); font-size: 1.75rem; font-weight: 700;">0 Puntos</span>
+                                <span class="badge" id="modal-reward-stock-info"></span>
+                            </div>
+                            <div id="modal-redeem-reward-button-container" class="mb-3">
+                                <!-- Botón de canje se insertará aquí -->
+                            </div>
+                            <hr class="border-secondary my-3">
+                            <div id="modal-product-recommendations-for-reward-container">
+                                <h5 class="text-light mb-3" style="font-weight: 600;"><i class="bi bi-hand-thumbs-up-fill me-2"></i>Productos que te podrían gustar:</h5>
+                                <div id="reward-modal-product-recs-row" class="row g-2">
+                                    <!-- Recomendaciones de productos -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <div class="modal fade" id="sharePageModal" tabindex="-1" aria-labelledby="sharePageModalLabel" aria-hidden="true">
@@ -1144,7 +1179,6 @@ main {
                                         <li><strong>Ver tus Puntos:</strong> El total de tus puntos disponibles se muestra en tu tarjeta VIP al iniciar sesión.</li>
                                         <li><strong>Sección Recompensas:</strong> Aquí encontrarás productos o beneficios especiales que puedes canjear utilizando tus puntos acumulados.</li>
                                         <li><strong>Canjear Recompensas:</strong> Si tienes suficientes puntos, podrás canjear una recompensa. Esta se aplicará a un futuro envío o según se especifique. Deberás notificarnos por WhatsApp al canjear para coordinar.</li>
-                                        <!-- MODIFICADO: Mención sobre no dar puntos iniciales -->
                                         <li><strong>Puntos de Bienvenida:</strong> Actualmente, no se otorgan puntos de bienvenida al registrarse. Los puntos se ganan a través de las compras.</li>
                                     </ul>
                                 </div>
@@ -1270,7 +1304,7 @@ main {
         const REWARDS_USER_CACHE_KEY = 'cafeteriaUserRewardsCache_v3';
         const REWARDS_CACHE_EXPIRY_KEY = 'cafeteriaRewardsCacheExpiry_v1';
         const MENU_CACHE_EXPIRY_KEY = 'cafeteriaMenuCacheExpiry_v1';
-        const CACHE_DURATION_MS = 60 * 60 * 1000;
+        const CACHE_DURATION_MS = 60 * 60 * 1000; // 1 hour
         const MAX_AVATAR_DIMENSION = 200;
         const AVATAR_JPEG_QUALITY = 0.75;
         const LOCAL_AVATAR_DATA_KEY = 'localAvatarDataUrl_v1';
@@ -1286,7 +1320,7 @@ main {
         let currentFilterCategory = 'all';
         let currentSortOption = 'default';
         const loadingSpinnerUser = document.getElementById('loadingSpinnerUser');
-        let registrationModalInstance, loginModalInstance, cartModalInstance, downloadAppModalInstance, productDetailModalInstance, sharePageModalInstance, confirmClearCartModalInstance, confirmRedeemRewardModalInstance, presentationVideoModalInstance, helpModalInstance;
+        let registrationModalInstance, loginModalInstance, cartModalInstance, downloadAppModalInstance, productDetailModalInstance, sharePageModalInstance, confirmClearCartModalInstance, confirmRedeemRewardModalInstance, presentationVideoModalInstance, helpModalInstance, rewardDetailModalInstance;
         let floatingCartButtonEl;
         let floatingCartCountEl;
         let qrcodePageInstance = null; 
@@ -1343,7 +1377,6 @@ main {
                 });
             }
 
-            // Para asegurar que los IDs del acordeón de ayuda son únicos
             const helpAccordionItems = document.querySelectorAll('#helpAccordion .accordion-collapse');
             helpAccordionItems.forEach((item, index) => {
                 const newId = `collapseHelp${index}`;
@@ -1359,8 +1392,8 @@ main {
         function setupNavbarToggler() {
             const navLinks = document.querySelectorAll('#navbarNavContent .nav-link, #navbarNavContent .dropdown-item');
             const navbarToggler = document.querySelector('.navbar-toggler');
-            const navbarCollapseEl = document.getElementById('navbarNavContent'); // Elemento del DOM
-            let navbarCollapseInstance = null; // Instancia de Bootstrap Collapse
+            const navbarCollapseEl = document.getElementById('navbarNavContent');
+            let navbarCollapseInstance = null;
 
             if (navbarCollapseEl) {
                 navbarCollapseInstance = bootstrap.Collapse.getOrCreateInstance(navbarCollapseEl, {toggle: false});
@@ -1368,13 +1401,10 @@ main {
         
             navLinks.forEach(link => {
                 link.addEventListener('click', (event) => {
-                    // Solo colapsar si el menú está visible (en modo hamburguesa) y el toggler está visible
                     const isTogglerVisible = getComputedStyle(navbarToggler).display !== 'none';
                     const isMenuExpanded = navbarCollapseEl.classList.contains('show');
 
                     if (isMenuExpanded && isTogglerVisible) {
-                         // Evitar que un dropdown se cierre al hacer clic en un item que abre un modal,
-                         // o si el propio enlace es un dropdown-toggle
                         const opensModal = link.getAttribute('data-bs-toggle') === 'modal';
                         const isDropdownToggle = link.classList.contains('dropdown-toggle');
                         
@@ -1441,18 +1471,22 @@ main {
                     console.log("Limpiando localStorage...");
                     localStorage.clear();
                     console.log("localStorage limpiado.");
+
                     console.log("Limpiando sessionStorage...");
                     sessionStorage.clear();
                     console.log("sessionStorage limpiado.");
-                    if ('serviceWorker' in navigator) {
+
+                    if ('serviceWorker' in navigator && navigator.serviceWorker.getRegistrations) {
                         console.log("Intentando desregistrar Service Workers...");
                         const registrations = await navigator.serviceWorker.getRegistrations();
                         for (let registration of registrations) {
                             await registration.unregister();
-                            console.log('Service Worker desregistrado:', registration);
+                            console.log('Service Worker desregistrado:', registration.scope);
                         }
+                        console.log("Service Workers desregistrados (si los había).");
                     }
-                    if (window.caches) {
+
+                    if (window.caches && window.caches.keys) {
                         console.log("Intentando limpiar caché de la API de Cache...");
                         const keys = await window.caches.keys();
                         await Promise.all(keys.map(key => window.caches.delete(key)));
@@ -1460,17 +1494,33 @@ main {
                     }
                 } catch (error) {
                     console.error("Error durante la limpieza de caché:", error);
-                    showGlobalFeedback("Error al limpiar algunos datos.", "warning");
+                    showGlobalFeedback("Error al limpiar algunos datos de caché.", "warning");
                 }
-                setTimeout(() => {
-                    location.reload(true);
-                }, 1500);
+
+                try {
+                    const baseUrl = window.location.origin + window.location.pathname;
+                    const timestamp = new Date().getTime();
+                    const newUrl = `${baseUrl}?t=${timestamp}`; 
+                    console.log(`Intentando recargar con URL para evitar caché: ${newUrl}`);
+                    window.location.href = newUrl;
+
+                    setTimeout(() => {
+                        console.log("Fallback: intentando location.reload(true) después de la navegación por URL.");
+                        window.location.reload(true);
+                    }, 1500); 
+                } catch (e) {
+                    console.error("Error al intentar recargar la página con URL:", e);
+                    console.log("Fallback final: intentando location.reload(true) directamente.");
+                    setTimeout(() => { 
+                        window.location.reload(true);
+                    }, 1500);
+                }
             }
         }
 
         function initializeModals() {
             try {
-                ['registerUserModal', 'loginModal', 'cartModal', 'downloadAppModal', 'productDetailModal', 'sharePageModal', 'confirmClearCartModal', 'confirmRedeemRewardModal', 'presentationVideoModal', 'helpModal'].forEach(id => {
+                ['registerUserModal', 'loginModal', 'cartModal', 'downloadAppModal', 'productDetailModal', 'sharePageModal', 'confirmClearCartModal', 'confirmRedeemRewardModal', 'presentationVideoModal', 'helpModal', 'rewardDetailModal'].forEach(id => {
                     const el = document.getElementById(id);
                     if (el) {
                         if (id === 'registerUserModal') registrationModalInstance = new bootstrap.Modal(el);
@@ -1483,6 +1533,7 @@ main {
                         else if (id === 'confirmRedeemRewardModal') confirmRedeemRewardModalInstance = new bootstrap.Modal(el);
                         else if (id === 'presentationVideoModal') presentationVideoModalInstance = new bootstrap.Modal(el);
                         else if (id === 'helpModal') helpModalInstance = new bootstrap.Modal(el); 
+                        else if (id === 'rewardDetailModal') rewardDetailModalInstance = new bootstrap.Modal(el);
                     } else { console.warn(`Modal con ID '${id}' no encontrado.`); }
                 });
             } catch (error) { console.error("Error inicializando modales:", error); }
@@ -1562,7 +1613,6 @@ main {
             
             if (navbarEl) { 
                 const navbarHeight = navbarEl.offsetHeight;
-                // Solo aplicar paddingTop si no se ha aplicado antes o si la altura del navbar ha cambiado
                 if (parseFloat(bodyEl.style.paddingTop) !== navbarHeight) {
                     bodyEl.style.paddingTop = navbarHeight + 'px';
                 }
@@ -1592,7 +1642,7 @@ main {
                            downloadAppModalInstance.show();
                         }
                     }
-                }, (videoAlreadyShown !== 'true' && !videoAlreadyShown) ? 7000 : 2500); // Aumentado delay si el video no se ha mostrado
+                }, (videoAlreadyShown !== 'true' && !videoAlreadyShown) ? 7000 : 2500);
             }
 
             if (downloadModalEl && dontShowCheckbox) {
@@ -1604,9 +1654,9 @@ main {
             }
             const bannerDismissed = localStorage.getItem(DOWNLOAD_BANNER_DISMISSED_KEY);
             if (bannerEl && !bannerDismissed) {
-                let bannerDelay = 3500; // Delay base banner
+                let bannerDelay = 3500;
                 if (!localStorage.getItem(DOWNLOAD_MODAL_DISMISSED_KEY) || (videoAlreadyShown !== 'true' && !videoAlreadyShown) ) {
-                    bannerDelay = 12000; // Mayor delay si modal de app o video no se han visto/ignorado
+                    bannerDelay = 12000;
                 }
                 setTimeout(() => {
                     const presentationModalIsActive = document.getElementById('presentationVideoModal')?.classList.contains('show');
@@ -1644,14 +1694,13 @@ main {
 
             if (!videoAlreadyShown || videoAlreadyShown === 'false') {
                 if (presentationVideoModalInstance && videoElement) {
-                    // Solo mostrar automáticamente si no hay otro modal principal activo
                     const anyMajorModalActive = ['loginModal', 'registerUserModal', 'cartModal', 'downloadAppModal', 'helpModal'].some(id => {
                         const modal = document.getElementById(id);
                         return modal && modal.classList.contains('show');
                     });
 
                     if (!anyMajorModalActive) {
-                        setTimeout(() => presentationVideoModalInstance.show(), 1000); // Ligero delay
+                        setTimeout(() => presentationVideoModalInstance.show(), 1000);
                     }
                 } else {
                     console.warn("Modal de video o elemento de video no encontrado para mostrar automáticamente.");
@@ -1803,7 +1852,6 @@ main {
             handleAppDownloadPromotion();
         }
 
-        // <!-- MODIFICADO: Validación para correo obligatorio -->
         async function handleUserRegistrationAttempt() {
             const nombre = document.getElementById('newUserName').value.trim();
             const telefono = document.getElementById('newUserPhone').value.trim();
@@ -1812,10 +1860,10 @@ main {
             const confirmPassword = document.getElementById('newUserConfirmPassword').value;
             const feedbackElId = 'registration-feedback';
             
-            if (!nombre || !telefono || !email || !password || !confirmPassword) { // Añadido !email
+            if (!nombre || !telefono || !email || !password || !confirmPassword) { 
                 showFeedbackInModal(null, feedbackElId, 'Todos los campos marcados con * son requeridos.', 'danger'); return;
             }
-            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { // Validación básica de formato de email
+            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { 
                 showFeedbackInModal(null, feedbackElId, 'Por favor, ingresa un correo electrónico válido.', 'danger'); return;
             }
             if (password !== confirmPassword) {
@@ -2674,23 +2722,112 @@ main {
             availableRewards.sort((a,b) => (a.pointsrequired||0)-(b.pointsrequired||0));
             availableRewards.forEach(reward => {
                 const ca = cp >= reward.pointsrequired;
-                const hs = isNaN(reward.stock) || reward.stock === 9999 || reward.stock > 0;
-                const cr = ca && hs;
+                const hs = isNaN(reward.stock) || reward.stock === 9999 || reward.stock > 0; // 9999 es stock ilimitado
+                const cr = ca && hs; // Can Redeem
                 const rid = String(reward.rewardid);
                 rc.innerHTML += `
                 <div class="col-6 col-md-6 col-lg-4 d-flex align-items-stretch animate__animated animate__fadeInUp" style="animation-duration: 0.5s;">
                     <div class="reward-card card w-100 ${!cr ? 'opacity-75' : ''}">
-                        <img src="${reward.imageurl || 'https://via.placeholder.com/350x220/F1C40F/2C3E50?text=' + encodeURIComponent(reward.name||'Recompensa')}" class="reward-image card-img-top" alt="${reward.name||'Recompensa'}" loading="lazy">
+                        <img src="${reward.imageurl || 'https://via.placeholder.com/350x220/F1C40F/2C3E50?text=' + encodeURIComponent(reward.name||'Recompensa')}" 
+                             class="reward-image card-img-top" alt="${reward.name||'Recompensa'}" loading="lazy" 
+                             style="cursor: pointer;" onclick="showRewardDetailModal('${rid}')">
                         <div class="card-body d-flex flex-column">
-                            <h5 class="card-title mb-1">${reward.name||'N/A'}</h5>
-                            <p class="card-text small flex-grow-1 mb-3">${reward.description||'Beneficio para tus envíos.'}</p>
+                            <h5 class="card-title mb-1" style="cursor: pointer;" onclick="showRewardDetailModal('${rid}')">${reward.name||'N/A'}</h5>
+                            <p class="card-text small flex-grow-1 mb-3">${(reward.description||'Beneficio para tus envíos.').substring(0,70)}${(reward.description || '').length > 70 ? '...' : ''}</p>
                             <div class="price-points-row d-flex justify-content-between align-items-center mt-auto pt-3">
                                 <span class="fw-bold fs-5" style="color: var(--accent-color);">${reward.pointsrequired} Pts</span>
-                                ${!isNaN(reward.stock) && reward.stock !== 9999 ? `<span class="small text-muted">Disp: ${reward.stock}</span>` : '<span class="small text-muted">Ilimitado!</span>'}
+                                ${!isNaN(reward.stock) && reward.stock !== 9999 ? `<span class="small text-muted">Disp: ${reward.stock}</span>` : (reward.stock === 0 ? `<span class="small text-danger fw-bold">Agotado</span>` : `<span class="small text-muted">Ilimitado</span>`)}
                             </div>
                             <button class="btn btn-warning w-100 mt-3" onclick="attemptRedeemReward('${rid}')" ${!cr?'disabled':''}>
-                                <i class="bi bi-award-fill me-2"></i> ${cr ? 'Canjear para Envío' : (ca&&!hs ? 'Agotado' : 'Puntos Insuficientes')}
+                                <i class="bi bi-award-fill me-2"></i> ${cr ? 'Canjear para Envío' : (ca && !hs && reward.stock === 0 ? 'Agotado' : (ca && !hs ? 'Agotado' : 'Puntos Insuf.'))}
                             </button>
+                        </div>
+                    </div>
+                </div>`;
+            });
+        }
+        
+        async function showRewardDetailModal(rewardId) {
+            if (!availableRewards || availableRewards.length === 0) await loadAvailableRewards(); 
+            const reward = availableRewards.find(r => r.rewardid === rewardId);
+
+            if (!reward) {
+                showGlobalFeedback("Recompensa no encontrada.", "danger");
+                return;
+            }
+
+            document.getElementById('modal-reward-image').src = reward.imageurl || 'https://via.placeholder.com/500x600/E67E22/FAFAFA?text=' + encodeURIComponent(reward.name || 'Recompensa');
+            document.getElementById('modal-reward-name').textContent = reward.name || 'Sin Nombre';
+            document.getElementById('modal-reward-description').textContent = reward.description || 'Descripción no disponible.';
+            document.getElementById('modal-reward-points-required').textContent = `${reward.pointsrequired || 0} Puntos`;
+
+            const stockInfoEl = document.getElementById('modal-reward-stock-info');
+            if (!isNaN(reward.stock) && reward.stock !== 9999) {
+                stockInfoEl.textContent = `Disponibles: ${reward.stock}`;
+                stockInfoEl.className = reward.stock > 0 ? 'badge bg-success' : 'badge bg-danger';
+            } else if (reward.stock === 0) { // Específicamente para cuando el stock es 0 (no ilimitado)
+                 stockInfoEl.textContent = `Agotado`;
+                 stockInfoEl.className = 'badge bg-danger fw-bold';
+            } else { // Stock es 9999 o NaN, interpretado como ilimitado
+                stockInfoEl.textContent = 'Ilimitado';
+                stockInfoEl.className = 'badge bg-info';
+            }
+
+
+            const redeemBtnContainer = document.getElementById('modal-redeem-reward-button-container');
+            const clientPoints = clientData ? (parseInt(clientData.puntos) || 0) : 0;
+            const canAfford = clientPoints >= reward.pointsrequired;
+            const hasStock = isNaN(reward.stock) || reward.stock === 9999 || reward.stock > 0;
+            const canRedeem = canAfford && hasStock && clientData && clientData.id;
+
+            if (canRedeem) {
+                redeemBtnContainer.innerHTML = `<button class="btn btn-warning btn-lg w-100" onclick="redeemFromDetailModal('${reward.rewardid}')"><i class="bi bi-award-fill me-2"></i>Canjear por ${reward.pointsrequired} Pts</button>`;
+            } else if (clientData && clientData.id) {
+                let reason = "";
+                if (!canAfford) reason = "Puntos insuficientes.";
+                else if (!hasStock) reason = "Recompensa agotada.";
+                redeemBtnContainer.innerHTML = `<button class="btn btn-secondary btn-lg w-100" disabled><i class="bi bi-x-octagon-fill me-2"></i>No canjeable (${reason})</button>`;
+            } else {
+                 redeemBtnContainer.innerHTML = `<button class="btn btn-outline-light btn-lg w-100" onclick="if(rewardDetailModalInstance) rewardDetailModalInstance.hide(); loginModalInstance.show();"><i class="bi bi-person-check-fill me-2"></i>Iniciar sesión para canjear</button>`;
+            }
+            
+            generateProductRecommendationsForRewardModal();
+            if(rewardDetailModalInstance) rewardDetailModalInstance.show();
+        }
+
+        function redeemFromDetailModal(rewardId) {
+            if(rewardDetailModalInstance) rewardDetailModalInstance.hide();
+            attemptRedeemReward(rewardId);
+        }
+
+        function generateProductRecommendationsForRewardModal() {
+            const recommendationsContainer = document.getElementById('reward-modal-product-recs-row');
+            if (!recommendationsContainer) return;
+            recommendationsContainer.innerHTML = ''; 
+
+            if (!menuItems || menuItems.length === 0) {
+                recommendationsContainer.innerHTML = '<p class="text-muted small col-12">No hay productos para recomendar en este momento.</p>';
+                return;
+            }
+
+            let candidates = [...menuItems];
+            candidates.sort(() => 0.5 - Math.random()); 
+            
+            const finalRecommendations = candidates.slice(0, 3); 
+
+            if (finalRecommendations.length === 0) {
+                recommendationsContainer.innerHTML = '<p class="text-muted small col-12">No hay productos para recomendar.</p>';
+                return;
+            }
+
+            finalRecommendations.forEach(rec => {
+                recommendationsContainer.innerHTML += `
+                <div class="col-4">
+                    <div class="recommendation-card" onclick="if(rewardDetailModalInstance) rewardDetailModalInstance.hide(); showProductDetailModal('${rec.id}');">
+                        <img src="${rec.imageurl || 'https://via.placeholder.com/150/21243D/FAFAFA?text=' + encodeURIComponent(rec.name)}" alt="${rec.name}" loading="lazy">
+                        <div class="p-2">
+                            <div class="rec-title">${rec.name}</div>
+                            <small class="text-primary fw-bold d-block mt-1">USD ${rec.price.toFixed(2)}</small>
                         </div>
                     </div>
                 </div>`;
@@ -2762,12 +2899,15 @@ main {
                                     <div class="alert alert-success py-2 small">
                                         ${result.message || "¡Recompensa canjeada con éxito!"}
                                         <hr class="my-2">
-                                        <a href="${whatsappUrl}" target="_blank" class="btn btn-sm btn-success w-100" onclick="if(confirmRedeemRewardModalInstance) confirmRedeemRewardModalInstance.hide();">
+                                        <a href="${whatsappUrl}" target="_blank" class="btn btn-sm btn-success w-100" 
+                                           onclick="if(confirmRedeemRewardModalInstance) confirmRedeemRewardModalInstance.hide(); if(rewardDetailModalInstance && rewardDetailModalInstance._isShown) rewardDetailModalInstance.hide();"> 
                                             <i class="bi bi-whatsapp me-2"></i>Notificar Canje por WhatsApp
                                         </a>
                                     </div>`;
                             }
-                            if (modalFooterEl) modalFooterEl.innerHTML = `<button type="button" class="btn btn-primary" data-bs-dismiss="modal">Cerrar</button>`;
+                            if (modalFooterEl) {
+                                modalFooterEl.innerHTML = `<button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="if(rewardDetailModalInstance && rewardDetailModalInstance._isShown) rewardDetailModalInstance.hide();">Cerrar</button>`;
+                            }
                             loadAvailableRewards(true); 
                         } else {
                             if (modalFeedbackEl) modalFeedbackEl.innerHTML = `<div class="alert alert-danger py-2 small">${result.message || "No se pudo canjear. Intenta de nuevo."}</div>`;
