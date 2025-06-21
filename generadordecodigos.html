@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generador de Código de Afiliado Configurable</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #f4f7f6;
+            margin: 0;
+            color: #333;
+            padding: 20px 0; /* Espacio para scroll si el contenido es mucho */
+        }
+
+        .container {
+            background-color: #ffffff;
+            padding: 30px 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 90%;
+            max-width: 500px; /* Un poco más ancho para las opciones */
+        }
+
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 25px;
+            font-size: 1.8em;
+        }
+
+        .settings {
+            margin-bottom: 25px;
+            text-align: left;
+            border: 1px solid #e0e0e0;
+            padding: 20px;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+        }
+
+        .settings fieldset {
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 10px 15px;
+            margin-bottom: 15px;
+        }
+        .settings legend {
+            padding: 0 5px;
+            font-weight: bold;
+            color: #34495e;
+        }
+
+        .setting-group {
+            margin-bottom: 15px;
+            display: flex;
+            flex-direction: column; /* Apila label e input */
+            gap: 5px;
+        }
+        .setting-group:last-child {
+            margin-bottom: 0;
+        }
+
+        .setting-group label {
+            font-weight: normal;
+            margin-bottom: 5px;
+            color: #555;
+            display: block; /* Para que el input numérico no se ponga al lado si es corto */
+        }
+        .setting-group input[type="number"],
+        .setting-group select { /* Aunque no usamos select, es buen estilo */
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        .setting-group input[type="number"] {
+            width: 80px; /* Ancho específico para el número de dígitos */
+        }
+
+
+        .radio-group label, .checkbox-group label {
+            display: inline-flex; /* Para alinear radio/checkbox con el texto */
+            align-items: center;
+            margin-right: 15px;
+            cursor: pointer;
+            font-weight: normal;
+        }
+        .radio-group input[type="radio"], .checkbox-group input[type="checkbox"] {
+            margin-right: 5px;
+        }
+
+
+        .code-display {
+            font-size: 1.8em; /* Un poco más pequeño si el código es largo */
+            font-weight: bold;
+            color: #2980b9;
+            background-color: #ecf0f1;
+            padding: 15px 20px;
+            border-radius: 5px;
+            margin-bottom: 25px;
+            border: 1px dashed #bdc3c7;
+            word-break: break-all;
+            min-height: 1.5em;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            font-size: 1em;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            outline: none;
+        }
+
+        button:hover {
+            background-color: #2980b9;
+        }
+        button:active {
+            background-color: #2471a3;
+        }
+
+        #copy-button {
+            background-color: #2ecc71;
+        }
+        #copy-button:hover {
+            background-color: #27ae60;
+        }
+        #copy-button:active {
+            background-color: #229954;
+        }
+
+        .copy-feedback {
+            margin-top: 15px;
+            color: #27ae60;
+            font-size: 0.9em;
+            height: 1.2em;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Generador de Código de Afiliado</h1>
+
+        <div class="settings">
+            <div class="setting-group">
+                <label for="code-length">Longitud del Código:</label>
+                <input type="number" id="code-length" value="8" min="4" max="32">
+            </div>
+
+            <fieldset>
+                <legend>Tipo de Caracteres:</legend>
+                <div class="radio-group">
+                    <label>
+                        <input type="radio" name="charType" value="uppercase" checked> Mayúsculas
+                    </label>
+                    <label>
+                        <input type="radio" name="charType" value="lowercase"> Minúsculas
+                    </label>
+                    <label>
+                        <input type="radio" name="charType" value="combined"> Combinado
+                    </label>
+                </div>
+            </fieldset>
+            
+            <div class="checkbox-group setting-group">
+                <label>
+                    <input type="checkbox" id="include-numbers" checked> Incluir Números
+                </label>
+            </div>
+        </div>
+        
+        <div id="affiliate-code" class="code-display">
+            <!-- El código generado aparecerá aquí -->
+        </div>
+        
+        <div class="button-group">
+            <button id="generate-button">Generar Código</button>
+            <button id="copy-button" title="Copiar al portapapeles">Copiar</button>
+        </div>
+
+        <div id="copy-feedback" class="copy-feedback">
+            <!-- Feedback de copiado -->
+        </div>
+    </div>
+
+    <script>
+        const codeDisplay = document.getElementById('affiliate-code');
+        const generateButton = document.getElementById('generate-button');
+        const copyButton = document.getElementById('copy-button');
+        const copyFeedback = document.getElementById('copy-feedback');
+
+        const codeLengthInput = document.getElementById('code-length');
+        const includeNumbersCheckbox = document.getElementById('include-numbers');
+        // Los radio buttons se seleccionan por su 'name' y el estado 'checked'
+
+        const CHARS_UPPERCASE = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        const CHARS_LOWERCASE = 'abcdefghijklmnopqrstuvwxyz';
+        const CHARS_NUMBERS = '0123456789';
+
+        function generateAffiliateCode() {
+            const length = parseInt(codeLengthInput.value, 10);
+            const selectedCharType = document.querySelector('input[name="charType"]:checked').value;
+            const includeNumbers = includeNumbersCheckbox.checked;
+
+            let availableChars = '';
+
+            if (selectedCharType === 'uppercase') {
+                availableChars += CHARS_UPPERCASE;
+            } else if (selectedCharType === 'lowercase') {
+                availableChars += CHARS_LOWERCASE;
+            } else if (selectedCharType === 'combined') {
+                availableChars += CHARS_UPPERCASE + CHARS_LOWERCASE;
+            }
+
+            if (includeNumbers) {
+                availableChars += CHARS_NUMBERS;
+            }
+
+            if (availableChars.length === 0) {
+                codeDisplay.textContent = 'Error: Selecciona opciones de caracteres.';
+                return ''; // Retornar vacío para que no intente copiar
+            }
+             if (length < 1 || length > 100) { // Limite de seguridad
+                codeDisplay.textContent = 'Error: Longitud inválida.';
+                return '';
+            }
+
+
+            let code = '';
+            for (let i = 0; i < length; i++) {
+                const randomIndex = Math.floor(Math.random() * availableChars.length);
+                code += availableChars.charAt(randomIndex);
+            }
+            return code;
+        }
+
+        function displayNewCode() {
+            const newCode = generateAffiliateCode();
+            if (newCode) { // Solo actualiza si se generó un código válido
+                codeDisplay.textContent = newCode;
+            }
+            copyFeedback.textContent = ''; 
+        }
+
+        async function copyToClipboard() {
+            const codeToCopy = codeDisplay.textContent;
+            if (!codeToCopy || codeToCopy.startsWith('Error:')) { // No copiar mensajes de error
+                copyFeedback.textContent = 'Primero genera un código válido.';
+                copyFeedback.style.color = '#e74c3c';
+                return;
+            }
+
+            try {
+                await navigator.clipboard.writeText(codeToCopy);
+                copyFeedback.textContent = '¡Copiado al portapapeles!';
+                copyFeedback.style.color = '#27ae60';
+            } catch (err) {
+                console.error('Error al copiar: ', err);
+                copyFeedback.textContent = 'Error al copiar.';
+                copyFeedback.style.color = '#e74c3c';
+                try {
+                    const textArea = document.createElement("textarea");
+                    textArea.value = codeToCopy;
+                    document.body.appendChild(textArea);
+                    textArea.focus();
+                    textArea.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(textArea);
+                    copyFeedback.textContent = '¡Copiado! (Fallback)';
+                    copyFeedback.style.color = '#27ae60';
+                } catch (fallbackErr) {
+                    console.error('Error al copiar con fallback: ', fallbackErr);
+                    copyFeedback.textContent = 'No se pudo copiar automáticamente.';
+                    copyFeedback.style.color = '#e74c3c';
+                }
+            }
+            
+            setTimeout(() => {
+                copyFeedback.textContent = '';
+            }, 3000);
+        }
+
+        generateButton.addEventListener('click', displayNewCode);
+        copyButton.addEventListener('click', copyToClipboard);
+
+        // Opcional: Regenerar si cambian las opciones (puede ser molesto para algunos)
+        // codeLengthInput.addEventListener('change', displayNewCode);
+        // includeNumbersCheckbox.addEventListener('change', displayNewCode);
+        // document.querySelectorAll('input[name="charType"]').forEach(radio => {
+        //     radio.addEventListener('change', displayNewCode);
+        // });
+
+
+        // Generar un código al cargar la página con las opciones por defecto
+        displayNewCode();
+    </script>
+
+</body>
+</html>
