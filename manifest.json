@@ -1,0 +1,62 @@
+{
+  "name": "DL Cumanayagua - Envíos a Cuba",
+  "short_name": "DL Cumanayagua",
+  "description": "Compra fácil y seguro productos, alimentos y regalos para tus seres queridos en Cumanayagua, Cuba. Paga cómodamente desde USA con Zelle.",
+  "lang": "es-ES",
+  "start_url": "/TheDo-aLuc-aGroup/portal-cliente-usd.html",
+  "display": "standalone",
+  "background_color": "#0A192F",
+  "theme_color": "#0A192F",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "https://i.postimg.cc/bwc5SzJG/striking-app-icon-the-letters-dl-in-a-custom-l-1.png",
+      "sizes": "72x72",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "https://i.postimg.cc/bwc5SzJG/striking-app-icon-the-letters-dl-in-a-custom-l-1.png",
+      "sizes": "96x96",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "https://i.postimg.cc/XJxYzHZW/striking-app-icon-the-letters-dl-in-a-custom-l.png",
+      "sizes": "128x128",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "https://i.postimg.cc/XJxYzHZW/striking-app-icon-the-letters-dl-in-a-custom-l.png",
+      "sizes": "144x144",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "https://i.postimg.cc/XJxYzHZW/striking-app-icon-the-letters-dl-in-a-custom-l.png",
+      "sizes": "152x152",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "https://i.postimg.cc/XJxYzHZW/striking-app-icon-the-letters-dl-in-a-custom-l.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "https://i.postimg.cc/XJxYzHZW/striking-app-icon-the-letters-dl-in-a-custom-l.png",
+      "sizes": "384x384",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "https://i.postimg.cc/XJxYzHZW/striking-app-icon-the-letters-dl-in-a-custom-l.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable any"
+    }
+  ],
+  "prefer_related_applications": false
+}
