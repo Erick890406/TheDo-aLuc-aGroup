@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="es" style="scroll-behavior: smooth;">
 <head>
@@ -26,23 +25,26 @@
     <meta name="twitter:description" content="Compra para tu familia en Cumanayagua desde USA. Paga con Zelle. Alimentos, regalos y más. ¡Visítanos!" />
     <meta name="twitter:image" content="https://i.postimg.cc/jjNmrcyw/Meta-Etiqueta.png" />
     <meta name="twitter:image:alt" content="Promoción DL USD Cumanayagua para compras familiares en Cuba" />
-    <style>
+<style>
 :root {
-    --primary-color: #F1C40F;
-    --accent-color: #E67E22;
-    --bg-dark: #141E30;
-    --bg-card: #21243D;
-    --text-light: #FAFAFA;
-    --text-muted: #B0B0B0;
-    --radius-lg: 1.5rem;
-    --shadow-lg: 0 10px 25px rgba(0,0,0,0.25);
-    --transition-fast: all 0.3s ease;
-    --primary-color-rgb: 241,196,15;
+    /* Nueva Paleta Azul - Calma, Poder, Seriedad */
+    --primary-color: #3B7DDD; /* Un azul profesional y confiable para CTAs y acentos principales */
+    --accent-color: #6096BA;  /* Un azul más suave y calmado para acentos secundarios */
+    --bg-dark: #0A192F;       /* Azul marino muy oscuro, casi negro, para el fondo principal - Poder y Seriedad */
+    --bg-card: #172A45;       /* Azul oscuro para tarjetas, ligeramente más claro que el fondo - Profundidad */
+    --text-light: #CCD6F6;    /* Un blanco azulado muy claro para texto sobre fondos oscuros - Calma y legibilidad */
+    --text-muted: #8892B0;    /* Un gris azulado para texto secundario - Sutileza */
+    
+    --radius-lg: 1.25rem; /* Ligeramente menos redondeado para un look más formal */
+    --shadow-lg: 0 8px 20px rgba(0,0,0,0.2);
+    --transition-fast: all 0.25s ease-in-out;
+    --primary-color-rgb: 59, 125, 221; /* RGB de --primary-color */
+    --accent-color-rgb: 96, 150, 186; /* RGB de --accent-color */
 }
 
 body {
     font-family: 'Montserrat', sans-serif;
-    background: linear-gradient(135deg, var(--bg-dark) 0%, #243B55 100%);
+    background: linear-gradient(135deg, var(--bg-dark) 0%, #0D203C 100%); /* Degradado sutil de azules oscuros */
     color: var(--text-light);
     margin: 0;
     padding: 0;
@@ -60,10 +62,13 @@ main {
 .text-muted {
     color: var(--text-muted) !important;
 }
+.text-warning { /* Reemplazar el uso de text-warning con el color primario */
+    color: var(--primary-color) !important;
+}
 
 .navbar-custom {
-    background: #0f1c2d;
-    border-bottom: 1px solid rgba(255,255,255,0.1);
+    background: #071325; /* Un poco más oscuro que bg-dark para distinción */
+    border-bottom: 1px solid rgba(var(--primary-color-rgb),0.2);
     box-shadow: var(--shadow-lg);
     z-index: 1030;
 }
@@ -72,31 +77,39 @@ main {
     font-family: 'Playfair Display', serif;
     font-size: 1.5rem;
     font-weight: bold;
-    color: var(--primary-color) !important;
+    color: var(--text-light) !important; /* Marca en color claro */
 }
+.navbar-brand img { /* Ajustar logo si es necesario */
+    filter: brightness(0) invert(1); /* Ejemplo para hacerlo blanco si es oscuro */
+}
+
 
 .navbar .nav-link,
 .navbar-text {
-    color: var(--text-light);
+    color: var(--text-muted); /* Texto de navegación más sutil */
+}
+.navbar .nav-link:hover,
+.navbar .nav-link.active {
+    color: var(--text-light); /* Resaltar al pasar el mouse o activo */
 }
 .navbar-toggler {
-    border-color: rgba(241, 196, 15, 0.5);
+    border-color: rgba(var(--primary-color-rgb), 0.5);
 }
 .navbar-toggler-icon {
-    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28241, 196, 15, 0.9%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba(var(--primary-color-rgb), 0.9)' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
 }
 .navbar-collapse {
-    background-color: #0f1c2d; 
+    background-color: #071325; /* Consistente con la barra de navegación */
 }
-@media (max-width: 575.98px) { 
+@media (max-width: 575.98px) {
     .navbar-collapse {
         position: absolute;
-        top: 100%; 
+        top: 100%;
         left: 0;
         right: 0;
         padding: 1rem;
         box-shadow: 0 8px 16px rgba(0,0,0,0.3);
-        border-top: 1px solid rgba(255,255,255,0.1);
+        border-top: 1px solid rgba(var(--primary-color-rgb),0.1);
     }
     .navbar-nav .nav-item {
         margin-bottom: 0.5rem;
@@ -106,7 +119,8 @@ main {
         border-radius: 0.5rem;
     }
     .navbar-nav .nav-link:hover {
-        background-color: rgba(255,255,255,0.1);
+        background-color: rgba(var(--primary-color-rgb),0.1);
+        color: var(--primary-color);
     }
 }
 
@@ -114,14 +128,36 @@ main {
 .btn-primary {
     background-color: var(--primary-color);
     border: none;
-    color: #000;
+    color: #fff; /* Texto blanco para contraste con azul primario */
     font-weight: 600;
     transition: var(--transition-fast);
 }
 
 .btn-primary:hover {
-    background-color: #d4ac0d;
+    background-color: #2F67C0; /* Azul primario ligeramente más oscuro al pasar el mouse */
+    color: #fff;
 }
+
+.btn-warning { /* Reemplazar estilos de btn-warning */
+    background-color: var(--primary-color);
+    border: none;
+    color: #fff;
+    font-weight: 600;
+    transition: var(--transition-fast);
+}
+.btn-warning:hover {
+    background-color: #2F67C0;
+    color: #fff;
+}
+.btn-outline-warning { /* Reemplazar estilos de btn-outline-warning */
+    border-color: var(--primary-color);
+    color: var(--primary-color);
+}
+.btn-outline-warning:hover {
+    background-color: var(--primary-color);
+    color: #fff;
+}
+
 
 .btn-outline-secondary {
     border-color: var(--accent-color);
@@ -130,15 +166,15 @@ main {
 
 .btn-outline-secondary:hover {
     background-color: var(--accent-color);
-    color: white;
+    color: var(--text-light);
 }
 
 .menu-item-card,
 .reward-card {
     background: var(--bg-card);
     border-radius: var(--radius-lg);
-    box-shadow: var(--shadow-lg);
-    border: none;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.15); /* Sombra más sutil */
+    border: 1px solid rgba(var(--accent-color-rgb), 0.15); /* Borde sutil */
     display: flex;
     flex-direction: column;
     height: 100%;
@@ -147,8 +183,9 @@ main {
 
 .menu-item-card:hover,
 .reward-card:hover {
-    transform: translateY(-6px);
-    box-shadow: 0 12px 30px rgba(0,0,0,0.4);
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    border-color: rgba(var(--accent-color-rgb), 0.3);
 }
 
 .product-image,
@@ -158,14 +195,14 @@ main {
     object-fit: cover;
     border-top-left-radius: var(--radius-lg);
     border-top-right-radius: var(--radius-lg);
-    border-bottom: 3px solid var(--primary-color);
+    border-bottom: 2px solid var(--accent-color); /* Borde con color de acento */
 }
 
 .card-body {
     flex-grow: 1;
     display: flex;
     flex-direction: column;
-    padding: 1rem;
+    padding: 1.25rem; /* Un poco más de padding */
 }
 
 .card-title {
@@ -191,15 +228,24 @@ main {
     justify-content: space-between;
     align-items: center;
     margin-top: 1rem;
-    padding-top: 0.5rem;
-    border-top: 1px solid rgba(255,255,255,0.1);
+    padding-top: 0.75rem; /* Aumentado */
+    border-top: 1px solid rgba(var(--text-light-rgb, 204, 214, 246),0.1);
 }
+.price-points-row .fw-bold { /* Precio de producto */
+    color: var(--primary-color);
+}
+
 
 .badge {
     font-size: 0.8rem;
     padding: 0.4em 0.6em;
     border-radius: 0.75rem;
 }
+.badge.bg-success { /* Mantener verde para éxito o cambiar a un azul claro */
+    background-color: #28a745 !important; /* O var(--accent-color) si se prefiere */
+    color: white !important;
+}
+
 
 #user-avatar,
 #changeAvatarButton,
@@ -218,13 +264,19 @@ main {
 #filter-container .btn-filter.active,
 #filter-container .btn-filter:hover {
     background: var(--primary-color);
-    color: #2C3E50;
+    color: #fff; /* Texto blanco en botón activo */
 }
 
 .toast {
     border-radius: var(--radius-lg);
     font-weight: 500;
 }
+/* Estilos para toasts ya definidos, solo asegurar consistencia con la paleta */
+.toast.bg-primary { background-color: var(--primary-color) !important; color: white; }
+.toast.bg-success { background-color: #28a745 !important; color: white; } /* Mantener verde o cambiar */
+.toast.bg-danger { background-color: #dc3545 !important; color: white; } /* Mantener rojo o cambiar */
+.toast.bg-warning { background-color: var(--accent-color) !important; color: var(--bg-dark); } /* Usar acento para warning */
+
 
 .toast-body {
     font-size: 0.9rem;
@@ -236,7 +288,7 @@ main {
     left: 0;
     width: 100vw;
     height: 100vh;
-    background: rgba(20, 30, 48, 0.8);
+    background: rgba(var(--bg-dark-rgb, 10, 25, 47), 0.85); /* Fondo oscuro del spinner */
     display: none;
     align-items: center;
     justify-content: center;
@@ -249,7 +301,7 @@ main {
 
 
 .luxury-spinner-inner {
-    border: 5px solid rgba(255,255,255,0.1);
+    border: 5px solid rgba(var(--text-light-rgb, 204, 214, 246),0.1);
     border-top: 5px solid var(--primary-color);
     border-radius: 50%;
     width: 60px;
@@ -269,51 +321,55 @@ main {
 }
 
 .modal-content {
-    background-color: #1f2a3d;
+    background-color: var(--bg-card); /* Fondo de modal consistente */
     color: var(--text-light);
     border-radius: var(--radius-lg);
-    box-shadow: var(--shadow-lg);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3); /* Sombra de modal */
+    border: 1px solid rgba(var(--accent-color-rgb), 0.2);
 }
 
 #helpModal .accordion-button {
-    background-color: #2c3e50; 
+    background-color: var(--bg-dark); /* Fondo de botón de acordeón */
     color: var(--text-light);
 }
 #helpModal .accordion-button:not(.collapsed) {
     color: var(--primary-color);
-    background-color: #1f2a3d; 
+    background-color: var(--bg-card); /* Fondo de botón de acordeón activo */
 }
 #helpModal .accordion-body {
-    background-color: var(--bg-card); 
+    background-color: #0F1E36; /* Un poco más claro que bg-dark para cuerpo de acordeón */
     font-size: 0.95rem;
 }
 #helpModal .accordion-item {
-    border: 1px solid rgba(255,255,255,0.1);
+    border: 1px solid rgba(var(--accent-color-rgb),0.1);
     margin-bottom: 0.5rem;
     border-radius: 0.5rem;
-    overflow: hidden; 
+    overflow: hidden;
 }
 
 
 .form-control {
-    background-color: #2c3e50;
-    border: 1px solid #3b4a5a;
-    color: white;
+    background-color: #10213B; /* Fondo de input */
+    border: 1px solid var(--accent-color);
+    color: var(--text-light);
 }
 
 .form-control:focus {
     border-color: var(--primary-color);
-    box-shadow: 0 0 0 0.2rem rgba(241, 196, 15, 0.25);
-    background-color: #2c3e50;
-    color: white;
+    box-shadow: 0 0 0 0.2rem rgba(var(--primary-color-rgb), 0.25);
+    background-color: #10213B;
+    color: var(--text-light);
 }
-.form-select.bg-dark {
-    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23f1c40f' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e");
+.form-select.bg-dark { /* Selector con fondo oscuro */
+    background-color: #10213B !important;
+    border-color: var(--accent-color);
+    color: var(--text-light);
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%233B7DDD' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e");
 }
 
 
 .nav-pills {
-    background-color: rgba(0,0,0,0.2);
+    background-color: rgba(var(--bg-card-rgb, 23, 42, 69),0.5); /* Fondo semi-transparente para pills */
     padding: 0.5rem;
     border-radius: 1rem;
     display: flex;
@@ -330,8 +386,8 @@ main {
 }
 
 .nav-pills .nav-link {
-    background-color: #2c3e50;
-    color: var(--text-light);
+    background-color: var(--bg-card); /* Fondo de link de pill */
+    color: var(--text-muted);
     border-radius: 0.75rem;
     transition: var(--transition-fast);
     padding: 0.6rem 0.5rem;
@@ -342,55 +398,56 @@ main {
 }
 
 .nav-pills .nav-link:hover {
-    background-color: #3a506b;
+    background-color: #23395B; /* Fondo de link de pill al pasar el mouse */
+    color: var(--text-light);
 }
 
 .nav-pills .nav-link.active {
     background-color: var(--primary-color);
-    color: #2C3E50;
+    color: #fff; /* Texto blanco en pill activa */
     font-weight: 600;
-    box-shadow: 0 2px 8px rgba(241,196,15,0.3);
+    box-shadow: 0 2px 8px rgba(var(--primary-color-rgb),0.3);
 }
 
 .accordion-button {
-    background-color: #1f2a3d;
+    background-color: var(--bg-card);
     color: var(--text-light);
     border: none;
 }
 .accordion-button:not(.collapsed) {
     color: var(--primary-color);
-    background-color: #1a2535;
-    box-shadow: inset 0 -1px 0 rgba(255,255,255,.1);
+    background-color: #10213B; /* Fondo de acordeón activo */
+    box-shadow: inset 0 -1px 0 rgba(var(--primary-color-rgb),.15);
 }
 .accordion-button:focus {
     z-index: 3;
     border-color: var(--primary-color);
     outline: 0;
-    box-shadow: 0 0 0 0.2rem rgba(241,196,15,.25);
+    box-shadow: 0 0 0 0.2rem rgba(var(--primary-color-rgb),.25);
 }
 
 
 .accordion-body {
-    background-color: var(--bg-card);
+    background-color: #0F1E36; /* Un poco más claro que bg-dark para cuerpo de acordeón */
     color: var(--text-light);
 }
 
 #vip-card-container {
-    background: linear-gradient(135deg, #1a1a2e, #16213e);
-    border: 2px solid rgba(241, 196, 15, 0.6);
-    box-shadow: 0 0 25px rgba(241, 196, 15, 0.2), 0 0 60px rgba(0,0,0,0.4);
+    background: linear-gradient(135deg, #172A45, #0A192F); /* Degradado de azules oscuros para VIP card */
+    border: 2px solid rgba(var(--primary-color-rgb), 0.6);
+    box-shadow: 0 0 25px rgba(var(--primary-color-rgb), 0.15), 0 0 50px rgba(0,0,0,0.3); /* Sombra ajustada */
     border-radius: var(--radius-lg);
     color: var(--text-light);
     position: relative;
     overflow: hidden;
     transition: all 0.4s ease;
     padding: 2rem;
-    backdrop-filter: blur(10px);
+    backdrop-filter: blur(5px); /* Menos blur */
 }
 
 #vip-card-container:hover {
     transform: scale(1.02);
-    box-shadow: 0 0 35px rgba(241, 196, 15, 0.4), 0 0 80px rgba(0,0,0,0.5);
+    box-shadow: 0 0 35px rgba(var(--primary-color-rgb), 0.3), 0 0 70px rgba(0,0,0,0.4);
 }
 
 #vip-card-container::before {
@@ -400,7 +457,7 @@ main {
     left: -50%;
     width: 200%;
     height: 200%;
-    background: radial-gradient(circle at center, rgba(241,196,15,0.08), transparent 70%);
+    background: radial-gradient(circle at center, rgba(var(--primary-color-rgb),0.06), transparent 70%); /* Efecto de luz más sutil */
     transform: rotate(25deg);
     z-index: 0;
 }
@@ -411,18 +468,18 @@ main {
 }
 
 #vip-status-badge {
-    background: linear-gradient(45deg, #F1C40F, #E67E22);
-    color: #2C3E50;
+    background: linear-gradient(45deg, var(--primary-color), var(--accent-color)); /* Degradado azul para badge */
+    color: #fff; /* Texto blanco */
     font-size: 0.9rem;
     padding: 0.4em 0.8em;
     border-radius: 2rem;
     font-weight: 700;
-    text-shadow: 0 0 3px rgba(0,0,0,0.5);
+    text-shadow: 0 0 3px rgba(0,0,0,0.3);
 }
 
 #user-avatar {
-    border: 3px solid #F1C40F;
-    box-shadow: 0 0 15px rgba(241, 196, 15, 0.5);
+    border: 3px solid var(--primary-color);
+    box-shadow: 0 0 15px rgba(var(--primary-color-rgb), 0.4);
     transition: transform 0.3s ease;
     object-fit: cover;
 }
@@ -436,7 +493,7 @@ main {
     font-family: 'Playfair Display', serif;
     font-size: 2rem;
     font-weight: bold;
-    color: var(--primary-color);
+    color: var(--text-light); /* Nombre del cliente en color claro */
     margin-top: 0.5rem;
 }
 
@@ -449,7 +506,7 @@ main {
 .points-display {
     font-size: 1.8rem;
     font-weight: bold;
-    color: var(--primary-color);
+    color: var(--primary-color); /* Puntos en color primario */
 }
 
 #client-phone-display {
@@ -459,9 +516,12 @@ main {
 
 #changeAvatarButton {
     background: var(--primary-color);
-    color: #2C3E50;
-    box-shadow: 0 0 5px rgba(241,196,15,0.6);
+    color: #fff;
+    box-shadow: 0 0 5px rgba(var(--primary-color-rgb),0.5);
     border: none;
+}
+#clientReferralCode {
+    color: var(--primary-color) !important; /* Código de referido en color primario */
 }
 
 #cartNavItem {
@@ -470,10 +530,15 @@ main {
 
 
 #downloadAppBanner {
+    background-color: var(--bg-dark) !important; /* Usar el fondo oscuro definido */
     border-top: 3px solid var(--primary-color);
     animation-duration: 0.6s;
     z-index: 1040;
 }
+#downloadAppBanner .fs-5 strong i.text-warning {
+    color: var(--primary-color) !important; /* Icono de estrella en color primario */
+}
+
 
 .floating-buttons-container {
     position: fixed;
@@ -495,7 +560,7 @@ main {
     align-items: center;
     justify-content: center;
     box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
-    border: 2px solid rgba(255, 255, 255, 0.15);
+    border: 2px solid rgba(var(--text-light-rgb, 204, 214, 246), 0.1); /* Borde más sutil */
     transition: all 0.3s cubic-bezier(0.68, -0.55, 0.27, 1.55);
     padding: 0;
     cursor: pointer;
@@ -526,27 +591,33 @@ main {
 }
 
 #floatingCartButton {
-    background: linear-gradient(145deg, var(--accent-color), var(--primary-color));
-    color: var(--bg-dark);
+    background: linear-gradient(145deg, var(--accent-color), var(--primary-color)); /* Degradado azul para carrito */
+    color: #fff;
     position: relative;
 }
 #floatingCartButton:hover {
-     box-shadow: 0 10px 25px rgba(var(--primary-color-rgb), 0.5);
+     box-shadow: 0 10px 25px rgba(var(--primary-color-rgb), 0.4);
 }
 
-#whatsappButton {
+#whatsappButton { /* Mantener verde de WhatsApp */
     background: linear-gradient(145deg, #25D366, #128C7E);
 }
 #whatsappButton:hover {
-    box-shadow: 0 10px 25px rgba(37, 211, 102, 0.5);
+    box-shadow: 0 10px 25px rgba(37, 211, 102, 0.4);
+}
+#floatingShareButton { /* Botón de compartir con azules serios */
+    background: linear-gradient(145deg, var(--bg-card), var(--bg-dark));
+}
+#floatingShareButton:hover {
+    box-shadow: 0 10px 25px rgba(var(--accent-color-rgb), 0.3);
 }
 
 .floating-cart-count {
     position: absolute;
     top: -8px;
     right: -8px;
-    background-color: var(--bg-dark);
-    color: var(--primary-color);
+    background-color: var(--bg-dark); /* Fondo oscuro */
+    color: var(--primary-color); /* Texto en color primario */
     font-size: 0.8rem;
     font-weight: bold;
     padding: 0.3em 0.6em;
@@ -561,7 +632,7 @@ main {
 }
 
 #productDetailModal .modal-content {
-    border: 1px solid rgba(255,255,255,0.1);
+    border: 1px solid rgba(var(--accent-color-rgb),0.2);
 }
 
 #modal-product-image {
@@ -574,18 +645,22 @@ main {
 
 #modal-product-name {
     font-family: 'Playfair Display', serif;
-    color: var(--primary-color);
+    color: var(--text-light); /* Nombre de producto en modal */
 }
 
-#modal-product-price {
-    color: var(--primary-color);
+#modal-product-price, #cart-total-price {
+    color: var(--primary-color) !important; /* Precio en modal y carrito */
     font-size: 1.75rem;
     font-weight: 700;
 }
+#cart-footer-info .text-warning i {
+    color: var(--accent-color) !important; /* Icono de Zelle */
+}
+
 
 #modal-recommendations-container h5 {
     color: var(--text-light);
-    border-bottom: 1px solid rgba(255,255,255,0.15);
+    border-bottom: 1px solid rgba(var(--text-light-rgb, 204, 214, 246),0.15);
     padding-bottom: 0.5rem;
     margin-bottom: 1rem;
     font-weight: 600;
@@ -620,9 +695,12 @@ main {
     overflow: hidden;
     text-overflow: ellipsis;
 }
+.recommendation-card .rec-title + small.text-primary { /* Precio en recomendación */
+     color: var(--accent-color) !important; /* Usar acento para no competir con el principal */
+}
 
 .footer-custom {
-    background-color: #0f1c2d;
+    background-color: #071325; /* Mismo que navbar para consistencia */
     color: var(--text-muted);
     border-top: 3px solid var(--primary-color);
     margin-top: auto;
@@ -647,6 +725,10 @@ main {
 .footer-custom h5 {
     color: var(--text-light);
 }
+.footer-custom h5.text-uppercase.fw-bold[style*="color: var(--primary-color);"] {
+    color: var(--text-light) !important; /* Título principal del footer en claro */
+}
+
 
 .footer-link {
     color: var(--text-muted);
@@ -675,8 +757,8 @@ main {
 .footer-refresh-btn {
     width: 35px;
     height: 35px;
-    background-color: rgba(33, 37, 61, 0.8);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background-color: rgba(var(--bg-card-rgb, 23, 42, 69), 0.8);
+    border: 1px solid rgba(var(--text-light-rgb, 204, 214, 246), 0.1);
     border-radius: 50%;
     color: var(--text-muted);
     transition: var(--transition-fast);
@@ -703,10 +785,10 @@ main {
 .quick-nav-btn {
     width: 45px;
     height: 45px;
-    background-color: rgba(33, 37, 61, 0.8);
+    background-color: rgba(var(--bg-card-rgb, 23, 42, 69), 0.8);
     backdrop-filter: blur(5px);
     color: var(--primary-color);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(var(--text-light-rgb, 204, 214, 246), 0.1);
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -734,6 +816,29 @@ main {
     max-height: 90vh;
 }
 
+#modal-reward-image {
+    border-color: var(--accent-color) !important;
+}
+#modal-reward-name {
+    color: var(--text-light) !important; /* Nombre de recompensa */
+}
+#modal-reward-points-required {
+    color: var(--accent-color) !important; /* Puntos de recompensa */
+}
+#confirmRedeemRewardModal .text-warning i,
+#rewardDetailModal .btn-warning,
+#rewardDetailModal .btn-warning:hover { /* Botones y elementos de "warning" para recompensas */
+    background-color: var(--accent-color) !important;
+    border-color: var(--accent-color) !important;
+    color: var(--bg-dark) !important;
+}
+#rewardDetailModal .btn-warning:hover {
+    background-color: #5289A3 !important; /* Acento más oscuro al pasar el mouse */
+}
+#modal-reward-stock-info.bg-success { background-color: #28a745 !important; }
+#modal-reward-stock-info.bg-danger { background-color: #dc3545 !important; }
+#modal-reward-stock-info.bg-info { background-color: var(--accent-color) !important; color: var(--bg-dark) !important; }
+
 
 @media (max-width: 768px) {
     .navbar-brand { font-size: 1.25rem; }
@@ -743,12 +848,12 @@ main {
     #downloadAppBanner .container { flex-direction: column; text-align: center; }
     #downloadAppBanner .me-3.mb-2.mb-md-0 { margin-bottom: 0.75rem !important; }
 
-    .floating-buttons-container { bottom: 20px; right: 20px; } 
+    .floating-buttons-container { bottom: 20px; right: 20px; }
     .floating-button { width: 60px; height: 60px; font-size: 1.6rem; }
     .floating-cart-count { font-size: 0.75rem; min-width: 22px; height: 22px; top: -6px; right: -6px; }
 
     #quick-nav-buttons {
-        bottom: 235px; 
+        bottom: 235px;
         right: 20px;
     }
     .quick-nav-btn { width: 40px; height: 40px; font-size: 1.2rem; }
@@ -763,12 +868,12 @@ main {
     .nav-pills .nav-link { font-size: 0.8rem; padding: 0.5rem; }
     .nav-pills .nav-item { min-width: 90px; }
 
-    .floating-buttons-container { bottom: 15px; right: 15px; } 
+    .floating-buttons-container { bottom: 15px; right: 15px; }
     .floating-button { width: 55px; height: 55px; font-size: 1.5rem; }
     .floating-cart-count { font-size: 0.7rem; min-width: 20px; height: 20px; top: -5px; right: -5px; }
 
     #quick-nav-buttons {
-        bottom: 210px; 
+        bottom: 210px;
         right: 15px;
     }
     .quick-nav-btn { width: 38px; height: 38px; font-size: 1.1rem; }
@@ -786,7 +891,7 @@ main {
 
     <nav class="navbar navbar-expand-sm navbar-custom fixed-top">
         <div class="container">
-            <a class="navbar-brand d-flex align-items-center" href="#top"> 
+            <a class="navbar-brand d-flex align-items-center" href="#top">
                 <img src="https://i.postimg.cc/bwc5SzJG/striking-app-icon-the-letters-dl-in-a-custom-l-1.png" alt="Doña Lucía Logo" style="height: 30px; margin-right: 8px;">
                 DL Cumanayagua
             </a>
@@ -818,7 +923,7 @@ main {
                             <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#downloadAppModal"><i class="bi bi-phone-vibrate-fill me-2"></i>Descargar App (Cuba)</a></li>
                         </ul>
                     </li>
-                     <li class="nav-item d-block d-sm-none my-2"> 
+                     <li class="nav-item d-block d-sm-none my-2">
                         <hr class="border-secondary">
                     </li>
                     <li class="nav-item d-flex align-items-center" id="auth-buttons-nav-container">
@@ -826,7 +931,7 @@ main {
                         </div>
                          <button id="logoutButtonNav" class="btn btn-sm btn-outline-warning ms-2" style="display:none;" onclick="logoutClient()"><i class="bi bi-box-arrow-right"></i> Salir</button>
                     </li>
-                     <li class="nav-item ms-sm-2" id="cartNavItem" style="display: none !important;"> 
+                     <li class="nav-item ms-sm-2" id="cartNavItem" style="display: none !important;">
                         <button class="btn cart-nav-button p-0" type="button" data-bs-toggle="modal" data-bs-target="#cartModal">
                             <i class="bi bi-cart-fill"></i>
                             <span class="badge rounded-pill cart-count-nav" id="cart-count-nav">0</span>
@@ -838,7 +943,7 @@ main {
     </nav>
 
     <main>
-        <div class="container mt-5 pt-4 pb-5"> 
+        <div class="container mt-5 pt-4 pb-5">
             <div id="vip-card-container" class="vip-card p-md-4 p-3 mb-4 position-relative animate__animated animate__fadeInDown" style="display: none;">
                 <span class="position-absolute top-0 start-0 m-3 badge" id="vip-status-badge">VIP</span>
                 <div class="text-center text-md-start">
@@ -854,6 +959,15 @@ main {
                     <p class="mb-1 opacity-75" id="client-status">Miembro DL</p>
                     <div class="points-display mb-2" id="client-points">0</div>
                     <small id="client-phone-display" class="text-light opacity-75"></small>
+                    <div id="client-referral-code-container" class="mt-2" style="display: none;">
+                        <small class="text-light opacity-75">Tu Código de Referido:</small>
+                        <div class="d-flex align-items-center">
+                            <strong id="clientReferralCode" class="text-warning fs-5 me-2">Cargando...</strong>
+                            <button class="btn btn-sm btn-outline-light py-0 px-2" onclick="copyReferralCode()" title="Copiar código">
+                                <i class="bi bi-clipboard-check"></i>
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -948,7 +1062,7 @@ main {
         </div>
     </div>
     <div class="toast-container position-fixed bottom-0 start-0 p-3" id="toastPlacement" style="z-index: 2050"> </div>
-    <div class="modal fade" id="registerUserModal" tabindex="-1" aria-labelledby="registerUserModalLabel" aria-hidden="true"><div class="modal-dialog modal-dialog-centered"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="registerUserModalLabel">Crear Cuenta para Envíos</h5><button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button></div><div class="modal-body"><form id="newUserRegistrationForm"><div class="mb-3"><label for="newUserName" class="form-label">Nombre Completo (Tuyo) <span class="text-danger">*</span></label><input type="text" class="form-control" id="newUserName" required autocomplete="name"></div><div class="mb-3"><label for="newUserPhone" class="form-label">Teléfono (Tuyo, con código de país si es de USA) <span class="text-danger">*</span></label><input type="tel" class="form-control" id="newUserPhone" required placeholder="Ej: +1 XXX XXX XXXX" autocomplete="tel"></div><div class="mb-3"><label for="newUserEmail" class="form-label">Correo (Tuyo) <span class="text-danger">*</span></label><input type="email" class="form-control" id="newUserEmail" required autocomplete="email"></div><div class="mb-3"><label for="newUserPassword" class="form-label">Contraseña <span class="text-danger">*</span></label><input type="password" class="form-control" id="newUserPassword" required autocomplete="new-password"></div><div class="mb-3"><label for="newUserConfirmPassword" class="form-label">Confirmar Contraseña <span class="text-danger">*</span></label><input type="password" class="form-control" id="newUserConfirmPassword" required autocomplete="new-password"></div><div id="registration-feedback" class="mt-3"></div></form></div><div class="modal-footer"><button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button><button type="button" class="btn btn-primary" onclick="handleUserRegistrationAttempt()">Registrarme</button></div></div></div></div>
+    <div class="modal fade" id="registerUserModal" tabindex="-1" aria-labelledby="registerUserModalLabel" aria-hidden="true"><div class="modal-dialog modal-dialog-centered"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="registerUserModalLabel">Crear Cuenta para Envíos</h5><button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button></div><div class="modal-body"><form id="newUserRegistrationForm"><div class="mb-3"><label for="newUserName" class="form-label">Nombre Completo (Tuyo) <span class="text-danger">*</span></label><input type="text" class="form-control" id="newUserName" required autocomplete="name"></div><div class="mb-3"><label for="newUserPhone" class="form-label">Teléfono (Tuyo, con código de país si es de USA) <span class="text-danger">*</span></label><input type="tel" class="form-control" id="newUserPhone" required placeholder="Ej: +1 XXX XXX XXXX" autocomplete="tel"></div><div class="mb-3"><label for="newUserEmail" class="form-label">Correo (Tuyo) <span class="text-danger">*</span></label><input type="email" class="form-control" id="newUserEmail" required autocomplete="email"></div><div class="mb-3"><label for="newUserPassword" class="form-label">Contraseña <span class="text-danger">*</span></label><input type="password" class="form-control" id="newUserPassword" required autocomplete="new-password"></div><div class="mb-3"><label for="newUserConfirmPassword" class="form-label">Confirmar Contraseña <span class="text-danger">*</span></label><input type="password" class="form-control" id="newUserConfirmPassword" required autocomplete="new-password"></div><div class="mb-3"><label for="newUserReferralCodeUsed" class="form-label">Código de Referido (Opcional)</label><input type="text" class="form-control" id="newUserReferralCodeUsed" placeholder="Ingresa un código si tienes uno"></div><div id="registration-feedback" class="mt-3"></div></form></div><div class="modal-footer"><button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button><button type="button" class="btn btn-primary" onclick="handleUserRegistrationAttempt()">Registrarme</button></div></div></div></div>
     <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true"><div class="modal-dialog modal-dialog-centered"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="loginModalLabel">Iniciar Sesión para Envíos</h5><button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button></div><div class="modal-body"><form id="loginForm"><div class="mb-3"><label for="loginPhone" class="form-label">Teléfono (Tuyo)</label><input type="tel" class="form-control" id="loginPhone" required autocomplete="username tel"></div><div class="mb-3"><label for="loginPassword" class="form-label">Contraseña</label><input type="password" class="form-control" id="loginPassword" required autocomplete="current-password"></div><div id="login-feedback" class="mt-3"></div></form></div><div class="modal-footer"><button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button><button type="button" class="btn btn-primary" onclick="handleLoginAttempt()">Acceder</button></div></div></div></div>
     <div class="modal fade" id="cartModal" tabindex="-1" aria-labelledby="cartModalLabel" aria-hidden="true"><div class="modal-dialog modal-lg modal-dialog-scrollable modal-dialog-centered"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="cartModalLabel"><i class="bi bi-cart3 me-2"></i>Mi Carrito de Envío</h5><button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button></div><div class="modal-body" id="cart-items-container"><p class="text-center">Tu carrito está vacío.</p></div><div class="modal-footer justify-content-between flex-wrap"><div id="cart-footer-info"><small class="text-muted d-block">Puntos a ganar: <span id="cart-points-to-earn" class="fw-bold">0</span></small><strong class="fs-5">Total: <span id="cart-total-price" style="color: var(--primary-color);">0.00</span> USD</strong><br><small class="text-warning"><i class="bi bi-credit-card-2-front-fill"></i> Pagos por Zelle.</small></div><div class="d-flex mt-2 mt-sm-0" id="cart-footer-buttons"><button type="button" class="btn btn-outline-danger me-2" onclick="clearCart()"><i class="bi bi-trash3 me-1"></i>Vaciar</button><button type="button" class="btn btn-success" onclick="confirmAndPlaceOrder()"><i class="bi bi-check-circle me-1"></i>Confirmar Envío</button></div></div><div id="order-placement-feedback" class="m-3"></div></div></div></div>
     <div class="modal fade" id="downloadAppModal" tabindex="-1" aria-labelledby="downloadAppModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
@@ -1029,7 +1143,7 @@ main {
                     </div>
 
                     <hr style="border-color: rgba(255,255,255,0.2);">
-                    
+
                     <h6 class="text-light mt-3">Compartir la App (para familia en Cuba):</h6>
                     <p class="mb-1 small text-muted">Para que tus familiares en Cuba vean el catálogo.</p>
                      <div id="qrcodeAppCanvas" class="mx-auto mb-3 border border-secondary p-2 rounded" style="width: 150px; height: 150px; background-color: white;">
@@ -1038,10 +1152,10 @@ main {
                         <button class="btn btn-primary btn-sm" onclick="shareAppLinkViaCopy()">
                             <i class="bi bi-clipboard-check-fill me-2"></i>Copiar Enlace de App
                         </button>
-                        <a id="shareAppViaWhatsAppButtonModal" class="btn btn-success btn-sm" href="#" target="_blank"> 
+                        <a id="shareAppViaWhatsAppButtonModal" class="btn btn-success btn-sm" href="#" target="_blank">
                             <i class="bi bi-whatsapp me-2"></i>App por WhatsApp
                         </a>
-                         <a id="shareAppViaTelegramButtonModal" class="btn btn-info btn-sm text-dark" href="#" target="_blank"> 
+                         <a id="shareAppViaTelegramButtonModal" class="btn btn-info btn-sm text-dark" href="#" target="_blank">
                             <i class="bi bi-telegram me-2"></i>App por Telegram
                         </a>
                     </div>
@@ -1125,7 +1239,7 @@ main {
                 </div>
                 <div class="modal-body">
                     <p class="lead">¡Bienvenido a DL Cumanayagua! Aquí te explicamos cómo funciona nuestra plataforma para que puedas enviar productos y cariño a tus seres queridos en Cumanayagua, Cuba, de forma fácil y segura.</p>
-                    
+
                     <div class="accordion" id="helpAccordion">
                         <div class="accordion-item">
                             <h2 class="accordion-header" id="headingOneHelp">
@@ -1139,7 +1253,7 @@ main {
                                     <ul>
                                         <li><strong>Registro e Inicio de Sesión:</strong> Crea una cuenta o inicia sesión con tu número de teléfono, correo y contraseña. Esto te permitirá guardar tu historial de envíos, acumular puntos y acceder a recompensas.</li>
                                         <li><strong>Información Personal:</strong> Tu nombre, teléfono y correo son para gestionar tus pedidos y comunicarnos contigo.</li>
-                                        
+
                                     </ul>
                                 </div>
                             </div>
@@ -1179,7 +1293,7 @@ main {
                                         <li><strong>Ver tus Puntos:</strong> El total de tus puntos disponibles se muestra en tu tarjeta VIP al iniciar sesión.</li>
                                         <li><strong>Sección Recompensas:</strong> Aquí encontrarás productos o beneficios especiales que puedes canjear utilizando tus puntos acumulados.</li>
                                         <li><strong>Canjear Recompensas:</strong> Si tienes suficientes puntos, podrás canjear una recompensa. Esta se aplicará a un futuro envío o según se especifique. Deberás notificarnos por WhatsApp al canjear para coordinar.</li>
-                                        <li><strong>Puntos de Bienvenida:</strong> Actualmente, no se otorgan puntos de bienvenida al registrarse. Los puntos se ganan a través de las compras.</li>
+                                        <li><strong>Puntos de Bienvenida:</strong> Actualmente, no se otorgan puntos de bienvenida al registrarse. Los puntos se ganan a través de las compras. (Excepción: Ver Programa de Referidos).</li>
                                     </ul>
                                 </div>
                             </div>
@@ -1212,6 +1326,25 @@ main {
                                         <li><strong>Instalación:</strong> Deberán descargar el archivo .apk e instalarlo en su teléfono Android. Es posible que necesiten habilitar "Instalar apps desconocidas" en los ajustes de su teléfono.</li>
                                         <li><strong>Importante:</strong> La app es solo para visualización. Las compras, pagos y gestión de tu cuenta de cliente (acumulación de puntos, etc.) se realizan siempre a través de esta página web por ti, el comprador.</li>
                                     </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingSixHelp">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSixHelp" aria-expanded="false" aria-controls="collapseSixHelp">
+                                    <i class="bi bi-person-hearts me-2"></i>Programa de Referidos
+                                </button>
+                            </h2>
+                            <div id="collapseSixHelp" class="accordion-collapse collapse" aria-labelledby="headingSixHelp" data-bs-parent="#helpAccordion">
+                                <div class="accordion-body">
+                                    <p>¡Invita a tus amigos y ambos ganan!</p>
+                                    <ul>
+                                        <li><strong>Tu Código de Referido:</strong> Cuando inicias sesión, verás tu código de referido personal en tu tarjeta VIP. Compártelo con amigos que quieran hacer envíos a Cumanayagua.</li>
+                                        <li><strong>Para tus Amigos (Nuevos Clientes):</strong> Al registrarse, tu amigo puede ingresar tu código de referido en el campo "Código de Referido". Si el código es válido, tu amigo recibirá <strong>15 puntos extra</strong> de bienvenida.</li>
+                                        <li><strong>Para Ti (Quien Refiere):</strong> Cuando tu amigo se registra exitosamente usando tu código, tú recibirás <strong>25 puntos</strong> como agradecimiento.</li>
+                                        <li>Los puntos se añaden automáticamente a sus respectivas cuentas.</li>
+                                    </ul>
+                                    <p class="small text-muted">Nota: Los puntos y condiciones del programa de referidos pueden cambiar.</p>
                                 </div>
                             </div>
                         </div>
@@ -1297,7 +1430,7 @@ main {
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script>
-        const GOOGLE_SCRIPT_URL_USER = 'https://script.google.com/macros/s/AKfycbwHgP1l0c26jRoQ5UG8ua3TFzV-AEW_1xfWyy6DcAP597rvpMxvjQexFhz1mSkWUYJqNA/exec';
+        const GOOGLE_SCRIPT_URL_USER = 'https://script.google.com/macros/s/AKfycby3oshMqxSgpF8Sl8cPRslGv7l4P4VQZtCRgbT6VTlHN9KrC0OH5hJPySeJo81bfggg9A/exec';
         const LOGGED_IN_CLIENT_KEY = 'cafeteriaVipClientLoggedIn_v8';
         const PRODUCTS_USER_CACHE_KEY = 'cafeteriaUserProductsCache_v8';
         const USER_CART_KEY = 'cafeteriaUserCart_v5';
@@ -1312,6 +1445,9 @@ main {
         const DOWNLOAD_BANNER_DISMISSED_KEY = 'downloadBannerDismissed_DL_v1';
         const PRESENTATION_VIDEO_SHOWN_KEY = 'presentationVideoShown_v1';
         const APP_DOWNLOAD_LINK = "https://drive.google.com/file/d/1JN1qbrX2JB7P5apVzzhtBy5x2hBPxCWa/view?usp=drive_link";
+        const REFERRAL_POINTS_FOR_REFERRER = 25; // Puntos para quien refiere
+        const REFERRAL_POINTS_FOR_REFEREE = 15; // Puntos extra para el nuevo referido
+
 
         let clientData = null;
         let menuItems = [];
@@ -1323,8 +1459,8 @@ main {
         let registrationModalInstance, loginModalInstance, cartModalInstance, downloadAppModalInstance, productDetailModalInstance, sharePageModalInstance, confirmClearCartModalInstance, confirmRedeemRewardModalInstance, presentationVideoModalInstance, helpModalInstance, rewardDetailModalInstance;
         let floatingCartButtonEl;
         let floatingCartCountEl;
-        let qrcodePageInstance = null; 
-        let qrcodeAppInstance = null; 
+        let qrcodePageInstance = null;
+        let qrcodeAppInstance = null;
 
 
         document.addEventListener('DOMContentLoaded', async function() {
@@ -1336,13 +1472,13 @@ main {
             updateClientDisplayAndUI();
             await loadMenuItems();
             setupEventListeners();
-            handleAppDownloadPromotion(); 
+            handleAppDownloadPromotion();
             handleScroll();
-            initializeShareModal(); 
+            initializeShareModal();
             setupShareEventListeners();
             setupFloatingButtonFeedback();
-            handlePresentationVideo(); 
-            setupNavbarToggler(); 
+            handlePresentationVideo();
+            setupNavbarToggler();
 
             const confirmClearCartBtn = document.getElementById('confirmClearCartButton');
             if (confirmClearCartBtn) {
@@ -1377,16 +1513,23 @@ main {
                 });
             }
 
+            // Ensure help accordion IDs are correctly targeted if they were dynamically generated before
+            // For statically added items like the referral program, their IDs are fixed.
             const helpAccordionItems = document.querySelectorAll('#helpAccordion .accordion-collapse');
+            let hasDynamicHelpItems = false;
             helpAccordionItems.forEach((item, index) => {
-                const newId = `collapseHelp${index}`;
                 const button = item.previousElementSibling.querySelector('button');
-                item.id = newId;
-                if (button) {
+                if (button && button.getAttribute('data-bs-target').startsWith('#collapseHelp')) { // Check if it's one of the dynamic ones
+                    hasDynamicHelpItems = true;
+                    const newId = `collapseHelp${index}`; // This assumes original logic generated them this way
+                    item.id = newId;
                     button.setAttribute('data-bs-target', `#${newId}`);
                     button.setAttribute('aria-controls', newId);
                 }
             });
+            // If no dynamic items were found, this loop might not be strictly necessary, but harmless.
+            // The static "Programa de Referidos" has ID "collapseSixHelp"
+
         });
 
         function setupNavbarToggler() {
@@ -1398,7 +1541,7 @@ main {
             if (navbarCollapseEl) {
                 navbarCollapseInstance = bootstrap.Collapse.getOrCreateInstance(navbarCollapseEl, {toggle: false});
             }
-        
+
             navLinks.forEach(link => {
                 link.addEventListener('click', (event) => {
                     const isTogglerVisible = getComputedStyle(navbarToggler).display !== 'none';
@@ -1407,7 +1550,7 @@ main {
                     if (isMenuExpanded && isTogglerVisible) {
                         const opensModal = link.getAttribute('data-bs-toggle') === 'modal';
                         const isDropdownToggle = link.classList.contains('dropdown-toggle');
-                        
+
                         if (!opensModal && !isDropdownToggle) {
                             if (navbarCollapseInstance) {
                                 navbarCollapseInstance.hide();
@@ -1417,14 +1560,14 @@ main {
                 });
             });
         }
-        
+
         function showTabAndScroll(tabLinkId) {
             const tabLink = document.getElementById(tabLinkId);
             if (tabLink) {
                 const tabInstance = bootstrap.Tab.getOrCreateInstance(tabLink);
                 tabInstance.show();
-                
-                const tabPaneId = tabLink.getAttribute('href'); 
+
+                const tabPaneId = tabLink.getAttribute('href');
                 if (tabPaneId) {
                     const tabPane = document.querySelector(tabPaneId);
                     if (tabPane) {
@@ -1443,10 +1586,10 @@ main {
             if (!quickNav || !goDownBtn) return;
 
             const floatingButtonsContainer = document.querySelector('.floating-buttons-container');
-            let fabContainerBottom = 25; 
+            let fabContainerBottom = 25;
              if (floatingButtonsContainer) {
                 const style = window.getComputedStyle(floatingButtonsContainer);
-                fabContainerBottom = parseFloat(style.bottom) || fabContainerBottom; 
+                fabContainerBottom = parseFloat(style.bottom) || fabContainerBottom;
             }
 
             if (window.scrollY > 300) {
@@ -1454,8 +1597,8 @@ main {
             } else {
                 quickNav.style.display = 'none';
             }
-            
-            let pageBottomOffset = 100; 
+
+            let pageBottomOffset = 100;
             const footer = document.getElementById('bottom');
             if (footer) pageBottomOffset += footer.offsetHeight;
 
@@ -1500,18 +1643,18 @@ main {
                 try {
                     const baseUrl = window.location.origin + window.location.pathname;
                     const timestamp = new Date().getTime();
-                    const newUrl = `${baseUrl}?t=${timestamp}`; 
+                    const newUrl = `${baseUrl}?t=${timestamp}`;
                     console.log(`Intentando recargar con URL para evitar caché: ${newUrl}`);
                     window.location.href = newUrl;
 
                     setTimeout(() => {
                         console.log("Fallback: intentando location.reload(true) después de la navegación por URL.");
                         window.location.reload(true);
-                    }, 1500); 
+                    }, 1500);
                 } catch (e) {
                     console.error("Error al intentar recargar la página con URL:", e);
                     console.log("Fallback final: intentando location.reload(true) directamente.");
-                    setTimeout(() => { 
+                    setTimeout(() => {
                         window.location.reload(true);
                     }, 1500);
                 }
@@ -1532,7 +1675,7 @@ main {
                         else if (id === 'confirmClearCartModal') confirmClearCartModalInstance = new bootstrap.Modal(el);
                         else if (id === 'confirmRedeemRewardModal') confirmRedeemRewardModalInstance = new bootstrap.Modal(el);
                         else if (id === 'presentationVideoModal') presentationVideoModalInstance = new bootstrap.Modal(el);
-                        else if (id === 'helpModal') helpModalInstance = new bootstrap.Modal(el); 
+                        else if (id === 'helpModal') helpModalInstance = new bootstrap.Modal(el);
                         else if (id === 'rewardDetailModal') rewardDetailModalInstance = new bootstrap.Modal(el);
                     } else { console.warn(`Modal con ID '${id}' no encontrado.`); }
                 });
@@ -1590,11 +1733,11 @@ main {
             const navbarEl = document.querySelector('.navbar-custom.fixed-top');
 
             let totalPaddingBottom = 0;
-            let fabContainerBottomOffset = 25; 
-            let quickNavBottomOffset = 260; 
+            let fabContainerBottomOffset = 25;
+            let quickNavBottomOffset = 260;
 
             if (window.matchMedia("(max-width: 768px)").matches) {
-                fabContainerBottomOffset = 20; 
+                fabContainerBottomOffset = 20;
                 quickNavBottomOffset = 235;
             }
             if (window.matchMedia("(max-width: 576px)").matches) {
@@ -1604,14 +1747,14 @@ main {
 
             if (bannerEl && bannerEl.style.display !== 'none' && !bannerEl.classList.contains('animate__fadeOutDown')) {
                 const bannerHeight = bannerEl.offsetHeight;
-                totalPaddingBottom = bannerHeight + 10; 
+                totalPaddingBottom = bannerHeight + 10;
                 fabContainerBottomOffset += bannerHeight;
                 quickNavBottomOffset += bannerHeight;
             }
-            
+
             bodyEl.style.paddingBottom = totalPaddingBottom + 'px';
-            
-            if (navbarEl) { 
+
+            if (navbarEl) {
                 const navbarHeight = navbarEl.offsetHeight;
                 if (parseFloat(bodyEl.style.paddingTop) !== navbarHeight) {
                     bodyEl.style.paddingTop = navbarHeight + 'px';
@@ -1621,10 +1764,10 @@ main {
             if (floatingButtonsContainer) {
                  floatingButtonsContainer.style.bottom = fabContainerBottomOffset + 'px';
             }
-            if (quickNavButtons && quickNavButtons.style.display !== 'none') { 
+            if (quickNavButtons && quickNavButtons.style.display !== 'none') {
                 quickNavButtons.style.bottom = quickNavBottomOffset + 'px';
             }
-             handleScroll(); 
+             handleScroll();
         }
 
 
@@ -1794,13 +1937,16 @@ main {
 
         function updateClientDisplayAndUI() {
             const el = id => document.getElementById(id);
-            const authNavContainer = el('auth-buttons-nav'); 
+            const authNavContainer = el('auth-buttons-nav');
             const logoutNavButton = el('logoutButtonNav');
             const vipCardContainer = el('vip-card-container');
             const guestPromptContainer = el('guest-prompt');
             const userAvatarImg = el('user-avatar');
-            const myOrdersTabLink = el('my-orders-tab-link'); 
-            
+            const myOrdersTabLink = el('my-orders-tab-link');
+            const referralCodeContainerEl = el('client-referral-code-container');
+            const clientReferralCodeEl = el('clientReferralCode');
+
+
             if (clientData && clientData.id && (clientData.verificado === true || String(clientData.verificado).toLowerCase() === 'true')) {
                 el('client-name').textContent = `¡Hola, ${clientData.nombre ? clientData.nombre.split(' ')[0] : 'Cliente'}!`;
                 el('client-points').textContent = clientData.puntos !== undefined ? clientData.puntos : 0;
@@ -1821,6 +1967,14 @@ main {
                 if(vipCardContainer) vipCardContainer.style.display = 'block';
                 if(guestPromptContainer) guestPromptContainer.style.display = 'none';
                 if(myOrdersTabLink) myOrdersTabLink.innerHTML = `<i class="bi bi-receipt me-1"></i>Mis Envíos`;
+
+                if (clientData.referralcode && clientReferralCodeEl && referralCodeContainerEl) {
+                    clientReferralCodeEl.textContent = clientData.referralcode;
+                    referralCodeContainerEl.style.display = 'block';
+                } else if (referralCodeContainerEl) {
+                    referralCodeContainerEl.style.display = 'none';
+                }
+
             } else {
                 el('client-name').textContent = `¡Bienvenido!`;
                 el('client-points').textContent = 0;
@@ -1833,6 +1987,7 @@ main {
                 if(vipCardContainer) vipCardContainer.style.display = 'none';
                 if(guestPromptContainer) guestPromptContainer.style.display = 'block';
                 if(myOrdersTabLink) myOrdersTabLink.innerHTML = `<i class="bi bi-receipt me-1"></i>Mis Envíos`;
+                if (referralCodeContainerEl) referralCodeContainerEl.style.display = 'none';
                 loadUserOrders();
                 generateRewardsList();
             }
@@ -1858,12 +2013,13 @@ main {
             const email = document.getElementById('newUserEmail').value.trim();
             const password = document.getElementById('newUserPassword').value;
             const confirmPassword = document.getElementById('newUserConfirmPassword').value;
+            const referralCodeUsed = document.getElementById('newUserReferralCodeUsed').value.trim();
             const feedbackElId = 'registration-feedback';
-            
-            if (!nombre || !telefono || !email || !password || !confirmPassword) { 
+
+            if (!nombre || !telefono || !email || !password || !confirmPassword) {
                 showFeedbackInModal(null, feedbackElId, 'Todos los campos marcados con * son requeridos.', 'danger'); return;
             }
-            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { 
+            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
                 showFeedbackInModal(null, feedbackElId, 'Por favor, ingresa un correo electrónico válido.', 'danger'); return;
             }
             if (password !== confirmPassword) {
@@ -1876,7 +2032,7 @@ main {
                 showFeedbackInModal(null, feedbackElId, 'La contraseña debe tener al menos 6 caracteres.', 'danger'); return;
             }
             showFeedbackInModal(null, feedbackElId, '<div class="spinner-border spinner-border-sm me-2"></div>Registrando...', 'info', null);
-            const payload = { nombre, telefono, email, password };
+            const payload = { nombre, telefono, email, password, referralCodeUsed };
             const result = await fetchDataFromGAS('registerNewUser', 'POST', payload);
             if (result.success) {
                 showFeedbackInModal(null, feedbackElId, `${result.message || '¡Registro exitoso!'} Ahora puedes iniciar sesión para realizar tus envíos.`, 'success', 4000);
@@ -2028,7 +2184,7 @@ main {
                     menuItems = JSON.parse(cachedProducts);
                     generatePopularItems();
                     generateCategoryFilters();
-                    generateMenu(); 
+                    generateMenu();
                     return;
                 } catch(e) {
                     localStorage.removeItem(PRODUCTS_USER_CACHE_KEY);
@@ -2051,7 +2207,7 @@ main {
                 localStorage.setItem(MENU_CACHE_EXPIRY_KEY, (now + CACHE_DURATION_MS).toString());
                 generatePopularItems();
                 generateCategoryFilters();
-                generateMenu(); 
+                generateMenu();
                 if (forceRefresh) showGlobalFeedback("Menú y combos actualizados.", "success", 2000);
             } else {
                 menuContainer.innerHTML = `<div class="col-12 text-center p-5"><p class="text-danger fs-5">Error al ${forceRefresh ? 'actualizar' : 'cargar'} el menú y combos: ${res.message || 'Desconocido.'}</p></div>`;
@@ -2374,14 +2530,14 @@ main {
                 showFeedbackInModal(null, 'order-placement-feedback', 'El carrito de envío ya está vacío.', 'info', 2000);
                 if (cartModalInstance && document.getElementById('cartModal').classList.contains('show')) {
                 } else if (cartModalInstance) {
-                    cartModalInstance.show(); 
+                    cartModalInstance.show();
                 }
                 return;
             }
 
             if (confirmClearCartModalInstance) {
                 confirmClearCartModalInstance.show();
-            } else { 
+            } else {
                 if (confirm("¿Estás seguro de que quieres vaciar tu carrito de envío?")) {
                     performClearCartActions();
                 }
@@ -2417,16 +2573,16 @@ main {
                     floatingCartButtonEl.classList.remove('animate__zoomIn');
                     floatingCartButtonEl.classList.add('animate__animated', 'animate__zoomOut');
                     setTimeout(() => {
-                        if ( !(totalItems > 0 && clientData && clientData.id) ) { 
+                        if ( !(totalItems > 0 && clientData && clientData.id) ) {
                            floatingCartButtonEl.style.display = 'none';
                         }
-                    }, 500); 
+                    }, 500);
                 }
                 floatingCartCountEl.textContent = totalItems;
             }
             const pointsEl = document.getElementById('cart-points-to-earn');
             if(pointsEl) pointsEl.textContent = Array.isArray(shoppingCart) ? shoppingCart.reduce((s,i)=>s+((i.points||0)*(i.quantity||0)),0) : 0;
-            adjustBodyPaddingAndFabPosition(); 
+            adjustBodyPaddingAndFabPosition();
         }
 
         function renderCartItems() {
@@ -2728,8 +2884,8 @@ main {
                 rc.innerHTML += `
                 <div class="col-6 col-md-6 col-lg-4 d-flex align-items-stretch animate__animated animate__fadeInUp" style="animation-duration: 0.5s;">
                     <div class="reward-card card w-100 ${!cr ? 'opacity-75' : ''}">
-                        <img src="${reward.imageurl || 'https://via.placeholder.com/350x220/F1C40F/2C3E50?text=' + encodeURIComponent(reward.name||'Recompensa')}" 
-                             class="reward-image card-img-top" alt="${reward.name||'Recompensa'}" loading="lazy" 
+                        <img src="${reward.imageurl || 'https://via.placeholder.com/350x220/F1C40F/2C3E50?text=' + encodeURIComponent(reward.name||'Recompensa')}"
+                             class="reward-image card-img-top" alt="${reward.name||'Recompensa'}" loading="lazy"
                              style="cursor: pointer;" onclick="showRewardDetailModal('${rid}')">
                         <div class="card-body d-flex flex-column">
                             <h5 class="card-title mb-1" style="cursor: pointer;" onclick="showRewardDetailModal('${rid}')">${reward.name||'N/A'}</h5>
@@ -2746,9 +2902,9 @@ main {
                 </div>`;
             });
         }
-        
+
         async function showRewardDetailModal(rewardId) {
-            if (!availableRewards || availableRewards.length === 0) await loadAvailableRewards(); 
+            if (!availableRewards || availableRewards.length === 0) await loadAvailableRewards();
             const reward = availableRewards.find(r => r.rewardid === rewardId);
 
             if (!reward) {
@@ -2790,7 +2946,7 @@ main {
             } else {
                  redeemBtnContainer.innerHTML = `<button class="btn btn-outline-light btn-lg w-100" onclick="if(rewardDetailModalInstance) rewardDetailModalInstance.hide(); loginModalInstance.show();"><i class="bi bi-person-check-fill me-2"></i>Iniciar sesión para canjear</button>`;
             }
-            
+
             generateProductRecommendationsForRewardModal();
             if(rewardDetailModalInstance) rewardDetailModalInstance.show();
         }
@@ -2803,7 +2959,7 @@ main {
         function generateProductRecommendationsForRewardModal() {
             const recommendationsContainer = document.getElementById('reward-modal-product-recs-row');
             if (!recommendationsContainer) return;
-            recommendationsContainer.innerHTML = ''; 
+            recommendationsContainer.innerHTML = '';
 
             if (!menuItems || menuItems.length === 0) {
                 recommendationsContainer.innerHTML = '<p class="text-muted small col-12">No hay productos para recomendar en este momento.</p>';
@@ -2811,9 +2967,9 @@ main {
             }
 
             let candidates = [...menuItems];
-            candidates.sort(() => 0.5 - Math.random()); 
-            
-            const finalRecommendations = candidates.slice(0, 3); 
+            candidates.sort(() => 0.5 - Math.random());
+
+            const finalRecommendations = candidates.slice(0, 3);
 
             if (finalRecommendations.length === 0) {
                 recommendationsContainer.innerHTML = '<p class="text-muted small col-12">No hay productos para recomendar.</p>';
@@ -2857,17 +3013,17 @@ main {
             const modalTextEl = document.getElementById('confirmRedeemRewardText');
             const modalFeedbackEl = document.getElementById('redeemRewardFeedback');
             const modalFooterEl = document.getElementById('confirmRedeemRewardFooter');
-            
+
             if (modalTextEl) modalTextEl.innerHTML = `¿Estás seguro de que quieres canjear "<strong>${reward.name}</strong>" por <strong>${reward.pointsrequired} puntos</strong>?`;
             if (modalFeedbackEl) modalFeedbackEl.innerHTML = '';
-            
+
             if (modalFooterEl) {
                 modalFooterEl.innerHTML = `
                     <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
                     <button type="button" class="btn btn-warning" id="confirmRedeemRewardButtonDynamicInstance">
                         <i class="bi bi-award-fill me-1"></i>Sí, Canjear Ahora
                     </button>`;
-                
+
                 const confirmButtonDynamic = document.getElementById('confirmRedeemRewardButtonDynamicInstance');
                 if (confirmButtonDynamic) {
                     confirmButtonDynamic.onclick = async () => {
@@ -2888,7 +3044,7 @@ main {
                                 clientData.puntos = Math.min(pointsBefore - (reward.pointsrequired || 0), serverPoints);
                                 if(localAvatar && !clientData[LOCAL_AVATAR_DATA_KEY]) clientData[LOCAL_AVATAR_DATA_KEY] = localAvatar;
                             }
-                            
+
                             localStorage.setItem(LOGGED_IN_CLIENT_KEY, JSON.stringify(clientData));
                             updateClientDisplayAndUI();
 
@@ -2899,8 +3055,8 @@ main {
                                     <div class="alert alert-success py-2 small">
                                         ${result.message || "¡Recompensa canjeada con éxito!"}
                                         <hr class="my-2">
-                                        <a href="${whatsappUrl}" target="_blank" class="btn btn-sm btn-success w-100" 
-                                           onclick="if(confirmRedeemRewardModalInstance) confirmRedeemRewardModalInstance.hide(); if(rewardDetailModalInstance && rewardDetailModalInstance._isShown) rewardDetailModalInstance.hide();"> 
+                                        <a href="${whatsappUrl}" target="_blank" class="btn btn-sm btn-success w-100"
+                                           onclick="if(confirmRedeemRewardModalInstance) confirmRedeemRewardModalInstance.hide(); if(rewardDetailModalInstance && rewardDetailModalInstance._isShown) rewardDetailModalInstance.hide();">
                                             <i class="bi bi-whatsapp me-2"></i>Notificar Canje por WhatsApp
                                         </a>
                                     </div>`;
@@ -2908,7 +3064,7 @@ main {
                             if (modalFooterEl) {
                                 modalFooterEl.innerHTML = `<button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="if(rewardDetailModalInstance && rewardDetailModalInstance._isShown) rewardDetailModalInstance.hide();">Cerrar</button>`;
                             }
-                            loadAvailableRewards(true); 
+                            loadAvailableRewards(true);
                         } else {
                             if (modalFeedbackEl) modalFeedbackEl.innerHTML = `<div class="alert alert-danger py-2 small">${result.message || "No se pudo canjear. Intenta de nuevo."}</div>`;
                             if(confirmButtonDynamic) confirmButtonDynamic.disabled = false;
@@ -2919,7 +3075,7 @@ main {
 
             if (confirmRedeemRewardModalInstance) {
                 confirmRedeemRewardModalInstance.show();
-            } else { 
+            } else {
                 if (confirm(`¿Canjear "${reward.name}" por ${reward.pointsrequired} puntos para un próximo envío?`)) {
                      showGlobalFeedback("Procesando canje...", "info", null);
                      const resultFallback = await fetchDataFromGAS('redeemReward', 'POST', { clientId: String(clientData.id), rewardId: rewardId });
@@ -2934,7 +3090,7 @@ main {
                             localStorage.setItem(LOGGED_IN_CLIENT_KEY, JSON.stringify(clientData));
                             updateClientDisplayAndUI();
                         }
-                        loadAvailableRewards(true); 
+                        loadAvailableRewards(true);
                      } else {
                         showGlobalFeedback(resultFallback.message || "No se pudo canjear. Intenta de nuevo.", "danger", 7000);
                      }
@@ -2982,14 +3138,14 @@ main {
         function initializeShareModal() {
              const shareModalEl = document.getElementById('sharePageModal');
              if (shareModalEl) {
-                shareModalEl.addEventListener('shown.bs.modal', generateQrCodesForSharing); 
+                shareModalEl.addEventListener('shown.bs.modal', generateQrCodesForSharing);
              }
         }
 
         function generateQrCodesForSharing() {
             const qrPageCanvas = document.getElementById('qrcodeCanvas');
-            const qrAppCanvas = document.getElementById('qrcodeAppCanvas'); 
-            
+            const qrAppCanvas = document.getElementById('qrcodeAppCanvas');
+
             if (qrPageCanvas) {
                 qrPageCanvas.innerHTML = '';
                 if (qrcodePageInstance) {
@@ -2998,7 +3154,7 @@ main {
                 }
                 const pageUrl = window.location.href;
                 qrcodePageInstance = new QRCode(qrPageCanvas, {
-                    text: pageUrl, width: 130, height: 130, 
+                    text: pageUrl, width: 130, height: 130,
                     colorDark : "#000000", colorLight : "#ffffff", correctLevel : QRCode.CorrectLevel.H
                 });
 
@@ -3014,7 +3170,7 @@ main {
                     qrcodeAppInstance = null;
                 }
                 qrcodeAppInstance = new QRCode(qrAppCanvas, {
-                    text: APP_DOWNLOAD_LINK, width: 130, height: 130, 
+                    text: APP_DOWNLOAD_LINK, width: 130, height: 130,
                     colorDark : "#000000", colorLight : "#ffffff", correctLevel : QRCode.CorrectLevel.H
                 });
                 const shareAppText = encodeURIComponent(`Descarga la app de DL Cumanayagua para que tu familia en Cuba vea el catálogo: ${APP_DOWNLOAD_LINK}`);
@@ -3080,6 +3236,17 @@ main {
                     setTimeout(() => {
                         whatsappButtonEl.classList.remove('clicked-animation');
                     }, 400);
+                });
+            }
+        }
+
+        function copyReferralCode() {
+            if (clientData && clientData.referralcode) {
+                navigator.clipboard.writeText(clientData.referralcode).then(() => {
+                    showGlobalFeedback('¡Tu código de referido ha sido copiado!', 'success', 2000);
+                }).catch(err => {
+                    showGlobalFeedback('Error al copiar el código.', 'danger');
+                    console.error('Error al copiar código de referido: ', err);
                 });
             }
         }
