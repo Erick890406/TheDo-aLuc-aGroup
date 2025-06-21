@@ -41,6 +41,9 @@
     --transition-fast: all 0.25s ease-in-out;
     --primary-color-rgb: 59, 125, 221; /* RGB de --primary-color */
     --accent-color-rgb: 96, 150, 186; /* RGB de --accent-color */
+    --bg-card-rgb: 23, 42, 69; /* RGB de --bg-card */
+    --text-light-rgb: 204, 214, 246; /* RGB de --text-light */
+    --bg-dark-rgb: 10, 25, 47; /* RGB de --bg-dark */
 }
 
 body {
@@ -80,7 +83,9 @@ main {
     font-weight: bold;
     color: var(--text-light) !important; /* Marca en color claro */
 }
-
+.navbar-brand img { /* Ajustar logo si es necesario */
+    /* filter: brightness(0) invert(1); */ /* Comentado o eliminado */
+}
 
 
 .navbar .nav-link,
@@ -228,7 +233,7 @@ main {
     align-items: center;
     margin-top: 1rem;
     padding-top: 0.75rem; /* Aumentado */
-    border-top: 1px solid rgba(var(--text-light-rgb, 204, 214, 246),0.1);
+    border-top: 1px solid rgba(var(--text-light-rgb),0.1);
 }
 .price-points-row .fw-bold { /* Precio de producto */
     color: var(--primary-color);
@@ -287,7 +292,7 @@ main {
     left: 0;
     width: 100vw;
     height: 100vh;
-    background: rgba(var(--bg-dark-rgb, 10, 25, 47), 0.85); /* Fondo oscuro del spinner */
+    background: rgba(var(--bg-dark-rgb), 0.85); /* Fondo oscuro del spinner */
     display: none;
     align-items: center;
     justify-content: center;
@@ -300,7 +305,7 @@ main {
 
 
 .luxury-spinner-inner {
-    border: 5px solid rgba(var(--text-light-rgb, 204, 214, 246),0.1);
+    border: 5px solid rgba(var(--text-light-rgb),0.1);
     border-top: 5px solid var(--primary-color);
     border-radius: 50%;
     width: 60px;
@@ -368,7 +373,7 @@ main {
 
 
 .nav-pills {
-    background-color: rgba(var(--bg-card-rgb, 23, 42, 69),0.5); /* Fondo semi-transparente para pills */
+    background-color: rgba(var(--bg-card-rgb),0.5); /* Fondo semi-transparente para pills */
     padding: 0.5rem;
     border-radius: 1rem;
     display: flex;
@@ -432,16 +437,27 @@ main {
 }
 
 #vip-card-container {
-    background: linear-gradient(135deg, #172A45, #0A192F); /* Degradado de azules oscuros para VIP card */
+    background: linear-gradient(135deg, #172A45, #0A192F);
     border: 2px solid rgba(var(--primary-color-rgb), 0.6);
-    box-shadow: 0 0 25px rgba(var(--primary-color-rgb), 0.15), 0 0 50px rgba(0,0,0,0.3); /* Sombra ajustada */
+    box-shadow: 0 0 25px rgba(var(--primary-color-rgb), 0.15), 0 0 50px rgba(0,0,0,0.3);
     border-radius: var(--radius-lg);
     color: var(--text-light);
     position: relative;
     overflow: hidden;
     transition: all 0.4s ease;
     padding: 2rem;
-    backdrop-filter: blur(5px); /* Menos blur */
+    backdrop-filter: blur(5px);
+    text-align: center; /* Centrará el texto de los elementos hijos directos */
+}
+
+/* NUEVO: Contenedor para el contenido que se quiere centrar */
+.vip-card-content-centered {
+    /* Este div no necesita mucho estilo si #vip-card-container ya usa text-align: center */
+}
+
+/* Ajuste específico para el contenedor del código de referido para que el strong y el botón se centren */
+#client-referral-code-container .d-flex {
+    justify-content: center !important; /* Asegura el centrado */
 }
 
 #vip-card-container:hover {
@@ -559,7 +575,7 @@ main {
     align-items: center;
     justify-content: center;
     box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
-    border: 2px solid rgba(var(--text-light-rgb, 204, 214, 246), 0.1); /* Borde más sutil */
+    border: 2px solid rgba(var(--text-light-rgb), 0.1); /* Borde más sutil */
     transition: all 0.3s cubic-bezier(0.68, -0.55, 0.27, 1.55);
     padding: 0;
     cursor: pointer;
@@ -659,7 +675,7 @@ main {
 
 #modal-recommendations-container h5 {
     color: var(--text-light);
-    border-bottom: 1px solid rgba(var(--text-light-rgb, 204, 214, 246),0.15);
+    border-bottom: 1px solid rgba(var(--text-light-rgb),0.15);
     padding-bottom: 0.5rem;
     margin-bottom: 1rem;
     font-weight: 600;
@@ -756,8 +772,8 @@ main {
 .footer-refresh-btn {
     width: 35px;
     height: 35px;
-    background-color: rgba(var(--bg-card-rgb, 23, 42, 69), 0.8);
-    border: 1px solid rgba(var(--text-light-rgb, 204, 214, 246), 0.1);
+    background-color: rgba(var(--bg-card-rgb), 0.8);
+    border: 1px solid rgba(var(--text-light-rgb), 0.1);
     border-radius: 50%;
     color: var(--text-muted);
     transition: var(--transition-fast);
@@ -784,10 +800,10 @@ main {
 .quick-nav-btn {
     width: 45px;
     height: 45px;
-    background-color: rgba(var(--bg-card-rgb, 23, 42, 69), 0.8);
+    background-color: rgba(var(--bg-card-rgb), 0.8);
     backdrop-filter: blur(5px);
     color: var(--primary-color);
-    border: 1px solid rgba(var(--text-light-rgb, 204, 214, 246), 0.1);
+    border: 1px solid rgba(var(--text-light-rgb), 0.1);
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -882,6 +898,49 @@ main {
         gap: 0.75rem;
     }
 }
+
+/* Styles for Auth Modal Tabs */
+#authModal .nav-tabs .nav-link {
+    background-color: transparent;
+    border-color: rgba(var(--primary-color-rgb), 0.2);
+    color: var(--text-muted);
+    border-bottom-width: 2px; /* Thicker bottom border for inactive */
+}
+
+#authModal .nav-tabs .nav-link:hover {
+    border-color: rgba(var(--primary-color-rgb), 0.5);
+    color: var(--text-light);
+}
+
+#authModal .nav-tabs .nav-link.active {
+    background-color: var(--bg-card); /* Or var(--primary-color) if you prefer solid fill */
+    color: var(--primary-color); /* Or #fff if background is var(--primary-color) */
+    border-color: var(--primary-color) var(--primary-color) var(--bg-card); /* Match card bg for bottom border */
+    border-bottom-color: var(--primary-color); /* Active tab bottom border highlight */
+    font-weight: 600;
+}
+
+#authModal .tab-content {
+    padding-top: 1rem; /* Add some space below tabs */
+}
+
+/* Make sure modal footer buttons in auth modal also fit the theme */
+#authModal .modal-footer .btn-primary {
+    background-color: var(--primary-color);
+    border: none;
+    color: #fff;
+}
+#authModal .modal-footer .btn-primary:hover {
+    background-color: #2F67C0; /* Darker primary */
+}
+#authModal .modal-footer .btn-outline-secondary {
+    border-color: var(--accent-color);
+    color: var(--accent-color);
+}
+#authModal .modal-footer .btn-outline-secondary:hover {
+    background-color: var(--accent-color);
+    color: var(--text-light);
+}
 </style>
 
 </head>
@@ -891,7 +950,7 @@ main {
     <nav class="navbar navbar-expand-sm navbar-custom fixed-top">
         <div class="container">
             <a class="navbar-brand d-flex align-items-center" href="#top">
-                <img src="https://i.postimg.cc/bwc5SzJG/striking-app-icon-the-letters-dl-in-a-custom-l-1.png" alt="Doña Lucía Logo" style="height: 30px; margin-right: 8px;">
+                <img src="img/Logo-DL-Cumanayagua.png" alt="Doña Lucía Logo" style="height: 30px; margin-right: 8px;">
                 DL Cumanayagua
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavContent" aria-controls="navbarNavContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -944,23 +1003,23 @@ main {
     <main>
         <div class="container mt-5 pt-4 pb-5">
             <div id="vip-card-container" class="vip-card p-md-4 p-3 mb-4 position-relative animate__animated animate__fadeInDown" style="display: none;">
-                <span class="position-absolute top-0 start-0 m-3 badge" id="vip-status-badge">VIP</span>
-                <div class="text-center text-md-start">
+                <!-- Contenedor para centrar el contenido principal de la tarjeta -->
+                <div class="vip-card-content-centered">
+                    <span class="position-absolute top-0 start-0 m-3 badge" id="vip-status-badge">VIP</span>
+                    <!-- El avatar ya no se mostrará por el CSS display:none, pero lo dejamos por si se reactiva -->
                     <div class="position-relative d-inline-block">
                         <img id="user-avatar" src="https://via.placeholder.com/80/FFFFFF/2C3E50?Text=VIP" alt="User Avatar" class="rounded-circle mb-2 shadow-sm" width="80" height="80" style="cursor:pointer; display:none;" title="Haz clic para cambiar tu avatar">
                         <button id="changeAvatarButton" class="btn btn-sm position-absolute bottom-0 end-0 mb-2 me-0 rounded-circle p-1 lh-1" title="Cambiar avatar" style="display:none; transform: translate(25%, 25%);">
                             <i class="bi bi-pencil-square"></i>
                         </button>
                     </div>
-                    <h2 class="mb-1 mt-2 mt-md-0" id="client-name">¡Hola!</h2>
-                </div>
-                <div class="text-center text-md-start mt-2">
+                    <h2 class="mb-1 mt-2" id="client-name">¡Hola!</h2>
                     <p class="mb-1 opacity-75" id="client-status">Miembro DL</p>
                     <div class="points-display mb-2" id="client-points">0</div>
-                    <small id="client-phone-display" class="text-light opacity-75"></small>
+                    <small id="client-phone-display" class="text-light opacity-75 d-block"></small> <!-- Añadido d-block para que ocupe su línea -->
                     <div id="client-referral-code-container" class="mt-2" style="display: none;">
-                        <small class="text-light opacity-75">Tu Código de Referido:</small>
-                        <div class="d-flex align-items-center">
+                        <small class="text-light opacity-75 d-block">Tu Código de Referido:</small> <!-- Añadido d-block -->
+                        <div class="d-flex align-items-center justify-content-center"> <!-- justify-content-center para el código y botón -->
                             <strong id="clientReferralCode" class="text-warning fs-5 me-2">Cargando...</strong>
                             <button class="btn btn-sm btn-outline-light py-0 px-2" onclick="copyReferralCode()" title="Copiar código">
                                 <i class="bi bi-clipboard-check"></i>
@@ -1061,8 +1120,83 @@ main {
         </div>
     </div>
     <div class="toast-container position-fixed bottom-0 start-0 p-3" id="toastPlacement" style="z-index: 2050"> </div>
-    <div class="modal fade" id="registerUserModal" tabindex="-1" aria-labelledby="registerUserModalLabel" aria-hidden="true"><div class="modal-dialog modal-dialog-centered"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="registerUserModalLabel">Crear Cuenta para Envíos</h5><button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button></div><div class="modal-body"><form id="newUserRegistrationForm"><div class="mb-3"><label for="newUserName" class="form-label">Nombre Completo (Tuyo) <span class="text-danger">*</span></label><input type="text" class="form-control" id="newUserName" required autocomplete="name"></div><div class="mb-3"><label for="newUserPhone" class="form-label">Teléfono (Tuyo, con código de país si es de USA) <span class="text-danger">*</span></label><input type="tel" class="form-control" id="newUserPhone" required placeholder="Ej: +1 XXX XXX XXXX" autocomplete="tel"></div><div class="mb-3"><label for="newUserEmail" class="form-label">Correo (Tuyo) <span class="text-danger">*</span></label><input type="email" class="form-control" id="newUserEmail" required autocomplete="email"></div><div class="mb-3"><label for="newUserPassword" class="form-label">Contraseña <span class="text-danger">*</span></label><input type="password" class="form-control" id="newUserPassword" required autocomplete="new-password"></div><div class="mb-3"><label for="newUserConfirmPassword" class="form-label">Confirmar Contraseña <span class="text-danger">*</span></label><input type="password" class="form-control" id="newUserConfirmPassword" required autocomplete="new-password"></div><div class="mb-3"><label for="newUserReferralCodeUsed" class="form-label">Código de Referido (Opcional)</label><input type="text" class="form-control" id="newUserReferralCodeUsed" placeholder="Ingresa un código si tienes uno"></div><div id="registration-feedback" class="mt-3"></div></form></div><div class="modal-footer"><button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button><button type="button" class="btn btn-primary" onclick="handleUserRegistrationAttempt()">Registrarme</button></div></div></div></div>
-    <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true"><div class="modal-dialog modal-dialog-centered"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="loginModalLabel">Iniciar Sesión para Envíos</h5><button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button></div><div class="modal-body"><form id="loginForm"><div class="mb-3"><label for="loginPhone" class="form-label">Teléfono (Tuyo)</label><input type="tel" class="form-control" id="loginPhone" required autocomplete="username tel"></div><div class="mb-3"><label for="loginPassword" class="form-label">Contraseña</label><input type="password" class="form-control" id="loginPassword" required autocomplete="current-password"></div><div id="login-feedback" class="mt-3"></div></form></div><div class="modal-footer"><button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button><button type="button" class="btn btn-primary" onclick="handleLoginAttempt()">Acceder</button></div></div></div></div>
+
+    <!-- INICIO MODAL DE AUTENTICACIÓN UNIFICADO -->
+    <div class="modal fade" id="authModal" tabindex="-1" aria-labelledby="authModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="authModalLabel">Acceso / Registro</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <ul class="nav nav-tabs nav-fill mb-3" id="authTab" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="login-tab-btn" data-bs-toggle="tab" data-bs-target="#login-tab-pane" type="button" role="tab" aria-controls="login-tab-pane" aria-selected="true">
+                                <i class="bi bi-box-arrow-in-right me-1"></i>Iniciar Sesión
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="register-tab-btn" data-bs-toggle="tab" data-bs-target="#register-tab-pane" type="button" role="tab" aria-controls="register-tab-pane" aria-selected="false">
+                                <i class="bi bi-person-plus-fill me-1"></i>Crear Cuenta
+                            </button>
+                        </li>
+                    </ul>
+                    <div class="tab-content" id="authTabContent">
+                        <div class="tab-pane fade show active" id="login-tab-pane" role="tabpanel" aria-labelledby="login-tab-btn" tabindex="0">
+                            <form id="loginForm">
+                                <div class="mb-3">
+                                    <label for="loginPhone" class="form-label">Teléfono (Tuyo)</label>
+                                    <input type="tel" class="form-control" id="loginPhone" required autocomplete="username tel">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="loginPassword" class="form-label">Contraseña</label>
+                                    <input type="password" class="form-control" id="loginPassword" required autocomplete="current-password">
+                                </div>
+                                <div id="login-feedback" class="mt-3 mb-3"></div>
+                                <button type="button" class="btn btn-primary w-100" onclick="handleLoginAttempt()">Acceder</button>
+                            </form>
+                        </div>
+                        <div class="tab-pane fade" id="register-tab-pane" role="tabpanel" aria-labelledby="register-tab-btn" tabindex="0">
+                            <form id="newUserRegistrationForm">
+                                <div class="mb-3">
+                                    <label for="newUserName" class="form-label">Nombre Completo (Tuyo) <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" id="newUserName" required autocomplete="name">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="newUserPhone" class="form-label">Teléfono (Tuyo, con código de país si es de USA) <span class="text-danger">*</span></label>
+                                    <input type="tel" class="form-control" id="newUserPhone" required placeholder="Ej: +1 XXX XXX XXXX" autocomplete="tel">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="newUserEmail" class="form-label">Correo (Tuyo) <span class="text-danger">*</span></label>
+                                    <input type="email" class="form-control" id="newUserEmail" required autocomplete="email">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="newUserPassword" class="form-label">Contraseña <span class="text-danger">*</span></label>
+                                    <input type="password" class="form-control" id="newUserPassword" required autocomplete="new-password">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="newUserConfirmPassword" class="form-label">Confirmar Contraseña <span class="text-danger">*</span></label>
+                                    <input type="password" class="form-control" id="newUserConfirmPassword" required autocomplete="new-password">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="newUserReferralCodeUsed" class="form-label">Código de Referido (Opcional)</label>
+                                    <input type="text" class="form-control" id="newUserReferralCodeUsed" placeholder="Ingresa un código si tienes uno">
+                                </div>
+                                <div id="registration-feedback" class="mt-3 mb-3"></div>
+                                <button type="button" class="btn btn-primary w-100" onclick="handleUserRegistrationAttempt()">Registrarme</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- FIN MODAL DE AUTENTICACIÓN UNIFICADO -->
+
     <div class="modal fade" id="cartModal" tabindex="-1" aria-labelledby="cartModalLabel" aria-hidden="true"><div class="modal-dialog modal-lg modal-dialog-scrollable modal-dialog-centered"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="cartModalLabel"><i class="bi bi-cart3 me-2"></i>Mi Carrito de Envío</h5><button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button></div><div class="modal-body" id="cart-items-container"><p class="text-center">Tu carrito está vacío.</p></div><div class="modal-footer justify-content-between flex-wrap"><div id="cart-footer-info"><small class="text-muted d-block">Puntos a ganar: <span id="cart-points-to-earn" class="fw-bold">0</span></small><strong class="fs-5">Total: <span id="cart-total-price" style="color: var(--primary-color);">0.00</span> USD</strong><br><small class="text-warning"><i class="bi bi-credit-card-2-front-fill"></i> Pagos por Zelle.</small></div><div class="d-flex mt-2 mt-sm-0" id="cart-footer-buttons"><button type="button" class="btn btn-outline-danger me-2" onclick="clearCart()"><i class="bi bi-trash3 me-1"></i>Vaciar</button><button type="button" class="btn btn-success" onclick="confirmAndPlaceOrder()"><i class="bi bi-check-circle me-1"></i>Confirmar Envío</button></div></div><div id="order-placement-feedback" class="m-3"></div></div></div></div>
     <div class="modal fade" id="downloadAppModal" tabindex="-1" aria-labelledby="downloadAppModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
         <div class="modal-dialog modal-dialog-centered"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="downloadAppModalLabel"><i class="bi bi-phone-vibrate-fill me-2" style="color:var(--primary-color);"></i> ¡App para tu Familia en Cuba!</h5><button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button></div><div class="modal-body text-center"><img src="https://i.postimg.cc/XJxYzHZW/striking-app-icon-the-letters-dl-in-a-custom-l.png" alt="Doña Lucía App Icon" class="img-fluid rounded-circle mb-3 shadow" style="width: 100px; height: 100px; border: 3px solid var(--primary-color);">
@@ -1455,7 +1589,11 @@ main {
         let currentFilterCategory = 'all';
         let currentSortOption = 'default';
         const loadingSpinnerUser = document.getElementById('loadingSpinnerUser');
-        let registrationModalInstance, loginModalInstance, cartModalInstance, downloadAppModalInstance, productDetailModalInstance, sharePageModalInstance, confirmClearCartModalInstance, confirmRedeemRewardModalInstance, presentationVideoModalInstance, helpModalInstance, rewardDetailModalInstance;
+        let authModalInstance, 
+            cartModalInstance, downloadAppModalInstance, productDetailModalInstance,
+            sharePageModalInstance, confirmClearCartModalInstance,
+            confirmRedeemRewardModalInstance, presentationVideoModalInstance,
+            helpModalInstance, rewardDetailModalInstance;
         let floatingCartButtonEl;
         let floatingCartCountEl;
         let qrcodePageInstance = null;
@@ -1512,23 +1650,18 @@ main {
                 });
             }
 
-            // Ensure help accordion IDs are correctly targeted if they were dynamically generated before
-            // For statically added items like the referral program, their IDs are fixed.
             const helpAccordionItems = document.querySelectorAll('#helpAccordion .accordion-collapse');
             let hasDynamicHelpItems = false;
             helpAccordionItems.forEach((item, index) => {
                 const button = item.previousElementSibling.querySelector('button');
-                if (button && button.getAttribute('data-bs-target').startsWith('#collapseHelp')) { // Check if it's one of the dynamic ones
+                if (button && button.getAttribute('data-bs-target').startsWith('#collapseHelp')) { 
                     hasDynamicHelpItems = true;
-                    const newId = `collapseHelp${index}`; // This assumes original logic generated them this way
+                    const newId = `collapseHelp${index}`; 
                     item.id = newId;
                     button.setAttribute('data-bs-target', `#${newId}`);
                     button.setAttribute('aria-controls', newId);
                 }
             });
-            // If no dynamic items were found, this loop might not be strictly necessary, but harmless.
-            // The static "Programa de Referidos" has ID "collapseSixHelp"
-
         });
 
         function setupNavbarToggler() {
@@ -1662,12 +1795,14 @@ main {
 
         function initializeModals() {
             try {
-                ['registerUserModal', 'loginModal', 'cartModal', 'downloadAppModal', 'productDetailModal', 'sharePageModal', 'confirmClearCartModal', 'confirmRedeemRewardModal', 'presentationVideoModal', 'helpModal', 'rewardDetailModal'].forEach(id => {
+                const authModalEl = document.getElementById('authModal');
+                if (authModalEl) authModalInstance = new bootstrap.Modal(authModalEl);
+                else console.warn("Modal con ID 'authModal' no encontrado.");
+
+                ['cartModal', 'downloadAppModal', 'productDetailModal', 'sharePageModal', 'confirmClearCartModal', 'confirmRedeemRewardModal', 'presentationVideoModal', 'helpModal', 'rewardDetailModal'].forEach(id => {
                     const el = document.getElementById(id);
                     if (el) {
-                        if (id === 'registerUserModal') registrationModalInstance = new bootstrap.Modal(el);
-                        else if (id === 'loginModal') loginModalInstance = new bootstrap.Modal(el);
-                        else if (id === 'cartModal') cartModalInstance = new bootstrap.Modal(el);
+                        if (id === 'cartModal') cartModalInstance = new bootstrap.Modal(el);
                         else if (id === 'downloadAppModal') downloadAppModalInstance = new bootstrap.Modal(el);
                         else if (id === 'productDetailModal') productDetailModalInstance = new bootstrap.Modal(el);
                         else if (id === 'sharePageModal') sharePageModalInstance = new bootstrap.Modal(el);
@@ -1682,8 +1817,14 @@ main {
         }
 
         function setupEventListeners() {
-            document.getElementById('registerUserModal')?.addEventListener('hidden.bs.modal', () => clearFormAndFeedback('newUserRegistrationForm', 'registration-feedback'));
-            document.getElementById('loginModal')?.addEventListener('hidden.bs.modal', () => clearFormAndFeedback('loginForm', 'login-feedback'));
+            const authModalEl = document.getElementById('authModal');
+            if (authModalEl) {
+                authModalEl.addEventListener('hidden.bs.modal', () => {
+                    clearFormAndFeedback('newUserRegistrationForm', 'registration-feedback');
+                    clearFormAndFeedback('loginForm', 'login-feedback');
+                });
+            }
+            
             document.getElementById('cartModal')?.addEventListener('show.bs.modal', renderCartItems);
             document.getElementById('cartModal')?.addEventListener('hidden.bs.modal', () => {
                 document.getElementById('order-placement-feedback').innerHTML = '';
@@ -1698,7 +1839,7 @@ main {
                     avatarUploadInputEl.click();
                 } else if (!clientData || !clientData.id) {
                     showGlobalFeedback("Inicia sesión para cambiar tu avatar.", "warning");
-                    loginModalInstance?.show();
+                    openAuthModal('login');
                 }
             };
             if (userAvatarImgEl) userAvatarImgEl.addEventListener('click', triggerAvatarUpload);
@@ -1722,6 +1863,20 @@ main {
             }
             window.addEventListener('resize', adjustBodyPaddingAndFabPosition);
             window.addEventListener('scroll', handleScroll);
+        }
+        
+        function openAuthModal(tabToActivate = 'login') {
+            if (authModalInstance) {
+                authModalInstance.show();
+                const tabButtonId = (tabToActivate === 'register') ? 'register-tab-btn' : 'login-tab-btn';
+                const tabButton = document.getElementById(tabButtonId);
+                if (tabButton) {
+                    const tab = bootstrap.Tab.getOrCreateInstance(tabButton);
+                    tab.show();
+                }
+            } else {
+                console.error("Auth modal instance not found");
+            }
         }
 
         function adjustBodyPaddingAndFabPosition() {
@@ -1836,7 +1991,7 @@ main {
 
             if (!videoAlreadyShown || videoAlreadyShown === 'false') {
                 if (presentationVideoModalInstance && videoElement) {
-                    const anyMajorModalActive = ['loginModal', 'registerUserModal', 'cartModal', 'downloadAppModal', 'helpModal'].some(id => {
+                    const anyMajorModalActive = ['authModal', 'cartModal', 'downloadAppModal', 'helpModal'].some(id => {
                         const modal = document.getElementById(id);
                         return modal && modal.classList.contains('show');
                     });
@@ -1981,7 +2136,9 @@ main {
                 el('client-phone-display').textContent = '';
                 el('vip-status-badge').style.display = 'none';
                 if (userAvatarImg) userAvatarImg.src = 'https://via.placeholder.com/80/FFFFFF/2C3E50?Text=VIP';
-                if(authNavContainer) authNavContainer.innerHTML = `<button class="btn btn-sm btn-outline-light me-2" data-bs-toggle="modal" data-bs-target="#loginModal"><i class="bi bi-box-arrow-in-right"></i> Login</button><button class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#registerUserModal"><i class="bi bi-person-plus"></i> Registro</button>`;
+                if(authNavContainer) authNavContainer.innerHTML = `
+                    <button class="btn btn-sm btn-outline-light me-2" onclick="openAuthModal('login')"><i class="bi bi-box-arrow-in-right"></i> Login</button>
+                    <button class="btn btn-sm btn-warning" onclick="openAuthModal('register')"><i class="bi bi-person-plus"></i> Registro</button>`;
                 if(logoutNavButton) logoutNavButton.style.display = 'none';
                 if(vipCardContainer) vipCardContainer.style.display = 'none';
                 if(guestPromptContainer) guestPromptContainer.style.display = 'block';
@@ -2037,8 +2194,13 @@ main {
                 showFeedbackInModal(null, feedbackElId, `${result.message || '¡Registro exitoso!'} Ahora puedes iniciar sesión para realizar tus envíos.`, 'success', 4000);
                 document.getElementById('newUserRegistrationForm').reset();
                 setTimeout(() => {
-                    registrationModalInstance?.hide();
-                    loginModalInstance?.show();
+                    if (authModalInstance) {
+                        const loginTabBtn = document.getElementById('login-tab-btn');
+                        if (loginTabBtn) {
+                            bootstrap.Tab.getOrCreateInstance(loginTabBtn).show();
+                        }
+                        clearFormAndFeedback('newUserRegistrationForm', 'registration-feedback');
+                    }
                 }, 3000);
             } else {
                 showFeedbackInModal(null, feedbackElId, result.message || 'Error al registrar. Intenta de nuevo.', 'danger');
@@ -2060,7 +2222,7 @@ main {
                 localStorage.setItem(LOGGED_IN_CLIENT_KEY, JSON.stringify(clientData));
                 updateClientDisplayAndUI();
                 showFeedbackInModal(null, feedbackElId, `¡Bienvenido de nuevo, ${clientData.nombre.split(' ')[0]}! Listo para enviar.`, 'success', 3000);
-                setTimeout(() => loginModalInstance?.hide(), 2000);
+                setTimeout(() => authModalInstance?.hide(), 2000);
                 loadMenuItems(true);
                 loadAvailableRewards(true);
                 loadUserOrders();
@@ -2476,7 +2638,7 @@ main {
         function addToCart(productId) {
             if (!clientData || !clientData.id) {
                 showGlobalFeedback('Inicia sesión para añadir productos a tu envío.', 'warning');
-                loginModalInstance?.show();
+                openAuthModal('login');
                 return;
             }
             if (!menuItems || menuItems.length === 0) {
@@ -2654,7 +2816,7 @@ main {
             if (!clientData || !clientData.id) {
                 showFeedbackInModal(null, 'order-placement-feedback', 'Inicia sesión para realizar un envío.', 'warning');
                 cartModalInstance?.hide();
-                loginModalInstance?.show();
+                openAuthModal('login');
                 return;
             }
             showFeedbackInModal(null, 'order-placement-feedback', '<div class="spinner-border spinner-border-sm me-2"></div>Procesando envío...', 'info', null);
@@ -2709,10 +2871,10 @@ main {
                         <i class="bi bi-person-fill-lock display-1 text-muted opacity-50 mb-3"></i>
                         <h4 class="text-light mb-2">Acceso VIP Requerido</h4>
                         <p class="text-muted mb-3">Inicia sesión o regístrate para ver tu historial de envíos.</p>
-                        <button class="btn btn-warning me-2" data-bs-toggle="modal" data-bs-target="#loginModal">
+                        <button class="btn btn-warning me-2" onclick="openAuthModal('login')">
                             <i class="bi bi-box-arrow-in-right me-2"></i>Iniciar Sesión
                         </button>
-                        <button class="btn btn-outline-light" data-bs-toggle="modal" data-bs-target="#registerUserModal">
+                        <button class="btn btn-outline-light" onclick="openAuthModal('register')">
                             <i class="bi bi-person-plus me-2"></i>Registrarme
                         </button>
                     </div>`;
@@ -2852,10 +3014,10 @@ main {
                         <i class="bi bi-person-fill-lock display-1 text-muted opacity-50 mb-3"></i>
                         <h4 class="text-light mb-2">Acceso VIP Requerido</h4>
                         <p class="text-muted mb-3">Inicia sesión o regístrate para descubrir y canjear recompensas exclusivas para tus envíos.</p>
-                        <button class="btn btn-warning me-2" data-bs-toggle="modal" data-bs-target="#loginModal">
+                        <button class="btn btn-warning me-2" onclick="openAuthModal('login')">
                             <i class="bi bi-box-arrow-in-right me-2"></i>Iniciar Sesión
                         </button>
-                        <button class="btn btn-outline-light" data-bs-toggle="modal" data-bs-target="#registerUserModal">
+                        <button class="btn btn-outline-light" onclick="openAuthModal('register')">
                             <i class="bi bi-person-plus me-2"></i>Registrarme
                         </button>
                     </div>`;
@@ -2877,8 +3039,8 @@ main {
             availableRewards.sort((a,b) => (a.pointsrequired||0)-(b.pointsrequired||0));
             availableRewards.forEach(reward => {
                 const ca = cp >= reward.pointsrequired;
-                const hs = isNaN(reward.stock) || reward.stock === 9999 || reward.stock > 0; // 9999 es stock ilimitado
-                const cr = ca && hs; // Can Redeem
+                const hs = isNaN(reward.stock) || reward.stock === 9999 || reward.stock > 0;
+                const cr = ca && hs; 
                 const rid = String(reward.rewardid);
                 rc.innerHTML += `
                 <div class="col-6 col-md-6 col-lg-4 d-flex align-items-stretch animate__animated animate__fadeInUp" style="animation-duration: 0.5s;">
@@ -2920,10 +3082,10 @@ main {
             if (!isNaN(reward.stock) && reward.stock !== 9999) {
                 stockInfoEl.textContent = `Disponibles: ${reward.stock}`;
                 stockInfoEl.className = reward.stock > 0 ? 'badge bg-success' : 'badge bg-danger';
-            } else if (reward.stock === 0) { // Específicamente para cuando el stock es 0 (no ilimitado)
+            } else if (reward.stock === 0) { 
                  stockInfoEl.textContent = `Agotado`;
                  stockInfoEl.className = 'badge bg-danger fw-bold';
-            } else { // Stock es 9999 o NaN, interpretado como ilimitado
+            } else { 
                 stockInfoEl.textContent = 'Ilimitado';
                 stockInfoEl.className = 'badge bg-info';
             }
@@ -2943,7 +3105,7 @@ main {
                 else if (!hasStock) reason = "Recompensa agotada.";
                 redeemBtnContainer.innerHTML = `<button class="btn btn-secondary btn-lg w-100" disabled><i class="bi bi-x-octagon-fill me-2"></i>No canjeable (${reason})</button>`;
             } else {
-                 redeemBtnContainer.innerHTML = `<button class="btn btn-outline-light btn-lg w-100" onclick="if(rewardDetailModalInstance) rewardDetailModalInstance.hide(); loginModalInstance.show();"><i class="bi bi-person-check-fill me-2"></i>Iniciar sesión para canjear</button>`;
+                 redeemBtnContainer.innerHTML = `<button class="btn btn-outline-light btn-lg w-100" onclick="if(rewardDetailModalInstance) rewardDetailModalInstance.hide(); openAuthModal('login');"><i class="bi bi-person-check-fill me-2"></i>Iniciar sesión para canjear</button>`;
             }
 
             generateProductRecommendationsForRewardModal();
@@ -3000,7 +3162,7 @@ main {
         async function attemptRedeemReward(rewardId) {
             if (!clientData || !clientData.id) {
                 showGlobalFeedback("Debes iniciar sesión para canjear.", "warning");
-                loginModalInstance?.show();
+                openAuthModal('login');
                 return;
             }
             const reward = availableRewards.find(r => r.rewardid === rewardId);
@@ -3253,7 +3415,7 @@ main {
          // Registrar Service Worker
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('./sw.js', { scope: '/TheDo-aLuc-aGroup/' }) // Asegúrate que el SCOPE es correcto para GitHub Pages
+                navigator.serviceWorker.register('./sw.js', { scope: '/TheDo-aLuc-aGroup/' }) 
                     .then(registration => {
                         console.log('Service Worker registrado con éxito:', registration);
                     })
