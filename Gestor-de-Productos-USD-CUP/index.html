@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Gestor de Productos - USD/CUP</title>
+  <!-- PWA Meta Tags -->
+  <meta name="theme-color" content="#007bff"/>
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="icons/icon-192x192.png"> <!-- Para iOS -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="GestorProd">
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background: #f0f2f5;
+      padding: 20px;
+      color: #333;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: auto;
+      background: white;
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 25px;
+      color: #1c1c1e;
+    }
+
+    label {
+      display: block;
+      font-weight: 600;
+      margin-top: 15px;
+      color: #555;
+    }
+
+    input, button {
+      padding: 12px;
+      width: 100%;
+      margin-top: 5px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      font-size: 16px;
+      box-sizing: border-box; 
+    }
+    
+    input:focus {
+        border-color: #007bff;
+        box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+        outline: none;
+    }
+
+    button {
+      background-color: #007bff;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+      border: none;
+      transition: background-color 0.3s ease, transform 0.1s ease;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+    
+    button:active {
+        transform: scale(0.98);
+    }
+    
+    #saveButton.editing {
+      background-color: #ffc107;
+      color: black;
+    }
+    
+    #saveButton.editing:hover {
+      background-color: #e0a800;
+    }
+
+    .table-container {
+      margin-top: 30px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      border: 1px solid #e5e5e5;
+      padding: 12px 15px;
+      text-align: center;
+    }
+    
+    th {
+        background-color: #f8f9fa;
+        font-weight: 600;
+    }
+
+    .actions button {
+      width: auto;
+      padding: 6px 12px;
+      margin: 2px;
+      font-size: 13px;
+    }
+
+    .edit {
+      background-color: #ffc107;
+      color: black;
+    }
+    .delete {
+      background-color: #dc3545;
+      color: white;
+    }
+    
+    .calculation-display {
+      display: block;
+      margin-top: 5px;
+      font-size: 14px;
+      font-weight: 600;
+      color: #007bff;
+      height: 1.2em; 
+    }
+    
+    /* ---- ESTILOS PARA CONTROLES GLOBALES DE DESPLIEGUE ---- */
+    .global-controls {
+        display: none; /* Oculto en escritorio */
+        gap: 10px;
+        margin-bottom: 15px;
+    }
+
+    .global-controls button {
+        background-color: #6c757d;
+    }
+    .global-controls button:hover {
+        background-color: #5a6268;
+    }
+    
+    /* ---- DISEÑO RESPONSIVE CON TARJETAS DESPLEGABLES ---- */
+    @media (max-width: 768px) {
+      .table-container { overflow-x: hidden; }
+      table, thead, tbody { display: block; }
+      thead { display: none; }
+      table { border: none; }
+      
+      .global-controls {
+          display: flex; /* Visible en móvil */
+      }
+
+      tr {
+        display: flex;
+        flex-direction: column;
+        background: white;
+        border: 1px solid #e5e5e5;
+        border-radius: 10px;
+        margin-bottom: 15px;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        overflow: hidden; /* Clave para animación */
+        transition: box-shadow 0.3s ease;
+      }
+      
+      td {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border: none;
+        padding: 12px 15px;
+        text-align: right;
+      }
+
+      td:not(:last-child) {
+        border-bottom: 1px solid #f0f0f0;
+      }
+      
+      td::before {
+        content: attr(data-label);
+        font-weight: 600;
+        color: #333;
+        text-align: left;
+        margin-right: 15px;
+      }
+
+      /* CABECERA DE LA TARJETA (NOMBRE DEL PRODUCTO) */
+      .card-header {
+        font-size: 1.2em;
+        font-weight: bold;
+        color: #007bff;
+        cursor: pointer;
+        padding: 15px;
+        position: relative;
+        border-bottom: 1px solid #f0f0f0;
+        justify-content: space-between;
+      }
+      
+      .card-header::before {
+        display: none; /* Ocultar el "Producto:" */
+      }
+      
+      /* Icono de flecha (chevron) */
+      .card-header::after {
+        content: '';
+        width: 8px;
+        height: 8px;
+        border-bottom: 2px solid #007bff;
+        border-right: 2px solid #007bff;
+        transform: rotate(45deg);
+        transition: transform 0.3s ease-in-out;
+      }
+
+      /* ESTADO RECOGIDO (POR DEFECTO) */
+      tr.collapsed .card-header {
+        border-bottom: none;
+      }
+      tr.collapsed td:not(.card-header) {
+        display: none; /* Oculta todos los detalles */
+      }
+      
+      /* ESTADO DESPLEGADO */
+      tr:not(.collapsed) .card-header::after {
+        transform: rotate(-135deg); /* Flecha apunta hacia arriba */
+      }
+
+      /* Celda de Acciones */
+      td[data-label="Acciones"] {
+        justify-content: space-evenly;
+        padding: 15px;
+        border-bottom: none;
+      }
+      td[data-label="Acciones"]::before { display: none; }
+      .actions button { flex: 1; margin: 0 5px; font-size: 14px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Gestor de Productos</h2>
+
+    <label>Nombre del producto:</label>
+    <input type="text" id="productName" placeholder="Ej: Refresco Lata">
+    <!-- ... resto de los inputs del formulario ... -->
+    <label>Costo en CUP:</label>
+    <input type="number" id="costCUP" placeholder="Ej: 160">
+    <label>Precio sugerido en CUP:</label>
+    <input type="number" id="priceCUP" placeholder="Ej: 200" oninput="updateSuggestedUSD()">
+    <span id="suggestedUSDDisplay" class="calculation-display"></span>
+    <label>Precio final en USD (lo que tú vas a cobrar):</label>
+    <input type="number" id="priceUSD" placeholder="Ej: 0.70">
+    <label>Tasa de cambio (CUP por 1 USD):</label>
+    <input type="number" id="exchangeRate" value="355" oninput="updateSuggestedUSD(); updateAllProducts();">
+    <button id="saveButton" onclick="addProduct()">Guardar producto</button>
+
+    <div class="table-container">
+      <!-- NUEVO: Controles globales -->
+      <div class="global-controls">
+        <button onclick="expandAll()">Desplegar Todos</button>
+        <button onclick="collapseAll()">Recoger Todos</button>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Producto</th><th>Costo (CUP)</th><th>Precio CUP</th><th>Precio sugerido (USD)</th><th>Precio final (USD)</th><th>Costo (USD)</th><th>Ganancia (USD)</th><th>Ganancia (CUP)</th><th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody id="productTable"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <script>
+    let products = JSON.parse(localStorage.getItem('products')) || [];
+    let editIndex = -1;
+
+    // ---- NUEVAS FUNCIONES PARA DESPLEGAR/RECOGER TARJETAS ----
+    function toggleCard(rowElement) {
+        rowElement.classList.toggle('collapsed');
+    }
+    
+    function expandAll() {
+        document.querySelectorAll('#productTable tr').forEach(row => {
+            row.classList.remove('collapsed');
+        });
+    }
+
+    function collapseAll() {
+        document.querySelectorAll('#productTable tr').forEach(row => {
+            row.classList.add('collapsed');
+        });
+    }
+
+    function saveToStorage() { localStorage.setItem('products', JSON.stringify(products)); }
+
+    function updateSuggestedUSD() {
+      const priceCUP = parseFloat(document.getElementById("priceCUP").value);
+      const rate = parseFloat(document.getElementById("exchangeRate").value);
+      const display = document.getElementById("suggestedUSDDisplay");
+      if (!isNaN(priceCUP) && !isNaN(rate) && rate > 0) { display.textContent = `Equivale a: $${(priceCUP / rate).toFixed(2)} USD`; } 
+      else { display.textContent = ""; }
+    }
+
+    function updateAllProducts() {
+        const newRate = parseFloat(document.getElementById("exchangeRate").value);
+        if (isNaN(newRate) || newRate <= 0) return;
+        products.forEach(p => {
+            const costUSD = p.costCUP / newRate;
+            const profitUSD = p.priceUSD - costUSD;
+            p.suggestedUSD = (p.priceCUP / newRate).toFixed(2);
+            p.costUSD = costUSD.toFixed(2);
+            p.profitUSD = profitUSD.toFixed(2);
+            p.profitCUP = (profitUSD * newRate).toFixed(2);
+        });
+        saveToStorage();
+        renderTable();
+    }
+
+    function addProduct() {
+      const name = document.getElementById("productName").value.trim();
+      const costCUP = parseFloat(document.getElementById("costCUP").value);
+      const priceCUP = parseFloat(document.getElementById("priceCUP").value);
+      const priceUSD = parseFloat(document.getElementById("priceUSD").value);
+      const rate = parseFloat(document.getElementById("exchangeRate").value);
+
+      if (!name || isNaN(costCUP) || isNaN(priceCUP) || isNaN(priceUSD) || isNaN(rate) || rate <= 0) { alert("Completa todos los campos correctamente."); return; }
+      
+      const costUSD = costCUP / rate;
+      const profitUSD = priceUSD - costUSD;
+      const product = { name, costCUP, priceCUP, priceUSD: priceUSD.toFixed(2), suggestedUSD: (priceCUP / rate).toFixed(2), costUSD: costUSD.toFixed(2), profitUSD: profitUSD.toFixed(2), profitCUP: (profitUSD * rate).toFixed(2) };
+      
+      if (editIndex >= 0) products[editIndex] = product;
+      else products.push(product);
+      
+      clearForm();
+      saveToStorage();
+      renderTable();
+    }
+
+    function clearForm() {
+      document.getElementById("productName").value = '';
+      document.getElementById("costCUP").value = '';
+      document.getElementById("priceCUP").value = '';
+      document.getElementById("priceUSD").value = '';
+      const saveButton = document.getElementById('saveButton');
+      saveButton.textContent = 'Guardar producto';
+      saveButton.classList.remove('editing');
+      editIndex = -1;
+      updateSuggestedUSD();
+    }
+
+    function renderTable() {
+      const tbody = document.getElementById("productTable");
+      tbody.innerHTML = "";
+      products.forEach((p, index) => {
+        const row = document.createElement("tr");
+        // MODIFICADO: Se añade la clase 'collapsed' por defecto
+        row.className = 'collapsed'; 
+        
+        // MODIFICADO: Se añade la clase 'card-header' y el evento onclick a la celda del producto
+        row.innerHTML = `
+          <td data-label="Producto" class="card-header" onclick="toggleCard(this.parentElement)">${p.name}</td>
+          <td data-label="Costo (CUP)">${p.costCUP}</td>
+          <td data-label="Precio CUP">${p.priceCUP}</td>
+          <td data-label="Precio sugerido (USD)">$${p.suggestedUSD}</td>
+          <td data-label="Precio final (USD)">$${p.priceUSD}</td>
+          <td data-label="Costo (USD)">$${p.costUSD}</td>
+          <td data-label="Ganancia (USD)">$${p.profitUSD}</td>
+          <td data-label="Ganancia (CUP)">${p.profitCUP} CUP</td>
+          <td data-label="Acciones" class="actions">
+            <button class="edit" onclick="editProduct(${index})">Editar</button>
+            <button class="delete" onclick="deleteProduct(${index})">Eliminar</button>
+          </td>
+        `;
+        tbody.appendChild(row);
+      });
+    }
+
+    function editProduct(index) {
+      const product = products[index];
+      document.getElementById("productName").value = product.name;
+      document.getElementById("costCUP").value = product.costCUP;
+      document.getElementById("priceCUP").value = product.priceCUP;
+      document.getElementById("priceUSD").value = product.priceUSD;
+      editIndex = index;
+      
+      const saveButton = document.getElementById('saveButton');
+      saveButton.textContent = 'Actualizar Producto';
+      saveButton.classList.add('editing');
+      
+      // MODIFICADO: Despliega la tarjeta que se está editando y se desplaza a ella
+      const rowToEdit = document.querySelectorAll('#productTable tr')[index];
+      if (rowToEdit) {
+          rowToEdit.classList.remove('collapsed');
+          rowToEdit.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+      
+      updateSuggestedUSD();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function deleteProduct(index) {
+      if (confirm("¿Estás seguro de que quieres eliminar este producto?")) {
+        products.splice(index, 1);
+        saveToStorage();
+        renderTable();
+        if(editIndex === index) clearForm();
+      }
+    }
+    
+    renderTable();
+      // Registrar el Service Worker
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js') // Asegúrate que la ruta sea correcta
+          .then(registration => {
+            console.log('ServiceWorker registration successful with scope: ', registration.scope);
+          })
+          .catch(err => {
+            console.log('ServiceWorker registration failed: ', err);
+          });
+      });
+    }
+  </script>
+</body>
+</html>
