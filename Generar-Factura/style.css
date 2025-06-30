@@ -1,0 +1,122 @@
+:root {
+    --color-primario: #2c3e50;
+    --color-secundario: #3498db;
+    --color-mipyme: #1a5276;
+    --color-danger: #e74c3c;
+}
+body { 
+    font-family: 'Montserrat', sans-serif; 
+    background-color: #f0f2f5; 
+    color: #333; 
+}
+.container-fluid {
+    padding: 0;
+}
+.invoice-container { 
+    background: white; 
+    margin: 0;
+    border-radius: 0;
+    box-shadow: none;
+    border: none;
+    min-height: 100vh;
+}
+@media (min-width: 768px) {
+    .container-fluid {
+        padding: 1.5rem;
+    }
+    .invoice-container {
+        margin: 0 auto;
+        border-radius: 10px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        border: 1px solid #eee;
+    }
+}
+
+.invoice-header { 
+    background: var(--color-primario); 
+    color: white; 
+    padding: 1rem; 
+    position: relative; 
+}
+.invoice-header h2 {
+    font-size: 1.25rem;
+}
+.mipyme-badge { 
+    position: absolute; 
+    top: 10px; 
+    right: 10px; 
+    background-color: var(--color-mipyme); 
+    color: white; 
+    padding: 5px 15px; 
+    border-radius: 20px; 
+    font-weight: bold; 
+    font-size: 12px; 
+    text-transform: uppercase; 
+}
+.nav-tabs {
+    border-bottom: 1px solid #dee2e6;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+.nav-tabs::-webkit-scrollbar {
+    display: none;
+}
+.nav-tabs .nav-item {
+    flex-shrink: 0;
+}
+.nav-tabs .nav-link { 
+    font-weight: 600; 
+    color: var(--color-primario); 
+    border: none; 
+    padding: 12px 15px; 
+    font-size: 0.9rem;
+    white-space: nowrap;
+}
+.nav-tabs .nav-link.active { 
+    background: transparent; 
+    color: var(--color-mipyme); 
+    font-weight: 700; 
+    border-bottom: 3px solid var(--color-mipyme); 
+}
+.tab-content { padding: 1.25rem; }
+
+h5 {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--color-primario);
+}
+
+.invoice-table { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
+.invoice-table th { background-color: var(--color-mipyme); color: white; padding: 10px; text-align: left; }
+.invoice-table td { padding: 8px; border-bottom: 1px solid #eee; vertical-align: middle; }
+.invoice-table input { min-width: 70px; }
+.invoice-table .form-control-sm { padding: 0.25rem 0.5rem; font-size: 0.8rem; }
+
+.btn-gestion-group {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.signature-container { border-top: 2px dashed #ccc; padding-top: 20px; margin-top: 30px; }
+.signature-box { text-align: center; margin-top: 30px; }
+.signature-box img { max-height: 80px; max-width: 100%; margin-bottom: 10px; }
+
+.template-card { cursor: pointer; transition: all 0.2s ease-in-out; }
+.template-card:hover { transform: translateY(-5px); box-shadow: 0 8px 20px rgba(0,0,0,0.12); }
+
+.template-classic .invoice-header { background: linear-gradient(135deg, #2c3e50, #4a6b8a); }
+.template-classic .invoice-table th { background: linear-gradient(135deg, #1a5276, #2874a6); }
+.template-modern .invoice-header { background: linear-gradient(135deg, #1a5276, #3498db); border-bottom: 5px solid var(--color-mipyme); }
+.template-modern .invoice-table th { background: var(--color-mipyme); }
+.template-horizontal .invoice-header { background: var(--color-mipyme); border-bottom: 3px solid var(--color-primario); }
+.template-horizontal .invoice-table th { background: var(--color-primario); }
+.template-premium .invoice-header { background: linear-gradient(90deg, #c0a062, #d4b57a); }
+.template-premium .invoice-table th { background: #333; color: #d4b57a;}
+.template-minimalist .invoice-header { background: #fff; border-bottom: 2px solid #111;}
+.template-minimalist .invoice-header h2 { color: #111; }
+.template-minimalist .invoice-table th { background: #fff; color: #111; border-bottom: 1px solid #111; }
+.template-creative .invoice-header { background: #4a4a4a; }
+.template-creative .invoice-table th { background: #3498db; }
