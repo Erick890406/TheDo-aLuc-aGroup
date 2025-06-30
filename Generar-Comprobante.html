@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generador de Recibos Pro</title>
+    
+    <!-- Fuentes de Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=VT323&family=Open+Sans:wght@400;700&display=swap" rel="stylesheet">
+
+    <!-- dom-to-image -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/dom-to-image/2.6.0/dom-to-image.min.js "></script>
+<!-- jsPDF -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js "></script>
+    
+    <!-- Librería para generar PDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    
+    <!-- === INICIO DE ESTILOS CSS === -->
+    <style>
+        :root {
+            --primary-color: #007bff;
+            --success-color: #28a745;
+            --bg-color: #f4f7f9;
+            --panel-bg: #ffffff;
+            --text-color: #333333;
+            --border-color: #e0e0e0;
+            --font-main: 'Poppins', sans-serif;
+            --font-receipt-walmart: 'VT323', monospace;
+            --font-receipt-target: 'Open Sans', sans-serif;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: var(--font-main);
+            background-color: var(--bg-color);
+            color: var(--text-color);
+        }
+
+        .app-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Panel de Controles */
+        .controls-panel {
+            width: 450px;
+            padding: 30px;
+            background-color: var(--panel-bg);
+            border-right: 1px solid var(--border-color);
+            overflow-y: auto;
+            flex-shrink: 0;
+        }
+
+        .main-title {
+            text-align: center;
+            margin-bottom: 30px;
+            color: var(--primary-color);
+        }
+
+        .control-section {
+            background-color: #fafbff;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            border: 1px solid var(--border-color);
+        }
+        .control-section h2 {
+            font-size: 1.1em;
+            margin-bottom: 15px;
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 5px;
+            color: var(--primary-color);
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            margin-bottom: 10px;
+            font-family: var(--font-main);
+            font-size: 1em;
+            min-height: 48px;
+        }
+
+        .button-primary, .button-success {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 6px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background-color 0.2s ease;
+        }
+        .button-primary { background-color: var(--primary-color); }
+        .button-primary:hover { background-color: #0056b3; }
+        .button-success { background-color: var(--success-color); }
+        .button-success:hover { background-color: #218838; }
+
+        /* Panel de "Añadir Rápido" */
+        #quick-add-container h3 {
+            font-size: 1em;
+            margin: 15px 0 10px;
+            color: #555;
+        }
+        .quick-add-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .quick-add-item {
+            background-color: #e9f2ff;
+            padding: 8px 12px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            cursor: pointer;
+            transition: background-color 0.2s, color 0.2s;
+            user-select: none;
+        }
+        .quick-add-item:hover {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        /* Panel del Recibo */
+        .receipt-panel {
+            flex-grow: 1;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow-y: auto;
+        }
+
+        #pdf-page-container {
+            width: 8.5in;
+            height: 11in;
+            background: white;
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+            padding: 1in;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            overflow: hidden;
+        }
+
+        .actions {
+            margin-top: 20px;
+            width: 100%;
+            max-width: 8.5in;
+        }
+
+        /* --- ESTILOS COMUNES DE RECIBOS --- */
+        .receipt { background-color: #fdfdfd; box-sizing: border-box; color: #000; text-transform: uppercase; }
+        .receipt p { margin: 0; }
+        .receipt-header { text-align: center; }
+        .receipt-info p, .receipt-totals p, .receipt-payment p { display: flex; justify-content: space-between; }
+        .receipt-item { margin-bottom: 8px; }
+        .item-line { display: flex; justify-content: space-between; }
+        .receipt-footer { text-align: center; }
+        .separator { margin: 10px 0; }
+        .total { font-weight: bold; }
+
+        /* --- ESTILO WALMART --- */
+        .style-walmart .receipt { width: 300px; padding: 15px; border: 1px dashed #888; font-family: var(--font-receipt-walmart); font-size: 18px; }
+        .style-walmart .receipt-logo { font-size: 32px; font-weight: bold; margin-bottom: 5px; color: #0071ce; }
+        .style-walmart .separator { font-size: 16px; letter-spacing: 2px; text-align: center; }
+        .style-walmart .separator::after { content: '*********************************'; }
+        .style-walmart .item-details { padding-left: 15px; font-size: 16px; }
+        .style-walmart .total { font-size: 22px; margin-top: 8px; }
+        .style-walmart .barcode { height: 40px; margin: 10px auto; display: flex; justify-content: center; align-items: flex-end; }
+        .style-walmart .barcode::after { content: '||| || ||||| |||| || |'; letter-spacing: 3px; font-size: 24px; }
+
+        /* --- ESTILO TARGET --- */
+        .style-target .receipt { width: 320px; padding: 20px; font-family: var(--font-receipt-target); font-size: 12px; font-weight: 700; }
+        .style-target .receipt-logo { font-size: 28px; font-weight: bold; margin-bottom: 5px; color: #CC0000; letter-spacing: 2px; }
+        .style-target .separator { border-top: 2px solid #333; }
+        .style-target .item-name { flex-grow: 1; }
+        .style-target .total { font-size: 16px; margin-top: 8px; }
+        .style-target .barcode { height: 40px; margin: 10px auto; }
+        .style-target .barcode::after { content: '1234 5678 9012 3456'; font-size: 14px; font-family: 'VT323', monospace; }
+
+        /* --- ESTILO STARBUCKS --- */
+        .style-starbucks .receipt { width: 280px; padding: 25px 20px; font-family: var(--font-receipt-target); font-size: 13px; text-transform: none; }
+        .style-starbucks .receipt-logo { font-size: 24px; font-weight: bold; margin-bottom: 10px; color: #00704A; }
+        .style-starbucks .separator { border-top: 1px dashed #333; }
+        .style-starbucks .item-line { font-weight: bold; }
+        .style-starbucks .item-details { padding-left: 10px; font-size: 12px; color: #555; }
+        .style-starbucks .total { font-size: 18px; margin-top: 8px; }
+        .style-starbucks .barcode { display: none; }
+
+        /* --- DISEÑO RESPONSIVO Y TÁCTIL --- */
+        @media (max-width: 1200px) {
+            .app-container {
+                flex-direction: column;
+            }
+            .controls-panel {
+                width: 100%;
+                border-right: none;
+                border-bottom: 1px solid var(--border-color);
+            }
+            .receipt-panel {
+                padding: 20px;
+            }
+            #pdf-page-container {
+                width: 100%;
+                height: auto;
+                padding: 20px;
+                overflow: visible; /* Permitir que se vea todo en móvil */
+            }
+            .receipt {
+                transform: scale(0.95);
+                transform-origin: top center;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .controls-panel, .receipt-panel {
+                padding: 15px;
+            }
+            #pdf-page-container {
+                padding: 10px;
+            }
+            .receipt {
+                transform: scale(1);
+                width: 100% !important;
+                border: none;
+                padding: 10px;
+            }
+        }
+
+        /* CLASE ESPECIAL PARA EL CLON DEL PDF */
+        .receipt-pdf-clone {
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: -1;
+            visibility: hidden;
+            transform: none !important;
+            box-shadow: none !important;
+            border: 1px solid #ccc !important;
+            padding: 20px !important;
+            background-color: white !important;
+        }
+    </style>
+    <!-- === FIN DE ESTILOS CSS === -->
+</head>
+<body>
+    <div class="app-container">
+        <!-- Panel de Controles (Izquierda) -->
+        <aside class="controls-panel">
+            <h1 class="main-title">Configuración del Recibo</h1>
+            
+            <section class="control-section">
+                <h2>1. Elige un Estilo</h2>
+                <select id="style-selector">
+                    <option value="walmart" selected>Walmart / Supermercado</option>
+                    <option value="target">Target</option>
+                    <option value="starbucks">Starbucks</option>
+                </select>
+            </section>
+
+            <section class="control-section">
+                <h2>2. Añadir Rápido</h2>
+                <div id="quick-add-container">
+                    <!-- Los productos se cargarán aquí con JS -->
+                </div>
+            </section>
+
+            <section class="control-section">
+                <h2>3. Añadir Manualmente</h2>
+                <form id="item-form">
+                    <input type="text" id="product-name" placeholder="Nombre del producto" required>
+                    <input type="number" id="product-price" placeholder="Precio" step="0.01" min="0" required>
+                    <input type="number" id="product-quantity" placeholder="Cantidad" value="1" min="1" required>
+                    <button type="submit" class="button-primary">Añadir Producto</button>
+                </form>
+            </section>
+
+            <section class="control-section">
+                <h2>4. Datos Adicionales</h2>
+                <input type="text" id="seller-name" placeholder="Nombre del Cajero/Vendedor">
+                <input type="date" id="custom-date">
+                <input type="time" id="custom-time">
+                <input type="number" id="cash-tendered-input" step="0.01" min="0" placeholder="Efectivo Recibido">
+            </section>
+
+        </aside>
+
+        <!-- Panel del Recibo (Derecha) -->
+        <main class="receipt-panel">
+            <div id="pdf-page-container">
+                <div class="receipt" id="receipt">
+                    <header class="receipt-header">
+                        <div class="receipt-logo" id="receipt-store-name"></div>
+                        <p id="receipt-address"></p>
+                    </header>
+                    <section class="receipt-info">
+                        <p><span>Fecha:</span> <span id="receipt-date"></span></p>
+                        <p><span>Hora:</span> <span id="receipt-time"></span></p>
+                        <p><span>Caja:</span> <span id="receipt-terminal"></span></p>
+                        <p><span>Cajero:</span> <span id="receipt-seller"></span></p>
+                    </section>
+                    <div class="separator"></div>
+                    <div id="receipt-items-container" class="receipt-items"></div>
+                    <div class="separator"></div>
+                    <section class="receipt-totals">
+                        <p><span>SUBTOTAL:</span> <span id="subtotal">$0.00</span></p>
+                        <p><span>IVA (16%):</span> <span id="tax">$0.00</span></p>
+                        <p class="total"><span>TOTAL:</span> <span id="total">$0.00</span></p>
+                    </section>
+                    <section class="receipt-payment">
+                        <p><span>EFECTIVO:</span> <span id="receipt-cash-tendered">$0.00</span></p>
+                        <p><span>CAMBIO:</span> <span id="receipt-change">$0.00</span></p>
+                    </section>
+                    <footer class="receipt-footer">
+                        <p id="receipt-slogan"></p>
+                        <div class="barcode"></div>
+                    </footer>
+                </div>
+            </div>
+            <div class="actions">
+                <button id="generate-pdf-btn" class="button-success">Generar PDF</button>
+            </div>
+        </main>
+    </div>
+
+    <!-- === INICIO DE JAVASCRIPT === -->
+   <script>
+document.addEventListener('DOMContentLoaded', () => {
+    // --- ELEMENTOS DEL DOM ---
+    const styleSelector = document.getElementById('style-selector');
+    const sellerNameInput = document.getElementById('seller-name');
+    const customDateInput = document.getElementById('custom-date');
+    const customTimeInput = document.getElementById('custom-time');
+    const itemForm = document.getElementById('item-form');
+    const productNameInput = document.getElementById('product-name');
+    const productPriceInput = document.getElementById('product-price');
+    const productQuantityInput = document.getElementById('product-quantity');
+    const cashTenderedInput = document.getElementById('cash-tendered-input');
+    const generatePdfBtn = document.getElementById('generate-pdf-btn');
+    const quickAddContainer = document.getElementById('quick-add-container');
+    const receiptEl = document.getElementById('receipt');
+    const receiptElements = {
+        storeName: document.getElementById('receipt-store-name'),
+        address: document.getElementById('receipt-address'),
+        date: document.getElementById('receipt-date'),
+        time: document.getElementById('receipt-time'),
+        terminal: document.getElementById('receipt-terminal'),
+        seller: document.getElementById('receipt-seller'),
+        itemsContainer: document.getElementById('receipt-items-container'),
+        subtotal: document.getElementById('subtotal'),
+        tax: document.getElementById('tax'),
+        total: document.getElementById('total'),
+        cashTendered: document.getElementById('receipt-cash-tendered'),
+        change: document.getElementById('receipt-change'),
+        slogan: document.getElementById('receipt-slogan')
+    };
+
+    // --- ESTADO Y DATOS ---
+    let items = [];
+    let currentTotal = 0;
+    const TAX_RATE = 0.16;
+    const formatCurrency = (amount) => `$${amount.toFixed(2)}`;
+    const storePresets = {
+        walmart: { name: 'WALMART', seller: 'ANTONIO H.', address: 'AV. UNIVERSIDAD 936, CDMX', terminal: '#0015', slogan: '¡AHORRA DINERO, VIVE MEJOR!' },
+        target: { name: 'T A R G E T', seller: 'GUEST SERVICE', address: '123 MAIN STREET, ANYTOWN USA', terminal: 'TERM: 04', slogan: 'EXPECT MORE. PAY LESS.' },
+        starbucks: { name: 'Starbucks', seller: 'BARISTA', address: '456 COFFEE BEAN BLVD', terminal: 'REG 1', slogan: 'ENJOY YOUR COFFEE' }
+    };
+    const QUICK_ADD_PRODUCTS = {
+        supermarket: {
+            'Bebidas': [ { name: 'Coca-Cola 12-pack', price: 7.98 }, { name: 'Iberia Tropical Soda', price: 1.89 }, { name: 'Agua Great Value 24pk', price: 4.38 } ],
+            'Lácteos y Quesos': [ { name: 'Queso Gouda 8oz', price: 2.98 }, { name: 'Queso Fresco Cacique', price: 4.29 }, { name: 'Leche 1 Galón', price: 3.86 } ],
+            'Despensa': [ { name: 'Sazón Goya 20ct', price: 2.19 }, { name: 'Levadura Fleischmann', price: 1.89 }, { name: 'Pan Wonder', price: 2.99 } ]
+        },
+        starbucks: {
+            'Cafés Calientes': [ { name: 'Caffè Latte Grande', price: 4.95 }, { name: 'Caramel Macchiato Venti', price: 5.75 }, { name: 'Mocha Grande', price: 5.25 } ],
+            'Cafés Fríos': [ { name: 'Iced White Mocha', price: 5.45 }, { name: 'Cold Brew con Crema', price: 4.75 }, { name: 'Dragon Drink', price: 5.25 } ],
+            'Comida': [ { name: 'Croissant Mantequilla', price: 3.45 }, { name: 'Muffin Arándanos', price: 3.65 } ],
+            'Café en Grano': [ { name: 'Pike Place Roast 1lb', price: 14.95 }, { name: 'Verona Blend 1lb', price: 15.95 } ]
+        }
+    };
+
+    // --- FUNCIONES ---
+    function addItemToReceipt(name, price, quantity) {
+        items.push({ name, price, quantity });
+        updateUI();
+    }
+
+    function renderQuickAddList(style) {
+        const productSet = (style === 'starbucks') ? QUICK_ADD_PRODUCTS.starbucks : QUICK_ADD_PRODUCTS.supermarket;
+        quickAddContainer.innerHTML = '';
+        for (const category in productSet) {
+            const categoryTitle = document.createElement('h3');
+            categoryTitle.textContent = category;
+            quickAddContainer.appendChild(categoryTitle);
+            const listDiv = document.createElement('div');
+            listDiv.classList.add('quick-add-list');
+            productSet[category].forEach(product => {
+                const itemDiv = document.createElement('div');
+                itemDiv.classList.add('quick-add-item');
+                itemDiv.textContent = product.name;
+                itemDiv.addEventListener('click', () => addItemToReceipt(product.name, product.price, 1));
+                listDiv.appendChild(itemDiv);
+            });
+            quickAddContainer.appendChild(listDiv);
+        }
+    }
+
+    function updateUI() {
+        receiptElements.itemsContainer.innerHTML = '';
+        let subtotal = 0;
+        items.forEach(item => {
+            subtotal += item.price * item.quantity;
+            receiptElements.itemsContainer.innerHTML += `<div class="receipt-item"><div class="item-line"><span class="item-name">${item.name}</span><span>${formatCurrency(item.price * item.quantity)}</span></div><div class="item-details">${item.quantity} X ${formatCurrency(item.price)}</div></div>`;
+        });
+        const tax = subtotal * TAX_RATE;
+        currentTotal = subtotal + tax;
+        receiptElements.subtotal.textContent = formatCurrency(subtotal);
+        receiptElements.tax.textContent = formatCurrency(tax);
+        receiptElements.total.textContent = formatCurrency(currentTotal);
+        updatePaymentDetails();
+    }
+
+    function updatePaymentDetails() {
+        const cashTendered = parseFloat(cashTenderedInput.value) || 0;
+        receiptElements.cashTendered.textContent = formatCurrency(cashTendered);
+        receiptElements.change.textContent = formatCurrency(cashTendered > currentTotal ? cashTendered - currentTotal : 0);
+    }
+
+    function applyStorePreset(style) {
+        document.body.className = `style-${style}`;
+        const preset = storePresets[style];
+        sellerNameInput.value = preset.seller;
+        receiptElements.storeName.textContent = preset.name;
+        receiptElements.address.textContent = preset.address;
+        receiptElements.terminal.textContent = preset.terminal;
+        receiptElements.seller.textContent = preset.seller;
+        receiptElements.slogan.textContent = preset.slogan;
+    }
+
+    const initializeDateTime = () => {
+        const now = new Date();
+        const y = now.getFullYear(), m = String(now.getMonth() + 1).padStart(2, '0'), d = String(now.getDate()).padStart(2, '0');
+        const h = String(now.getHours()).padStart(2, '0'), min = String(now.getMinutes()).padStart(2, '0');
+        customDateInput.value = `${y}-${m}-${d}`;
+        customTimeInput.value = `${h}:${min}`;
+        updateReceiptDateTime();
+    };
+
+    const updateReceiptDateTime = () => {
+        const selectedDate = new Date(`${customDateInput.value}T00:00:00`);
+        receiptElements.date.textContent = selectedDate.toLocaleDateString('es-MX', { day: '2-digit', month: '2-digit', year: 'numeric', timeZone: 'UTC' });
+        receiptElements.time.textContent = customTimeInput.value;
+    };
+
+    // --- EVENT LISTENERS ---
+    styleSelector.addEventListener('change', (e) => {
+        applyStorePreset(e.target.value);
+        renderQuickAddList(e.target.value);
+    });
+    sellerNameInput.addEventListener('input', (e) => receiptElements.seller.textContent = e.target.value);
+    customDateInput.addEventListener('change', updateReceiptDateTime);
+    customTimeInput.addEventListener('change', updateReceiptDateTime);
+    cashTenderedInput.addEventListener('input', updatePaymentDetails);
+    itemForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        addItemToReceipt(productNameInput.value.trim(), parseFloat(productPriceInput.value), parseInt(productQuantityInput.value));
+        itemForm.reset();
+        productQuantityInput.value = 1;
+        productNameInput.focus();
+    });
+
+    generatePdfBtn.addEventListener('click', () => {
+        if (items.length === 0) {
+            alert("Por favor, añade al menos un producto al recibo antes de generar el PDF.");
+            return;
+        }
+
+        const receiptClone = receiptEl.cloneNode(true);
+        receiptClone.classList.add('receipt-pdf-clone');
+        receiptClone.style.position = 'absolute';
+        receiptClone.style.left = '-9999px';
+        receiptClone.style.top = '0';
+        receiptClone.style.visibility = 'hidden';
+        receiptClone.style.transform = 'none';
+        receiptClone.style.backgroundColor = 'white';
+        receiptClone.style.padding = '20px';
+        receiptClone.style.width = '300px'; // Ancho explícito para evitar errores
+        document.body.appendChild(receiptClone);
+
+        setTimeout(() => {
+            domtoimage.toPng(receiptClone)
+                .then((dataUrl) => {
+                    const { jsPDF } = window.jspdf;
+                    const pdf = new jsPDF({
+                        orientation: "portrait",
+                        unit: "pt",
+                        format: [320, 600] // Ajustado al tamaño del recibo clonado
+                    });
+
+                    pdf.addImage(dataUrl, 'PNG', 10, 10, 280, 0); // Escalado suave
+                    pdf.save(`recibo_${styleSelector.value}_${Date.now()}.pdf`);
+                    document.body.removeChild(receiptClone);
+                })
+                .catch((error) => {
+                    console.error("Error al convertir el recibo a imagen:", error);
+                    alert("Hubo un error al generar la imagen del recibo.");
+                    document.body.removeChild(receiptClone);
+                });
+        }, 500); // Tiempo suficiente para cargar fuentes
+    });
+
+    // --- INICIALIZACIÓN ---
+    initializeDateTime();
+    applyStorePreset(styleSelector.value);
+    renderQuickAddList(styleSelector.value);
+    updateUI();
+});
+</script>
+</body>
+</html>
