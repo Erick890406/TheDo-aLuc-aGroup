@@ -212,9 +212,15 @@
                     <div class="d-flex justify-content-between align-items-center mb-3">
                         <div> <h1 class="h4 mb-0 d-none d-lg-block"><i class="bi bi-egg-fried"></i> Gestión de Productos y Combos</h1> <h1 class="h5 mb-0 d-lg-none"><i class="bi bi-egg-fried"></i> Productos y Combos</h1> </div>
                         <div>
-                            <button class="btn btn-danger btn-sm me-2" id="bulk-delete-products-btn" onclick="showBulkDeleteModal()" disabled>
-                                <i class="bi bi-trash-fill"></i> <span class="d-none d-sm-inline">Eliminar Seleccionados</span>
-                            </button>
+                            <button class="btn btn-info btn-sm me-1" id="bulk-show-products-btn" onclick="bulkToggleProductsActive(true)" disabled title="Marcar seleccionados como Visibles">
+    <i class="bi bi-eye-fill"></i> <span class="d-none d-sm-inline">Mostrar</span>
+</button>
+<button class="btn btn-secondary btn-sm me-2" id="bulk-hide-products-btn" onclick="bulkToggleProductsActive(false)" disabled title="Marcar seleccionados como Ocultos">
+    <i class="bi bi-eye-slash-fill"></i> <span class="d-none d-sm-inline">Ocultar</span>
+</button>
+<button class="btn btn-danger btn-sm me-2" id="bulk-delete-products-btn" onclick="showBulkDeleteModal()" disabled>
+    <i class="bi bi-trash-fill"></i> <span class="d-none d-sm-inline">Eliminar</span>
+</button>
                             <button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#addProductModal">
                                 <i class="bi bi-journal-plus"></i> <span class="d-none d-sm-inline">Nuevo Producto/Combo</span>
                             </button>
@@ -444,8 +450,8 @@
     </div>
 
  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
- <script>
-     const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby3oshMqxSgpF8Sl8cPRslGv7l4P4VQZtCRgbT6VTlHN9KrC0OH5hJPySeJo81bfggg9A/exec'; // Reemplaza con tu URL real
+  <script>
+     const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwvc92DuX1Db62TUiUrJ06N6BlNwsfl8yrPLSvncZSYM_MrrOV0GTrWrfKXKobntiFJoA/exec'; // Reemplaza con tu URL real
 
     let allClients = [], displayedClients = [];
     let allProducts = [], displayedProducts = [];
@@ -482,12 +488,11 @@
         const toastId = 'toast-' + Date.now();
         let iconClass = 'bi-info-circle-fill';
         let bgClass = 'bg-info text-white';
-        // let title = 'Información'; // No se usa 'title' en esta implementación de toast
 
         switch (type) {
-            case 'success': iconClass = 'bi-check-circle-fill'; bgClass = 'bg-success text-white'; /* title = 'Éxito'; */ break;
-            case 'error': iconClass = 'bi-exclamation-triangle-fill'; bgClass = 'bg-danger text-white'; /* title = 'Error'; */ break;
-            case 'warning': iconClass = 'bi-exclamation-triangle-fill'; bgClass = 'bg-warning text-dark'; /* title = 'Advertencia'; */ break;
+            case 'success': iconClass = 'bi-check-circle-fill'; bgClass = 'bg-success text-white'; break;
+            case 'error': iconClass = 'bi-exclamation-triangle-fill'; bgClass = 'bg-danger text-white'; break;
+            case 'warning': iconClass = 'bi-exclamation-triangle-fill'; bgClass = 'bg-warning text-dark'; break;
         }
 
         const toastHTML = `
@@ -655,7 +660,7 @@
             }
         }
         setupSidebarLayout();
-        if (sectionId !== 'rewards' || allRewards.length === 0) { // Solo actualizar dashboard si no es la sección de recompensas o si las recompensas no se han cargado aún.
+        if (sectionId !== 'rewards' || allRewards.length === 0) {
             updateDashboard();
         }
     }
@@ -725,10 +730,9 @@
         const mainContentCol = document.getElementById('dynamic-content-col');
         if (window.innerWidth >= 992 && sidebar && mainContentCol) {
             mainContentCol.style.marginLeft = sidebar.offsetWidth + 'px';
-            mainContentCol.classList.remove('offset-lg-2'); // Esto es importante si antes se usaba offset
+            mainContentCol.classList.remove('offset-lg-2');
         } else if (mainContentCol) {
             mainContentCol.style.marginLeft = '0';
-            // mainContentCol.classList.add('offset-lg-2'); // No debería ser necesario si el sidebar está oculto
         }
     }
 
@@ -975,11 +979,12 @@
             filterProducts();
         }else{
             tb.innerHTML=`<tr><td colspan="9" class="text-center text-danger">Error: ${res.message||'No se cargaron productos/combos.'} <button class="btn btn-sm btn-outline-success ms-2" data-bs-toggle="modal" data-bs-target="#addProductModal"><i class="bi bi-journal-plus"></i> Nuevo Producto/Combo</button></td></tr>`;
-            updateBulkDeleteButtonState();
+            updateBulkProductActionButtonsState();
             document.getElementById('select-all-products').checked = false;
         }
         updateDashboard();
     }
+    
     function renderProductsTable() {
         const tb = document.getElementById('products-table'); tb.innerHTML = '';
         const startIndex = (currentPageProducts - 1) * ITEMS_PER_PAGE_PRODUCTS;
@@ -994,18 +999,39 @@
         if (displayedProducts.length === 0) {
             tb.innerHTML = `<tr><td colspan="9" class="text-center">No hay productos o combos para mostrar. <button class="btn btn-sm btn-outline-success ms-2" data-bs-toggle="modal" data-bs-target="#addProductModal"><i class="bi bi-journal-plus"></i> Nuevo Producto/Combo</button></td></tr>`;
             document.getElementById('products-pagination-controls').innerHTML = '';
-            updateBulkDeleteButtonState();
+            updateBulkProductActionButtonsState();
             document.getElementById('select-all-products').checked = false;
         } else {
              paginatedProducts.sort((a, b) => (a.name || "").localeCompare(b.name || "")).forEach(p => {
                 const imageUrl = p.imageurl ? p.imageurl : 'https://via.placeholder.com/50?text=No+Img';
                 const isChecked = selectedProductIds.has(p.id);
-                tb.innerHTML += `<tr><td class="checkbox-column"><input type="checkbox" class="form-check-input product-select-checkbox" value="${p.id}" data-product-id="${p.id}" ${isChecked ? 'checked' : ''}></td><td><img src="${imageUrl}" alt="${p.name || 'Producto'}" class="product-image-table" loading="lazy" onerror="this.onerror=null; this.src='https://via.placeholder.com/50?text=Error';"></td><td>${p.id || 'N/A'}</td><td>${p.name || 'S/N'}</td><td class="d-none d-md-table-cell">${p.category || 'N/A'}</td><td>${(p.price || 0).toFixed(2)} USD</td><td>${p.points || 0}</td><td><span class="badge bg-${p.active ? 'success' : 'secondary'}">${p.active ? 'Sí' : 'No'}</span></td><td><div class="btn-group btn-group-sm"><button class="btn btn-outline-primary" onclick="editProduct('${p.id}')"><i class="bi bi-pencil"></i></button><button class="btn btn-outline-danger" onclick="showDeleteModal('${p.id}','${p.name}','product')"><i class="bi bi-trash"></i></button></div></td></tr>`;
+                
+                const activeSwitch = `
+                    <div class="form-check form-switch d-flex justify-content-center">
+                        <input class="form-check-input" type="checkbox" role="switch" 
+                               id="activeSwitch-${p.id}" ${p.active ? 'checked' : ''} 
+                               onclick="toggleProductActiveState('${p.id}', this)">
+                    </div>`;
+
+                tb.innerHTML += `<tr>
+                    <td class="checkbox-column"><input type="checkbox" class="form-check-input product-select-checkbox" value="${p.id}" data-product-id="${p.id}" ${isChecked ? 'checked' : ''}></td>
+                    <td><img src="${imageUrl}" alt="${p.name || 'Producto'}" class="product-image-table" loading="lazy" onerror="this.onerror=null; this.src='https://via.placeholder.com/50?text=Error';"></td>
+                    <td>${p.id || 'N/A'}</td>
+                    <td>${p.name || 'S/N'}</td>
+                    <td class="d-none d-md-table-cell">${p.category || 'N/A'}</td>
+                    <td>${(p.price || 0).toFixed(2)} USD</td>
+                    <td>${p.points || 0}</td>
+                    <td>${activeSwitch}</td>
+                    <td><div class="btn-group btn-group-sm">
+                        <button class="btn btn-outline-primary" onclick="editProduct('${p.id}')"><i class="bi bi-pencil"></i></button>
+                        <button class="btn btn-outline-danger" onclick="showDeleteModal('${p.id}','${p.name}','product')"><i class="bi bi-trash"></i></button>
+                    </div></td>
+                </tr>`;
             });
         }
         document.querySelectorAll('.product-select-checkbox').forEach(checkbox => checkbox.addEventListener('change', handleProductSelectSingle));
         updateSelectAllCheckboxState();
-        updateBulkDeleteButtonState();
+        updateBulkProductActionButtonsState();
         renderGenericPaginationControls({
             paginationContainerId: 'products-pagination-controls',
             currentPage: currentPageProducts,
@@ -1015,6 +1041,7 @@
             entityNameLabel: 'productos'
         });
     }
+
     function filterProducts() {
         const term=document.getElementById('search-product-input').value.toLowerCase().trim();
         displayedProducts=term?allProducts.filter(p=>(p.name&&p.name.toLowerCase().includes(term))||(p.category&&p.category.toLowerCase().includes(term))||(p.id&&String(p.id).toLowerCase().includes(term))):[...allProducts];
@@ -1042,13 +1069,13 @@
             checkbox.checked = isChecked;
             if (isChecked) selectedProductIds.add(productId); else selectedProductIds.delete(productId);
         });
-        updateBulkDeleteButtonState();
+        updateBulkProductActionButtonsState();
     }
     function handleProductSelectSingle(event) {
         const productId = event.target.dataset.productId;
         if (event.target.checked) selectedProductIds.add(productId); else selectedProductIds.delete(productId);
         updateSelectAllCheckboxState();
-        updateBulkDeleteButtonState();
+        updateBulkProductActionButtonsState();
     }
     function updateSelectAllCheckboxState() {
         const selectAllCheckbox = document.getElementById('select-all-products'); if (!selectAllCheckbox) return;
@@ -1059,13 +1086,36 @@
         else if (checkedCount === allProductCheckboxes.length) { selectAllCheckbox.checked = true; selectAllCheckbox.indeterminate = false; }
         else { selectAllCheckbox.checked = false; selectAllCheckbox.indeterminate = true; }
     }
-    function updateBulkDeleteButtonState() {
-        const btn = document.getElementById('bulk-delete-products-btn'); if (!btn) return;
-        const btnTextSpan = btn.querySelector('span.d-none.d-sm-inline');
-        if (selectedProductIds.size > 0) { btn.disabled = false; if (btnTextSpan) btnTextSpan.textContent = `Eliminar Seleccionados (${selectedProductIds.size})`;}
-        else { btn.disabled = true; if (btnTextSpan) btnTextSpan.textContent = `Eliminar Seleccionados`;}
+    
+    function updateBulkProductActionButtonsState() {
+        const deleteBtn = document.getElementById('bulk-delete-products-btn');
+        const showBtn = document.getElementById('bulk-show-products-btn');
+        const hideBtn = document.getElementById('bulk-hide-products-btn');
+
+        if (!deleteBtn || !showBtn || !hideBtn) return;
+
+        const deleteBtnTextSpan = deleteBtn.querySelector('span.d-none.d-sm-inline');
+        const showBtnTextSpan = showBtn.querySelector('span.d-none.d-sm-inline');
+        const hideBtnTextSpan = hideBtn.querySelector('span.d-none.d-sm-inline');
+
+        if (selectedProductIds.size > 0) {
+            deleteBtn.disabled = false;
+            showBtn.disabled = false;
+            hideBtn.disabled = false;
+            if (deleteBtnTextSpan) deleteBtnTextSpan.textContent = `Eliminar (${selectedProductIds.size})`;
+            if (showBtnTextSpan) showBtnTextSpan.textContent = `Mostrar (${selectedProductIds.size})`;
+            if (hideBtnTextSpan) hideBtnTextSpan.textContent = `Ocultar (${selectedProductIds.size})`;
+        } else {
+            deleteBtn.disabled = true;
+            showBtn.disabled = true;
+            hideBtn.disabled = true;
+            if (deleteBtnTextSpan) deleteBtnTextSpan.textContent = `Eliminar Seleccionados`;
+            if (showBtnTextSpan) showBtnTextSpan.textContent = `Mostrar`;
+            if (hideBtnTextSpan) hideBtnTextSpan.textContent = `Ocultar`;
+        }
     }
-    function showBulkDeleteModal() { // This is generic now, but called specifically for products
+
+    function showBulkDeleteModal() {
         if (selectedProductIds.size === 0) { showToast("Selecciona productos para eliminar.", "warning"); return; }
         itemToDeleteType = 'products_bulk';
         document.getElementById('delete-item-type').textContent = `los ${selectedProductIds.size} productos/combos seleccionados`;
@@ -1101,6 +1151,62 @@
             bootstrap.Modal.getInstance(document.getElementById('addProductModal')).hide();
         }else{showToast(`Error al guardar '${data.name}': ${res.message||'Fallo.'}`, 'error');}
     }
+
+    async function toggleProductActiveState(productId, checkbox) {
+        const product = allProducts.find(p => p.id === productId);
+        if (!product) {
+            showToast('Producto no encontrado.', 'error');
+            return;
+        }
+
+        checkbox.disabled = true;
+        
+        const originalState = product.active;
+        const newState = checkbox.checked;
+
+        product.active = newState;
+
+        const res = await fetchData('updateProduct', 'POST', { product: { id: productId, active: newState } });
+
+        if (res && res.success) {
+            showToast(`Producto '${product.name}' ahora está ${newState ? 'visible' : 'oculto'}.`, 'success');
+        } else {
+            showToast(`Error al actualizar el estado de '${product.name}'.`, 'error');
+            product.active = originalState;
+            checkbox.checked = originalState;
+        }
+        checkbox.disabled = false;
+    }
+
+    async function bulkToggleProductsActive(setActive) {
+        if (selectedProductIds.size === 0) {
+            showToast(`Selecciona productos para ${setActive ? 'mostrar' : 'ocultar'}.`, "warning");
+            return;
+        }
+
+        const actionText = setActive ? "mostrar" : "ocultar";
+        if (!confirm(`¿Estás seguro de que quieres ${actionText} los ${selectedProductIds.size} productos seleccionados?`)) {
+            return;
+        }
+
+        const btnId = setActive ? 'bulk-show-products-btn' : 'bulk-hide-products-btn';
+        const button = document.getElementById(btnId);
+        setButtonLoading(button, true, setActive ? "Mostrar" : "Ocultar");
+
+        const productIdsArray = Array.from(selectedProductIds);
+        const res = await fetchData('bulkToggleActiveProducts', 'POST', { productIds: productIdsArray, setActive: setActive });
+        
+        setButtonLoading(button, false);
+
+        if (res && res.success) {
+            showToast(res.message || `${selectedProductIds.size} producto(s) actualizado(s) correctamente.`, 'success');
+            selectedProductIds.clear();
+            await loadProducts(true);
+        } else {
+            showToast(`Error al ${actionText} productos: ${res ? res.message : 'Fallo desconocido.'}`, 'error');
+        }
+    }
+
 
     // --- ORDER FUNCTIONS (ENVIOS) ---
     async function loadOrders(force = false) {
