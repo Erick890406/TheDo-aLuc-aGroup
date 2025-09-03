@@ -1,0 +1,33 @@
+name: Crear IPA
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: macos-latest
+
+    steps:
+      - name: Descargar código
+        uses: actions/checkout@v4
+
+      - name: Construir app (sin firma)
+        run: |
+          xcodebuild -project IPV-10.7 \
+            -scheme IPV-10.7 \
+            -sdk iphoneos \
+            -configuration Release \
+            CODE_SIGNING_ALLOWED=NO
+
+      - name: Empaquetar IPA
+        run: |
+          APP=$(find build/ -name "*.app" | head -n 1)
+          mkdir Payload
+          cp -R "$APP" Payload/
+          zip -r App.ipa Payload
+
+      - name: Guardar IPA
+        uses: actions/upload-artifact@v4
+        with:
+          name: ipa
+          path: App.ipa
