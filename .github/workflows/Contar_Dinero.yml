@@ -1,4 +1,4 @@
-name: Crear IPA
+name: Crear IPA de Contar Dinero
 
 on:
   workflow_dispatch:
