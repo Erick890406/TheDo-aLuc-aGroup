@@ -1,0 +1,35 @@
+name: Crear IPA
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: macos-latest
+
+    steps:
+      - name: Descargar código
+        uses: actions/checkout@v4
+
+      - name: Construir app (sin firma)
+        run: |
+          xcodebuild -project ios/sourcecode/Contar_Dinero.xcodeproj \
+            -scheme Contar_Dinero \
+            -sdk iphoneos \
+            -configuration Release \
+            -derivedDataPath build \
+            CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO
+
+      - name: Empaquetar IPA
+        run: |
+          APP=$(find build -name "*.app" | head -n 1)
+          echo "App encontrada: $APP"
+          mkdir Payload
+          cp -R "$APP" Payload/
+          zip -r App.ipa Payload
+
+      - name: Guardar IPA
+        uses: actions/upload-artifact@v4
+        with:
+          name: ipa
+          path: App.ipa
