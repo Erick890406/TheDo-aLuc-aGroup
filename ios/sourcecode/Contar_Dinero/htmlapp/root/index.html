@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contador de Billetes Profesional</title>
+    <!-- Iconos de Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Fuente para la nueva calculadora -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500&display=swap" rel="stylesheet">
+    <!-- Favicon para evitar errores en consola -->
+    <link rel="icon" href="data:;base64,iVBORw0KGgo=">
+
+    <style>
+        :root {
+            --primary-bg: #121212;
+            --secondary-bg: #1f1f1f;
+            --accent-color: #76ff03;
+            --text-color: #e0e0e0;
+            --shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+            --blue-accent: #2979ff;
+            --red-accent: #d32f2f;
+            --green-accent: #388e3c;
+            --purple-accent: #6a1b9a;
+        }
+
+        /* Reset y estilos generales */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: var(--primary-bg); color: var(--text-color); line-height: 1.6; }
+
+        /* Header */
+        .header { position: fixed; top: 0; width: 100%; background: var(--secondary-bg); padding: 10px 20px; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; z-index: 1000; box-shadow: var(--shadow); }
+        .header-totals { display: flex; gap: 20px; flex-grow: 1; justify-content: center; }
+        .header-buttons { display: flex; gap: 10px; }
+        .total, .grand-total { font-size: 1.5em; font-weight: bold; text-align: center; }
+        .total { color: var(--accent-color); }
+        #inactiveTotal { color: var(--red-accent); }
+        .grand-total { color: var(--blue-accent); }
+        .header-btn { padding: 8px 15px; color: white; border: none; border-radius: 6px; font-size: 0.9em; cursor: pointer; transition: all 0.3s ease; }
+        .header-btn:hover { transform: scale(1.05); }
+        #clearBtn { background: var(--red-accent); } #clearBtn:hover { background: #b71c1c; }
+        #saveBtn { background: var(--green-accent); } #saveBtn:hover { background: #2e7d32; }
+        #historyBtn { background: var(--blue-accent); } #historyBtn:hover { background: #1c54b2; }
+        #calcBtn { background: var(--purple-accent); } #calcBtn:hover { background: #4a148c; }
+
+        /* Contenedor principal */
+        .container { background: var(--secondary-bg); padding: 20px; border-radius: 15px; box-shadow: var(--shadow); max-width: 800px; width: 95%; margin: 120px auto 20px; }
+        h1 { text-align: center; color: var(--accent-color); font-size: 2em; font-weight: bold; margin-bottom: 10px; }
+        .actions-bar { display: flex; justify-content: center; gap: 10px; margin-bottom: 25px; flex-wrap: wrap; }
+        .action-btn { background-color: var(--primary-bg); color: var(--text-color); border: 1px solid var(--blue-accent); padding: 8px 15px; border-radius: 8px; cursor: pointer; font-size: 0.9em; transition: all 0.3s ease; display: flex; align-items: center; gap: 8px; }
+        .action-btn:hover { background-color: var(--blue-accent); color: white; }
+        .action-btn:disabled { border-color: #555; color: #777; background-color: #222; cursor: not-allowed; }
+        .action-btn.copied { background-color: var(--green-accent); border-color: var(--green-accent); color: white; }
+        
+        /* Filas de billetes */
+        .bill-row { display: flex; align-items: center; gap: 10px; padding: 15px; background: var(--primary-bg); border-radius: 10px; margin-bottom: 15px; box-shadow: var(--shadow); transition: all 0.3s ease; }
+        .bill-row:hover { transform: translateY(-5px); }
+        .bill-row label { font-size: 1.2em; font-weight: bold; color: var(--accent-color); flex: 1; text-align: center; }
+        .bill-row input[type="number"] { width: 80px; padding: 10px; border: none; border-bottom: 2px solid var(--accent-color); text-align: center; font-size: 1.2em; background: transparent; color: var(--text-color); transition: border-color 0.3s ease; flex: 1; }
+        .bill-row input[type="number"]:focus { outline: none; border-color: #64dd17; }
+        .individual-total { font-size: 1.2em; color: var(--accent-color); font-weight: bold; flex: 1; text-align: center; }
+        input[type="checkbox"] { appearance: none; width: 24px; height: 24px; border: 2px solid var(--accent-color); border-radius: 4px; cursor: pointer; transition: 0.3s; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+        input[type="checkbox"]:checked { background: var(--accent-color); }
+        input[type="checkbox"]:checked::after { content: '✓'; color: var(--secondary-bg); font-size: 1.2rem; }
+        .bill-row.inactive { background: #3a3a3a; }
+        .bill-row.inactive label, .bill-row.inactive input[type="number"], .bill-row.inactive .individual-total { color: #aaa; }
+        .bill-row.inactive input[type="number"] { border-bottom-color: #aaa; }
+        
+        /* Estilos Generales de Modales */
+        .modal { display: none; position: fixed; z-index: 1001; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background: rgba(0, 0, 0, 0.5); backdrop-filter: blur(8px); }
+        .modal-content { background: var(--secondary-bg); margin: 5% auto; padding: 20px; border-radius: 15px; width: 90%; max-width: 500px; text-align: center; box-shadow: 0 8px 30px rgba(0,0,0,0.7); position: relative; }
+        .close { color: #aaa; position: absolute; top: 10px; right: 20px; font-size: 28px; font-weight: bold; transition: color 0.3s ease; }
+        .close:hover, .close:focus { color: #fff; text-decoration: none; cursor: pointer; }
+
+        /* Historial */
+        #historyList { list-style: none; padding: 0; max-height: 400px; overflow-y: auto; }
+        #historyList li { background: var(--primary-bg); margin-bottom: 10px; padding: 15px; border-radius: 8px; cursor: pointer; transition: background-color 0.3s; display: flex; justify-content: space-between; align-items: center; }
+        #historyList li:hover { background-color: #333; }
+        #historyDetailContent table { width: 100%; margin-top: 20px; border-collapse: collapse; }
+        #historyDetailContent th, #historyDetailContent td { padding: 8px; border-bottom: 1px solid #444; }
+        
+        /* --- ESTILO DE CALCULADORA (GLASSMORPHISM) --- */
+        #calculatorModal .modal-content {
+            max-width: 400px;
+            background: rgba(30, 30, 30, 0.75);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            padding: 25px;
+            border-radius: 20px;
+        }
+        .calculator { font-family: 'Poppins', sans-serif; }
+        .calculator-display-container { padding: 20px; margin-bottom: 20px; text-align: right; word-wrap: break-word; word-break: break-all; }
+        #calcHistory { font-size: 1.2em; color: rgba(255, 255, 255, 0.5); height: 25px; margin-bottom: 5px; }
+        #calcDisplay { font-size: 3.5em; color: #fff; font-weight: 500; }
+        .calculator-buttons { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; }
+        .calculator-buttons button { font-family: 'Poppins', sans-serif; font-size: 1.5em; height: 75px; border: none; border-radius: 15px; cursor: pointer; transition: all 0.2s ease; background: rgba(255, 255, 255, 0.1); color: #fff; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3); border: 1px solid rgba(255, 255, 255, 0.05); }
+        .calculator-buttons button:hover { background: rgba(255, 255, 255, 0.2); }
+        .calculator-buttons button:active { transform: scale(0.95); background: rgba(255, 255, 255, 0.25); }
+        .btn-number { background: rgba(80, 80, 80, 0.5); }
+        .btn-operator { background: rgba(41, 121, 255, 0.8); }
+        .btn-special { background: rgba(50, 50, 50, 0.8); }
+        .btn-equals { background: var(--accent-color); color: #121212; font-weight: bold; }
+        .span-two { grid-column: span 2; }
+
+        /* --- ESTILOS PARA MODAL DE NOTIFICACIÓN --- */
+        #notificationButtons button {
+            padding: 10px 20px;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+        #notificationButtons button:hover {
+            transform: scale(1.05);
+        }
+        .btn-confirm { background-color: var(--green-accent); }
+        .btn-danger { background-color: var(--red-accent); }
+        .btn-cancel { background-color: #555; }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header { flex-direction: column; }
+            .header-totals { width: 100%; justify-content: space-around; margin-bottom: 10px; }
+            .total, .grand-total { font-size: 1.2em; }
+            .header-buttons { width: 100%; justify-content: space-around; }
+            .container { margin-top: 150px; }
+            #calcDisplay { font-size: 2.8em; }
+            .calculator-buttons button { height: 65px; font-size: 1.3em; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header Fijo -->
+    <div class="header">
+        <div class="header-totals">
+            <div class="total" id="total">Activos: $0</div>
+            <div class="total" id="inactiveTotal">Inactivos: $0</div>
+            <div class="grand-total" id="grandTotal">Total: $0</div>
+        </div>
+        <div class="header-buttons">
+            <button class="header-btn" id="saveBtn">Guardar</button>
+            <button class="header-btn" id="historyBtn">Historial</button>
+            <button class="header-btn" id="calcBtn">Calculadora</button>
+            <button class="header-btn" id="clearBtn">Limpiar</button>
+        </div>
+    </div>
+
+    <!-- Contenedor Principal -->
+    <div class="container">
+        <h1>Contador de Billetes</h1>
+        <div class="actions-bar">
+            <button class="action-btn" id="copyBtn"><i class="fas fa-copy"></i> Copiar Desglose</button>
+            <button class="action-btn" id="whatsappBtn"><i class="fab fa-whatsapp"></i> WhatsApp</button>
+            <button class="action-btn" id="smsBtn"><i class="fas fa-comment-sms"></i> SMS</button>
+        </div>
+        
+        <div class="bill-row" id="row1000"><label>1000 x</label><input type="number" id="bill1000" value="0"><div class="individual-total" id="total1000">$0</div><input type="checkbox" class="bill-toggle" id="toggle1000" checked></div>
+        <div class="bill-row" id="row500"><label>500 x</label><input type="number" id="bill500" value="0"><div class="individual-total" id="total500">$0</div><input type="checkbox" class="bill-toggle" id="toggle500" checked></div>
+        <div class="bill-row" id="row200"><label>200 x</label><input type="number" id="bill200" value="0"><div class="individual-total" id="total200">$0</div><input type="checkbox" class="bill-toggle" id="toggle200" checked></div>
+        <div class="bill-row" id="row100"><label>100 x</label><input type="number" id="bill100" value="0"><div class="individual-total" id="total100">$0</div><input type="checkbox" class="bill-toggle" id="toggle100" checked></div>
+        <div class="bill-row" id="row50"><label>50 x</label><input type="number" id="bill50" value="0"><div class="individual-total" id="total50">$0</div><input type="checkbox" class="bill-toggle" id="toggle50" checked></div>
+        <div class="bill-row" id="row20"><label>20 x</label><input type="number" id="bill20" value="0"><div class="individual-total" id="total20">$0</div><input type="checkbox" class="bill-toggle" id="toggle20" checked></div>
+        <div class="bill-row" id="row10"><label>10 x</label><input type="number" id="bill10" value="0"><div class="individual-total" id="total10">$0</div><input type="checkbox" class="bill-toggle" id="toggle10" checked></div>
+        <div class="bill-row" id="row5"><label>5 x</label><input type="number" id="bill5" value="0"><div class="individual-total" id="total5">$0</div><input type="checkbox" class="bill-toggle" id="toggle5" checked></div>
+    </div>
+
+    <!-- Modales -->
+    <div id="historyModal" class="modal"><div class="modal-content"><span class="close">&times;</span><h2>Historial de Conteos</h2><ul id="historyList"></ul></div></div>
+    <div id="historyDetailModal" class="modal"><div class="modal-content"><span class="close">&times;</span><h2>Detalle del Conteo</h2><div id="historyDetailContent"></div></div></div>
+    
+    <div id="calculatorModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <div class="calculator">
+                <div class="calculator-display-container">
+                    <div id="calcHistory">&nbsp;</div>
+                    <div id="calcDisplay">0</div>
+                </div>
+                <div class="calculator-buttons">
+                    <button class="btn-special" data-action="clear">C</button>
+                    <button class="btn-special" data-action="toggle-sign">+/-</button>
+                    <button class="btn-special" data-action="percentage">%</button>
+                    <button class="btn-operator" data-action="divide">÷</button>
+                    <button class="btn-number" data-number="7">7</button>
+                    <button class="btn-number" data-number="8">8</button>
+                    <button class="btn-number" data-number="9">9</button>
+                    <button class="btn-operator" data-action="multiply">×</button>
+                    <button class="btn-number" data-number="4">4</button>
+                    <button class="btn-number" data-number="5">5</button>
+                    <button class="btn-number" data-number="6">6</button>
+                    <button class="btn-operator" data-action="subtract">−</button>
+                    <button class="btn-number" data-number="1">1</button>
+                    <button class="btn-number" data-number="2">2</button>
+                    <button class="btn-number" data-number="3">3</button>
+                    <button class="btn-operator" data-action="add">+</button>
+                    <button class="btn-number span-two" data-number="0">0</button>
+                    <button class="btn-number" data-number="00">00</button>
+                    <button class="btn-number" data-action="decimal">.</button>
+                    <button class="btn-equals" data-action="calculate">=</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div id="notificationModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2 id="notificationTitle"></h2>
+            <p id="notificationMessage"></p>
+            <div id="notificationButtons" class="actions-bar" style="margin-top: 20px;">
+                <!-- Los botones se insertarán aquí con JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // *** VARIABLES GLOBALES ***
+        const billInputs = document.querySelectorAll('input[type="number"]');
+        const billToggles = document.querySelectorAll('.bill-toggle');
+        const totalDisplay = document.getElementById('total');
+        const inactiveTotalDisplay = document.getElementById('inactiveTotal');
+        const grandTotalDisplay = document.getElementById('grandTotal');
+        const clearBtn = document.getElementById('clearBtn');
+        const saveBtn = document.getElementById('saveBtn');
+        const historyBtn = document.getElementById('historyBtn');
+        const calcBtn = document.getElementById('calcBtn');
+        const copyBtn = document.getElementById('copyBtn');
+        const whatsappBtn = document.getElementById('whatsappBtn');
+        const smsBtn = document.getElementById('smsBtn');
+
+        // Modales
+        const historyModal = document.getElementById('historyModal');
+        const historyDetailModal = document.getElementById('historyDetailModal');
+        const historyList = document.getElementById('historyList');
+        const historyDetailContent = document.getElementById('historyDetailContent');
+        const notificationModal = document.getElementById('notificationModal');
+
+        let history = [];
+        const MAX_HISTORY_ENTRIES = 10;
+
+        // *** FUNCIONES DEL CONTADOR DE BILLETES ***
+        const formatCurrency = (value) => `$${value.toLocaleString('es-MX')}`;
+
+        function calculateAndUpdateTotals() {
+            let activeTotal = 0, inactiveTotal = 0;
+            billInputs.forEach(input => {
+                const denomination = parseInt(input.id.replace('bill', ''));
+                const count = parseInt(input.value) || 0;
+                const toggle = document.getElementById(`toggle${denomination}`);
+                const subtotal = denomination * count;
+                document.getElementById(`total${denomination}`).textContent = formatCurrency(subtotal);
+                if (toggle.checked) activeTotal += subtotal; else inactiveTotal += subtotal;
+            });
+            const grandTotal = activeTotal + inactiveTotal;
+            totalDisplay.textContent = `Activos: ${formatCurrency(activeTotal)}`;
+            inactiveTotalDisplay.textContent = `Inactivos: ${formatCurrency(inactiveTotal)}`;
+            grandTotalDisplay.textContent = `Total: ${formatCurrency(grandTotal)}`;
+            const isDisabled = grandTotal === 0;
+            [saveBtn, copyBtn, whatsappBtn, smsBtn].forEach(btn => btn.disabled = isDisabled);
+        }
+
+        function saveToLocalStorage(element) {
+            localStorage.setItem(element.id, element.type === 'checkbox' ? element.checked : element.value);
+        }
+
+        function updateRowStyle(toggle) {
+            const row = document.getElementById(`row${toggle.id.replace('toggle', '')}`);
+            row.classList.toggle('inactive', !toggle.checked);
+        }
+
+        function loadFromLocalStorage() {
+            billInputs.forEach(input => {
+                input.value = localStorage.getItem(input.id) || '0';
+                const toggle = document.getElementById(`toggle${input.id.replace('bill', '')}`);
+                const toggleState = localStorage.getItem(toggle.id);
+                if (toggleState !== null) toggle.checked = toggleState === 'true';
+                updateRowStyle(toggle);
+            });
+            const savedHistory = localStorage.getItem('billCounterHistory');
+            if (savedHistory) history = JSON.parse(savedHistory);
+            calculateAndUpdateTotals();
+        }
+
+        // *** FUNCIONES DE COMPARTIR ***
+        function generateShareText() {
+            let detailsText = '🧾 *Desglose de Billetes*\n\n';
+            let activeTotal = 0, inactiveTotal = 0;
+            billInputs.forEach(input => {
+                const count = parseInt(input.value) || 0;
+                if (count > 0) {
+                    const denomination = parseInt(input.id.replace('bill', ''));
+                    const subtotal = count * denomination;
+                    const toggle = document.getElementById(`toggle${denomination}`);
+                    detailsText += `${count} x ${formatCurrency(denomination)} = *${formatCurrency(subtotal)}* ${!toggle.checked ? '(inactivo)' : ''}\n`;
+                    if (toggle.checked) activeTotal += subtotal; else inactiveTotal += subtotal;
+                }
+            });
+            const grandTotal = activeTotal + inactiveTotal;
+            detailsText += `\n-------------------------\n`;
+            detailsText += `✅ *Total Activos:* ${formatCurrency(activeTotal)}\n`;
+            detailsText += `❌ *Total Inactivos:* ${formatCurrency(inactiveTotal)}\n`;
+            detailsText += `💰 *Total General:* *${formatCurrency(grandTotal)}*`;
+            return detailsText;
+        }
+
+        // *** MODAL DE NOTIFICACIÓN GENÉRICO ***
+        function showNotification(title, message, buttons = [{ text: 'OK', class: 'btn-confirm' }]) {
+            document.getElementById('notificationTitle').textContent = title;
+            document.getElementById('notificationMessage').textContent = message;
+            const buttonsContainer = document.getElementById('notificationButtons');
+            buttonsContainer.innerHTML = ''; // Limpiar botones anteriores
+
+            buttons.forEach(btnInfo => {
+                const button = document.createElement('button');
+                button.textContent = btnInfo.text;
+                button.className = btnInfo.class;
+                button.onclick = () => {
+                    notificationModal.style.display = 'none';
+                    if (btnInfo.action) btnInfo.action();
+                };
+                buttonsContainer.appendChild(button);
+            });
+            notificationModal.style.display = 'block';
+        }
+
+        // *** FUNCIONES DE HISTORIAL (IMPLEMENTADAS) ***
+        function saveCurrentStateToHistory() {
+            const details = [];
+            let activeTotal = 0, inactiveTotal = 0;
+            billInputs.forEach(input => {
+                const denomination = parseInt(input.id.replace('bill', ''));
+                const count = parseInt(input.value) || 0;
+                const toggle = document.getElementById(`toggle${denomination}`);
+                if (count > 0) details.push({ denomination, count, subtotal: denomination * count, isActive: toggle.checked });
+                if (toggle.checked) activeTotal += denomination * count; else inactiveTotal += denomination * count;
+            });
+
+            if (details.length === 0) {
+                showNotification('Atención', 'No hay nada que guardar.');
+                return;
+            }
+
+            const entry = { id: Date.now(), date: new Date().toLocaleString('es-MX'), activeTotal, inactiveTotal, grandTotal: activeTotal + inactiveTotal, details };
+            history.unshift(entry);
+            if (history.length > MAX_HISTORY_ENTRIES) history.pop();
+            localStorage.setItem('billCounterHistory', JSON.stringify(history));
+            showNotification('Éxito', 'Conteo guardado en el historial.');
+        }
+
+        function renderHistoryList() {
+            historyList.innerHTML = ''; // Limpiar lista
+            if (history.length === 0) {
+                historyList.innerHTML = '<li>El historial está vacío.</li>';
+                return;
+            }
+            history.forEach(entry => {
+                const li = document.createElement('li');
+                li.innerHTML = `<span>${entry.date}</span> <strong>${formatCurrency(entry.grandTotal)}</strong>`;
+                li.dataset.id = entry.id;
+                li.onclick = () => showHistoryDetail(entry.id);
+                historyList.appendChild(li);
+            });
+        }
+
+        function showHistoryDetail(id) {
+            const entry = history.find(e => e.id === id);
+            if (!entry) return;
+
+            let tableHTML = `
+                <p><strong>Fecha:</strong> ${entry.date}</p>
+                <p><strong>Total Activos:</strong> ${formatCurrency(entry.activeTotal)}</p>
+                <p><strong>Total Inactivos:</strong> ${formatCurrency(entry.inactiveTotal)}</p>
+                <h3><strong>Total General: ${formatCurrency(entry.grandTotal)}</strong></h3>
+                <table>
+                    <thead><tr><th>Denominación</th><th>Cantidad</th><th>Subtotal</th></tr></thead>
+                    <tbody>
+            `;
+            entry.details.forEach(item => {
+                tableHTML += `
+                    <tr>
+                        <td>${formatCurrency(item.denomination)} ${!item.isActive ? '(inactivo)' : ''}</td>
+                        <td>${item.count}</td>
+                        <td>${formatCurrency(item.subtotal)}</td>
+                    </tr>
+                `;
+            });
+            tableHTML += `</tbody></table>`;
+            
+            historyDetailContent.innerHTML = tableHTML;
+            historyDetailModal.style.display = 'block';
+        }
+
+        // *** LÓGICA DE LA CALCULADORA ***
+        const calculatorState = { displayValue: '0', firstOperand: null, waitingForSecondOperand: false, operator: null, history: '' };
+        const calcDisplay = document.getElementById('calcDisplay');
+        const calcHistory = document.getElementById('calcHistory');
+        const operatorSymbols = { 'add': '+', 'subtract': '-', 'multiply': '×', 'divide': '÷' };
+
+        function updateCalcDisplays() {
+            let display = calculatorState.displayValue;
+            if (display.length > 9 && !display.includes('e')) {
+                display = parseFloat(display).toExponential(4);
+            }
+            calcDisplay.textContent = display;
+            calcHistory.textContent = calculatorState.history || '\u00A0';
+        }
+
+        const performCalculation = {
+            'divide': (a, b) => b === 0 ? 'Error' : a / b,
+            'multiply': (a, b) => a * b,
+            'add': (a, b) => a + b,
+            'subtract': (a, b) => a - b,
+        };
+
+        function resetCalculator() {
+            Object.assign(calculatorState, { displayValue: '0', firstOperand: null, waitingForSecondOperand: false, operator: null, history: '' });
+        }
+
+        function handleOperator(nextOperator) {
+            const { firstOperand, displayValue, operator } = calculatorState;
+            const inputValue = parseFloat(displayValue);
+            if (operator && calculatorState.waitingForSecondOperand) {
+                calculatorState.operator = nextOperator;
+                calculatorState.history = `${firstOperand} ${operatorSymbols[nextOperator]}`;
+                return;
+            }
+            if (firstOperand === null && !isNaN(inputValue)) {
+                calculatorState.firstOperand = inputValue;
+            } else if (operator) {
+                const result = performCalculation[operator](firstOperand, inputValue);
+                if (result === 'Error') { resetCalculator(); calculatorState.displayValue = 'Error'; return; }
+                calculatorState.displayValue = `${parseFloat(result.toFixed(7))}`;
+                calculatorState.firstOperand = result;
+            }
+            calculatorState.waitingForSecondOperand = true;
+            calculatorState.operator = nextOperator;
+            calculatorState.history = `${calculatorState.firstOperand} ${operatorSymbols[nextOperator]}`;
+        }
+        
+        // *** EVENT LISTENERS ***
+        loadFromLocalStorage();
+
+        billInputs.forEach(input => { input.addEventListener('input', () => { saveToLocalStorage(input); calculateAndUpdateTotals(); }); input.addEventListener('click', () => input.select()); });
+        billToggles.forEach(toggle => { toggle.addEventListener('change', () => { updateRowStyle(toggle); saveToLocalStorage(toggle); calculateAndUpdateTotals(); }); });
+        
+        copyBtn.addEventListener('click', () => {
+            navigator.clipboard.writeText(generateShareText()).then(() => {
+                const originalText = copyBtn.innerHTML;
+                copyBtn.innerHTML = '<i class="fas fa-check"></i> ¡Copiado!';
+                copyBtn.classList.add('copied');
+                setTimeout(() => { copyBtn.innerHTML = originalText; copyBtn.classList.remove('copied'); }, 2000);
+            }).catch(() => showNotification('Error', 'No se pudo copiar el texto al portapapeles.'));
+        });
+        whatsappBtn.addEventListener('click', () => window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(generateShareText())}`, '_blank'));
+        smsBtn.addEventListener('click', () => window.location.href = `sms:?body=${encodeURIComponent(generateShareText().replace(/[*_]/g, ''))}`);
+        
+        saveBtn.addEventListener('click', saveCurrentStateToHistory);
+        
+        historyBtn.addEventListener('click', () => {
+            renderHistoryList(); 
+            historyModal.style.display = 'block';
+        });
+
+        clearBtn.addEventListener('click', () => {
+            showNotification(
+                'Confirmar Limpieza',
+                '¿Estás seguro de que deseas limpiar todos los valores? Esta acción no se puede deshacer.',
+                [
+                    {
+                        text: 'Sí, Limpiar',
+                        class: 'btn-danger',
+                        action: () => {
+                            billInputs.forEach(input => { input.value = 0; localStorage.removeItem(input.id); });
+                            billToggles.forEach(toggle => { toggle.checked = true; localStorage.removeItem(toggle.id); updateRowStyle(toggle); });
+                            calculateAndUpdateTotals();
+                        }
+                    },
+                    { text: 'Cancelar', class: 'btn-cancel' }
+                ]
+            );
+        });
+
+        calcBtn.addEventListener('click', () => document.getElementById('calculatorModal').style.display = 'block');
+        
+        document.querySelector('.calculator-buttons').addEventListener('click', (event) => {
+            const { target } = event;
+            if (!target.matches('button')) return;
+
+            const { number, action } = target.dataset;
+            const { displayValue, operator, firstOperand } = calculatorState;
+
+            if (calculatorState.displayValue === 'Error') resetCalculator();
+            
+            if (number) {
+                if (calculatorState.waitingForSecondOperand) {
+                    calculatorState.displayValue = number;
+                    calculatorState.waitingForSecondOperand = false;
+                } else {
+                    if (displayValue === '0' && number === '00') return;
+                    calculatorState.displayValue = displayValue === '0' ? number : displayValue + number;
+                }
+            } else {
+                switch (action) {
+                    case 'decimal': if (!displayValue.includes('.')) calculatorState.displayValue += '.'; break;
+                    case 'add': case 'subtract': case 'multiply': case 'divide': handleOperator(action); break;
+                    case 'toggle-sign': calculatorState.displayValue = `${parseFloat(displayValue) * -1}`; break;
+                    case 'percentage': calculatorState.displayValue = `${parseFloat(displayValue) / 100}`; break;
+                    case 'clear': resetCalculator(); break;
+                    case 'calculate':
+                        if (operator && !calculatorState.waitingForSecondOperand) {
+                            const inputValue = parseFloat(displayValue);
+                            const result = performCalculation[operator](firstOperand, inputValue);
+                            if (result === 'Error') { resetCalculator(); calculatorState.displayValue = 'Error'; break; }
+                            calculatorState.history = `${firstOperand} ${operatorSymbols[operator]} ${inputValue} =`;
+                            calculatorState.displayValue = `${parseFloat(result.toFixed(7))}`;
+                            calculatorState.firstOperand = null;
+                            calculatorState.operator = null;
+                            calculatorState.waitingForSecondOperand = true;
+                        }
+                        break;
+                }
+            }
+            updateCalcDisplays();
+        });
+        
+        // Cierre de modales
+        document.querySelectorAll('.close').forEach(el => el.onclick = () => el.closest('.modal').style.display = 'none');
+        window.addEventListener('click', (event) => { if (event.target.classList.contains('modal')) { event.target.style.display = 'none'; } });
+    });
+    </script>
+</body>
+</html>
