@@ -17,11 +17,13 @@ jobs:
             -scheme Mio \
             -sdk iphoneos \
             -configuration Release \
+            -derivedDataPath build \
             CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO
 
       - name: Empaquetar IPA
         run: |
-          APP=$(find build/ -name "*.app" | head -n 1)
+          APP=$(find build -name "*.app" | head -n 1)
+          echo "App encontrada: $APP"
           mkdir Payload
           cp -R "$APP" Payload/
           zip -r App.ipa Payload
