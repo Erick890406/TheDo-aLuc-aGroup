@@ -13,8 +13,8 @@ jobs:
 
       - name: Construir app (sin firma)
         run: |
-          xcodebuild -project IPV-10.7 \
-            -scheme IPV-10.7 \
+          xcodebuild -project project.pbxproj \
+            -scheme project.pbxproj \
             -sdk iphoneos \
             -configuration Release \
             CODE_SIGNING_ALLOWED=NO
