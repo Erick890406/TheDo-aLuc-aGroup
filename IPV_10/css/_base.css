@@ -1,0 +1,85 @@
+/* PARTIAL: _base.css */
+
+/* 
+ * 0. IMPORTS & GLOBAL RESET
+ * ---------------------------------------------------------------
+ */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&display=swap');
+
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* 
+ * 1. ROOT VARIABLES & GLOBAL STYLES
+ * ---------------------------------------------------------------
+ */
+:root {
+    --bg-dark: #0A0E1A;
+    --bg-primary: #121829;
+    --bg-glass: rgba(18, 24, 41, 0.6);
+    --border-glass: rgba(136, 173, 255, 0.15);
+    --border-highlight: rgba(136, 173, 255, 0.3);
+    --primary-cyan: #00E0FF;
+    --primary-magenta: #E100FF;
+    --glow-cyan: rgba(0, 224, 255, 0.3);
+    --glow-magenta: rgba(225, 0, 255, 0.25);
+    --success-color: #00FF95;
+    --danger-color: #FF3D71;
+    --warning-color: #FFD600;
+    --glow-success: rgba(0, 255, 149, 0.3);
+    --glow-danger: rgba(255, 61, 113, 0.3);
+    --text-primary: #E0E5FF;
+    --text-secondary: #88ADFF;
+    --text-headings: #FFFFFF;
+    --font-main: 'Inter', sans-serif;
+    --font-serif: 'Playfair Display', serif;
+    --font-mono: 'Roboto Mono', monospace;
+    --radius-sm: 6px;
+    --radius-md: 12px;
+    --radius-lg: 20px;
+    --backdrop-blur: 12px;
+    --transition-fast: 0.2s ease-out;
+    --transition-slow: 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+body {
+    font-family: var(--font-main);
+    background-color: var(--bg-dark);
+    color: var(--text-primary);
+    overflow-x: hidden;
+    position: relative;
+}
+
+body::before {
+    content: '';
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    z-index: -1;
+    background-image:
+        radial-gradient(circle at 15% 20%, var(--glow-cyan) 0%, transparent 30%),
+        radial-gradient(circle at 85% 75%, var(--glow-magenta) 0%, transparent 35%);
+    background-repeat: no-repeat;
+    opacity: 0.5;
+}
+
+/* Custom Scrollbars */
+::-webkit-scrollbar { width: 10px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(135deg, var(--primary-cyan), var(--primary-magenta));
+    border-radius: 10px;
+    border: 2px solid var(--bg-primary);
+}
+
+.hidden {
+    display: none !important;
+}

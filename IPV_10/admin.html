@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>IPV Admin</title>
+    <link rel="icon" type="image/png" href="./img/Logo.png">
+    <link rel="stylesheet" href="./css/admin.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
+    <meta name="theme-color" content="#111827">
+</head>
+<body>
+
+    <div id="admin-login-screen">
+        <div class="login-container">
+            <img src="./img/Logo.png" alt="Logo" class="logo">
+            <h1>Panel de Control</h1>
+            <p>Análisis de rendimiento de IPV.</p>
+            <form id="adminLoginForm" autocomplete="on">
+                <input type="text" name="username" autocomplete="username" style="display:none;">
+                <select id="adminBusinessSelect" required>
+                    <option value="">Cargando negocios...</option>
+                </select>
+                <input type="password" id="adminPasswordInput" placeholder="Contraseña" required autocomplete="current-password">
+                <button type="submit" class="btn btn-primary">Acceder</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="admin-panel" class="hidden">
+        <header class="app-header">
+            <h1 id="view-title">Dashboard</h1>
+            <button id="adminLogoutBtn" class="logout-btn" aria-label="Cerrar Sesión">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M16 17v-3H9v-4h7V7l5 5-5 5M14 2a2 2 0 0 1 2 2v2h-2V4H5v16h9v-2h2v2a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9z"></path></svg>
+            </button>
+        </header>
+
+        <main class="content-area">
+            <!-- VISTA: DASHBOARD -->
+            <div id="dashboard-view" class="view active">
+                <div class="filters">
+                    <select id="dashboard-period-selector" class="period-selector">
+                        <option value="7">Últimos 7 días</option>
+                        <option value="30" selected>Últimos 30 días</option>
+                        <option value="this_month">Este mes</option>
+                        <option value="last_month">Mes pasado</option>
+                    </select>
+                </div>
+                <div id="dashboard-content"></div>
+            </div>
+
+            <!-- VISTA: REPORTES -->
+            <div id="reports-view" class="view">
+                <div class="filters-stacked">
+                    <div class="date-range">
+                        <label>Desde: <input type="date" id="report-start-date"></label>
+                        <label>Hasta: <input type="date" id="report-end-date"></label>
+                    </div>
+                    <button id="generate-report-btn" class="btn btn-primary">Generar Reporte</button>
+                </div>
+                <div id="report-results-container"></div>
+            </div>
+
+            <!-- VISTA: PRODUCTOS -->
+            <div id="products-view" class="view">
+                 <div class="filters-stacked">
+                    <div class="date-range">
+                        <label>Desde: <input type="date" id="products-start-date"></label>
+                        <label>Hasta: <input type="date" id="products-end-date"></label>
+                    </div>
+                    <button id="generate-products-report-btn" class="btn btn-primary">Analizar Productos</button>
+                </div>
+                 <div id="products-report-container"></div>
+            </div>
+        </main>
+
+        <nav class="bottom-nav">
+            <button class="nav-link active" data-view="dashboard" aria-label="Dashboard">
+                <div class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8h5z"></path></svg></div>
+                <span>Dashboard</span>
+            </button>
+            <button class="nav-link" data-view="reports" aria-label="Reportes">
+                <div class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M20 6v14H6v2h14a2 2 0 0 0 2-2V6h-2z M16 2H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2zm-1 10H9v-2h6v2zm-6-4h6V6H9v2z"></path></svg></div>
+                <span>Reportes</span>
+            </button>
+            <button class="nav-link" data-view="products" aria-label="Productos">
+                <div class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M22 7.5a.5.5 0 0 0-.5-.5h-2a.5.5 0 0 0 0 1h1.5v12.01a.5.5 0 0 0 .5.5h2a.5.5 0 0 0 .5-.5v-12a.5.5 0 0 0-.5-.5zM3 5.5a.5.5 0 0 0 .5.5H5v13H3.5a.5.5 0 0 0 0 1h17a.5.5 0 0 0 0-1H6V3.01a.5.5 0 0 0-.5-.5H4a.5.5 0 0 0 0 1h1.5v2.01H3.5a.5.5 0 0 0-.5.5zm5.5 2a.5.5 0 0 0-.5.5v12a.5.5 0 0 0 1 0v-12a.5.5 0 0 0-.5-.5zm4 0a.5.5 0 0 0-.5.5v12a.5.5 0 0 0 1 0v-12a.5.5 0 0 0-.5-.5z"></path></svg></div>
+                <span>Productos</span>
+            </button>
+        </nav>
+    </div>
+
+    <div id="loading-overlay-admin" class="loading-overlay hidden"><div class="spinner"></div><p>Cargando datos...</p></div>
+
+    <script type="module" src="./js/admin-main.js"></script>
+
+</body>
+</html>
