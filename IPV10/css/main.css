@@ -1,15 +1,8 @@
-/*
-=================================================================
-  MAIN.CSS - IPV GESTIÓN v11.0 (Refactor)
-  Entry point for all CSS partials.
-=================================================================
-*/
-
-@import url('_base.css');
-@import url('_layout.css');
-@import url('_login.css');
-@import url('_modals.css');
-@import url('_table.css');
-@import url('_components.css');
-@import url('_calculators.css');
-@import url('_promo-themes.css');
+@import url('./_base.css');
+@import url('./_layout.css');
+@import url('./_login.css');
+@import url('./_modals.css');
+@import url('./_table.css');
+@import url('./_components.css');
+@import url('./_calculators.css');
+@import url('./_promo-themes.css');
