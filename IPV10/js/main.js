@@ -1,15 +1,15 @@
 // js/main.js
 
-import StateManager from './state.js';
-import { ApiClient } from './api.js';
-import * as UI from './ui.js';
-import { initializeCalculators } from './calculators.js';
-import { normalizeData, createNewDayDataFromPrevious } from './utils.js';
-import { showAlert } from './customModals.js';
-import { APP_VERSION, PROMOTIONAL_MODALS } from './config.js';
-import Session from './session.js';
-import * as EventHandlers from './eventHandlers.js';
-import * as ReportHandlers from './reportHandlers.js';
+import StateManager from '../state.js';
+import { ApiClient } from '../api.js';
+import * as UI from '../ui.js';
+import { initializeCalculators } from '../calculators.js';
+import { normalizeData, createNewDayDataFromPrevious } from '../utils.js';
+import { showAlert } from '../customModals.js';
+import { APP_VERSION, PROMOTIONAL_MODALS } from '../config.js';
+import Session from '../session.js';
+import * as EventHandlers from '../eventHandlers.js';
+import * as ReportHandlers from '../reportHandlers.js';
 
 console.log(`main.js: Módulo cargado. Versión ${APP_VERSION}`);
 
@@ -189,4 +189,5 @@ function setupScrollAndHeaderListeners() {
         }
         lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
     }, false);
+
 }
