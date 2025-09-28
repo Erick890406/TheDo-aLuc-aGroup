@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -141,7 +142,7 @@
                 <li class="nav-item"><a class="nav-link" href="#" onclick="navigateToSection('products')"><i class="bi bi-egg-fried me-2"></i> Productos y Combos</a></li>
                 <li class="nav-item"><a class="nav-link" href="#" onclick="navigateToSection('orders')"><i class="bi bi-truck me-2"></i> Envíos</a></li>
                 <li class="nav-item"><a class="nav-link" href="#" onclick="navigateToSection('rewards')"><i class="bi bi-gift-fill me-2"></i> Recompensas</a></li>
-                <li class="nav-item"><a class="nav-link" href="#"><i class="bi bi-graph-up me-2"></i> Estadísticas (Próx.)</a></li>
+                <li class="nav-item"><a class="nav-link" href="#" onclick="navigateToSection('global-message')"><i class="bi bi-broadcast me-2"></i> Mensaje Global</a></li>
             </ul>
             <div class="mt-auto pt-3 border-top border-light-subtle"><div class="d-flex align-items-center"><i class="bi bi-person-circle fs-4"></i><div class="ms-3"><small>Admin</small><p class="mb-0 fw-bold" id="adminUserNameDisplay">Usuario Admin</p></div></div></div>
         </div>
@@ -155,7 +156,7 @@
                 <li class="nav-item"><a class="nav-link" href="#" onclick="navigateToSection('products')"><i class="bi bi-egg-fried me-2"></i> Productos y Combos</a></li>
                 <li class="nav-item"><a class="nav-link" href="#" onclick="navigateToSection('orders')"><i class="bi bi-truck me-2"></i> Envíos</a></li>
                 <li class="nav-item"><a class="nav-link" href="#" onclick="navigateToSection('rewards')"><i class="bi bi-gift-fill me-2"></i> Recompensas</a></li>
-                <li class="nav-item"><a class="nav-link" href="#"><i class="bi bi-graph-up me-2"></i> Estadísticas (Próx.)</a></li>
+                <li class="nav-item"><a class="nav-link" href="#" onclick="navigateToSection('global-message')"><i class="bi bi-broadcast me-2"></i> Mensaje Global</a></li>
             </ul>
         </div>
         <div class="mt-auto pt-3 border-top border-light-subtle"><div class="d-flex align-items-center"><i class="bi bi-person-circle fs-4"></i><div class="ms-3"><small>Admin</small><p class="mb-0 fw-bold" id="adminUserNameDisplayDesktop">Usuario Admin</p></div></div></div>
@@ -213,14 +214,14 @@
                         <div> <h1 class="h4 mb-0 d-none d-lg-block"><i class="bi bi-egg-fried"></i> Gestión de Productos y Combos</h1> <h1 class="h5 mb-0 d-lg-none"><i class="bi bi-egg-fried"></i> Productos y Combos</h1> </div>
                         <div>
                             <button class="btn btn-info btn-sm me-1" id="bulk-show-products-btn" onclick="bulkToggleProductsActive(true)" disabled title="Marcar seleccionados como Visibles">
-    <i class="bi bi-eye-fill"></i> <span class="d-none d-sm-inline">Mostrar</span>
-</button>
-<button class="btn btn-secondary btn-sm me-2" id="bulk-hide-products-btn" onclick="bulkToggleProductsActive(false)" disabled title="Marcar seleccionados como Ocultos">
-    <i class="bi bi-eye-slash-fill"></i> <span class="d-none d-sm-inline">Ocultar</span>
-</button>
-<button class="btn btn-danger btn-sm me-2" id="bulk-delete-products-btn" onclick="showBulkDeleteModal()" disabled>
-    <i class="bi bi-trash-fill"></i> <span class="d-none d-sm-inline">Eliminar</span>
-</button>
+                                <i class="bi bi-eye-fill"></i> <span class="d-none d-sm-inline">Mostrar</span>
+                            </button>
+                            <button class="btn btn-secondary btn-sm me-2" id="bulk-hide-products-btn" onclick="bulkToggleProductsActive(false)" disabled title="Marcar seleccionados como Ocultos">
+                                <i class="bi bi-eye-slash-fill"></i> <span class="d-none d-sm-inline">Ocultar</span>
+                            </button>
+                            <button class="btn btn-danger btn-sm me-2" id="bulk-delete-products-btn" onclick="showBulkDeleteModal()" disabled>
+                                <i class="bi bi-trash-fill"></i> <span class="d-none d-sm-inline">Eliminar</span>
+                            </button>
                             <button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#addProductModal">
                                 <i class="bi bi-journal-plus"></i> <span class="d-none d-sm-inline">Nuevo Producto/Combo</span>
                             </button>
@@ -360,6 +361,38 @@
                     </div>
                     <div id="rewards-pagination-controls" class="d-flex justify-content-center pt-3"></div>
                 </div>
+
+                <div id="global-message-section" style="display: none;">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <div>
+                            <h1 class="h4 mb-0"><i class="bi bi-broadcast"></i> Mensaje Global para Clientes</h1>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Editar Anuncio</h5>
+                            <p class="card-text text-muted small">Este mensaje se mostrará en un modal a todos los clientes que visiten la página VIP. Aparecerá solo una vez por cada actualización que guardes.</p>
+                            <form id="globalMessageForm">
+                                <div class="mb-3">
+                                    <label for="messageTitle" class="form-label">Título del Mensaje</label>
+                                    <input type="text" class="form-control" id="messageTitle" placeholder="Ej: ¡Nueva Promoción!">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="messageBody" class="form-label">Cuerpo del Mensaje (Soporta HTML)</label>
+                                    <textarea class="form-control" id="messageBody" rows="8" placeholder="Ej: <p>Hola a todos,</p><p>Esta semana tenemos un <b>descuento especial</b> en todos los combos.</p>"></textarea>
+                                </div>
+                                <div class="form-check form-switch mb-3">
+                                    <input class="form-check-input" type="checkbox" role="switch" id="messageIsActive">
+                                    <label class="form-check-label" for="messageIsActive">Mostrar este mensaje a los clientes</label>
+                                </div>
+                                <button type="button" class="btn btn-primary" id="saveGlobalMessageBtn" onclick="saveGlobalMessage()">
+                                    <i class="bi bi-save-fill me-2"></i>Guardar y Publicar Mensaje
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </div>
     </div>
@@ -371,7 +404,6 @@
       </div>
     </div>
 
-    <!-- Contenedor para las notificaciones Toast -->
     <div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 99999;">
     </div>
 
@@ -417,22 +449,14 @@
                 <div class="modal-body">
                     <form id="bulkEmailClientsForm">
                         <div class="mb-3">
-                            <label class="form-label">Plantilla de Email</label>
-                            <select id="templateSelector" class="form-select">
-                                <option value="">-- Selecciona una plantilla --</option>
-                            </select>
-                        </div>
-                        <div id="templateInputsContainer" class="mb-3"></div>
-
-                        <div class="mb-3">
                             <label for="emailSubject" class="form-label">Asunto <span class="text-danger">*</span></label>
                             <input type="text" class="form-control" id="emailSubject" required>
                         </div>
                         <div class="mb-3">
-                            <label for="emailBody" class="form-label">Cuerpo del Mensaje <span class="text-danger">*</span> (Puedes usar HTML básico)</label>
+                            <label for="emailBody" class="form-label">Cuerpo del Mensaje <span class="text-danger">*</span> (Puedes usar HTML)</label>
                             <textarea class="form-control" id="emailBody" rows="10" required></textarea>
                             <small class="form-text text-muted">
-                                Puedes usar marcadores de posición como <code>{{nombreCliente}}</code>, <code>{{fecha}}</code>, etc.
+                                Usa <code>{{nombreCliente}}</code> para personalizar el saludo con el nombre del cliente.
                             </small>
                         </div>
                         <div class="alert alert-info small">
@@ -451,23 +475,18 @@
 
  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <script>
-     const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwvc92DuX1Db62TUiUrJ06N6BlNwsfl8yrPLSvncZSYM_MrrOV0GTrWrfKXKobntiFJoA/exec'; // Reemplaza con tu URL real
+     const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyG77ab1DSxczn02VlA99PtBYAVZzoJXr0vbjvXhbXtQno_Cypjyl5HQWHfg-cMXBZMlg/exec';
 
     let allClients = [], displayedClients = [];
     let allProducts = [], displayedProducts = [];
     let allOrders = [], displayedOrders = [];
     let allRewards = [], displayedRewards = [];
 
-    let currentPageClients = 1;
-    const ITEMS_PER_PAGE_CLIENTS = 10;
-    let currentPageProducts = 1;
-    const ITEMS_PER_PAGE_PRODUCTS = 10;
-    let currentPageOrders = 1;
-    const ITEMS_PER_PAGE_ORDERS = 10;
-    let currentPageRewards = 1;
-    const ITEMS_PER_PAGE_REWARDS = 10;
-
-
+    let currentPageClients = 1, ITEMS_PER_PAGE_CLIENTS = 10;
+    let currentPageProducts = 1, ITEMS_PER_PAGE_PRODUCTS = 10;
+    let currentPageOrders = 1, ITEMS_PER_PAGE_ORDERS = 10;
+    let currentPageRewards = 1, ITEMS_PER_PAGE_REWARDS = 10;
+    
     let itemToDeleteId = null, itemToDeleteType = null;
     const loadingSpinner = document.getElementById('loadingSpinner');
     let selectedProductIds = new Set();
@@ -477,31 +496,17 @@
 
     const DEBOUNCE_DELAY = 350;
 
-
     function showToast(message, type = 'info', delay = 5000) {
         const toastContainer = document.querySelector('.toast-container');
-        if (!toastContainer) {
-            console.error('Toast container not found!');
-            alert(message);
-            return;
-        }
+        if (!toastContainer) { alert(message); return; }
         const toastId = 'toast-' + Date.now();
-        let iconClass = 'bi-info-circle-fill';
-        let bgClass = 'bg-info text-white';
-
+        let iconClass = 'bi-info-circle-fill', bgClass = 'bg-info text-white';
         switch (type) {
             case 'success': iconClass = 'bi-check-circle-fill'; bgClass = 'bg-success text-white'; break;
             case 'error': iconClass = 'bi-exclamation-triangle-fill'; bgClass = 'bg-danger text-white'; break;
             case 'warning': iconClass = 'bi-exclamation-triangle-fill'; bgClass = 'bg-warning text-dark'; break;
         }
-
-        const toastHTML = `
-            <div id="${toastId}" class="toast align-items-center ${bgClass} border-0" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="${delay}">
-                <div class="d-flex">
-                    <div class="toast-body"><i class="bi ${iconClass} me-2"></i>${message}</div>
-                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
-                </div>
-            </div>`;
+        const toastHTML = `<div id="${toastId}" class="toast align-items-center ${bgClass} border-0" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="${delay}"><div class="d-flex"><div class="toast-body"><i class="bi ${iconClass} me-2"></i>${message}</div><button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button></div></div>`;
         toastContainer.insertAdjacentHTML('beforeend', toastHTML);
         const toastElement = document.getElementById(toastId);
         const toastInstance = new bootstrap.Toast(toastElement);
@@ -511,11 +516,9 @@
 
     function debounce(func, delay) {
         let timeoutId;
-        return function(...args) {
+        return (...args) => {
             clearTimeout(timeoutId);
-            timeoutId = setTimeout(() => {
-                func.apply(this, args);
-            }, delay);
+            timeoutId = setTimeout(() => func.apply(this, args), delay);
         };
     }
 
@@ -546,59 +549,35 @@
     }
 
     function renderGenericPaginationControls(entityConfig) {
-        const { paginationContainerId, currentPage, totalItems, itemsPerPage, changePageFnName } = entityConfig;
+        const { paginationContainerId, currentPage, totalItems, itemsPerPage, changePageFnName, entityNameLabel } = entityConfig;
         const paginationContainer = document.getElementById(paginationContainerId);
-        if (!paginationContainer) {
-            console.warn("Pagination container not found:", paginationContainerId);
-            return;
-        }
+        if (!paginationContainer) return;
         paginationContainer.innerHTML = '';
-
         const totalPages = Math.ceil(totalItems / itemsPerPage);
         if (totalPages <= 1) return;
-
-        let paginationHTML = `<nav aria-label="Navegación de ${entityConfig.entityNameLabel}"><ul class="pagination pagination-sm">`;
-        paginationHTML += `<li class="page-item ${currentPage === 1 ? 'disabled' : ''}"><a class="page-link" href="#" onclick="${changePageFnName}(${currentPage - 1})" aria-label="Anterior"><span aria-hidden="true">«</span></a></li>`;
-
-        let startPage = Math.max(1, currentPage - 2);
-        let endPage = Math.min(totalPages, currentPage + 2);
+        let paginationHTML = `<nav aria-label="Navegación de ${entityNameLabel}"><ul class="pagination pagination-sm">`;
+        paginationHTML += `<li class="page-item ${currentPage === 1 ? 'disabled' : ''}"><a class="page-link" href="#" onclick="${changePageFnName}(${currentPage - 1})">«</a></li>`;
+        let startPage = Math.max(1, currentPage - 2), endPage = Math.min(totalPages, currentPage + 2);
         if (currentPage <= 3) endPage = Math.min(totalPages, 5);
         if (currentPage > totalPages - 3) startPage = Math.max(1, totalPages - 4);
-
-        if (startPage > 1) {
-            paginationHTML += `<li class="page-item"><a class="page-link" href="#" onclick="${changePageFnName}(1)">1</a></li>`;
-            if (startPage > 2) paginationHTML += `<li class="page-item disabled"><span class="page-link">...</span></li>`;
-        }
-        for (let i = startPage; i <= endPage; i++) {
-            paginationHTML += `<li class="page-item ${i === currentPage ? 'active' : ''}"><a class="page-link" href="#" onclick="${changePageFnName}(${i})">${i}</a></li>`;
-        }
-        if (endPage < totalPages) {
-            if (endPage < totalPages - 1) paginationHTML += `<li class="page-item disabled"><span class="page-link">...</span></li>`;
-            paginationHTML += `<li class="page-item"><a class="page-link" href="#" onclick="${changePageFnName}(${totalPages})">${totalPages}</a></li>`;
-        }
-        paginationHTML += `<li class="page-item ${currentPage === totalPages ? 'disabled' : ''}"><a class="page-link" href="#" onclick="${changePageFnName}(${currentPage + 1})" aria-label="Siguiente"><span aria-hidden="true">»</span></a></li>`;
+        if (startPage > 1) { paginationHTML += `<li class="page-item"><a class="page-link" href="#" onclick="${changePageFnName}(1)">1</a></li>`; if (startPage > 2) paginationHTML += `<li class="page-item disabled"><span class="page-link">...</span></li>`; }
+        for (let i = startPage; i <= endPage; i++) { paginationHTML += `<li class="page-item ${i === currentPage ? 'active' : ''}"><a class="page-link" href="#" onclick="${changePageFnName}(${i})">${i}</a></li>`; }
+        if (endPage < totalPages) { if (endPage < totalPages - 1) paginationHTML += `<li class="page-item disabled"><span class="page-link">...</span></li>`; paginationHTML += `<li class="page-item"><a class="page-link" href="#" onclick="${changePageFnName}(${totalPages})">${totalPages}</a></li>`; }
+        paginationHTML += `<li class="page-item ${currentPage === totalPages ? 'disabled' : ''}"><a class="page-link" href="#" onclick="${changePageFnName}(${currentPage + 1})">»</a></li>`;
         paginationHTML += '</ul></nav>';
         paginationContainer.innerHTML = paginationHTML;
     }
 
-
     async function fetchData(action, httpMethod = 'POST', payloadData = null) {
-        if (GOOGLE_SCRIPT_URL === 'AQUI_VA_TU_URL_DEL_SCRIPT_DE_GOOGLE_APPS' || !GOOGLE_SCRIPT_URL || GOOGLE_SCRIPT_URL.length < 20) {
-            showToast("CONFIGURACIÓN REQUERIDA: URL de GOOGLE_SCRIPT_URL no es válida.", "error");
-            if(loadingSpinner) loadingSpinner.style.display = 'none';
-            return { success: false, message: 'URL no configurada o inválida.' };
-        }
-        console.log(`Admin fetchData: Acción='${action}', Método='${httpMethod}'`);
-        if (payloadData && httpMethod === 'POST') console.log(`Admin fetchData Payload: ${JSON.stringify(payloadData).substring(0,300)}`);
-
-        if(loadingSpinner) loadingSpinner.style.display = 'flex';
+        if (!GOOGLE_SCRIPT_URL || GOOGLE_SCRIPT_URL.length < 20) { showToast("URL de Google Script no configurada.", "error"); if (loadingSpinner) loadingSpinner.style.display = 'none'; return { success: false, message: 'URL no configurada.' }; }
+        if (loadingSpinner) loadingSpinner.style.display = 'flex';
         try {
             let url = GOOGLE_SCRIPT_URL;
             const options = { method: httpMethod, headers: {}, mode: 'cors', redirect: 'follow' };
             if (httpMethod === 'GET') {
                 const params = new URLSearchParams({ action: action, cacheBuster: new Date().getTime() });
                 if (payloadData) { for (const key in payloadData) { params.append(key, payloadData[key]); } }
-                url += (url.includes('?') ? '&' : '?') + params.toString();
+                url += `?${params.toString()}`;
             } else {
                 options.headers['Content-Type'] = 'application/x-www-form-urlencoded';
                 const jsonDataPayload = JSON.stringify({ action, payload: payloadData });
@@ -606,116 +585,62 @@
             }
             const res = await fetch(url, options);
             const responseText = await res.text();
-            console.log(`Respuesta bruta para '${action}': ${responseText.substring(0, 500)}`);
-
-            if (!res.ok) {
-                console.error(`Error en Fetch (${res.status}) para ${action}: ${responseText}`);
-                throw new Error(`Error de red o servidor (${res.status}): ${responseText.substring(0,100)}...`);
-            }
+            if (!res.ok) throw new Error(`Error de servidor (${res.status}): ${responseText.substring(0, 100)}...`);
             let responseJson;
-            try { responseJson = JSON.parse(responseText); } catch (jsonError) {
-                console.error(`Error al parsear JSON para '${action}': ${jsonError}. Respuesta recibida: ${responseText}`);
-                throw new Error(`Respuesta inválida del servidor (no es JSON): ${responseText.substring(0,100)}...`);
-            }
-            console.log(`Respuesta JSON parseada para '${action}':`, responseJson);
-            if (responseJson && responseJson.success === false && responseJson.message && responseJson.message.includes("ScriptError: Autorización necesaria")) {
-                 showToast("Error de autorización con Google Apps Script. Asegúrate de haber autorizado el script y desplegado la última versión correctamente.", "error");
-            }
+            try { responseJson = JSON.parse(responseText); } catch (e) { throw new Error(`Respuesta inválida (no JSON): ${responseText.substring(0, 100)}...`); }
             return responseJson;
         } catch (error) {
-            console.error(`Error crítico en fetchData (Acción: ${action}):`, error);
-            showToast(`Error de comunicación con el servidor: ${error.message}`, "error");
-            return { success: false, message: `Error: ${error.message || 'Desconocido'}` };
+            showToast(`Error de comunicación: ${error.message}`, "error");
+            return { success: false, message: `Error: ${error.message}` };
         } finally {
-            if(loadingSpinner) loadingSpinner.style.display = 'none';
+            if (loadingSpinner) loadingSpinner.style.display = 'none';
         }
     }
 
     function navigateToSection(sectionId) {
-        ['clients-section', 'products-section', 'orders-section', 'rewards-section'].forEach(id => {
-            const el = document.getElementById(id);
-            if (el) el.style.display = 'none';
+        ['clients-section', 'products-section', 'orders-section', 'rewards-section', 'global-message-section'].forEach(id => {
+            const el = document.getElementById(id); if (el) el.style.display = 'none';
         });
         document.querySelectorAll('#sidebarMobile .nav-link, .d-none.d-lg-flex .nav-link').forEach(link => link.classList.remove('active'));
-
         const sectionElement = document.getElementById(sectionId + '-section');
         if (sectionElement) sectionElement.style.display = 'block';
-
-        let activeLinkSelector = `.nav-link[onclick*="${sectionId}"]`;
-        document.querySelectorAll(activeLinkSelector).forEach(link => link.classList.add('active'));
-
+        document.querySelectorAll(`.nav-link[onclick*="${sectionId}"]`).forEach(link => link.classList.add('active'));
         if (sectionId === 'clients' && allClients.length === 0) loadClients(true);
         else if (sectionId === 'products' && allProducts.length === 0) loadProducts(true);
         else if (sectionId === 'orders' && allOrders.length === 0) loadOrders(true);
         else if (sectionId === 'rewards' && allRewards.length === 0) loadRewards(true);
-        else if (sectionId === 'rewards' && allRewards.length > 0) updateDashboard();
-
+        else if (sectionId === 'global-message') loadGlobalMessageForAdmin();
         localStorage.setItem('lastAdminSectionDL', sectionId);
-
         const offcanvasEl = document.getElementById('sidebarMobile');
-        if (offcanvasEl) {
-            const offcanvasInstance = bootstrap.Offcanvas.getInstance(offcanvasEl);
-            if (offcanvasInstance && offcanvasInstance._isShown) {
-                 offcanvasInstance.hide();
-            }
-        }
-        setupSidebarLayout();
-        if (sectionId !== 'rewards' || allRewards.length === 0) {
-            updateDashboard();
-        }
+        if (offcanvasEl) { const offcanvasInstance = bootstrap.Offcanvas.getInstance(offcanvasEl); if (offcanvasInstance && offcanvasInstance._isShown) offcanvasInstance.hide(); }
+        setupSidebarLayout(); updateDashboard();
     }
 
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', () => {
         const lastSection = localStorage.getItem('lastAdminSectionDL');
-        if (lastSection && ['clients', 'products', 'orders', 'rewards'].includes(lastSection)) {
-            navigateToSection(lastSection);
-        } else {
-            navigateToSection('clients');
-        }
-
+        navigateToSection(['clients', 'products', 'orders', 'rewards', 'global-message'].includes(lastSection) ? lastSection : 'clients');
         document.getElementById('confirm-delete-btn').addEventListener('click', confirmDeleteItem);
-
-        const searchInputsConfig = [
+        const searchConfigs = [
             { id: 'search-client-input', filterFn: filterClients, resetFn: resetFilterAndLoadClients },
             { id: 'search-product-input', filterFn: filterProducts, resetFn: resetFilterAndLoadProducts },
             { id: 'search-order-input', filterFn: filterOrders, resetFn: resetFilterAndLoadOrders },
             { id: 'search-reward-input', filterFn: filterRewards, resetFn: resetFilterAndLoadRewards }
         ];
-
-        searchInputsConfig.forEach(config => {
+        searchConfigs.forEach(config => {
             const inputEl = document.getElementById(config.id);
             if (inputEl) {
                 inputEl.addEventListener('input', debounce(config.filterFn, DEBOUNCE_DELAY));
-                inputEl.addEventListener('keydown', (event) => {
-                    if (event.key === 'Escape') {
-                        inputEl.value = '';
-                        if (config.resetFn) config.resetFn();
-                        else config.filterFn();
-                        updateFilterIndicator(config.id, false);
-                    }
-                });
+                inputEl.addEventListener('keydown', e => { if (e.key === 'Escape') { inputEl.value = ''; config.resetFn ? config.resetFn() : config.filterFn(); updateFilterIndicator(config.id, false); } });
             }
         });
-
-        document.getElementById('filter-order-status')?.addEventListener('change', () => {
-            currentPageOrders = 1;
-            filterOrders();
+        document.getElementById('filter-order-status')?.addEventListener('change', () => { currentPageOrders = 1; filterOrders(); });
+        document.getElementById('addProductModal').addEventListener('show.bs.modal', e => {
+            const modalTitle = e.target.querySelector('.modal-title'), productIdField = document.getElementById('productId'), form = document.getElementById('productForm');
+            if (productIdField.value) modalTitle.textContent = 'Editar Producto/Combo'; else { modalTitle.textContent = 'Añadir Nuevo Producto/Combo'; form.reset(); productIdField.value = ''; document.getElementById('productActive').checked = true; }
         });
-
-
-        document.getElementById('addProductModal').addEventListener('show.bs.modal', function(event) {
-            const modalTitle = this.querySelector('.modal-title');
-            const productIdField = document.getElementById('productId');
-            const productForm = document.getElementById('productForm');
-            if (productIdField.value) modalTitle.textContent = 'Editar Producto/Combo';
-            else { modalTitle.textContent = 'Añadir Nuevo Producto/Combo'; productForm.reset(); productIdField.value = ''; document.getElementById('productActive').checked = true; }
-        });
-         document.getElementById('addRewardModal').addEventListener('show.bs.modal', function(event) {
-            const modalTitle = this.querySelector('.modal-title');
-            const rewardIdField = document.getElementById('rewardIdField');
-            const rewardForm = document.getElementById('rewardForm');
-            if (rewardIdField.value) modalTitle.textContent = 'Editar Recompensa';
-            else { modalTitle.textContent = 'Añadir Nueva Recompensa'; rewardForm.reset(); rewardIdField.value = ''; document.getElementById('rewardIsActive').checked = true; document.getElementById('rewardStock').value = '9999'; document.getElementById('rewardType').value = 'Producto';}
+        document.getElementById('addRewardModal').addEventListener('show.bs.modal', e => {
+            const modalTitle = e.target.querySelector('.modal-title'), rewardIdField = document.getElementById('rewardIdField'), form = document.getElementById('rewardForm');
+            if (rewardIdField.value) modalTitle.textContent = 'Editar Recompensa'; else { modalTitle.textContent = 'Añadir Nueva Recompensa'; form.reset(); rewardIdField.value = ''; document.getElementById('rewardIsActive').checked = true; document.getElementById('rewardStock').value = '9999'; document.getElementById('rewardType').value = 'Producto'; }
         });
         document.getElementById('select-all-products').addEventListener('change', handleProductSelectAll);
         document.getElementById('select-all-clients').addEventListener('change', handleClientSelectAll);
@@ -738,940 +663,398 @@
 
     async function updateDashboard() {
         document.getElementById('total-clients-stat').textContent = allClients.length;
-        const totalPoints = allClients.reduce((sum, client) => sum + (parseInt(client.puntos) || 0), 0);
-        document.getElementById('total-points-stat').textContent = totalPoints;
-
-        if (allRewards.length === 0 && (!document.getElementById('rewards-section') || document.getElementById('rewards-section').style.display !== 'block') ) {
-            const res = await fetchData('getAdminRewards', 'GET');
-            if (res && res.success && Array.isArray(res.data)) {
-                allRewards = res.data.map(r => ({ ...r, isactive: r.isactive === true || String(r.isactive).toLowerCase() === 'true' }));
-            }
+        document.getElementById('total-points-stat').textContent = allClients.reduce((sum, client) => sum + (parseInt(client.puntos) || 0), 0);
+        if (allRewards.length === 0 && (!document.getElementById('rewards-section') || document.getElementById('rewards-section').style.display !== 'block')) {
+            const res = await fetchData('getAdminRewards', 'GET'); if (res && res.success && Array.isArray(res.data)) allRewards = res.data.map(r => ({ ...r, isactive: r.isactive === true || String(r.isactive).toLowerCase() === 'true' }));
         }
-        const activeRewardsCount = allRewards.filter(r => r.isactive).length;
-        document.getElementById('total-rewards-stat').textContent = activeRewardsCount;
+        document.getElementById('total-rewards-stat').textContent = allRewards.filter(r => r.isactive).length;
     }
-
 
     // --- CLIENT FUNCTIONS ---
     async function loadClients(force = false) {
         const tb = document.getElementById('clients-table');
         if (!force && allClients.length) { filterClients(); return; }
-
-        tb.innerHTML = `<tr><td colspan="10" class="text-center py-5"><div class="spinner-border text-primary" role="status"><span class="visually-hidden">Cargando...</span></div><p>Cargando clientes...</p></td></tr>`;
+        tb.innerHTML = `<tr><td colspan="10" class="text-center py-5"><div class="spinner-border text-primary"></div><p>Cargando...</p></td></tr>`;
         document.getElementById('clients-pagination-controls').innerHTML = '';
-
-
         const res = await fetchData('getClients', 'GET');
         if (res && res.success && Array.isArray(res.data)) {
-            allClients = res.data.map(c => ({...c, puntos: parseInt(c.puntos)||0, compras: parseInt(c.compras)||0, verificado: c.verificado===true||String(c.verificado).toLowerCase()==='true'}));
-            currentPageClients = 1;
-            filterClients();
+            allClients = res.data.map(c => ({ ...c, puntos: parseInt(c.puntos) || 0, compras: parseInt(c.compras) || 0, verificado: c.verificado === true || String(c.verificado).toLowerCase() === 'true' }));
+            currentPageClients = 1; filterClients();
         } else {
-            tb.innerHTML = `<tr><td colspan="10" class="text-center text-danger">Error: ${res.message||'No se cargaron clientes.'} <button class="btn btn-sm btn-outline-primary ms-2" data-bs-toggle="modal" data-bs-target="#addClientModal"><i class="bi bi-person-plus"></i> Nuevo Cliente</button></td></tr>`;
-            updateBulkEmailClientsButtonState();
-            const selectAllClientsCheckbox = document.getElementById('select-all-clients');
-            if (selectAllClientsCheckbox) selectAllClientsCheckbox.checked = false;
+            tb.innerHTML = `<tr><td colspan="10" class="text-center text-danger">Error: ${res.message || 'No se cargaron clientes.'} <button class="btn btn-sm btn-outline-primary ms-2" data-bs-toggle="modal" data-bs-target="#addClientModal"><i class="bi bi-person-plus"></i> Nuevo</button></td></tr>`;
+            updateBulkEmailClientsButtonState(); const selectAllCheckbox = document.getElementById('select-all-clients'); if (selectAllCheckbox) selectAllCheckbox.checked = false;
         }
         updateDashboard();
     }
-
     function renderClientsTable() {
         const tb = document.getElementById('clients-table'); tb.innerHTML = '';
         const startIndex = (currentPageClients - 1) * ITEMS_PER_PAGE_CLIENTS;
         const endIndex = startIndex + ITEMS_PER_PAGE_CLIENTS;
         const paginatedClients = displayedClients.slice(startIndex, endIndex);
-
-        if (paginatedClients.length === 0 && displayedClients.length > 0 && currentPageClients > 1) {
-             currentPageClients = Math.ceil(displayedClients.length / ITEMS_PER_PAGE_CLIENTS) || 1;
-             renderClientsTable(); return;
-        }
-
-        if (displayedClients.length === 0) {
-            tb.innerHTML = `<tr><td colspan="10" class="text-center">No hay clientes (compradores) para mostrar. <button class="btn btn-sm btn-outline-primary ms-2" data-bs-toggle="modal" data-bs-target="#addClientModal"><i class="bi bi-person-plus"></i> Nuevo Cliente</button></td></tr>`;
-            document.getElementById('clients-pagination-controls').innerHTML = '';
-            updateBulkEmailClientsButtonState();
-            document.getElementById('select-all-clients').checked = false;
-            return;
-        }
-
-        paginatedClients.sort((a,b) => (a.nombre||"").localeCompare(b.nombre||"")).forEach(c => {
+        if (paginatedClients.length === 0 && displayedClients.length > 0 && currentPageClients > 1) { currentPageClients = Math.ceil(displayedClients.length / ITEMS_PER_PAGE_CLIENTS) || 1; renderClientsTable(); return; }
+        if (displayedClients.length === 0) { tb.innerHTML = `<tr><td colspan="10" class="text-center">No hay clientes. <button class="btn btn-sm btn-outline-primary ms-2" data-bs-toggle="modal" data-bs-target="#addClientModal"><i class="bi bi-person-plus"></i> Nuevo</button></td></tr>`; document.getElementById('clients-pagination-controls').innerHTML = ''; updateBulkEmailClientsButtonState(); document.getElementById('select-all-clients').checked = false; return; }
+        paginatedClients.sort((a, b) => (a.nombre || "").localeCompare(b.nombre || "")).forEach(c => {
             const vIcon = c.verificado ? '<i class="bi bi-check-circle-fill text-success" title="Verificado"></i>' : '<i class="bi bi-patch-question-fill text-warning" title="Pendiente"></i>';
             const telefonoDisplay = c.telefono && String(c.telefono).trim() !== "" ? c.telefono : 'N/A';
             const emailDisplay = c.email && String(c.email).trim() !== "" ? c.email : 'N/A';
             const isChecked = selectedClientIds.has(c.id);
-            tb.innerHTML += `<tr>
-                                <td class="checkbox-column"><input type="checkbox" class="form-check-input client-select-checkbox" value="${c.id}" data-client-id="${c.id}" ${isChecked ? 'checked' : ''}></td>
-                                <td>${c.id||'N/A'}</td>
-                                <td>${c.nombre||'S/N'} ${vIcon}<small class="d-block d-md-none text-muted">${telefonoDisplay}</small></td>
-                                <td class="d-none d-md-table-cell">${telefonoDisplay}</td>
-                                <td>${emailDisplay}</td>
-                                <td><span class="badge points-badge">${c.puntos}</span></td>
-                                <td class="d-none d-sm-table-cell">${c.ultimavisita||'N/A'}</td>
-                                <td><span class="badge bg-info text-dark">${c.referralcode || 'N/G'}</span></td>
-                                <td class="d-none d-lg-table-cell">${c.referredbycode || '-'}</td>
-                                <td><div class="btn-group btn-group-sm"><button class="btn btn-outline-primary" onclick="viewClientDetails('${c.id}')"><i class="bi bi-eye"></i></button><button class="btn btn-outline-success" onclick="showAddPointsModal('${c.id}')"><i class="bi bi-plus-circle"></i></button><button class="btn btn-outline-danger" onclick="showDeleteModal('${c.id}','${c.nombre}','client')"><i class="bi bi-trash"></i></button></div></td>
-                             </tr>`;
+            tb.innerHTML += `<tr><td class="checkbox-column"><input type="checkbox" class="form-check-input client-select-checkbox" value="${c.id}" data-client-id="${c.id}" ${isChecked ? 'checked' : ''}></td><td>${c.id || 'N/A'}</td><td>${c.nombre || 'S/N'} ${vIcon}<small class="d-block d-md-none text-muted">${telefonoDisplay}</small></td><td class="d-none d-md-table-cell">${telefonoDisplay}</td><td>${emailDisplay}</td><td><span class="badge points-badge">${c.puntos}</span></td><td class="d-none d-sm-table-cell">${c.ultimavisita ? new Date(c.ultimavisita).toLocaleDateString() : 'N/A'}</td><td><span class="badge bg-info text-dark">${c.referralcode || 'N/G'}</span></td><td class="d-none d-lg-table-cell">${c.referredbycode || '-'}</td><td><div class="btn-group btn-group-sm"><button class="btn btn-outline-primary" onclick="viewClientDetails('${c.id}')"><i class="bi bi-eye"></i></button><button class="btn btn-outline-success" onclick="showAddPointsModal('${c.id}')"><i class="bi bi-plus-circle"></i></button><button class="btn btn-outline-danger" onclick="showDeleteModal('${c.id}','${c.nombre}','client')"><i class="bi bi-trash"></i></button></div></td></tr>`;
         });
         document.querySelectorAll('.client-select-checkbox').forEach(checkbox => checkbox.addEventListener('change', handleClientSelectSingle));
-        updateSelectAllClientsCheckboxState();
-        updateBulkEmailClientsButtonState();
-        renderGenericPaginationControls({
-            paginationContainerId: 'clients-pagination-controls',
-            currentPage: currentPageClients,
-            totalItems: displayedClients.length,
-            itemsPerPage: ITEMS_PER_PAGE_CLIENTS,
-            changePageFnName: 'changeClientsPage',
-            entityNameLabel: 'clientes'
-        });
+        updateSelectAllClientsCheckboxState(); updateBulkEmailClientsButtonState();
+        renderGenericPaginationControls({ paginationContainerId: 'clients-pagination-controls', currentPage: currentPageClients, totalItems: displayedClients.length, itemsPerPage: ITEMS_PER_PAGE_CLIENTS, changePageFnName: 'changeClientsPage', entityNameLabel: 'clientes' });
     }
-
     function filterClients() {
         const term = document.getElementById('search-client-input').value.toLowerCase().trim();
-        displayedClients = term ? allClients.filter(c => (c.nombre&&c.nombre.toLowerCase().includes(term))||(c.telefono&&String(c.telefono).includes(term))||(c.id&&String(c.id).toLowerCase().includes(term))||(c.email&&c.email.toLowerCase().includes(term))) : [...allClients];
-        currentPageClients = 1;
-        renderClientsTable();
-        updateFilterIndicator('search-client-input', term.length > 0);
+        displayedClients = term ? allClients.filter(c => (c.nombre && c.nombre.toLowerCase().includes(term)) || (c.telefono && String(c.telefono).includes(term)) || (c.id && String(c.id).toLowerCase().includes(term)) || (c.email && c.email.toLowerCase().includes(term))) : [...allClients];
+        currentPageClients = 1; renderClientsTable(); updateFilterIndicator('search-client-input', term.length > 0);
     }
-    async function resetFilterAndLoadClients() {
-        document.getElementById('search-client-input').value = '';
-        selectedClientIds.clear();
-        currentPageClients = 1;
-        updateFilterIndicator('search-client-input', false);
-        await loadClients(true);
-    }
-    function changeClientsPage(newPage) {
-        if (newPage < 1 || newPage > Math.ceil(displayedClients.length / ITEMS_PER_PAGE_CLIENTS) && displayedClients.length > 0) return;
-        currentPageClients = newPage;
-        renderClientsTable();
-        document.getElementById('clients-table').scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
-
-    function handleClientSelectAll(event) {
-        const isChecked = event.target.checked;
-        document.querySelectorAll('#clients-table .client-select-checkbox').forEach(checkbox => {
-            const clientId = checkbox.dataset.clientId;
-            checkbox.checked = isChecked;
-            if (isChecked) selectedClientIds.add(clientId); else selectedClientIds.delete(clientId);
-        });
-        updateBulkEmailClientsButtonState();
-    }
-    function handleClientSelectSingle(event) {
-        const clientId = event.target.dataset.clientId;
-        if (event.target.checked) selectedClientIds.add(clientId); else selectedClientIds.delete(clientId);
-        updateSelectAllClientsCheckboxState();
-        updateBulkEmailClientsButtonState();
-    }
+    async function resetFilterAndLoadClients() { document.getElementById('search-client-input').value = ''; selectedClientIds.clear(); currentPageClients = 1; updateFilterIndicator('search-client-input', false); await loadClients(true); }
+    function changeClientsPage(newPage) { if (newPage < 1 || (newPage > Math.ceil(displayedClients.length / ITEMS_PER_PAGE_CLIENTS) && displayedClients.length > 0)) return; currentPageClients = newPage; renderClientsTable(); document.getElementById('clients-table').scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+    function handleClientSelectAll(event) { const isChecked = event.target.checked; document.querySelectorAll('#clients-table .client-select-checkbox').forEach(checkbox => { const clientId = checkbox.dataset.clientId; checkbox.checked = isChecked; if (isChecked) selectedClientIds.add(clientId); else selectedClientIds.delete(clientId); }); updateBulkEmailClientsButtonState(); }
+    function handleClientSelectSingle(event) { const clientId = event.target.dataset.clientId; if (event.target.checked) selectedClientIds.add(clientId); else selectedClientIds.delete(clientId); updateSelectAllClientsCheckboxState(); updateBulkEmailClientsButtonState(); }
     function updateSelectAllClientsCheckboxState() {
         const selectAllCheckbox = document.getElementById('select-all-clients'); if (!selectAllCheckbox) return;
-        const allClientCheckboxes = document.querySelectorAll('#clients-table .client-select-checkbox');
-        if (allClientCheckboxes.length === 0) { selectAllCheckbox.checked = false; selectAllCheckbox.indeterminate = false; return; }
+        const allClientCheckboxes = document.querySelectorAll('#clients-table .client-select-checkbox'); if (allClientCheckboxes.length === 0) { selectAllCheckbox.checked = false; selectAllCheckbox.indeterminate = false; return; }
         const checkedCount = Array.from(allClientCheckboxes).filter(cb => cb.checked).length;
-        if (checkedCount === 0) { selectAllCheckbox.checked = false; selectAllCheckbox.indeterminate = false; }
-        else if (checkedCount === allClientCheckboxes.length) { selectAllCheckbox.checked = true; selectAllCheckbox.indeterminate = false; }
-        else { selectAllCheckbox.checked = false; selectAllCheckbox.indeterminate = true; }
+        if (checkedCount === 0) { selectAllCheckbox.checked = false; selectAllCheckbox.indeterminate = false; } else if (checkedCount === allClientCheckboxes.length) { selectAllCheckbox.checked = true; selectAllCheckbox.indeterminate = false; } else { selectAllCheckbox.checked = false; selectAllCheckbox.indeterminate = true; }
     }
     function updateBulkEmailClientsButtonState() {
         const btn = document.getElementById('bulk-email-clients-btn'); if (!btn) return;
         const btnTextSpan = btn.querySelector('span.d-none.d-sm-inline');
-        if (selectedClientIds.size > 0) { btn.disabled = false; if (btnTextSpan) btnTextSpan.textContent = `Enviar Email (${selectedClientIds.size})`;}
-        else { btn.disabled = true; if (btnTextSpan) btnTextSpan.textContent = `Enviar Email`; }
+        if (selectedClientIds.size > 0) { btn.disabled = false; if (btnTextSpan) btnTextSpan.textContent = `Enviar Email (${selectedClientIds.size})`; } else { btn.disabled = true; if (btnTextSpan) btnTextSpan.textContent = `Enviar Email`; }
         const countSpan = document.getElementById('selectedClientsCountForEmail'); if (countSpan) countSpan.textContent = selectedClientIds.size;
     }
     function showBulkEmailClientsModal() {
         if (selectedClientIds.size === 0) { showToast("Por favor, selecciona al menos un cliente.", 'warning'); return; }
         document.getElementById('bulkEmailClientsForm').reset();
         document.getElementById('selectedClientsCountForEmail').textContent = selectedClientIds.size;
+        const subjectInput = document.getElementById('emailSubject');
+        const bodyInput = document.getElementById('emailBody');
+        subjectInput.value = "Un mensaje importante de DL Cumanayagua";
+        bodyInput.value = `<p>Hola {{nombreCliente}},</p>\n<p>Queremos compartir contigo nuestras últimas novedades...</p>\n<br>\n<p>Saludos,<br>El equipo de DL Cumanayagua</p>`;
         (bootstrap.Modal.getInstance(document.getElementById('bulkEmailClientsModal')) || new bootstrap.Modal(document.getElementById('bulkEmailClientsModal'))).show();
     }
     async function confirmSendBulkEmailToClients() {
-        const subject = document.getElementById('emailSubject').value.trim();
-        const body = document.getElementById('emailBody').value.trim();
+        const subject = document.getElementById('emailSubject').value.trim(), body = document.getElementById('emailBody').value.trim();
         if (!subject || !body) { showToast("El asunto y el cuerpo del mensaje son obligatorios.", 'warning'); return; }
         if (selectedClientIds.size === 0) { showToast("No hay clientes seleccionados.", 'warning'); return; }
-
-        const sendButton = document.getElementById('sendBulkEmailBtn');
-        setButtonLoading(sendButton, true, "Enviar Emails");
+        const sendButton = document.getElementById('sendBulkEmailBtn'); setButtonLoading(sendButton, true, "Enviar Emails");
         const clientIdsArray = Array.from(selectedClientIds);
         const payload = { clientIds: clientIdsArray, subject: subject, emailBody: body };
         const res = await fetchData('sendBulkEmailToClients', 'POST', payload);
         setButtonLoading(sendButton, false);
-
-        if (res && res.success) {
-            showToast(res.message || "Proceso de envío de emails completado.", 'success');
-            bootstrap.Modal.getInstance(document.getElementById('bulkEmailClientsModal')).hide();
-        } else { showToast(`Error al enviar emails: ${res ? res.message : 'Fallo desconocido.'}`, 'error'); }
+        if (res && res.success) { showToast(res.message || "Proceso de envío de emails completado.", 'success'); bootstrap.Modal.getInstance(document.getElementById('bulkEmailClientsModal')).hide(); } else { showToast(`Error al enviar emails: ${res ? res.message : 'Fallo desconocido.'}`, 'error'); }
     }
     function viewClientDetails(id) {
-        const c=allClients.find(x=>x.id===id); if(!c){showToast('Cliente no hallado.','error');return;}
-        let btns=''; if(!c.verificado){btns=`<button class="btn btn-success btn-sm" onclick="manuallyMarkVerified('${c.id}'); bootstrap.Modal.getInstance(document.getElementById('clientModal')).hide();">Verificar Manualmente</button>`;}
+        const c = allClients.find(x => x.id === id); if (!c) { showToast('Cliente no hallado.', 'error'); return; }
+        let btns = ''; if (!c.verificado) { btns = `<button class="btn btn-success btn-sm" onclick="manuallyMarkVerified('${c.id}'); bootstrap.Modal.getInstance(document.getElementById('clientModal')).hide();">Verificar Manualmente</button>`; }
         const telefonoDisplay = c.telefono && String(c.telefono).trim() !== "" ? c.telefono : 'N/A';
-        document.getElementById('client-details').innerHTML=`
-            <h5>${c.nombre||'S/N'} <span class="badge bg-${c.verificado?'success':'warning text-dark'}">${c.verificado?'Verificado':'No Verificado'}</span></h5>
-            <p><strong>ID:</strong> ${c.id||'N/A'}</p>
-            <p><strong>Tel (Comprador):</strong> ${telefonoDisplay}</p>
-            <p><strong>Email:</strong> ${c.email||'N/A'}</p>
-            <p><strong>Puntos:</strong> <span class="badge points-badge fs-6">${c.puntos||0}</span></p>
-            <p><strong>Desde:</strong> ${c.fecharegistro||'N/A'}</p>
-            <p><strong>Últ. Actividad:</strong> ${c.ultimavisita||'N/A'}</p>
-            <p><strong>Envíos Realizados:</strong> ${c.compras||0}</p>
-            <p><strong>Su Código de Referido:</strong> <span class="fw-bold text-info">${c.referralcode || 'No Generado'}</span></p>
-            <p><strong>Referido por Código:</strong> ${c.referredbycode || 'Ninguno'}</p>
-            <hr>${btns}`;
-        (bootstrap.Modal.getInstance(document.getElementById('clientModal'))||new bootstrap.Modal(document.getElementById('clientModal'))).show();
+        document.getElementById('client-details').innerHTML = `<h5>${c.nombre || 'S/N'} <span class="badge bg-${c.verificado ? 'success' : 'warning text-dark'}">${c.verificado ? 'Verificado' : 'No Verificado'}</span></h5><p><strong>ID:</strong> ${c.id || 'N/A'}</p><p><strong>Tel (Comprador):</strong> ${telefonoDisplay}</p><p><strong>Email:</strong> ${c.email || 'N/A'}</p><p><strong>Puntos:</strong> <span class="badge points-badge fs-6">${c.puntos || 0}</span></p><p><strong>Desde:</strong> ${c.fecharegistro ? new Date(c.fecharegistro).toLocaleDateString() : 'N/A'}</p><p><strong>Últ. Actividad:</strong> ${c.ultimavisita ? new Date(c.ultimavisita).toLocaleString() : 'N/A'}</p><p><strong>Envíos Realizados:</strong> ${c.compras || 0}</p><p><strong>Su Código de Referido:</strong> <span class="fw-bold text-info">${c.referralcode || 'No Generado'}</span></p><p><strong>Referido por Código:</strong> ${c.referredbycode || 'Ninguno'}</p><hr>${btns}`;
+        (bootstrap.Modal.getInstance(document.getElementById('clientModal')) || new bootstrap.Modal(document.getElementById('clientModal'))).show();
     }
-    function showAddPointsModal(id) { const c=allClients.find(x=>x.id===id); if(!c){showToast('Cliente no hallado.','error');return;} document.getElementById('currentClientIdPoints').value=id; document.getElementById('addPointsForm').reset(); document.getElementById('pointsAmount').value=10; (bootstrap.Modal.getInstance(document.getElementById('addPointsModal'))||new bootstrap.Modal(document.getElementById('addPointsModal'))).show(); }
-    async function manuallyMarkVerified(id) {
-        if(!confirm(`Verificar cliente '${id}'?`))return;
-        const client = allClients.find(c => c.id === id);
-        const clientName = client ? client.nombre : `ID ${id}`;
-        const res=await fetchData('markClientVerified','POST',{clientId:id});
-        if(res && res.success){showToast(res.message||`Cliente ${clientName} verificado.`, 'success');await loadClients(true);}
-        else{showToast(`Error al verificar ${clientName}: ${res.message||'Error.'}`, 'error');}
-    }
+    function showAddPointsModal(id) { const c = allClients.find(x => x.id === id); if (!c) { showToast('Cliente no hallado.', 'error'); return; } document.getElementById('currentClientIdPoints').value = id; document.getElementById('addPointsForm').reset(); document.getElementById('pointsAmount').value = 10; (bootstrap.Modal.getInstance(document.getElementById('addPointsModal')) || new bootstrap.Modal(document.getElementById('addPointsModal'))).show(); }
+    async function manuallyMarkVerified(id) { if (!confirm(`Verificar cliente '${id}'?`)) return; const client = allClients.find(c => c.id === id); const clientName = client ? client.nombre : `ID ${id}`; const res = await fetchData('markClientVerified', 'POST', { clientId: id }); if (res && res.success) { showToast(res.message || `Cliente ${clientName} verificado.`, 'success'); await loadClients(true); } else { showToast(`Error al verificar ${clientName}: ${res.message || 'Error.'}`, 'error'); } }
     async function addNewClient() {
-        const data={
-            nombre:document.getElementById('clientName').value.trim(),
-            telefono:document.getElementById('clientPhone').value.trim(),
-            email:document.getElementById('clientEmail').value.trim(),
-            puntos:parseInt(document.getElementById('clientInitialPoints').value),
-            verificado:true,
-            referralcode: document.getElementById('clientReferralCode').value.trim(),
-            referredbycode: document.getElementById('clientReferredByCode').value.trim()
-        };
-        if(!data.nombre){showToast('Nombre requerido.','warning');return;}
-        if(isNaN(data.puntos)||data.puntos<0){showToast('Puntos inválidos.','warning');return;}
-
-        const saveBtn = document.getElementById('saveNewClientBtn');
-        setButtonLoading(saveBtn, true, "Guardar Cliente");
-        const res=await fetchData('addClient','POST',{client:data});
-        setButtonLoading(saveBtn, false);
-
-        if(res && res.success && res.data){showToast(res.message||`Cliente '${res.data.nombre}' añadido.`, 'success');await loadClients(true);bootstrap.Modal.getInstance(document.getElementById('addClientModal')).hide();document.getElementById('newClientForm').reset();}
-        else{showToast(`Error al añadir cliente: ${res.message||'Fallo.'}`,'error');}
+        const data = { nombre: document.getElementById('clientName').value.trim(), telefono: document.getElementById('clientPhone').value.trim(), email: document.getElementById('clientEmail').value.trim(), puntos: parseInt(document.getElementById('clientInitialPoints').value), verificado: true, referralcode: document.getElementById('clientReferralCode').value.trim(), referredbycode: document.getElementById('clientReferredByCode').value.trim() };
+        if (!data.nombre) { showToast('Nombre requerido.', 'warning'); return; } if (isNaN(data.puntos) || data.puntos < 0) { showToast('Puntos inválidos.', 'warning'); return; }
+        const saveBtn = document.getElementById('saveNewClientBtn'); setButtonLoading(saveBtn, true, "Guardar Cliente"); const res = await fetchData('addClient', 'POST', { client: data }); setButtonLoading(saveBtn, false);
+        if (res && res.success && res.data) { showToast(res.message || `Cliente '${res.data.nombre}' añadido.`, 'success'); await loadClients(true); bootstrap.Modal.getInstance(document.getElementById('addClientModal')).hide(); document.getElementById('newClientForm').reset(); } else { showToast(`Error al añadir cliente: ${res.message || 'Fallo.'}`, 'error'); }
     }
     async function confirmAddPoints() {
-        const id=document.getElementById('currentClientIdPoints').value; const pts=parseInt(document.getElementById('pointsAmount').value); const rsn=document.getElementById('pointsReason').value;
-        if(isNaN(pts)){showToast("Cantidad de puntos inválida.",'warning');return;}
-        const client = allClients.find(c => c.id === id);
-        const clientName = client ? client.nombre : `Cliente ID ${id}`;
-
-        const applyBtn = document.getElementById('confirmAddPointsBtn');
-        setButtonLoading(applyBtn, true, "Aplicar Puntos");
-        const res=await fetchData('updateClientPoints','POST',{clientId:id,points:pts,reason:rsn});
-        setButtonLoading(applyBtn, false);
-
-        if(res && res.success && res.data){showToast(res.message||`Puntos actualizados para ${clientName}.`, 'success');await loadClients(true);bootstrap.Modal.getInstance(document.getElementById('addPointsModal')).hide();}
-        else{showToast(`Error al actualizar puntos para ${clientName}: ${res.message||'Fallo.'}`, 'error');}
+        const id = document.getElementById('currentClientIdPoints').value, pts = parseInt(document.getElementById('pointsAmount').value), rsn = document.getElementById('pointsReason').value;
+        if (isNaN(pts)) { showToast("Cantidad de puntos inválida.", 'warning'); return; } const client = allClients.find(c => c.id === id); const clientName = client ? client.nombre : `Cliente ID ${id}`;
+        const applyBtn = document.getElementById('confirmAddPointsBtn'); setButtonLoading(applyBtn, true, "Aplicar Puntos"); const res = await fetchData('updateClientPoints', 'POST', { clientId: id, points: pts, reason: rsn }); setButtonLoading(applyBtn, false);
+        if (res && res.success && res.data) { showToast(res.message || `Puntos actualizados para ${clientName}.`, 'success'); await loadClients(true); bootstrap.Modal.getInstance(document.getElementById('addPointsModal')).hide(); } else { showToast(`Error al actualizar puntos para ${clientName}: ${res.message || 'Fallo.'}`, 'error'); }
     }
 
     // --- PRODUCT FUNCTIONS ---
-    async function loadProducts(force=false) {
-        const tb = document.getElementById('products-table');
-        if(!force&&allProducts.length){ filterProducts(); return; }
-
-        tb.innerHTML = `<tr><td colspan="9" class="text-center py-5"><div class="spinner-border text-primary" role="status"><span class="visually-hidden">Cargando...</span></div><p>Cargando productos...</p></td></tr>`;
+    async function loadProducts(force = false) {
+        const tb = document.getElementById('products-table'); if (!force && allProducts.length) { filterProducts(); return; }
+        tb.innerHTML = `<tr><td colspan="9" class="text-center py-5"><div class="spinner-border text-primary"></div><p>Cargando...</p></td></tr>`;
         document.getElementById('products-pagination-controls').innerHTML = '';
-
-        const res=await fetchData('getProducts','GET');
-        if(res && res.success && Array.isArray(res.data)){
-            allProducts=res.data.map(p=>({...p,price:parseFloat(p.price)||0,points:parseInt(p.points)||0,active:p.active===true||String(p.active).toLowerCase()==='true', imageurl: p.imageurl || ''}));
-            currentPageProducts = 1;
-            filterProducts();
-        }else{
-            tb.innerHTML=`<tr><td colspan="9" class="text-center text-danger">Error: ${res.message||'No se cargaron productos/combos.'} <button class="btn btn-sm btn-outline-success ms-2" data-bs-toggle="modal" data-bs-target="#addProductModal"><i class="bi bi-journal-plus"></i> Nuevo Producto/Combo</button></td></tr>`;
-            updateBulkProductActionButtonsState();
-            document.getElementById('select-all-products').checked = false;
+        const res = await fetchData('getProducts', 'GET');
+        if (res && res.success && Array.isArray(res.data)) {
+            allProducts = res.data.map(p => ({ ...p, price: parseFloat(p.price) || 0, points: parseInt(p.points) || 0, active: p.active === true || String(p.active).toLowerCase() === 'true', imageurl: p.imageurl || '' }));
+            currentPageProducts = 1; filterProducts();
+        } else {
+            tb.innerHTML = `<tr><td colspan="9" class="text-center text-danger">Error: ${res.message || 'No se cargaron productos.'} <button class="btn btn-sm btn-outline-success ms-2" data-bs-toggle="modal" data-bs-target="#addProductModal"><i class="bi bi-journal-plus"></i> Nuevo</button></td></tr>`;
+            updateBulkProductActionButtonsState(); document.getElementById('select-all-products').checked = false;
         }
         updateDashboard();
     }
-    
     function renderProductsTable() {
         const tb = document.getElementById('products-table'); tb.innerHTML = '';
-        const startIndex = (currentPageProducts - 1) * ITEMS_PER_PAGE_PRODUCTS;
-        const endIndex = startIndex + ITEMS_PER_PAGE_PRODUCTS;
-        const paginatedProducts = displayedProducts.slice(startIndex, endIndex);
-
-        if (paginatedProducts.length === 0 && displayedProducts.length > 0 && currentPageProducts > 1) {
-             currentPageProducts = Math.ceil(displayedProducts.length / ITEMS_PER_PAGE_PRODUCTS) || 1;
-             renderProductsTable(); return;
-        }
-
-        if (displayedProducts.length === 0) {
-            tb.innerHTML = `<tr><td colspan="9" class="text-center">No hay productos o combos para mostrar. <button class="btn btn-sm btn-outline-success ms-2" data-bs-toggle="modal" data-bs-target="#addProductModal"><i class="bi bi-journal-plus"></i> Nuevo Producto/Combo</button></td></tr>`;
-            document.getElementById('products-pagination-controls').innerHTML = '';
-            updateBulkProductActionButtonsState();
-            document.getElementById('select-all-products').checked = false;
-        } else {
-             paginatedProducts.sort((a, b) => (a.name || "").localeCompare(b.name || "")).forEach(p => {
-                const imageUrl = p.imageurl ? p.imageurl : 'https://via.placeholder.com/50?text=No+Img';
-                const isChecked = selectedProductIds.has(p.id);
-                
-                const activeSwitch = `
-                    <div class="form-check form-switch d-flex justify-content-center">
-                        <input class="form-check-input" type="checkbox" role="switch" 
-                               id="activeSwitch-${p.id}" ${p.active ? 'checked' : ''} 
-                               onclick="toggleProductActiveState('${p.id}', this)">
-                    </div>`;
-
-                tb.innerHTML += `<tr>
-                    <td class="checkbox-column"><input type="checkbox" class="form-check-input product-select-checkbox" value="${p.id}" data-product-id="${p.id}" ${isChecked ? 'checked' : ''}></td>
-                    <td><img src="${imageUrl}" alt="${p.name || 'Producto'}" class="product-image-table" loading="lazy" onerror="this.onerror=null; this.src='https://via.placeholder.com/50?text=Error';"></td>
-                    <td>${p.id || 'N/A'}</td>
-                    <td>${p.name || 'S/N'}</td>
-                    <td class="d-none d-md-table-cell">${p.category || 'N/A'}</td>
-                    <td>${(p.price || 0).toFixed(2)} USD</td>
-                    <td>${p.points || 0}</td>
-                    <td>${activeSwitch}</td>
-                    <td><div class="btn-group btn-group-sm">
-                        <button class="btn btn-outline-primary" onclick="editProduct('${p.id}')"><i class="bi bi-pencil"></i></button>
-                        <button class="btn btn-outline-danger" onclick="showDeleteModal('${p.id}','${p.name}','product')"><i class="bi bi-trash"></i></button>
-                    </div></td>
-                </tr>`;
-            });
-        }
+        const startIndex = (currentPageProducts - 1) * ITEMS_PER_PAGE_PRODUCTS; const endIndex = startIndex + ITEMS_PER_PAGE_PRODUCTS; const paginatedProducts = displayedProducts.slice(startIndex, endIndex);
+        if (paginatedProducts.length === 0 && displayedProducts.length > 0 && currentPageProducts > 1) { currentPageProducts = Math.ceil(displayedProducts.length / ITEMS_PER_PAGE_PRODUCTS) || 1; renderProductsTable(); return; }
+        if (displayedProducts.length === 0) { tb.innerHTML = `<tr><td colspan="9" class="text-center">No hay productos. <button class="btn btn-sm btn-outline-success ms-2" data-bs-toggle="modal" data-bs-target="#addProductModal"><i class="bi bi-journal-plus"></i> Nuevo</button></td></tr>`; document.getElementById('products-pagination-controls').innerHTML = ''; updateBulkProductActionButtonsState(); document.getElementById('select-all-products').checked = false; return; }
+        paginatedProducts.sort((a, b) => (a.name || "").localeCompare(b.name || "")).forEach(p => {
+            const imageUrl = p.imageurl ? p.imageurl : 'https://via.placeholder.com/50?text=No+Img'; const isChecked = selectedProductIds.has(p.id);
+            const activeSwitch = `<div class="form-check form-switch d-flex justify-content-center"><input class="form-check-input" type="checkbox" role="switch" id="activeSwitch-${p.id}" ${p.active ? 'checked' : ''} onclick="toggleProductActiveState('${p.id}', this)"></div>`;
+            tb.innerHTML += `<tr><td class="checkbox-column"><input type="checkbox" class="form-check-input product-select-checkbox" value="${p.id}" data-product-id="${p.id}" ${isChecked ? 'checked' : ''}></td><td><img src="${imageUrl}" alt="${p.name || 'Producto'}" class="product-image-table" loading="lazy" onerror="this.onerror=null; this.src='https://via.placeholder.com/50?text=Error';"></td><td>${p.id || 'N/A'}</td><td>${p.name || 'S/N'}</td><td class="d-none d-md-table-cell">${p.category || 'N/A'}</td><td>${(p.price || 0).toFixed(2)} USD</td><td>${p.points || 0}</td><td>${activeSwitch}</td><td><div class="btn-group btn-group-sm"><button class="btn btn-outline-primary" onclick="editProduct('${p.id}')"><i class="bi bi-pencil"></i></button><button class="btn btn-outline-danger" onclick="showDeleteModal('${p.id}','${p.name}','product')"><i class="bi bi-trash"></i></button></div></td></tr>`;
+        });
         document.querySelectorAll('.product-select-checkbox').forEach(checkbox => checkbox.addEventListener('change', handleProductSelectSingle));
-        updateSelectAllCheckboxState();
-        updateBulkProductActionButtonsState();
-        renderGenericPaginationControls({
-            paginationContainerId: 'products-pagination-controls',
-            currentPage: currentPageProducts,
-            totalItems: displayedProducts.length,
-            itemsPerPage: ITEMS_PER_PAGE_PRODUCTS,
-            changePageFnName: 'changeProductsPage',
-            entityNameLabel: 'productos'
-        });
+        updateSelectAllCheckboxState(); updateBulkProductActionButtonsState();
+        renderGenericPaginationControls({ paginationContainerId: 'products-pagination-controls', currentPage: currentPageProducts, totalItems: displayedProducts.length, itemsPerPage: ITEMS_PER_PAGE_PRODUCTS, changePageFnName: 'changeProductsPage', entityNameLabel: 'productos' });
     }
-
-    function filterProducts() {
-        const term=document.getElementById('search-product-input').value.toLowerCase().trim();
-        displayedProducts=term?allProducts.filter(p=>(p.name&&p.name.toLowerCase().includes(term))||(p.category&&p.category.toLowerCase().includes(term))||(p.id&&String(p.id).toLowerCase().includes(term))):[...allProducts];
-        currentPageProducts = 1;
-        renderProductsTable();
-        updateFilterIndicator('search-product-input', term.length > 0);
-    }
-    async function resetFilterAndLoadProducts() {
-        document.getElementById('search-product-input').value='';
-        selectedProductIds.clear();
-        currentPageProducts = 1;
-        updateFilterIndicator('search-product-input', false);
-        await loadProducts(true);
-    }
-    function changeProductsPage(newPage) {
-        if (newPage < 1 || newPage > Math.ceil(displayedProducts.length / ITEMS_PER_PAGE_PRODUCTS) && displayedProducts.length > 0) return;
-        currentPageProducts = newPage;
-        renderProductsTable();
-        document.getElementById('products-table').scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
-    function handleProductSelectAll(event) {
-        const isChecked = event.target.checked;
-        document.querySelectorAll('#products-table .product-select-checkbox').forEach(checkbox => {
-            const productId = checkbox.dataset.productId;
-            checkbox.checked = isChecked;
-            if (isChecked) selectedProductIds.add(productId); else selectedProductIds.delete(productId);
-        });
-        updateBulkProductActionButtonsState();
-    }
-    function handleProductSelectSingle(event) {
-        const productId = event.target.dataset.productId;
-        if (event.target.checked) selectedProductIds.add(productId); else selectedProductIds.delete(productId);
-        updateSelectAllCheckboxState();
-        updateBulkProductActionButtonsState();
-    }
+    function filterProducts() { const term = document.getElementById('search-product-input').value.toLowerCase().trim(); displayedProducts = term ? allProducts.filter(p => (p.name && p.name.toLowerCase().includes(term)) || (p.category && p.category.toLowerCase().includes(term)) || (p.id && String(p.id).toLowerCase().includes(term))) : [...allProducts]; currentPageProducts = 1; renderProductsTable(); updateFilterIndicator('search-product-input', term.length > 0); }
+    async function resetFilterAndLoadProducts() { document.getElementById('search-product-input').value = ''; selectedProductIds.clear(); currentPageProducts = 1; updateFilterIndicator('search-product-input', false); await loadProducts(true); }
+    function changeProductsPage(newPage) { if (newPage < 1 || (newPage > Math.ceil(displayedProducts.length / ITEMS_PER_PAGE_PRODUCTS) && displayedProducts.length > 0)) return; currentPageProducts = newPage; renderProductsTable(); document.getElementById('products-table').scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+    function handleProductSelectAll(event) { const isChecked = event.target.checked; document.querySelectorAll('#products-table .product-select-checkbox').forEach(checkbox => { const productId = checkbox.dataset.productId; checkbox.checked = isChecked; if (isChecked) selectedProductIds.add(productId); else selectedProductIds.delete(productId); }); updateBulkProductActionButtonsState(); }
+    function handleProductSelectSingle(event) { const productId = event.target.dataset.productId; if (event.target.checked) selectedProductIds.add(productId); else selectedProductIds.delete(productId); updateSelectAllCheckboxState(); updateBulkProductActionButtonsState(); }
     function updateSelectAllCheckboxState() {
         const selectAllCheckbox = document.getElementById('select-all-products'); if (!selectAllCheckbox) return;
-        const allProductCheckboxes = document.querySelectorAll('#products-table .product-select-checkbox');
-        if (allProductCheckboxes.length === 0) { selectAllCheckbox.checked = false; selectAllCheckbox.indeterminate = false; return; }
+        const allProductCheckboxes = document.querySelectorAll('#products-table .product-select-checkbox'); if (allProductCheckboxes.length === 0) { selectAllCheckbox.checked = false; selectAllCheckbox.indeterminate = false; return; }
         const checkedCount = Array.from(allProductCheckboxes).filter(cb => cb.checked).length;
-        if (checkedCount === 0) { selectAllCheckbox.checked = false; selectAllCheckbox.indeterminate = false; }
-        else if (checkedCount === allProductCheckboxes.length) { selectAllCheckbox.checked = true; selectAllCheckbox.indeterminate = false; }
-        else { selectAllCheckbox.checked = false; selectAllCheckbox.indeterminate = true; }
+        if (checkedCount === 0) { selectAllCheckbox.checked = false; selectAllCheckbox.indeterminate = false; } else if (checkedCount === allProductCheckboxes.length) { selectAllCheckbox.checked = true; selectAllCheckbox.indeterminate = false; } else { selectAllCheckbox.checked = false; selectAllCheckbox.indeterminate = true; }
     }
-    
     function updateBulkProductActionButtonsState() {
-        const deleteBtn = document.getElementById('bulk-delete-products-btn');
-        const showBtn = document.getElementById('bulk-show-products-btn');
-        const hideBtn = document.getElementById('bulk-hide-products-btn');
-
+        const deleteBtn = document.getElementById('bulk-delete-products-btn'), showBtn = document.getElementById('bulk-show-products-btn'), hideBtn = document.getElementById('bulk-hide-products-btn');
         if (!deleteBtn || !showBtn || !hideBtn) return;
-
-        const deleteBtnTextSpan = deleteBtn.querySelector('span.d-none.d-sm-inline');
-        const showBtnTextSpan = showBtn.querySelector('span.d-none.d-sm-inline');
-        const hideBtnTextSpan = hideBtn.querySelector('span.d-none.d-sm-inline');
-
+        const deleteBtnTextSpan = deleteBtn.querySelector('span'), showBtnTextSpan = showBtn.querySelector('span'), hideBtnTextSpan = hideBtn.querySelector('span');
         if (selectedProductIds.size > 0) {
-            deleteBtn.disabled = false;
-            showBtn.disabled = false;
-            hideBtn.disabled = false;
+            deleteBtn.disabled = false; showBtn.disabled = false; hideBtn.disabled = false;
             if (deleteBtnTextSpan) deleteBtnTextSpan.textContent = `Eliminar (${selectedProductIds.size})`;
             if (showBtnTextSpan) showBtnTextSpan.textContent = `Mostrar (${selectedProductIds.size})`;
             if (hideBtnTextSpan) hideBtnTextSpan.textContent = `Ocultar (${selectedProductIds.size})`;
         } else {
-            deleteBtn.disabled = true;
-            showBtn.disabled = true;
-            hideBtn.disabled = true;
-            if (deleteBtnTextSpan) deleteBtnTextSpan.textContent = `Eliminar Seleccionados`;
-            if (showBtnTextSpan) showBtnTextSpan.textContent = `Mostrar`;
-            if (hideBtnTextSpan) hideBtnTextSpan.textContent = `Ocultar`;
+            deleteBtn.disabled = true; showBtn.disabled = true; hideBtn.disabled = true;
+            if (deleteBtnTextSpan) deleteBtnTextSpan.textContent = `Eliminar`; if (showBtnTextSpan) showBtnTextSpan.textContent = `Mostrar`; if (hideBtnTextSpan) hideBtnTextSpan.textContent = `Ocultar`;
         }
     }
-
-    function showBulkDeleteModal() {
-        if (selectedProductIds.size === 0) { showToast("Selecciona productos para eliminar.", "warning"); return; }
-        itemToDeleteType = 'products_bulk';
-        document.getElementById('delete-item-type').textContent = `los ${selectedProductIds.size} productos/combos seleccionados`;
-        document.getElementById('item-to-delete').innerHTML = `IDs: <small>${Array.from(selectedProductIds).slice(0, 5).join(', ')}${selectedProductIds.size > 5 ? '...' : ''}</small>`;
-        (bootstrap.Modal.getInstance(document.getElementById('deleteModal')) || new bootstrap.Modal(document.getElementById('deleteModal'))).show();
-    }
+    function showBulkDeleteModal() { if (selectedProductIds.size === 0) { showToast("Selecciona productos para eliminar.", "warning"); return; } itemToDeleteType = 'products_bulk'; document.getElementById('delete-item-type').textContent = `los ${selectedProductIds.size} productos/combos seleccionados`; document.getElementById('item-to-delete').innerHTML = `IDs: <small>${Array.from(selectedProductIds).slice(0, 5).join(', ')}${selectedProductIds.size > 5 ? '...' : ''}</small>`; (bootstrap.Modal.getInstance(document.getElementById('deleteModal')) || new bootstrap.Modal(document.getElementById('deleteModal'))).show(); }
     function editProduct(id) {
-        const p=allProducts.find(x=>x.id===id); if(!p){showToast('Producto/Combo no hallado.','error');return;}
-        document.getElementById('productId').value=p.id;
-        document.getElementById('productName').value=p.name;
-        document.getElementById('productDescription').value=p.description||'';
-        document.getElementById('productPrice').value=p.price;
-        document.getElementById('productPoints').value=p.points;
-        document.getElementById('productCategory').value=p.category||'';
-        document.getElementById('productImageUrl').value=p.imageurl||'';
-        document.getElementById('productActive').checked=p.active;
-        (bootstrap.Modal.getInstance(document.getElementById('addProductModal'))||new bootstrap.Modal(document.getElementById('addProductModal'))).show();
+        const p = allProducts.find(x => x.id === id); if (!p) { showToast('Producto/Combo no hallado.', 'error'); return; }
+        document.getElementById('productId').value = p.id; document.getElementById('productName').value = p.name; document.getElementById('productDescription').value = p.description || ''; document.getElementById('productPrice').value = p.price; document.getElementById('productPoints').value = p.points; document.getElementById('productCategory').value = p.category || ''; document.getElementById('productImageUrl').value = p.imageurl || ''; document.getElementById('productActive').checked = p.active;
+        (bootstrap.Modal.getInstance(document.getElementById('addProductModal')) || new bootstrap.Modal(document.getElementById('addProductModal'))).show();
     }
     async function saveProduct() {
-        const data={id:document.getElementById('productId').value,name:document.getElementById('productName').value.trim(),description:document.getElementById('productDescription').value.trim(),price:parseFloat(document.getElementById('productPrice').value),points:parseInt(document.getElementById('productPoints').value)||0,category:document.getElementById('productCategory').value.trim(),imageurl:document.getElementById('productImageUrl').value.trim(),active:document.getElementById('productActive').checked};
-        if(!data.name||isNaN(data.price)||data.price<0){showToast('Nombre y Precio (USD) requeridos.','warning');return;}
-
-        const saveBtn = document.getElementById('saveProductBtn');
-        setButtonLoading(saveBtn, true, "Guardar Producto/Combo");
-        const action=data.id?'updateProduct':'addProduct';
-        const res=await fetchData(action,'POST',{product:data});
-        setButtonLoading(saveBtn, false);
-
-        if(res && res.success && res.data){
-            showToast(res.message||`Producto/Combo '${data.name}' guardado.`, 'success');
-            selectedProductIds.clear();
-            await loadProducts(true);
-            bootstrap.Modal.getInstance(document.getElementById('addProductModal')).hide();
-        }else{showToast(`Error al guardar '${data.name}': ${res.message||'Fallo.'}`, 'error');}
+        const data = { id: document.getElementById('productId').value, name: document.getElementById('productName').value.trim(), description: document.getElementById('productDescription').value.trim(), price: parseFloat(document.getElementById('productPrice').value), points: parseInt(document.getElementById('productPoints').value) || 0, category: document.getElementById('productCategory').value.trim(), imageurl: document.getElementById('productImageUrl').value.trim(), active: document.getElementById('productActive').checked };
+        if (!data.name || isNaN(data.price) || data.price < 0) { showToast('Nombre y Precio (USD) requeridos.', 'warning'); return; }
+        const saveBtn = document.getElementById('saveProductBtn'); setButtonLoading(saveBtn, true, "Guardar Producto/Combo");
+        const action = data.id ? 'updateProduct' : 'addProduct'; const res = await fetchData(action, 'POST', { product: data }); setButtonLoading(saveBtn, false);
+        if (res && res.success && res.data) { showToast(res.message || `Producto/Combo '${data.name}' guardado.`, 'success'); selectedProductIds.clear(); await loadProducts(true); bootstrap.Modal.getInstance(document.getElementById('addProductModal')).hide(); } else { showToast(`Error al guardar '${data.name}': ${res.message || 'Fallo.'}`, 'error'); }
     }
-
     async function toggleProductActiveState(productId, checkbox) {
-        const product = allProducts.find(p => p.id === productId);
-        if (!product) {
-            showToast('Producto no encontrado.', 'error');
-            return;
-        }
-
-        checkbox.disabled = true;
-        
-        const originalState = product.active;
-        const newState = checkbox.checked;
-
-        product.active = newState;
-
+        const product = allProducts.find(p => p.id === productId); if (!product) { showToast('Producto no encontrado.', 'error'); return; } checkbox.disabled = true; const originalState = product.active; const newState = checkbox.checked; product.active = newState;
         const res = await fetchData('updateProduct', 'POST', { product: { id: productId, active: newState } });
-
-        if (res && res.success) {
-            showToast(`Producto '${product.name}' ahora está ${newState ? 'visible' : 'oculto'}.`, 'success');
-        } else {
-            showToast(`Error al actualizar el estado de '${product.name}'.`, 'error');
-            product.active = originalState;
-            checkbox.checked = originalState;
-        }
-        checkbox.disabled = false;
+        if (res && res.success) { showToast(`Producto '${product.name}' ahora está ${newState ? 'visible' : 'oculto'}.`, 'success'); } else { showToast(`Error al actualizar el estado de '${product.name}'.`, 'error'); product.active = originalState; checkbox.checked = originalState; } checkbox.disabled = false;
     }
-
     async function bulkToggleProductsActive(setActive) {
-        if (selectedProductIds.size === 0) {
-            showToast(`Selecciona productos para ${setActive ? 'mostrar' : 'ocultar'}.`, "warning");
-            return;
-        }
-
-        const actionText = setActive ? "mostrar" : "ocultar";
-        if (!confirm(`¿Estás seguro de que quieres ${actionText} los ${selectedProductIds.size} productos seleccionados?`)) {
-            return;
-        }
-
-        const btnId = setActive ? 'bulk-show-products-btn' : 'bulk-hide-products-btn';
-        const button = document.getElementById(btnId);
-        setButtonLoading(button, true, setActive ? "Mostrar" : "Ocultar");
-
-        const productIdsArray = Array.from(selectedProductIds);
-        const res = await fetchData('bulkToggleActiveProducts', 'POST', { productIds: productIdsArray, setActive: setActive });
-        
-        setButtonLoading(button, false);
-
-        if (res && res.success) {
-            showToast(res.message || `${selectedProductIds.size} producto(s) actualizado(s) correctamente.`, 'success');
-            selectedProductIds.clear();
-            await loadProducts(true);
-        } else {
-            showToast(`Error al ${actionText} productos: ${res ? res.message : 'Fallo desconocido.'}`, 'error');
-        }
+        if (selectedProductIds.size === 0) { showToast(`Selecciona productos para ${setActive ? 'mostrar' : 'ocultar'}.`, "warning"); return; }
+        const actionText = setActive ? "mostrar" : "ocultar"; if (!confirm(`¿Estás seguro de que quieres ${actionText} los ${selectedProductIds.size} productos seleccionados?`)) return;
+        const btnId = setActive ? 'bulk-show-products-btn' : 'bulk-hide-products-btn'; const button = document.getElementById(btnId); setButtonLoading(button, true, setActive ? "Mostrar" : "Ocultar");
+        const productIdsArray = Array.from(selectedProductIds); const res = await fetchData('bulkToggleActiveProducts', 'POST', { productIds: productIdsArray, setActive: setActive }); setButtonLoading(button, false);
+        if (res && res.success) { showToast(res.message || `${selectedProductIds.size} producto(s) actualizado(s) correctamente.`, 'success'); selectedProductIds.clear(); await loadProducts(true); } else { showToast(`Error al ${actionText} productos: ${res ? res.message : 'Fallo desconocido.'}`, 'error'); }
     }
-
 
     // --- ORDER FUNCTIONS (ENVIOS) ---
     async function loadOrders(force = false) {
-        const tb = document.getElementById('orders-table');
-        if (!force && allOrders.length > 0) { filterOrders(); return; }
-
-        tb.innerHTML = `<tr><td colspan="7" class="text-center py-5"><div class="spinner-border text-primary" role="status"><span class="visually-hidden">Cargando...</span></div><p>Cargando envíos...</p></td></tr>`;
-        document.getElementById('orders-pagination-controls').innerHTML = '';
-
+        const tb = document.getElementById('orders-table'); if (!force && allOrders.length > 0) { filterOrders(); return; }
+        tb.innerHTML = `<tr><td colspan="7" class="text-center py-5"><div class="spinner-border text-primary"></div><p>Cargando...</p></td></tr>`; document.getElementById('orders-pagination-controls').innerHTML = '';
         const result = await fetchData('getAdminOrders', 'GET');
         if (result && result.success && Array.isArray(result.data)) {
-            allOrders = result.data.map(o => ({ ...o, totalamount: parseFloat(o.totalamount) || 0, orderdateiso: o.orderdateiso || o.orderdate }))
-            .sort((a,b) => {
-                const dateA = a.orderdateiso ? new Date(a.orderdateiso) : new Date(0);
-                const dateB = b.orderdateiso ? new Date(b.orderdateiso) : new Date(0);
-                if (isNaN(dateA.getTime()) || isNaN(dateB.getTime())) return String(b.orderdate).localeCompare(String(a.orderdate));
-                return dateB - dateA;
-            });
-            currentPageOrders = 1;
-            filterOrders();
-        } else {
-             tb.innerHTML = `<tr><td colspan="7" class="text-center text-danger">Error al cargar envíos: ${result.message || 'Error.'}</td></tr>`;
-             updateBulkDeleteOrdersButtonState();
-             const selectAllOrdersCheckbox = document.getElementById('select-all-orders');
-             if (selectAllOrdersCheckbox) selectAllOrdersCheckbox.checked = false;
-        }
+            allOrders = result.data.map(o => ({ ...o, totalamount: parseFloat(o.totalamount) || 0, orderdateiso: o.orderdateiso || o.orderdate })).sort((a, b) => new Date(b.orderdateiso || 0) - new Date(a.orderdateiso || 0));
+            currentPageOrders = 1; filterOrders();
+        } else { tb.innerHTML = `<tr><td colspan="7" class="text-center text-danger">Error al cargar envíos: ${result.message || 'Error.'}</td></tr>`; updateBulkDeleteOrdersButtonState(); const selectAllCheckbox = document.getElementById('select-all-orders'); if (selectAllCheckbox) selectAllCheckbox.checked = false; }
         updateDashboard();
     }
     function renderOrdersTable() {
         const tb = document.getElementById('orders-table'); tb.innerHTML = '';
-        const startIndex = (currentPageOrders - 1) * ITEMS_PER_PAGE_ORDERS;
-        const endIndex = startIndex + ITEMS_PER_PAGE_ORDERS;
-        const paginatedOrders = displayedOrders.slice(startIndex, endIndex);
-
-        if (paginatedOrders.length === 0 && displayedOrders.length > 0 && currentPageOrders > 1) {
-             currentPageOrders = Math.ceil(displayedOrders.length / ITEMS_PER_PAGE_ORDERS) || 1;
-             renderOrdersTable(); return;
-        }
-
-        if (displayedOrders.length === 0) {
-            tb.innerHTML = '<tr><td colspan="7" class="text-center">No hay envíos para mostrar.</td></tr>';
-            document.getElementById('orders-pagination-controls').innerHTML = '';
-            updateBulkDeleteOrdersButtonState();
-            document.getElementById('select-all-orders').checked = false;
-            return;
-        }
-
+        const startIndex = (currentPageOrders - 1) * ITEMS_PER_PAGE_ORDERS; const endIndex = startIndex + ITEMS_PER_PAGE_ORDERS; const paginatedOrders = displayedOrders.slice(startIndex, endIndex);
+        if (paginatedOrders.length === 0 && displayedOrders.length > 0 && currentPageOrders > 1) { currentPageOrders = Math.ceil(displayedOrders.length / ITEMS_PER_PAGE_ORDERS) || 1; renderOrdersTable(); return; }
+        if (displayedOrders.length === 0) { tb.innerHTML = '<tr><td colspan="7" class="text-center">No hay envíos para mostrar.</td></tr>'; document.getElementById('orders-pagination-controls').innerHTML = ''; updateBulkDeleteOrdersButtonState(); document.getElementById('select-all-orders').checked = false; return; }
         paginatedOrders.forEach(order => {
-            let sClass='', statusText = order.status || 'N/A';
-            switch(String(order.status).toLowerCase().replace(/\s+/g, '-')) {
-                case 'pendiente-de-pago': sClass='status-pendiente-de-pago'; statusText = "Pend. Pago (Zelle)"; break;
-                case 'pendiente': sClass='status-pendiente'; statusText = "Pago Recibido"; break;
-                case 'procesado': case 'en-preparacion': sClass='status-procesado'; statusText = "En Preparación"; break;
-                case 'entregado': case 'entregado-en-cuba': sClass='status-entregado'; statusText = "Entregado en Cuba"; break;
-                case 'cancelado': sClass='status-cancelado'; break;
-                default: sClass='bg-secondary text-white';
+            let sClass = '', statusText = order.status || 'N/A';
+            switch (String(order.status).toLowerCase().replace(/\s+/g, '-')) {
+                case 'pendiente-de-pago': sClass = 'status-pendiente-de-pago'; statusText = "Pend. Pago (Zelle)"; break;
+                case 'pendiente': sClass = 'status-pendiente'; statusText = "Pago Recibido"; break;
+                case 'procesado': case 'en-preparacion': sClass = 'status-procesado'; statusText = "En Preparación"; break;
+                case 'entregado': case 'entregado-en-cuba': sClass = 'status-entregado'; statusText = "Entregado en Cuba"; break;
+                case 'cancelado': sClass = 'status-cancelado'; break;
+                default: sClass = 'bg-secondary text-white';
             }
             let displayDate = order.orderdate || 'N/A';
-            if (order.orderdateiso) { try { displayDate = new Date(order.orderdateiso).toLocaleDateString('es-ES', { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }); } catch(e) { /* usar original */ }}
-            else if (typeof order.orderdate === 'string' && order.orderdate.match(/^\d{1,2}\/\d{1,2}\/\d{4}$/)) { /* Mantenemos dd/mm/yyyy */ }
-
+            try { if (order.orderdateiso) displayDate = new Date(order.orderdateiso).toLocaleDateString('es-ES', { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }); } catch (e) { }
             const isChecked = selectedOrderIds.has(order.orderid);
-            tb.innerHTML += `<tr>
-                                <td class="checkbox-column"><input type="checkbox" class="form-check-input order-select-checkbox" value="${order.orderid}" data-order-id="${order.orderid}" ${isChecked ? 'checked' : ''}></td>
-                                <td>${order.orderid?String(order.orderid).substr(-8):'N/A'}</td>
-                                <td>${order.clientname||'N/A'}<small class="d-block text-muted">${order.clientid||''}</small></td>
-                                <td class="d-none d-md-table-cell">${displayDate}</td>
-                                <td>${(order.totalamount||0).toFixed(2)} USD</td>
-                                <td><span class="status-badge ${sClass}">${statusText}</span></td>
-                                <td><button class="btn btn-sm btn-outline-primary" onclick="viewOrderDetails('${order.orderid}')"><i class="bi bi-eye"></i></button></td>
-                             </tr>`;
+            tb.innerHTML += `<tr><td class="checkbox-column"><input type="checkbox" class="form-check-input order-select-checkbox" value="${order.orderid}" data-order-id="${order.orderid}" ${isChecked ? 'checked' : ''}></td><td>${order.orderid ? String(order.orderid).substr(-8) : 'N/A'}</td><td>${order.clientname || 'N/A'}<small class="d-block text-muted">${order.clientid || ''}</small></td><td class="d-none d-md-table-cell">${displayDate}</td><td>${(order.totalamount || 0).toFixed(2)} USD</td><td><span class="status-badge ${sClass}">${statusText}</span></td><td><button class="btn btn-sm btn-outline-primary" onclick="viewOrderDetails('${order.orderid}')"><i class="bi bi-eye"></i></button></td></tr>`;
         });
         document.querySelectorAll('.order-select-checkbox').forEach(checkbox => checkbox.addEventListener('change', handleOrderSelectSingle));
-        updateSelectAllOrdersCheckboxState();
-        updateBulkDeleteOrdersButtonState();
-        renderGenericPaginationControls({
-            paginationContainerId: 'orders-pagination-controls',
-            currentPage: currentPageOrders,
-            totalItems: displayedOrders.length,
-            itemsPerPage: ITEMS_PER_PAGE_ORDERS,
-            changePageFnName: 'changeOrdersPage',
-            entityNameLabel: 'envíos'
-        });
+        updateSelectAllOrdersCheckboxState(); updateBulkDeleteOrdersButtonState();
+        renderGenericPaginationControls({ paginationContainerId: 'orders-pagination-controls', currentPage: currentPageOrders, totalItems: displayedOrders.length, itemsPerPage: ITEMS_PER_PAGE_ORDERS, changePageFnName: 'changeOrdersPage', entityNameLabel: 'envíos' });
     }
     function filterOrders() {
         const searchTerm = document.getElementById('search-order-input').value.toLowerCase().trim();
         const statusFilter = document.getElementById('filter-order-status').value;
         currentPageOrders = 1;
-
-        displayedOrders = allOrders.filter(o => {
-            const matchesSearch = searchTerm ? (o.orderid&&String(o.orderid).toLowerCase().includes(searchTerm))||(o.clientname&&o.clientname.toLowerCase().includes(searchTerm))||(o.clientid&&String(o.clientid).toLowerCase().includes(searchTerm))||(o.status&&o.status.toLowerCase().includes(searchTerm)) : true;
-            const matchesStatus = statusFilter ? (o.status === statusFilter) : true;
-            return matchesSearch && matchesStatus;
-        });
-        renderOrdersTable();
-        updateFilterIndicator('search-order-input', searchTerm.length > 0);
+        displayedOrders = allOrders.filter(o => { const matchesSearch = searchTerm ? (o.orderid && String(o.orderid).toLowerCase().includes(searchTerm)) || (o.clientname && o.clientname.toLowerCase().includes(searchTerm)) || (o.clientid && String(o.clientid).toLowerCase().includes(searchTerm)) || (o.status && o.status.toLowerCase().includes(searchTerm)) : true; const matchesStatus = statusFilter ? (o.status === statusFilter) : true; return matchesSearch && matchesStatus; });
+        renderOrdersTable(); updateFilterIndicator('search-order-input', searchTerm.length > 0);
     }
-    async function resetFilterAndLoadOrders() {
-        document.getElementById('search-order-input').value = '';
-        document.getElementById('filter-order-status').value = '';
-        selectedOrderIds.clear();
-        currentPageOrders = 1;
-        updateFilterIndicator('search-order-input', false);
-        await loadOrders(true);
-    }
-    function changeOrdersPage(newPage) {
-        if (newPage < 1 || newPage > Math.ceil(displayedOrders.length / ITEMS_PER_PAGE_ORDERS) && displayedOrders.length > 0) return;
-        currentPageOrders = newPage;
-        renderOrdersTable();
-        document.getElementById('orders-table').scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
+    async function resetFilterAndLoadOrders() { document.getElementById('search-order-input').value = ''; document.getElementById('filter-order-status').value = ''; selectedOrderIds.clear(); currentPageOrders = 1; updateFilterIndicator('search-order-input', false); await loadOrders(true); }
+    function changeOrdersPage(newPage) { if (newPage < 1 || (newPage > Math.ceil(displayedOrders.length / ITEMS_PER_PAGE_ORDERS) && displayedOrders.length > 0)) return; currentPageOrders = newPage; renderOrdersTable(); document.getElementById('orders-table').scrollIntoView({ behavior: 'smooth', block: 'start' }); }
     function viewOrderDetails(id) {
-        const o=allOrders.find(x=>x.orderid===id); if(!o){showToast('Envío no hallado.','error');return;}
-        const content=document.getElementById('order-details-content');
-        document.getElementById('order-id-to-update').value=id;
-        let items='<p class="text-muted small">No hay ítems.</p>';
-        if(o.itemsjson&&Array.isArray(o.itemsjson)&&o.itemsjson.length>0){
-            items='<ul class="order-details-list">';
-            o.itemsjson.forEach(i=>{ items+=`<li>${i.quantity}x <strong>${i.name||'N/A'}</strong> (@ ${(parseFloat(i.price)||0).toFixed(2)} USD) = ${(i.quantity*(parseFloat(i.price)||0)).toFixed(2)} USD</li>`; });
-            items+='</ul>';
-        }
-        let recipientDetailsHTML = "";
-        if (o.recipientname || o.recipientphone || o.deliveryaddress) {
-            recipientDetailsHTML += "<hr><h5>Información del Destinatario (Cuba):</h5>";
-            if (o.recipientname) recipientDetailsHTML += `<p><strong>Nombre:</strong> ${o.recipientname}</p>`;
-            if (o.recipientphone) recipientDetailsHTML += `<p><strong>Teléfono:</strong> ${o.recipientphone}</p>`;
-            if (o.deliveryaddress) recipientDetailsHTML += `<p><strong>Dirección:</strong> ${o.deliveryaddress}</p>`;
-        }
-        let displayDateModal = o.orderdate || 'N/A';
-        if (o.orderdateiso) { try { displayDateModal = new Date(o.orderdateiso).toLocaleString('es-ES', { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' }); } catch(e) { /* usar original */ }}
-        content.innerHTML=`<p><strong>ID Envío:</strong> ${o.orderid}</p><p><strong>Comprador (USA):</strong> ${o.clientname||'N/A'} (ID: ${o.clientid||'N/A'})</p>${recipientDetailsHTML}<p><strong>Fecha:</strong> ${displayDateModal}</p><p><strong>Total:</strong> ${(parseFloat(o.totalamount)||0).toFixed(2)} USD</p><p><strong>Puntos Otorgados (al comprador):</strong> ${o.totalpointsawarded||0}</p><p><strong>Estado:</strong> <span class="fw-bold">${o.status||'N/A'}</span></p><p><strong>Puntos Ya Entregados (al comprador):</strong> <span class="badge bg-${o.pointsgiven ? 'success' : 'secondary'}">${o.pointsgiven ? 'Sí' : 'No'}</span></p><hr><h5>Ítems:</h5>${items}`;
-        document.getElementById('orderStatusSelect').value=o.status||'Pendiente de Pago';
-        (bootstrap.Modal.getInstance(document.getElementById('orderDetailsModal'))||new bootstrap.Modal(document.getElementById('orderDetailsModal'))).show();
+        const o = allOrders.find(x => x.orderid === id); if (!o) { showToast('Envío no hallado.', 'error'); return; }
+        const content = document.getElementById('order-details-content'); document.getElementById('order-id-to-update').value = id; let items = '<p class="text-muted small">No hay ítems.</p>';
+        if (o.itemsjson && Array.isArray(o.itemsjson) && o.itemsjson.length > 0) { items = '<ul class="order-details-list">'; o.itemsjson.forEach(i => { items += `<li>${i.quantity}x <strong>${i.name || 'N/A'}</strong> (@ ${(parseFloat(i.price) || 0).toFixed(2)} USD) = ${(i.quantity * (parseFloat(i.price) || 0)).toFixed(2)} USD</li>`; }); items += '</ul>'; }
+        let recipientDetailsHTML = ""; if (o.recipientname || o.recipientphone || o.deliveryaddress) { recipientDetailsHTML += "<hr><h5>Información del Destinatario (Cuba):</h5>"; if (o.recipientname) recipientDetailsHTML += `<p><strong>Nombre:</strong> ${o.recipientname}</p>`; if (o.recipientphone) recipientDetailsHTML += `<p><strong>Teléfono:</strong> ${o.recipientphone}</p>`; if (o.deliveryaddress) recipientDetailsHTML += `<p><strong>Dirección:</strong> ${o.deliveryaddress}</p>`; }
+        let displayDateModal = o.orderdate || 'N/A'; try { if (o.orderdateiso) displayDateModal = new Date(o.orderdateiso).toLocaleString('es-ES', { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' }); } catch (e) { }
+        content.innerHTML = `<p><strong>ID Envío:</strong> ${o.orderid}</p><p><strong>Comprador (USA):</strong> ${o.clientname || 'N/A'} (ID: ${o.clientid || 'N/A'})</p>${recipientDetailsHTML}<p><strong>Fecha:</strong> ${displayDateModal}</p><p><strong>Total:</strong> ${(parseFloat(o.totalamount) || 0).toFixed(2)} USD</p><p><strong>Puntos Otorgados (al comprador):</strong> ${o.totalpointsawarded || 0}</p><p><strong>Estado:</strong> <span class="fw-bold">${o.status || 'N/A'}</span></p><p><strong>Puntos Ya Entregados (al comprador):</strong> <span class="badge bg-${o.pointsgiven ? 'success' : 'secondary'}">${o.pointsgiven ? 'Sí' : 'No'}</span></p><hr><h5>Ítems:</h5>${items}`;
+        document.getElementById('orderStatusSelect').value = o.status || 'Pendiente de Pago';
+        (bootstrap.Modal.getInstance(document.getElementById('orderDetailsModal')) || new bootstrap.Modal(document.getElementById('orderDetailsModal'))).show();
     }
     async function updateOrderStatusAttempt() {
-        const id=document.getElementById('order-id-to-update').value; const status=document.getElementById('orderStatusSelect').value;
-        if(!id||!status){showToast("Datos inválidos.", 'warning');return;}
-
-        const updateBtn = document.getElementById('updateOrderStatusBtn');
-        setButtonLoading(updateBtn, true, "Actualizar");
-        const res=await fetchData('updateOrderStatus','POST',{orderId:id,newStatus:status});
-        setButtonLoading(updateBtn, false);
-
-        if(res && res.success){showToast(res.message||`Estado del envío ${id.substr(-6)} actualizado a ${status}.`, 'success');await loadOrders(true);bootstrap.Modal.getInstance(document.getElementById('orderDetailsModal'))?.hide();}
-        else{showToast(`Error al actualizar estado: ${res.message||'Fallo.'}`, 'error');}
+        const id = document.getElementById('order-id-to-update').value, status = document.getElementById('orderStatusSelect').value; if (!id || !status) { showToast("Datos inválidos.", 'warning'); return; }
+        const updateBtn = document.getElementById('updateOrderStatusBtn'); setButtonLoading(updateBtn, true, "Actualizar"); const res = await fetchData('updateOrderStatus', 'POST', { orderId: id, newStatus: status }); setButtonLoading(updateBtn, false);
+        if (res && res.success) { showToast(res.message || `Estado del envío ${id.substr(-6)} actualizado a ${status}.`, 'success'); await loadOrders(true); bootstrap.Modal.getInstance(document.getElementById('orderDetailsModal'))?.hide(); } else { showToast(`Error al actualizar estado: ${res.message || 'Fallo.'}`, 'error'); }
     }
-    function handleOrderSelectAll(event) {
-        const isChecked = event.target.checked;
-        document.querySelectorAll('#orders-table .order-select-checkbox').forEach(checkbox => {
-            const orderId = checkbox.dataset.orderId;
-            checkbox.checked = isChecked;
-            if (isChecked) selectedOrderIds.add(orderId); else selectedOrderIds.delete(orderId);
-        });
-        updateBulkDeleteOrdersButtonState();
-    }
-    function handleOrderSelectSingle(event) {
-        const orderId = event.target.dataset.orderId;
-        if (event.target.checked) selectedOrderIds.add(orderId); else selectedOrderIds.delete(orderId);
-        updateSelectAllOrdersCheckboxState();
-        updateBulkDeleteOrdersButtonState();
-    }
+    function handleOrderSelectAll(event) { const isChecked = event.target.checked; document.querySelectorAll('#orders-table .order-select-checkbox').forEach(checkbox => { const orderId = checkbox.dataset.orderId; checkbox.checked = isChecked; if (isChecked) selectedOrderIds.add(orderId); else selectedOrderIds.delete(orderId); }); updateBulkDeleteOrdersButtonState(); }
+    function handleOrderSelectSingle(event) { const orderId = event.target.dataset.orderId; if (event.target.checked) selectedOrderIds.add(orderId); else selectedOrderIds.delete(orderId); updateSelectAllOrdersCheckboxState(); updateBulkDeleteOrdersButtonState(); }
     function updateSelectAllOrdersCheckboxState() {
         const selectAllCheckbox = document.getElementById('select-all-orders'); if (!selectAllCheckbox) return;
-        const allOrderCheckboxes = document.querySelectorAll('#orders-table .order-select-checkbox');
-        if (allOrderCheckboxes.length === 0) { selectAllCheckbox.checked = false; selectAllCheckbox.indeterminate = false; return; }
+        const allOrderCheckboxes = document.querySelectorAll('#orders-table .order-select-checkbox'); if (allOrderCheckboxes.length === 0) { selectAllCheckbox.checked = false; selectAllCheckbox.indeterminate = false; return; }
         const checkedCount = Array.from(allOrderCheckboxes).filter(cb => cb.checked).length;
-        if (checkedCount === 0) { selectAllCheckbox.checked = false; selectAllCheckbox.indeterminate = false; }
-        else if (checkedCount === allOrderCheckboxes.length) { selectAllCheckbox.checked = true; selectAllCheckbox.indeterminate = false; }
-        else { selectAllCheckbox.checked = false; selectAllCheckbox.indeterminate = true; }
+        if (checkedCount === 0) { selectAllCheckbox.checked = false; selectAllCheckbox.indeterminate = false; } else if (checkedCount === allOrderCheckboxes.length) { selectAllCheckbox.checked = true; selectAllCheckbox.indeterminate = false; } else { selectAllCheckbox.checked = false; selectAllCheckbox.indeterminate = true; }
     }
     function updateBulkDeleteOrdersButtonState() {
         const btn = document.getElementById('bulk-delete-orders-btn'); if (!btn) return;
-        const btnTextSpan = btn.querySelector('span.d-none.d-sm-inline');
-        if (selectedOrderIds.size > 0) { btn.disabled = false; if (btnTextSpan) btnTextSpan.textContent = `Eliminar Seleccionados (${selectedOrderIds.size})`;}
-        else { btn.disabled = true; if (btnTextSpan) btnTextSpan.textContent = `Eliminar Seleccionados`;}
+        const btnTextSpan = btn.querySelector('span'); if (selectedOrderIds.size > 0) { btn.disabled = false; if (btnTextSpan) btnTextSpan.textContent = `Eliminar Seleccionados (${selectedOrderIds.size})`; } else { btn.disabled = true; if (btnTextSpan) btnTextSpan.textContent = `Eliminar Seleccionados`; }
     }
-    function showBulkDeleteOrdersModal() {
-        if (selectedOrderIds.size === 0) { showToast("Selecciona envíos para eliminar.", "warning"); return; }
-        itemToDeleteType = 'orders_bulk';
-        document.getElementById('delete-item-type').textContent = `los ${selectedOrderIds.size} envíos seleccionados`;
-        document.getElementById('item-to-delete').innerHTML = `IDs: <small>${Array.from(selectedOrderIds).slice(0, 5).join(', ')}${selectedOrderIds.size > 5 ? '...' : ''}</small>`;
-        (bootstrap.Modal.getInstance(document.getElementById('deleteModal')) || new bootstrap.Modal(document.getElementById('deleteModal'))).show();
-    }
-
+    function showBulkDeleteOrdersModal() { if (selectedOrderIds.size === 0) { showToast("Selecciona envíos para eliminar.", "warning"); return; } itemToDeleteType = 'orders_bulk'; document.getElementById('delete-item-type').textContent = `los ${selectedOrderIds.size} envíos seleccionados`; document.getElementById('item-to-delete').innerHTML = `IDs: <small>${Array.from(selectedOrderIds).slice(0, 5).join(', ')}${selectedOrderIds.size > 5 ? '...' : ''}</small>`; (bootstrap.Modal.getInstance(document.getElementById('deleteModal')) || new bootstrap.Modal(document.getElementById('deleteModal'))).show(); }
 
     // --- REWARD FUNCTIONS ---
     async function loadRewards(force = false) {
-        const tb = document.getElementById('rewards-table');
-        if (!force && allRewards.length) {
-            filterRewards();
-            updateDashboard();
-            return;
-        }
-
-        tb.innerHTML = `<tr><td colspan="10" class="text-center py-5"><div class="spinner-border text-primary" role="status"><span class="visually-hidden">Cargando...</span></div><p>Cargando recompensas...</p></td></tr>`;
-        document.getElementById('rewards-pagination-controls').innerHTML = '';
-
+        const tb = document.getElementById('rewards-table'); if (!force && allRewards.length) { filterRewards(); updateDashboard(); return; }
+        tb.innerHTML = `<tr><td colspan="10" class="text-center py-5"><div class="spinner-border text-primary"></div><p>Cargando...</p></td></tr>`; document.getElementById('rewards-pagination-controls').innerHTML = '';
         const res = await fetchData('getAdminRewards', 'GET');
         if (res && res.success && Array.isArray(res.data)) {
             allRewards = res.data.map(r => ({ ...r, pointsrequired: parseInt(r.pointsrequired) || 0, stock: parseInt(r.stock) || 0, isactive: r.isactive === true || String(r.isactive).toLowerCase() === 'true' }));
-            currentPageRewards = 1;
-            filterRewards();
+            currentPageRewards = 1; filterRewards();
         } else {
-            tb.innerHTML = `<tr><td colspan="10" class="text-center text-danger">Error: ${res.message || 'No se cargaron recompensas.'} <button class="btn btn-sm btn-outline-info ms-2" data-bs-toggle="modal" data-bs-target="#addRewardModal"><i class="bi bi-plus-circle-dotted"></i> Nueva Recompensa</button></td></tr>`;
-            updateBulkActionRewardsButtonsState();
-            const selectAllRewardsCheckbox = document.getElementById('select-all-rewards');
-            if (selectAllRewardsCheckbox) selectAllRewardsCheckbox.checked = false;
+            tb.innerHTML = `<tr><td colspan="10" class="text-center text-danger">Error: ${res.message || 'No se cargaron recompensas.'} <button class="btn btn-sm btn-outline-info ms-2" data-bs-toggle="modal" data-bs-target="#addRewardModal"><i class="bi bi-plus-circle-dotted"></i> Nueva</button></td></tr>`;
+            updateBulkActionRewardsButtonsState(); const selectAllCheckbox = document.getElementById('select-all-rewards'); if (selectAllCheckbox) selectAllCheckbox.checked = false;
         }
         updateDashboard();
     }
     function renderRewardsTable() {
         const tb = document.getElementById('rewards-table'); tb.innerHTML = '';
-        const startIndex = (currentPageRewards - 1) * ITEMS_PER_PAGE_REWARDS;
-        const endIndex = startIndex + ITEMS_PER_PAGE_REWARDS;
-        const paginatedRewards = displayedRewards.slice(startIndex, endIndex);
-
-        if (paginatedRewards.length === 0 && displayedRewards.length > 0 && currentPageRewards > 1) {
-             currentPageRewards = Math.ceil(displayedRewards.length / ITEMS_PER_PAGE_REWARDS) || 1;
-             renderRewardsTable(); return;
-        }
-
-        if (displayedRewards.length === 0) {
-            tb.innerHTML = `<tr><td colspan="10" class="text-center">No hay recompensas para mostrar. <button class="btn btn-sm btn-outline-info ms-2" data-bs-toggle="modal" data-bs-target="#addRewardModal"><i class="bi bi-plus-circle-dotted"></i> Nueva Recompensa</button></td></tr>`;
-            document.getElementById('rewards-pagination-controls').innerHTML = '';
-            updateBulkActionRewardsButtonsState();
-            document.getElementById('select-all-rewards').checked = false;
-            return;
-        }
+        const startIndex = (currentPageRewards - 1) * ITEMS_PER_PAGE_REWARDS; const endIndex = startIndex + ITEMS_PER_PAGE_REWARDS; const paginatedRewards = displayedRewards.slice(startIndex, endIndex);
+        if (paginatedRewards.length === 0 && displayedRewards.length > 0 && currentPageRewards > 1) { currentPageRewards = Math.ceil(displayedRewards.length / ITEMS_PER_PAGE_REWARDS) || 1; renderRewardsTable(); return; }
+        if (displayedRewards.length === 0) { tb.innerHTML = `<tr><td colspan="10" class="text-center">No hay recompensas. <button class="btn btn-sm btn-outline-info ms-2" data-bs-toggle="modal" data-bs-target="#addRewardModal"><i class="bi bi-plus-circle-dotted"></i> Nueva</button></td></tr>`; document.getElementById('rewards-pagination-controls').innerHTML = ''; updateBulkActionRewardsButtonsState(); document.getElementById('select-all-rewards').checked = false; return; }
         paginatedRewards.sort((a, b) => (a.name || "").localeCompare(b.name || "")).forEach(r => {
             let displayValue = r.value !== undefined ? String(r.value) : 'N/A';
-            if (r.type === 'DescuentoFijo') displayValue += ' USD';
-            else if (r.type === 'DescuentoPorcentaje') displayValue += '%';
-            const imageUrl = r.imageurl ? r.imageurl : 'https://via.placeholder.com/50?text=No+Img';
-            const isChecked = selectedRewardIds.has(r.rewardid);
-
-            tb.innerHTML += `<tr>
-                                <td class="checkbox-column"><input type="checkbox" class="form-check-input reward-select-checkbox" value="${r.rewardid}" data-reward-id="${r.rewardid}" ${isChecked ? 'checked' : ''}></td>
-                                <td><img src="${imageUrl}" alt="${r.name || 'Recompensa'}" class="product-image-table" loading="lazy" onerror="this.onerror=null; this.src='https://via.placeholder.com/50?text=Error';"></td>
-                                <td>${r.rewardid || 'N/A'}</td>
-                                <td>${r.name || 'S/N'}</td>
-                                <td>${r.pointsrequired || 0}</td>
-                                <td>${r.type || 'N/A'}</td>
-                                <td>${displayValue}</td>
-                                <td>${r.stock === 9999 ? 'Ilimitado' : (r.stock || 0)}</td>
-                                <td><span class="badge bg-${r.isactive ? 'success' : 'secondary'}">${r.isactive ? 'Sí' : 'No'}</span></td>
-                                <td><div class="btn-group btn-group-sm"><button class="btn btn-outline-primary" onclick="editReward('${r.rewardid}')"><i class="bi bi-pencil"></i></button><button class="btn btn-outline-danger" onclick="showDeleteModal('${r.rewardid}','${r.name}','reward')"><i class="bi bi-trash"></i></button></div></td>
-                             </tr>`;
+            if (r.type === 'DescuentoFijo') displayValue += ' USD'; else if (r.type === 'DescuentoPorcentaje') displayValue += '%';
+            const imageUrl = r.imageurl ? r.imageurl : 'https://via.placeholder.com/50?text=No+Img'; const isChecked = selectedRewardIds.has(r.rewardid);
+            tb.innerHTML += `<tr><td class="checkbox-column"><input type="checkbox" class="form-check-input reward-select-checkbox" value="${r.rewardid}" data-reward-id="${r.rewardid}" ${isChecked ? 'checked' : ''}></td><td><img src="${imageUrl}" alt="${r.name || 'Recompensa'}" class="product-image-table" loading="lazy" onerror="this.onerror=null; this.src='https://via.placeholder.com/50?text=Error';"></td><td>${r.rewardid || 'N/A'}</td><td>${r.name || 'S/N'}</td><td>${r.pointsrequired || 0}</td><td>${r.type || 'N/A'}</td><td>${displayValue}</td><td>${r.stock === 9999 ? 'Ilimitado' : (r.stock || 0)}</td><td><span class="badge bg-${r.isactive ? 'success' : 'secondary'}">${r.isactive ? 'Sí' : 'No'}</span></td><td><div class="btn-group btn-group-sm"><button class="btn btn-outline-primary" onclick="editReward('${r.rewardid}')"><i class="bi bi-pencil"></i></button><button class="btn btn-outline-danger" onclick="showDeleteModal('${r.rewardid}','${r.name}','reward')"><i class="bi bi-trash"></i></button></div></td></tr>`;
         });
         document.querySelectorAll('.reward-select-checkbox').forEach(checkbox => checkbox.addEventListener('change', handleRewardSelectSingle));
-        updateSelectAllRewardsCheckboxState();
-        updateBulkActionRewardsButtonsState();
-        renderGenericPaginationControls({
-            paginationContainerId: 'rewards-pagination-controls',
-            currentPage: currentPageRewards,
-            totalItems: displayedRewards.length,
-            itemsPerPage: ITEMS_PER_PAGE_REWARDS,
-            changePageFnName: 'changeRewardsPage',
-            entityNameLabel: 'recompensas'
-        });
+        updateSelectAllRewardsCheckboxState(); updateBulkActionRewardsButtonsState();
+        renderGenericPaginationControls({ paginationContainerId: 'rewards-pagination-controls', currentPage: currentPageRewards, totalItems: displayedRewards.length, itemsPerPage: ITEMS_PER_PAGE_REWARDS, changePageFnName: 'changeRewardsPage', entityNameLabel: 'recompensas' });
     }
-    function filterRewards() {
-        const term = document.getElementById('search-reward-input').value.toLowerCase().trim();
-        displayedRewards = term ? allRewards.filter(r => (r.name && r.name.toLowerCase().includes(term)) || (r.type && r.type.toLowerCase().includes(term)) || (r.rewardid && String(r.rewardid).toLowerCase().includes(term))) : [...allRewards];
-        currentPageRewards = 1;
-        renderRewardsTable();
-        updateFilterIndicator('search-reward-input', term.length > 0);
-    }
-    async function resetFilterAndLoadRewards() {
-        document.getElementById('search-reward-input').value = '';
-        selectedRewardIds.clear();
-        currentPageRewards = 1;
-        updateFilterIndicator('search-reward-input', false);
-        await loadRewards(true);
-    }
-    function changeRewardsPage(newPage) {
-        if (newPage < 1 || newPage > Math.ceil(displayedRewards.length / ITEMS_PER_PAGE_REWARDS) && displayedRewards.length > 0) return;
-        currentPageRewards = newPage;
-        renderRewardsTable();
-        document.getElementById('rewards-table').scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
+    function filterRewards() { const term = document.getElementById('search-reward-input').value.toLowerCase().trim(); displayedRewards = term ? allRewards.filter(r => (r.name && r.name.toLowerCase().includes(term)) || (r.type && r.type.toLowerCase().includes(term)) || (r.rewardid && String(r.rewardid).toLowerCase().includes(term))) : [...allRewards]; currentPageRewards = 1; renderRewardsTable(); updateFilterIndicator('search-reward-input', term.length > 0); }
+    async function resetFilterAndLoadRewards() { document.getElementById('search-reward-input').value = ''; selectedRewardIds.clear(); currentPageRewards = 1; updateFilterIndicator('search-reward-input', false); await loadRewards(true); }
+    function changeRewardsPage(newPage) { if (newPage < 1 || (newPage > Math.ceil(displayedRewards.length / ITEMS_PER_PAGE_REWARDS) && displayedRewards.length > 0)) return; currentPageRewards = newPage; renderRewardsTable(); document.getElementById('rewards-table').scrollIntoView({ behavior: 'smooth', block: 'start' }); }
     function editReward(id) {
-        const r = allRewards.find(x => x.rewardid === id); if (!r) { showToast('Recompensa no hallada.','error'); return; }
-        document.getElementById('rewardIdField').value = r.rewardid;
-        document.getElementById('rewardName').value = r.name;
-        document.getElementById('rewardDescription').value = r.description || '';
-        document.getElementById('rewardPointsRequired').value = r.pointsrequired;
-        document.getElementById('rewardStock').value = r.stock;
-        document.getElementById('rewardType').value = r.type || 'Producto';
-        document.getElementById('rewardValue').value = r.value !== undefined ? String(r.value) : '';
-        document.getElementById('rewardImageUrl').value = r.imageurl || '';
-        document.getElementById('rewardIsActive').checked = r.isactive;
-        (bootstrap.Modal.getInstance(document.getElementById('addRewardModal'))||new bootstrap.Modal(document.getElementById('addRewardModal'))).show();
+        const r = allRewards.find(x => x.rewardid === id); if (!r) { showToast('Recompensa no hallada.', 'error'); return; }
+        document.getElementById('rewardIdField').value = r.rewardid; document.getElementById('rewardName').value = r.name; document.getElementById('rewardDescription').value = r.description || ''; document.getElementById('rewardPointsRequired').value = r.pointsrequired; document.getElementById('rewardStock').value = r.stock; document.getElementById('rewardType').value = r.type || 'Producto'; document.getElementById('rewardValue').value = r.value !== undefined ? String(r.value) : ''; document.getElementById('rewardImageUrl').value = r.imageurl || ''; document.getElementById('rewardIsActive').checked = r.isactive;
+        (bootstrap.Modal.getInstance(document.getElementById('addRewardModal')) || new bootstrap.Modal(document.getElementById('addRewardModal'))).show();
     }
     async function saveReward() {
         const rewardData = { rewardid: document.getElementById('rewardIdField').value, name: document.getElementById('rewardName').value.trim(), description: document.getElementById('rewardDescription').value.trim(), pointsrequired: parseInt(document.getElementById('rewardPointsRequired').value), stock: parseInt(document.getElementById('rewardStock').value), type: document.getElementById('rewardType').value, value: document.getElementById('rewardValue').value.trim(), imageurl: document.getElementById('rewardImageUrl').value.trim(), isactive: document.getElementById('rewardIsActive').checked };
-        if (!rewardData.name || isNaN(rewardData.pointsrequired) || rewardData.pointsrequired < 0) { showToast('Nombre y Puntos Requeridos son obligatorios y deben ser válidos.', 'warning'); return; }
-        if (isNaN(rewardData.stock) || rewardData.stock < 0) { showToast('El stock debe ser un número válido (0 o más). Use 9999 para ilimitado.', 'warning'); return; }
-        if ((rewardData.type === 'DescuentoFijo' || rewardData.type === 'DescuentoPorcentaje') && (isNaN(parseFloat(rewardData.value)) || parseFloat(rewardData.value) <=0) ) { showToast(`El valor para ${rewardData.type} debe ser un número positivo.`, 'warning'); return; }
-
-        const saveBtn = document.getElementById('saveRewardBtn');
-        setButtonLoading(saveBtn, true, "Guardar Recompensa");
-        const action = rewardData.rewardid ? 'updateReward' : 'addReward';
-        const res = await fetchData(action, 'POST', { reward: rewardData });
-        setButtonLoading(saveBtn, false);
-
-        if (res && res.success && res.data) {
-            showToast(res.message || `Recompensa '${rewardData.name}' guardada.`, 'success');
-            selectedRewardIds.clear();
-            await loadRewards(true);
-            bootstrap.Modal.getInstance(document.getElementById('addRewardModal')).hide();
-        } else { showToast(`Error al guardar recompensa '${rewardData.name}': ${res.message || 'Fallo.'}`, 'error');}
+        if (!rewardData.name || isNaN(rewardData.pointsrequired) || rewardData.pointsrequired < 0) { showToast('Nombre y Puntos Requeridos son obligatorios.', 'warning'); return; } if (isNaN(rewardData.stock) || rewardData.stock < 0) { showToast('El stock debe ser un número válido (0+).', 'warning'); return; }
+        const saveBtn = document.getElementById('saveRewardBtn'); setButtonLoading(saveBtn, true, "Guardar Recompensa"); const action = rewardData.rewardid ? 'updateReward' : 'addReward'; const res = await fetchData(action, 'POST', { reward: rewardData }); setButtonLoading(saveBtn, false);
+        if (res && res.success && res.data) { showToast(res.message || `Recompensa '${rewardData.name}' guardada.`, 'success'); selectedRewardIds.clear(); await loadRewards(true); bootstrap.Modal.getInstance(document.getElementById('addRewardModal')).hide(); } else { showToast(`Error al guardar recompensa '${rewardData.name}': ${res.message || 'Fallo.'}`, 'error'); }
     }
-    function handleRewardSelectAll(event) {
-        const isChecked = event.target.checked;
-        document.querySelectorAll('#rewards-table .reward-select-checkbox').forEach(checkbox => {
-            const rewardId = checkbox.dataset.rewardId;
-            checkbox.checked = isChecked;
-            if (isChecked) selectedRewardIds.add(rewardId); else selectedRewardIds.delete(rewardId);
-        });
-        updateBulkActionRewardsButtonsState();
-    }
-    function handleRewardSelectSingle(event) {
-        const rewardId = event.target.dataset.rewardId;
-        if (event.target.checked) selectedRewardIds.add(rewardId); else selectedRewardIds.delete(rewardId);
-        updateSelectAllRewardsCheckboxState();
-        updateBulkActionRewardsButtonsState();
-    }
+    function handleRewardSelectAll(event) { const isChecked = event.target.checked; document.querySelectorAll('#rewards-table .reward-select-checkbox').forEach(checkbox => { const rewardId = checkbox.dataset.rewardId; checkbox.checked = isChecked; if (isChecked) selectedRewardIds.add(rewardId); else selectedRewardIds.delete(rewardId); }); updateBulkActionRewardsButtonsState(); }
+    function handleRewardSelectSingle(event) { const rewardId = event.target.dataset.rewardId; if (event.target.checked) selectedRewardIds.add(rewardId); else selectedRewardIds.delete(rewardId); updateSelectAllRewardsCheckboxState(); updateBulkActionRewardsButtonsState(); }
     function updateSelectAllRewardsCheckboxState() {
         const selectAllCheckbox = document.getElementById('select-all-rewards'); if (!selectAllCheckbox) return;
-        const allRewardCheckboxes = document.querySelectorAll('#rewards-table .reward-select-checkbox');
-        if (allRewardCheckboxes.length === 0) { selectAllCheckbox.checked = false; selectAllCheckbox.indeterminate = false; return; }
+        const allRewardCheckboxes = document.querySelectorAll('#rewards-table .reward-select-checkbox'); if (allRewardCheckboxes.length === 0) { selectAllCheckbox.checked = false; selectAllCheckbox.indeterminate = false; return; }
         const checkedCount = Array.from(allRewardCheckboxes).filter(cb => cb.checked).length;
-        if (checkedCount === 0) { selectAllCheckbox.checked = false; selectAllCheckbox.indeterminate = false; }
-        else if (checkedCount === allRewardCheckboxes.length) { selectAllCheckbox.checked = true; selectAllCheckbox.indeterminate = false; }
-        else { selectAllCheckbox.checked = false; selectAllCheckbox.indeterminate = true; }
+        if (checkedCount === 0) { selectAllCheckbox.checked = false; selectAllCheckbox.indeterminate = false; } else if (checkedCount === allRewardCheckboxes.length) { selectAllCheckbox.checked = true; selectAllCheckbox.indeterminate = false; } else { selectAllCheckbox.checked = false; selectAllCheckbox.indeterminate = true; }
     }
     function updateBulkActionRewardsButtonsState() {
-        const deleteBtn = document.getElementById('bulk-delete-rewards-btn');
-        const activateBtn = document.getElementById('bulk-toggle-rewards-active-btn');
-        const deactivateBtn = document.getElementById('bulk-toggle-rewards-inactive-btn');
-
-        const deleteBtnTextSpan = deleteBtn?.querySelector('span.d-none.d-sm-inline');
-        const activateBtnTextSpan = activateBtn?.querySelector('span.d-none.d-sm-inline');
-        const deactivateBtnTextSpan = deactivateBtn?.querySelector('span.d-none.d-sm-inline');
-
+        const deleteBtn = document.getElementById('bulk-delete-rewards-btn'), activateBtn = document.getElementById('bulk-toggle-rewards-active-btn'), deactivateBtn = document.getElementById('bulk-toggle-rewards-inactive-btn');
+        const deleteBtnTextSpan = deleteBtn?.querySelector('span'), activateBtnTextSpan = activateBtn?.querySelector('span'), deactivateBtnTextSpan = deactivateBtn?.querySelector('span');
         if (selectedRewardIds.size > 0) {
-            if(deleteBtn) deleteBtn.disabled = false;
-            if(activateBtn) activateBtn.disabled = false;
-            if(deactivateBtn) deactivateBtn.disabled = false;
-            if (deleteBtnTextSpan) deleteBtnTextSpan.textContent = `Eliminar (${selectedRewardIds.size})`;
-            if (activateBtnTextSpan) activateBtnTextSpan.textContent = `Activar (${selectedRewardIds.size})`;
-            if (deactivateBtnTextSpan) deactivateBtnTextSpan.textContent = `Desactivar (${selectedRewardIds.size})`;
+            if (deleteBtn) deleteBtn.disabled = false; if (activateBtn) activateBtn.disabled = false; if (deactivateBtn) deactivateBtn.disabled = false;
+            if (deleteBtnTextSpan) deleteBtnTextSpan.textContent = `Eliminar (${selectedRewardIds.size})`; if (activateBtnTextSpan) activateBtnTextSpan.textContent = `Activar (${selectedRewardIds.size})`; if (deactivateBtnTextSpan) deactivateBtnTextSpan.textContent = `Desactivar (${selectedRewardIds.size})`;
         } else {
-            if(deleteBtn) deleteBtn.disabled = true;
-            if(activateBtn) activateBtn.disabled = true;
-            if(deactivateBtn) deactivateBtn.disabled = true;
-            if (deleteBtnTextSpan) deleteBtnTextSpan.textContent = `Eliminar`;
-            if (activateBtnTextSpan) activateBtnTextSpan.textContent = `Activar`;
-            if (deactivateBtnTextSpan) deactivateBtnTextSpan.textContent = `Desactivar`;
+            if (deleteBtn) deleteBtn.disabled = true; if (activateBtn) activateBtn.disabled = true; if (deactivateBtn) deactivateBtn.disabled = true;
+            if (deleteBtnTextSpan) deleteBtnTextSpan.textContent = `Eliminar`; if (activateBtnTextSpan) activateBtnTextSpan.textContent = `Activar`; if (deactivateBtnTextSpan) deactivateBtnTextSpan.textContent = `Desactivar`;
         }
     }
-    function showBulkDeleteRewardsModal() {
-        if (selectedRewardIds.size === 0) { showToast("Selecciona recompensas para eliminar.", "warning"); return; }
-        itemToDeleteType = 'rewards_bulk';
-        document.getElementById('delete-item-type').textContent = `las ${selectedRewardIds.size} recompensas seleccionadas`;
-        document.getElementById('item-to-delete').innerHTML = `IDs: <small>${Array.from(selectedRewardIds).slice(0, 5).join(', ')}${selectedRewardIds.size > 5 ? '...' : ''}</small>`;
-        (bootstrap.Modal.getInstance(document.getElementById('deleteModal')) || new bootstrap.Modal(document.getElementById('deleteModal'))).show();
-    }
+    function showBulkDeleteRewardsModal() { if (selectedRewardIds.size === 0) { showToast("Selecciona recompensas para eliminar.", "warning"); return; } itemToDeleteType = 'rewards_bulk'; document.getElementById('delete-item-type').textContent = `las ${selectedRewardIds.size} recompensas seleccionadas`; document.getElementById('item-to-delete').innerHTML = `IDs: <small>${Array.from(selectedRewardIds).slice(0, 5).join(', ')}${selectedRewardIds.size > 5 ? '...' : ''}</small>`; (bootstrap.Modal.getInstance(document.getElementById('deleteModal')) || new bootstrap.Modal(document.getElementById('deleteModal'))).show(); }
     async function showBulkToggleActiveRewardsModal(setActive) {
         if (selectedRewardIds.size === 0) { showToast(`Selecciona recompensas para ${setActive ? 'activar' : 'desactivar'}.`, "warning"); return; }
         const actionText = setActive ? "activar" : "desactivar";
         if (confirm(`¿Estás seguro de que quieres ${actionText} las ${selectedRewardIds.size} recompensas seleccionadas?`)) {
             const rewardIdsArray = Array.from(selectedRewardIds);
             const btnId = setActive ? 'bulk-toggle-rewards-active-btn' : 'bulk-toggle-rewards-inactive-btn';
-            const button = document.getElementById(btnId);
-            setButtonLoading(button, true, setActive ? "Activar" : "Desactivar");
-
-            const res = await fetchData('bulkToggleActiveRewards', 'POST', { rewardIds: rewardIdsArray, setActive: setActive });
-            setButtonLoading(button, false);
-
-            if (res && res.success) {
-                showToast(res.message || `${selectedRewardIds.size} recompensa(s) ${actionText} correctamente.`, 'success');
-                selectedRewardIds.clear();
-                await loadRewards(true);
-            } else {
-                showToast(`Error al ${actionText} recompensas: ${res ? res.message : 'Fallo desconocido.'}`, 'error');
-            }
+            const button = document.getElementById(btnId); setButtonLoading(button, true, setActive ? "Activar" : "Desactivar");
+            const res = await fetchData('bulkToggleActiveRewards', 'POST', { rewardIds: rewardIdsArray, setActive: setActive }); setButtonLoading(button, false);
+            if (res && res.success) { showToast(res.message || `${selectedRewardIds.size} recompensa(s) actualizada(s).`, 'success'); selectedRewardIds.clear(); await loadRewards(true); } else { showToast(`Error al ${actionText} recompensas: ${res ? res.message : 'Fallo.'}`, 'error'); }
         }
     }
 
+    // --- GLOBAL MESSAGE FUNCTIONS ---
+    async function loadGlobalMessageForAdmin() {
+        const res = await fetchData('getGlobalMessage', 'GET');
+        if (res && res.success && res.data) {
+            document.getElementById('messageTitle').value = res.data.title || '';
+            document.getElementById('messageBody').value = res.data.body || '';
+            document.getElementById('messageIsActive').checked = res.data.isActive || false;
+        } else {
+            showToast(`Error al cargar el mensaje: ${res.message || 'Fallo.'}`, 'error');
+        }
+    }
+    async function saveGlobalMessage() {
+        const payload = { title: document.getElementById('messageTitle').value.trim(), body: document.getElementById('messageBody').value.trim(), isActive: document.getElementById('messageIsActive').checked };
+        if (!payload.title || !payload.body) { showToast('Título y cuerpo son obligatorios.', 'warning'); return; }
+        const saveBtn = document.getElementById('saveGlobalMessageBtn'); setButtonLoading(saveBtn, true, "Guardar y Publicar Mensaje");
+        const res = await fetchData('updateGlobalMessage', 'POST', payload); setButtonLoading(saveBtn, false);
+        if (res && res.success) { showToast(res.message || 'Mensaje guardado.', 'success'); } else { showToast(`Error al guardar: ${res.message || 'Fallo.'}`, 'error'); }
+    }
 
     // --- GENERAL DELETE FUNCTIONS ---
-    function showDeleteModal(id,name,type) {
-        itemToDeleteId=id; itemToDeleteType=type;
+    function showDeleteModal(id, name, type) {
+        itemToDeleteId = id; itemToDeleteType = type;
         let itemTypeDisplay = 'elemento';
-        if (type === 'client') itemTypeDisplay = 'cliente (comprador)';
-        else if (type === 'product') itemTypeDisplay = 'producto/combo';
-        else if (type === 'reward') itemTypeDisplay = 'recompensa';
-        else if (type === 'order') itemTypeDisplay = 'envío';
-        document.getElementById('delete-item-type').textContent= itemTypeDisplay;
-        document.getElementById('item-to-delete').textContent=`${name||'N/A'} (ID: ${id||'N/A'})`;
-        (bootstrap.Modal.getInstance(document.getElementById('deleteModal'))||new bootstrap.Modal(document.getElementById('deleteModal'))).show();
+        if (type === 'client') itemTypeDisplay = 'cliente (comprador)'; else if (type === 'product') itemTypeDisplay = 'producto/combo'; else if (type === 'reward') itemTypeDisplay = 'recompensa'; else if (type === 'order') itemTypeDisplay = 'envío';
+        document.getElementById('delete-item-type').textContent = itemTypeDisplay;
+        document.getElementById('item-to-delete').textContent = `${name || 'N/A'} (ID: ${id || 'N/A'})`;
+        (bootstrap.Modal.getInstance(document.getElementById('deleteModal')) || new bootstrap.Modal(document.getElementById('deleteModal'))).show();
     }
     async function confirmDeleteItem() {
         if (!itemToDeleteType) return;
         let res, loadFn, itemTypeDisplayForAlert = 'Elemento(s)', itemNameForAlert = itemToDeleteId;
-        const deleteBtn = document.getElementById('confirm-delete-btn');
-        setButtonLoading(deleteBtn, true, "Eliminar");
-
+        const deleteBtn = document.getElementById('confirm-delete-btn'); setButtonLoading(deleteBtn, true, "Eliminar");
         if (itemToDeleteType === 'products_bulk') {
-            const idsToDelete = Array.from(selectedProductIds);
-            if (idsToDelete.length === 0) { bootstrap.Modal.getInstance(document.getElementById('deleteModal'))?.hide(); setButtonLoading(deleteBtn, false); return; }
-            itemTypeDisplayForAlert = `${idsToDelete.length} producto(s)/combo(s)`;
-            res = await fetchData('bulkDeleteProducts', 'POST', { productIds: idsToDelete });
-            loadFn = () => loadProducts(true);
+            const idsToDelete = Array.from(selectedProductIds); if (idsToDelete.length === 0) { bootstrap.Modal.getInstance(document.getElementById('deleteModal'))?.hide(); setButtonLoading(deleteBtn, false); return; }
+            itemTypeDisplayForAlert = `${idsToDelete.length} producto(s)`; res = await fetchData('bulkDeleteProducts', 'POST', { productIds: idsToDelete }); loadFn = () => loadProducts(true);
         } else if (itemToDeleteType === 'orders_bulk') {
-            const idsToDelete = Array.from(selectedOrderIds);
-            if (idsToDelete.length === 0) { bootstrap.Modal.getInstance(document.getElementById('deleteModal'))?.hide(); setButtonLoading(deleteBtn, false); return; }
-            itemTypeDisplayForAlert = `${idsToDelete.length} envío(s)`;
-            res = await fetchData('bulkDeleteOrders', 'POST', { orderIds: idsToDelete });
-            loadFn = () => loadOrders(true);
+            const idsToDelete = Array.from(selectedOrderIds); if (idsToDelete.length === 0) { bootstrap.Modal.getInstance(document.getElementById('deleteModal'))?.hide(); setButtonLoading(deleteBtn, false); return; }
+            itemTypeDisplayForAlert = `${idsToDelete.length} envío(s)`; res = await fetchData('bulkDeleteOrders', 'POST', { orderIds: idsToDelete }); loadFn = () => loadOrders(true);
         } else if (itemToDeleteType === 'rewards_bulk') {
-            const idsToDelete = Array.from(selectedRewardIds);
-            if (idsToDelete.length === 0) { bootstrap.Modal.getInstance(document.getElementById('deleteModal'))?.hide(); setButtonLoading(deleteBtn, false); return; }
-            itemTypeDisplayForAlert = `${idsToDelete.length} recompensa(s)`;
-            res = await fetchData('bulkDeleteRewards', 'POST', { rewardIds: idsToDelete });
-            loadFn = () => loadRewards(true);
-        }
-        else { // Eliminación individual
-            let action, key;
-            const originalItem = itemToDeleteType === 'client' ? allClients.find(c => c.id === itemToDeleteId) :
-                                 itemToDeleteType === 'product' ? allProducts.find(p => p.id === itemToDeleteId) :
-                                 itemToDeleteType === 'reward' ? allRewards.find(r => r.rewardid === itemToDeleteId) :
-                                 itemToDeleteType === 'order' ? allOrders.find(o => o.orderid === itemToDeleteId) : null;
-            itemNameForAlert = originalItem ? (originalItem.name || originalItem.orderid || originalItem.rewardid) : itemToDeleteId;
-
-            if(itemToDeleteType==='client'){action='deleteClient';key='clientId';loadFn=()=>loadClients(true); itemTypeDisplayForAlert = 'Cliente';}
-            else if(itemToDeleteType==='product'){action='deleteProduct';key='productId';loadFn=()=>loadProducts(true); itemTypeDisplayForAlert = 'Producto/Combo';}
-            else if(itemToDeleteType==='reward'){action='deleteReward';key='rewardId';loadFn=()=>loadRewards(true); itemTypeDisplayForAlert = 'Recompensa';}
-            else if(itemToDeleteType==='order'){action='deleteOrder';key='orderId';loadFn=()=>loadOrders(true); itemTypeDisplayForAlert = 'Envío';}
-            else { bootstrap.Modal.getInstance(document.getElementById('deleteModal'))?.hide(); setButtonLoading(deleteBtn, false); return; }
-            res = await fetchData(action,'POST',{[key]:itemToDeleteId});
-        }
-        setButtonLoading(deleteBtn, false);
-        const deleteModalEl = document.getElementById('deleteModal');
-        const modalInstance = bootstrap.Modal.getInstance(deleteModalEl);
-
-        if (res && res.success) {
-            showToast(res.message || `${itemTypeDisplayForAlert} '${itemNameForAlert}' eliminado(s) correctamente.`, 'success');
-            if (itemToDeleteType === 'products_bulk') selectedProductIds.clear();
-            else if (itemToDeleteType === 'orders_bulk') selectedOrderIds.clear();
-            else if (itemToDeleteType === 'rewards_bulk') selectedRewardIds.clear();
-
-            if (loadFn) await loadFn();
+            const idsToDelete = Array.from(selectedRewardIds); if (idsToDelete.length === 0) { bootstrap.Modal.getInstance(document.getElementById('deleteModal'))?.hide(); setButtonLoading(deleteBtn, false); return; }
+            itemTypeDisplayForAlert = `${idsToDelete.length} recompensa(s)`; res = await fetchData('bulkDeleteRewards', 'POST', { rewardIds: idsToDelete }); loadFn = () => loadRewards(true);
         } else {
-            const errorMessage = res ? (res.message || 'Fallo en la operación.') : 'Respuesta inesperada.';
-            showToast(`Error al eliminar '${itemNameForAlert}': ${errorMessage}`, 'error');
+            let action, key;
+            const originalItem = itemToDeleteType === 'client' ? allClients.find(c => c.id === itemToDeleteId) : itemToDeleteType === 'product' ? allProducts.find(p => p.id === itemToDeleteId) : itemToDeleteType === 'reward' ? allRewards.find(r => r.rewardid === itemToDeleteId) : itemToDeleteType === 'order' ? allOrders.find(o => o.orderid === itemToDeleteId) : null;
+            itemNameForAlert = originalItem ? (originalItem.name || originalItem.orderid || originalItem.rewardid) : itemToDeleteId;
+            if (itemToDeleteType === 'client') { action = 'deleteClient'; key = 'clientId'; loadFn = () => loadClients(true); itemTypeDisplayForAlert = 'Cliente'; }
+            else if (itemToDeleteType === 'product') { action = 'deleteProduct'; key = 'productId'; loadFn = () => loadProducts(true); itemTypeDisplayForAlert = 'Producto'; }
+            else if (itemToDeleteType === 'reward') { action = 'deleteReward'; key = 'rewardId'; loadFn = () => loadRewards(true); itemTypeDisplayForAlert = 'Recompensa'; }
+            else if (itemToDeleteType === 'order') { action = 'deleteOrder'; key = 'orderId'; loadFn = () => loadOrders(true); itemTypeDisplayForAlert = 'Envío'; }
+            else { bootstrap.Modal.getInstance(document.getElementById('deleteModal'))?.hide(); setButtonLoading(deleteBtn, false); return; }
+            res = await fetchData(action, 'POST', { [key]: itemToDeleteId });
         }
-        if (modalInstance && modalInstance._isShown) {
-             deleteModalEl.addEventListener('hidden.bs.modal', () => {
-                const firstFocusableElement = document.querySelector('button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])');
-                if (firstFocusableElement) firstFocusableElement.focus(); else document.body.focus();
-            }, { once: true });
-            modalInstance.hide();
-        }
+        setButtonLoading(deleteBtn, false); const modalInstance = bootstrap.Modal.getInstance(document.getElementById('deleteModal'));
+        if (res && res.success) {
+            showToast(res.message || `${itemTypeDisplayForAlert} '${itemNameForAlert}' eliminado(s).`, 'success');
+            if (itemToDeleteType === 'products_bulk') selectedProductIds.clear(); else if (itemToDeleteType === 'orders_bulk') selectedOrderIds.clear(); else if (itemToDeleteType === 'rewards_bulk') selectedRewardIds.clear();
+            if (loadFn) await loadFn();
+        } else { const errorMessage = res ? (res.message || 'Fallo.') : 'Respuesta inesperada.'; showToast(`Error al eliminar '${itemNameForAlert}': ${errorMessage}`, 'error'); }
+        if (modalInstance && modalInstance._isShown) modalInstance.hide();
         itemToDeleteId = null; itemToDeleteType = null;
     }
 </script>
