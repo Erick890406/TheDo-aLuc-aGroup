@@ -3130,33 +3130,32 @@ h6 { font-size: var(--text-sm); }
     </div>
 
     <div class="modal fade" id="rewardDetailModal" tabindex="-1" aria-labelledby="rewardDetailModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header border-0">
-                    <h5 class="modal-title" id="rewardDetailModalLabel">Detalles de la Recompensa</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body pt-0">
-                    <div class="row g-4">
-                        <div class="col-md-5">
-                            <img src="https://via.placeholder.com/500x600" id="modal-reward-image" class="img-fluid" alt="Imagen de la recompensa" style="aspect-ratio: 4 / 5; object-fit: cover; border-radius: 1rem; border: 2px solid var(--accent-color);">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header border-0">
+                <h5 class="modal-title" id="rewardDetailModalLabel">Detalles de la Recompensa</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body pt-0">
+                <div class="row g-4">
+                    <div class="col-md-5">
+                        <img src="./img/placeholder-product.png" id="modal-reward-image" class="img-fluid" alt="Imagen de la recompensa" style="aspect-ratio: 4 / 5; object-fit: cover; border-radius: 1rem; border: 2px solid var(--accent-color);">
+                    </div>
+                    <div class="col-md-7 d-flex flex-column">
+                        <h2 id="modal-reward-name" class="mb-2" style="font-family: 'Playfair Display', serif; color: var(--accent-color);">Nombre de la Recompensa</h2>
+                        <p id="modal-reward-description" class="text-muted">Descripción detallada de la recompensa...</p>
+                        <div class="d-flex justify-content-between align-items-center my-3">
+                            <span id="modal-reward-points-required" style="color: var(--accent-color); font-size: 1.75rem; font-weight: 700;">0 Puntos</span>
+                            <span class="badge" id="modal-reward-stock-info"></span>
                         </div>
-                        <div class="col-md-7 d-flex flex-column">
-                            <h2 id="modal-reward-name" class="mb-2" style="font-family: 'Playfair Display', serif; color: var(--accent-color);">Nombre de la Recompensa</h2>
-                            <p id="modal-reward-description" class="text-muted">Descripción detallada de la recompensa...</p>
-                            <div class="d-flex justify-content-between align-items-center my-3">
-                                <span id="modal-reward-points-required" style="color: var(--accent-color); font-size: 1.75rem; font-weight: 700;">0 Puntos</span>
-                                <span class="badge" id="modal-reward-stock-info"></span>
-                            </div>
-                            <div id="modal-redeem-reward-button-container" class="mb-3">
-                                <!-- Botón de canje se insertará aquí -->
-                            </div>
-                            <hr class="border-secondary my-3">
-                            <div id="modal-product-recommendations-for-reward-container">
-                                <h5 class="text-light mb-3" style="font-weight: 600;"><i class="bi bi-hand-thumbs-up-fill me-2"></i>Productos que te podrían gustar:</h5>
-                                <div id="reward-modal-product-recs-row" class="row g-2">
-                                    <!-- Recomendaciones de productos -->
-                                </div>
+                        <div id="modal-redeem-reward-button-container" class="mb-3">
+                            <!-- Botón de canje se insertará aquí -->
+                        </div>
+                        <hr class="border-secondary my-3">
+                        <div id="modal-product-recommendations-for-reward-container">
+                            <h5 class="text-light mb-3" style="font-weight: 600;"><i class="bi bi-hand-thumbs-up-fill me-2"></i>Productos que te podrían gustar:</h5>
+                            <div id="reward-modal-product-recs-row" class="row g-2">
+                                <!-- Recomendaciones de productos -->
                             </div>
                         </div>
                     </div>
@@ -3164,6 +3163,7 @@ h6 { font-size: var(--text-sm); }
             </div>
         </div>
     </div>
+</div>
 
     <div class="modal fade" id="sharePageModal" tabindex="-1" aria-labelledby="sharePageModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
@@ -4016,65 +4016,65 @@ h6 { font-size: var(--text-sm); }
         }
 
         function updateClientDisplayAndUI() {
-            const el = id => document.getElementById(id);
-            const authNavContainer = el('auth-buttons-nav');
-            const logoutNavButton = el('logoutButtonNav');
-            const vipCardContainer = el('vip-card-container');
-            const guestPromptContainer = el('guest-prompt');
-            const userAvatarImg = el('user-avatar');
-            const myOrdersTabLink = el('my-orders-tab-link');
-            const referralCodeContainerEl = el('client-referral-code-container');
-            const clientReferralCodeEl = el('clientReferralCode');
+    const el = id => document.getElementById(id);
+    const authNavContainer = el('auth-buttons-nav');
+    const logoutNavButton = el('logoutButtonNav');
+    const vipCardContainer = el('vip-card-container');
+    const guestPromptContainer = el('guest-prompt');
+    const userAvatarImg = el('user-avatar');
+    const myOrdersTabLink = el('my-orders-tab-link');
+    const referralCodeContainerEl = el('client-referral-code-container');
+    const clientReferralCodeEl = el('clientReferralCode');
 
 
-            if (clientData && clientData.id && (clientData.verificado === true || String(clientData.verificado).toLowerCase() === 'true')) {
-                el('client-name').textContent = `¡Hola, ${clientData.nombre ? clientData.nombre.split(' ')[0] : 'Cliente'}!`;
-                el('client-points').textContent = clientData.puntos !== undefined ? clientData.puntos : 0;
-                el('client-status').textContent = `Nivel: ${(clientData.puntos||0)>=150?"Oro":(clientData.puntos||0)>=75?"Plata":"Bronce"}`;
-                el('client-phone-display').textContent = clientData.telefono ? `Tel: ${clientData.telefono}` : '';
-                el('vip-status-badge').style.display = 'inline-block';
-                if (userAvatarImg) {
-                    if (clientData[LOCAL_AVATAR_DATA_KEY] && typeof clientData[LOCAL_AVATAR_DATA_KEY] === 'string') {
-                        userAvatarImg.src = clientData[LOCAL_AVATAR_DATA_KEY];
-                    } else if (clientData.avatarurl && typeof clientData.avatarurl === 'string' && clientData.avatarurl.trim() !== '') {
-                         userAvatarImg.src = clientData.avatarurl + (clientData.avatarurl.includes('?') ? '&t=' : '?t=') + new Date().getTime();
-                    } else {
-                        userAvatarImg.src = 'https://via.placeholder.com/80/FFFFFF/2C3E50?Text=VIP';
-                    }
-                }
-                if(authNavContainer) authNavContainer.innerHTML = `<span class="navbar-text text-light me-2 small">Hola, ${clientData.nombre ? clientData.nombre.split(' ')[0] : 'VIP'}</span>`;
-                if(logoutNavButton) logoutNavButton.style.display = 'inline-block';
-                if(vipCardContainer) vipCardContainer.style.display = 'block';
-                if(guestPromptContainer) guestPromptContainer.style.display = 'none';
-                if(myOrdersTabLink) myOrdersTabLink.innerHTML = `<i class="bi bi-receipt me-1"></i>Mis Envíos`;
-
-                if (clientData.referralcode && clientReferralCodeEl && referralCodeContainerEl) {
-                    clientReferralCodeEl.textContent = clientData.referralcode;
-                    referralCodeContainerEl.style.display = 'block';
-                } else if (referralCodeContainerEl) {
-                    referralCodeContainerEl.style.display = 'none';
-                }
-
+    if (clientData && clientData.id && (clientData.verificado === true || String(clientData.verificado).toLowerCase() === 'true')) {
+        el('client-name').textContent = `¡Hola, ${clientData.nombre ? clientData.nombre.split(' ')[0] : 'Cliente'}!`;
+        el('client-points').textContent = clientData.puntos !== undefined ? clientData.puntos : 0;
+        el('client-status').textContent = `Nivel: ${(clientData.puntos||0)>=150?"Oro":(clientData.puntos||0)>=75?"Plata":"Bronce"}`;
+        el('client-phone-display').textContent = clientData.telefono ? `Tel: ${clientData.telefono}` : '';
+        el('vip-status-badge').style.display = 'inline-block';
+        if (userAvatarImg) {
+            if (clientData[LOCAL_AVATAR_DATA_KEY] && typeof clientData[LOCAL_AVATAR_DATA_KEY] === 'string') {
+                userAvatarImg.src = clientData[LOCAL_AVATAR_DATA_KEY];
+            } else if (clientData.avatarurl && typeof clientData.avatarurl === 'string' && clientData.avatarurl.trim() !== '') {
+                 userAvatarImg.src = clientData.avatarurl + (clientData.avatarurl.includes('?') ? '&t=' : '?t=') + new Date().getTime();
             } else {
-                el('client-name').textContent = `¡Bienvenido!`;
-                el('client-points').textContent = 0;
-                el('client-status').textContent = "Inicia sesión o regístrate para enviar.";
-                el('client-phone-display').textContent = '';
-                el('vip-status-badge').style.display = 'none';
-                if (userAvatarImg) userAvatarImg.src = 'https://via.placeholder.com/80/FFFFFF/2C3E50?Text=VIP';
-                if(authNavContainer) authNavContainer.innerHTML = `
-                    <button class="btn btn-sm btn-outline-light me-2" onclick="openAuthModal('login')"><i class="bi bi-box-arrow-in-right"></i> Login</button>
-                    <button class="btn btn-sm btn-warning" onclick="openAuthModal('register')"><i class="bi bi-person-plus"></i> Registro</button>`;
-                if(logoutNavButton) logoutNavButton.style.display = 'none';
-                if(vipCardContainer) vipCardContainer.style.display = 'none';
-                if(guestPromptContainer) guestPromptContainer.style.display = 'block';
-                if(myOrdersTabLink) myOrdersTabLink.innerHTML = `<i class="bi bi-receipt me-1"></i>Mis Envíos`;
-                if (referralCodeContainerEl) referralCodeContainerEl.style.display = 'none';
-                loadUserOrders();
-                generateRewardsList();
+                userAvatarImg.src = './img/placeholder-avatar.png'; // CORREGIDO
             }
-            updateCartDisplay();
         }
+        if(authNavContainer) authNavContainer.innerHTML = `<span class="navbar-text text-light me-2 small">Hola, ${clientData.nombre ? clientData.nombre.split(' ')[0] : 'VIP'}</span>`;
+        if(logoutNavButton) logoutNavButton.style.display = 'inline-block';
+        if(vipCardContainer) vipCardContainer.style.display = 'block';
+        if(guestPromptContainer) guestPromptContainer.style.display = 'none';
+        if(myOrdersTabLink) myOrdersTabLink.innerHTML = `<i class="bi bi-receipt me-1"></i>Mis Envíos`;
+
+        if (clientData.referralcode && clientReferralCodeEl && referralCodeContainerEl) {
+            clientReferralCodeEl.textContent = clientData.referralcode;
+            referralCodeContainerEl.style.display = 'block';
+        } else if (referralCodeContainerEl) {
+            referralCodeContainerEl.style.display = 'none';
+        }
+
+    } else {
+        el('client-name').textContent = `¡Bienvenido!`;
+        el('client-points').textContent = 0;
+        el('client-status').textContent = "Inicia sesión o regístrate para enviar.";
+        el('client-phone-display').textContent = '';
+        el('vip-status-badge').style.display = 'none';
+        if (userAvatarImg) userAvatarImg.src = './img/placeholder-avatar.png'; // CORREGIDO
+        if(authNavContainer) authNavContainer.innerHTML = `
+            <button class="btn btn-sm btn-outline-light me-2" onclick="openAuthModal('login')"><i class="bi bi-box-arrow-in-right"></i> Login</button>
+            <button class="btn btn-sm btn-warning" onclick="openAuthModal('register')"><i class="bi bi-person-plus"></i> Registro</button>`;
+        if(logoutNavButton) logoutNavButton.style.display = 'none';
+        if(vipCardContainer) vipCardContainer.style.display = 'none';
+        if(guestPromptContainer) guestPromptContainer.style.display = 'block';
+        if(myOrdersTabLink) myOrdersTabLink.innerHTML = `<i class="bi bi-receipt me-1"></i>Mis Envíos`;
+        if (referralCodeContainerEl) referralCodeContainerEl.style.display = 'none';
+        loadUserOrders();
+        generateRewardsList();
+    }
+    updateCartDisplay();
+}
 
         function logoutClient() {
             clientData = null;
@@ -5325,17 +5325,17 @@ function generateProductRecommendationsForRewardModal() {
     }
 
     finalRecommendations.forEach(rec => {
-        recommendationsContainer.innerHTML += `
-        <div class="col-4">
-            <div class="recommendation-card" onclick="if(rewardDetailModalInstance) rewardDetailModalInstance.hide(); showProductDetailModal('${rec.id}');">
-                <img src="${rec.imageurl || 'https://via.placeholder.com/150/21243D/FAFAFA?text=' + encodeURIComponent(rec.name)}" alt="${rec.name}" loading="lazy">
-                <div class="p-2">
-                    <div class="rec-title">${rec.name}</div>
-                    <small class="text-primary fw-bold d-block mt-1">USD ${rec.price.toFixed(2)}</small>
-                </div>
+    recommendationsContainer.innerHTML += `
+    <div class="col-4">
+        <div class="recommendation-card" onclick="if(rewardDetailModalInstance) rewardDetailModalInstance.hide(); showProductDetailModal('${rec.id}');">
+            <img src="${rec.imageurl || './img/placeholder-product.png'}" alt="${rec.name}" loading="lazy">
+            <div class="p-2">
+                <div class="rec-title">${rec.name}</div>
+                <small class="text-primary fw-bold d-block mt-1">USD ${rec.price.toFixed(2)}</small>
             </div>
-        </div>`;
-    });
+        </div>
+    </div>`;
+});
 }
 
         function generateRewardWhatsAppMessage(rewardName, clientName) {
