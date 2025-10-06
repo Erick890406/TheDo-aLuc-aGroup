@@ -4,6 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mi Cuenta VIP - Doña Lucía</title>
+
+    <!-- =================================================================== -->
+    <!-- ================ INICIO: CONFIGURACIÓN PWA ======================== -->
+    <!-- =================================================================== -->
+    <!-- Enlace al Web App Manifest -->
+    <link rel="manifest" href="./manifest.json">
+    <!-- Color de la barra de estado/direcciones del navegador en móviles -->
+    <meta name="theme-color" content="#2563EB">
+    <!-- =================================================================== -->
+    <!-- ================= FIN: CONFIGURACIÓN PWA ========================== -->
+    <!-- =================================================================== -->
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
@@ -2812,6 +2824,8 @@ h6 { font-size: var(--text-sm); }
                         <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end" aria-labelledby="moreOptionsDropdown">
                             <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#presentationVideoModal"><i class="bi bi-play-btn-fill me-2"></i>Ver Video Intro</a></li>
                             <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#sharePageModal"><i class="bi bi-share-fill me-2"></i>Compartir Página</a></li>
+                            <!-- ================ BOTÓN DE INSTALACIÓN PWA ================== -->
+                            <li><a class="dropdown-item" href="#" id="installAppButton" style="display: none;"><i class="bi bi-download me-2"></i>Instalar App</a></li>
                         </ul>
                     </li>
                      <li class="nav-item d-block d-sm-none my-2">
@@ -3365,6 +3379,61 @@ h6 { font-size: var(--text-sm); }
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script>
+
+// ===================================================================
+// ==================== INICIO: LÓGICA PWA ===========================
+// ===================================================================
+
+// Variable para guardar el evento de instalación
+let deferredPrompt;
+
+// 1. REGISTRAR EL SERVICE WORKER
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./sw.js')
+      .then(registration => {
+        console.log('Service Worker registrado con éxito:', registration);
+      })
+      .catch(error => {
+        console.log('Error al registrar el Service Worker:', error);
+      });
+  });
+}
+
+// 2. GESTIONAR EL PROMPT DE INSTALACIÓN
+const installAppButton = document.getElementById('installAppButton');
+
+window.addEventListener('beforeinstallprompt', (e) => {
+  // Prevenir que el navegador muestre su propio mini-infobar
+  e.preventDefault();
+  // Guardar el evento para poder dispararlo más tarde
+  deferredPrompt = e;
+  // Mostrar nuestro botón de instalación personalizado
+  if(installAppButton) {
+      installAppButton.style.display = 'flex';
+  }
+});
+
+if(installAppButton) {
+    installAppButton.addEventListener('click', async (e) => {
+      // Ocultar el botón, ya que solo se puede usar una vez
+      installAppButton.style.display = 'none';
+      
+      if (deferredPrompt) {
+        // Mostrar el diálogo de instalación
+        deferredPrompt.prompt();
+        // Esperar a que el usuario responda
+        const { outcome } = await deferredPrompt.userChoice;
+        console.log(`Respuesta del usuario a la instalación: ${outcome}`);
+        // Limpiar la variable, ya que no se puede volver a usar
+        deferredPrompt = null;
+      }
+    });
+}
+// ===================================================================
+// ====================== FIN: LÓGICA PWA ============================
+// ===================================================================
+
       
 const GOOGLE_SCRIPT_URL_USER = 'https://script.google.com/macros/s/AKfycbyG77ab1DSxczn02VlA99PtBYAVZzoJXr0vbjvXhbXtQno_Cypjyl5HQWHfg-cMXBZMlg/exec';
 const LOGGED_IN_CLIENT_KEY = 'cafeteriaVipClientLoggedIn_v8';
