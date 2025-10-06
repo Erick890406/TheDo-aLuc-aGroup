@@ -25,7 +25,6 @@
     <meta name="twitter:description" content="Compra para tu familia en Cumanayagua desde USA. Paga con Zelle. Alimentos, regalos y más. ¡Visítanos!" />
     <meta name="twitter:image" content="https://i.postimg.cc/jjNmrcyw/Meta-Etiqueta.png" />
     <meta name="twitter:image:alt" content="Promoción DL USD Cumanayagua para compras familiares en Cuba" />
-    <link rel="manifest" href="manifest.json">
 <style>
 :root {
     /* Sistema de Design - Paleta Clara Moderna */
@@ -590,74 +589,243 @@ h6 { font-size: var(--text-sm); }
     color: var(--text-secondary);
 }
 
-/* VIP Card - Premium Design */
-#vip-card-container {
-    background: linear-gradient(135deg, var(--primary-600), var(--accent-600));
-    border-radius: var(--radius-2xl);
-    color: var(--white);
-    padding: var(--space-8);
+/* ============================================= */
+/* ===== ESTILOS DE LA TARJETA VIP DE LUJO ===== */
+/* ============================================= */
+
+/* Contenedor Principal de la Tarjeta */
+#vip-card-container.vip-card {
+    background: #1a202c; /* Base oscura y sofisticada */
+    border-radius: var(--radius-xl, 20px);
+    color: var(--white, #FFFFFF);
+    padding: 0; /* El padding lo controlará el contenido interno */
     position: relative;
     overflow: hidden;
-    box-shadow: var(--shadow-xl);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    transition: transform 0.4s cubic-bezier(0.1, 0.8, 0.2, 1), box-shadow 0.4s cubic-bezier(0.1, 0.8, 0.2, 1);
+    transform-style: preserve-3d;
+    backface-visibility: hidden;
     margin-bottom: var(--space-8);
 }
 
-#vip-card-container::before {
-    content: "";
+#vip-card-container.vip-card:hover {
+    box-shadow: 0 35px 60px -15px rgba(0, 0, 0, 0.6);
+}
+
+/* 1. Capa de Brillo Interactivo (sigue al mouse) */
+.vip-card-glow {
     position: absolute;
-    top: -50%;
-    left: -50%;
+    top: 0;
+    left: 0;
     width: 200%;
     height: 200%;
-    background: radial-gradient(circle at center, rgba(255,255,255,0.1), transparent 70%);
-    transform: rotate(25deg);
+    background: radial-gradient(circle at center, 
+        rgba(118, 75, 162, 0.3) 0%,   /* Morado sutil */
+        rgba(102, 126, 234, 0.2) 30%, /* Azul sutil */
+        transparent 70%
+    );
+    opacity: 0;
+    transition: opacity 0.5s ease;
     z-index: 0;
+    will-change: transform;
 }
 
-#vip-card-container * {
-    position: relative;
+#vip-card-container.vip-card:hover .vip-card-glow {
+    opacity: 1;
+}
+
+/* 2. Capa de Textura de Ruido Sutil */
+.vip-card-noise {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-image: url("data:image/svg+xml,%3csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+    opacity: 0.03;
     z-index: 1;
+    pointer-events: none; /* No interfiere con el mouse */
 }
 
-#vip-status-badge {
-    background: rgba(255,255,255,0.2);
-    backdrop-filter: blur(10px);
+/* Contenedor del Contenido Principal */
+.vip-card-content {
+    position: relative;
+    z-index: 2;
+    padding: var(--space-6, 24px) var(--space-8, 32px);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6, 24px);
+    backdrop-filter: blur(10px); /* Efecto cristalino sutil */
+    background: rgba(26, 32, 44, 0.3);
+}
+
+/* Encabezado: Badge e Icono */
+.vip-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.vip-badge {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    font-size: var(--text-xs, 12px);
+    padding: var(--space-1, 4px) var(--space-3, 12px);
+    border-radius: 20px;
+    font-weight: var(--font-weight-medium, 500);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.vip-icon {
+    font-size: var(--text-xl, 20px);
+    color: rgba(255, 255, 255, 0.4);
+}
+
+/* Cuerpo Principal: Avatar e Información */
+.vip-card-body {
+    display: flex;
+    align-items: center;
+    gap: var(--space-8, 32px);
+}
+
+/* Sección del Avatar */
+.vip-avatar-section {
+    flex-shrink: 0;
+}
+.avatar-wrapper {
+    position: relative;
+    cursor: pointer;
+}
+.vip-avatar {
+    width: 96px;
+    height: 96px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 0 20px rgba(102, 126, 234, 0.5), inset 0 0 10px rgba(0,0,0,0.3);
+    transition: transform 0.3s ease;
+}
+.avatar-wrapper:hover .vip-avatar {
+    transform: scale(1.05);
+}
+.change-avatar-btn {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 32px;
+    height: 32px;
+    background: var(--primary-600, #2563EB);
     color: var(--white);
-    border: 1px solid rgba(255,255,255,0.3);
-    font-size: var(--text-xs);
-    padding: var(--space-1) var(--space-3);
-    border-radius: var(--radius-lg);
+    border: 2px solid #1a202c;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+.change-avatar-btn:hover {
+    transform: scale(1.1);
+    background: var(--primary-500, #3B82F6);
 }
 
-#client-name {
-    font-size: var(--text-2xl);
-    font-weight: var(--font-weight-bold);
-    margin: var(--space-2) 0;
+/* Sección de Información */
+.vip-info-section {
+    flex-grow: 1;
+}
+.client-status-text {
+    font-size: var(--text-sm, 14px);
+    color: rgba(255, 255, 255, 0.7);
+    margin-bottom: var(--space-1, 4px);
+    font-weight: var(--font-weight-medium, 500);
+}
+.client-name-heading {
+    font-family: 'Playfair Display', serif;
+    font-size: var(--text-3xl, 30px);
+    font-weight: 700;
+    margin: 0 0 var(--space-4, 16px);
+    line-height: 1.1;
+    letter-spacing: 0.02em;
     color: var(--white);
+    text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+}
+.points-display-wrapper {
+    margin-bottom: var(--space-2, 8px);
+}
+.points-value {
+    font-size: 2.8rem; /* 48px */
+    font-weight: 700;
+    line-height: 1;
+    background: linear-gradient(135deg, #f6d365 0%, #fda085 100%); /* Gradiente dorado */
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-right: var(--space-3, 12px);
+    display: inline-block;
+}
+.points-label {
+    font-size: var(--text-sm, 14px);
+    color: rgba(255, 255, 255, 0.7);
+    font-weight: var(--font-weight-medium, 500);
+}
+.client-phone-text {
+    font-size: var(--text-sm, 14px);
+    color: rgba(255, 255, 255, 0.5);
+    display: block;
+    margin-top: var(--space-2);
 }
 
-#client-status {
-    color: rgba(255,255,255,0.8);
-    margin-bottom: var(--space-2);
+/* Pie de Tarjeta: Código de Referido */
+.vip-card-footer {
+    background: rgba(0, 0, 0, 0.2);
+    margin: 0 calc(-1 * var(--space-8, 32px)) calc(-1 * var(--space-6, 24px));
+    padding: var(--space-4, 16px) var(--space-8, 32px);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
-
-.points-display {
-    font-size: var(--text-3xl);
-    font-weight: var(--font-weight-bold);
+.referral-info {
+    display: flex;
+    flex-direction: column;
+}
+.referral-label {
+    display: block;
+    font-size: var(--text-xs, 12px);
+    color: rgba(255, 255, 255, 0.6);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 2px;
+}
+.referral-code {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: var(--text-lg, 18px);
+    font-weight: 700;
+    color: #f6d365; /* Color dorado */
+    letter-spacing: 0.1em;
+}
+.copy-referral-btn {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
     color: var(--white);
-    margin: var(--space-2) 0;
+    padding: var(--space-2, 8px) var(--space-3, 12px);
+    border-radius: var(--radius-md, 8px);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: var(--space-2, 8px);
+    transition: background 0.2s ease;
+}
+.copy-referral-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+.copy-referral-btn .copy-text {
+    font-weight: 500;
+    font-size: 13px;
 }
 
-#client-phone-display {
-    color: rgba(255,255,255,0.7);
-    font-size: var(--text-sm);
+/* Ocultar el botón original, ya que lo integramos en el nuevo diseño */
+#vip-card-container > .vip-card-content-centered {
+    display: none;
 }
-
-#clientReferralCode {
-    color: var(--white) !important;
-    font-weight: var(--font-weight-bold);
-}
-
 /* Form System */
 .form-control {
     width: 100%;
@@ -929,271 +1097,6 @@ h6 { font-size: var(--text-sm); }
     font-size: var(--text-2xl);
     font-weight: var(--font-weight-bold);
 }
-/* ESTILOS MEJORADOS PARA EL CARRITO - DISEÑO PROFESIONAL */
-.cart-section {
-    padding: var(--space-6);
-    background: linear-gradient(135deg, var(--primary-50) 0%, var(--white) 100%);
-    border-radius: var(--radius-2xl);
-    box-shadow: var(--shadow-lg);
-    border: 1px solid var(--primary-100);
-    position: relative;
-    overflow: hidden;
-}
-
-.cart-section::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 4px;
-    background: linear-gradient(90deg, var(--primary-500), var(--accent-500));
-}
-
-.cart-items {
-    margin-bottom: var(--space-6);
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-3);
-}
-
-.cart-item {
-    display: grid;
-    grid-template-columns: auto 1fr auto auto;
-    align-items: center;
-    gap: var(--space-4);
-    padding: var(--space-4);
-    background: var(--white);
-    border-radius: var(--radius-lg);
-    box-shadow: var(--shadow-sm);
-    border: 1px solid var(--gray-200);
-    transition: all var(--transition-fast);
-    position: relative;
-    overflow: hidden;
-    animation: slideInUp 0.4s ease-out;
-}
-
-.cart-item:nth-child(1) { animation-delay: 0.1s; }
-.cart-item:nth-child(2) { animation-delay: 0.2s; }
-.cart-item:nth-child(3) { animation-delay: 0.3s; }
-.cart-item:nth-child(4) { animation-delay: 0.4s; }
-
-.cart-item::before {
-    content: '';
-    position: absolute;
-    left: 0;
-    top: 0;
-    bottom: 0;
-    width: 4px;
-    background: linear-gradient(to bottom, var(--primary-500), var(--accent-500));
-    opacity: 0;
-    transition: opacity var(--transition-fast);
-}
-
-.cart-item:hover {
-    box-shadow: var(--shadow-md);
-    transform: translateY(-2px);
-    border-color: var(--primary-200);
-}
-
-.cart-item:hover::before {
-    opacity: 1;
-}
-
-/* Indicador de cantidad */
-.item-quantity-indicator {
-    width: 32px;
-    height: 32px;
-    background: linear-gradient(135deg, var(--primary-500), var(--primary-600));
-    color: var(--white);
-    border-radius: var(--radius-lg);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: var(--text-sm);
-    font-weight: var(--font-weight-bold);
-    box-shadow: var(--shadow-sm);
-}
-
-.item-info {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-1);
-    min-width: 0;
-}
-
-.item-name {
-    font-weight: var(--font-weight-semibold);
-    color: var(--gray-900);
-    font-size: var(--text-base);
-    line-height: 1.3;
-    letter-spacing: -0.01em;
-    margin-bottom: 0;
-}
-
-.item-details {
-    font-size: var(--text-sm);
-    color: var(--gray-500);
-    line-height: 1.2;
-}
-
-.item-price-section {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    gap: var(--space-1);
-    text-align: right;
-}
-
-.item-price {
-    font-weight: var(--font-weight-bold);
-    color: var(--primary-600);
-    font-size: var(--text-lg);
-    letter-spacing: -0.01em;
-}
-
-.item-unit-price {
-    font-size: var(--text-xs);
-    color: var(--gray-400);
-    font-weight: var(--font-weight-medium);
-}
-
-.item-points {
-    background: var(--success-50);
-    color: var(--success-700);
-    padding: 2px 8px;
-    border-radius: var(--radius-sm);
-    font-size: var(--text-xs);
-    font-weight: var(--font-weight-medium);
-    border: 1px solid var(--success-200);
-}
-
-/* Controles de cantidad */
-.cart-controls {
-    display: flex;
-    align-items: center;
-    gap: var(--space-2);
-    background: var(--gray-50);
-    padding: var(--space-1);
-    border-radius: var(--radius-md);
-    border: 1px solid var(--gray-200);
-}
-
-.quantity-btn {
-    width: 32px;
-    height: 32px;
-    border: none;
-    border-radius: var(--radius-sm);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: var(--text-sm);
-    font-weight: var(--font-weight-bold);
-    cursor: pointer;
-    transition: all var(--transition-fast);
-}
-
-.quantity-btn.decrease {
-    background: var(--gray-200);
-    color: var(--gray-700);
-}
-
-.quantity-btn.decrease:hover {
-    background: var(--error-100);
-    color: var(--error-600);
-}
-
-.quantity-btn.increase {
-    background: var(--primary-100);
-    color: var(--primary-600);
-}
-
-.quantity-btn.increase:hover {
-    background: var(--primary-200);
-    color: var(--primary-700);
-}
-
-.quantity-display {
-    min-width: 40px;
-    text-align: center;
-    font-weight: var(--font-weight-semibold);
-    color: var(--gray-800);
-    font-size: var(--text-sm);
-}
-
-.remove-btn {
-    background: var(--error-50);
-    color: var(--error-600);
-    border: 1px solid var(--error-200);
-    border-radius: var(--radius-md);
-    width: 32px;
-    height: 32px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: var(--text-sm);
-    cursor: pointer;
-    transition: all var(--transition-fast);
-}
-
-.remove-btn:hover {
-    background: var(--error-100);
-    border-color: var(--error-300);
-    transform: scale(1.05);
-}
-
-/* Sistema de puntos mejorado */
-.points-container {
-    background: linear-gradient(135deg, var(--success-50) 0%, var(--primary-50) 100%);
-    padding: var(--space-5);
-    border-radius: var(--radius-xl);
-    margin: var(--space-6) 0;
-    border: 2px solid var(--success-200);
-    position: relative;
-    overflow: hidden;
-    text-align: center;
-}
-
-.points-container::before {
-    content: '';
-    position: absolute;
-    top: -20px;
-    right: -20px;
-    width: 100px;
-    height: 100px;
-    background: radial-gradient(circle, var(--primary-300) 0%, transparent 70%);
-    opacity: 0.3;
-    border-radius: 50%;
-}
-
-.points-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: var(--space-2);
-    background: linear-gradient(135deg, var(--primary-500), var(--accent-500));
-    color: var(--white);
-    padding: var(--space-2) var(--space-4);
-    border-radius: var(--radius-lg);
-    font-size: var(--text-sm);
-    font-weight: var(--font-weight-semibold);
-    margin-bottom: var(--space-3);
-    box-shadow: var(--shadow-sm);
-}
-
-.points-text {
-    font-weight: var(--font-weight-bold);
-    color: var(--success-700);
-    font-size: var(--text-2xl);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: var(--space-2);
-}
-
-.points-icon {
-    font-size: var(--text-xl);
-    color: var(--warning-500);
-}
 
 /* ===== VARIABLES CSS ===== */
 :root {
@@ -1206,8 +1109,8 @@ h6 { font-size: var(--text-sm); }
     --dark-bg: #1a202c;
     --darker-bg: #0f1419;
     --card-bg: rgba(255, 255, 255, 0.95);
-    --text-primary: #2d3748;
-    --text-secondary: #718096;
+    /*--text-primary: #2d3748; Overridden by main system */
+    /* --text-secondary: #718096; Overridden by main system */
     --text-light: #e2e8f0;
     --border-light: #e2e8f0;
     --border-medium: #cbd5e1;
@@ -1217,13 +1120,13 @@ h6 { font-size: var(--text-sm); }
     --shadow-large: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
     --shadow-xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
     
-    --radius-sm: 8px;
-    --radius-md: 12px;
-    --radius-lg: 16px;
-    --radius-xl: 20px;
+    /* --radius-sm: 8px; Overridden */
+    /* --radius-md: 12px; Overridden */
+    /* --radius-lg: 16px; Overridden */
+    /* --radius-xl: 20px; Overridden */
     
     --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    --transition-fast: all 0.15s ease;
+    /* --transition-fast: all 0.15s ease; Overridden */
     --transition-slow: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -2665,18 +2568,6 @@ h6 { font-size: var(--text-sm); }
     border-top: 1px solid var(--border-primary);
 }
 
-/* Download App Banner */
-#downloadAppBanner {
-    background: var(--bg-primary) !important;
-    border-top: 3px solid var(--primary-500);
-    box-shadow: var(--shadow-lg);
-    padding: var(--space-4) 0;
-    position: fixed;
-    bottom: 0;
-    width: 100%;
-    z-index: 1040;
-}
-
 /* Responsive Design */
 @media (max-width: 768px) {
     .container {
@@ -2885,253 +2776,6 @@ h6 { font-size: var(--text-sm); }
     }
 }
 
-/* ============================================= */
-/* ===== ESTILOS DEL BANNER VIP DE LUJO ===== */
-/* ============================================= */
-
-/* Contenedor Principal del Banner */
-#vip-card-container.vip-banner {
-    background-image: linear-gradient(rgba(10, 5, 20, 0.6), rgba(20, 15, 35, 0.8)), url('https://i.postimg.cc/N0ScPnCG/Generated-Image-October-05-2025-1-44-AM.png');
-    background-size: cover;
-    background-position: center center;
-    border-radius: var(--radius-2xl, 20px);
-    color: var(--white, #FFFFFF);
-    padding: var(--space-6, 24px);
-    position: relative;
-    overflow: hidden;
-    border: 1px solid rgba(255, 215, 0, 0.2);
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 20px rgba(255, 215, 0, 0.1) inset;
-    transition: transform 0.4s ease, box-shadow 0.4s ease;
-    animation: fadeInBanner 1s ease-out forwards;
-}
-
-@keyframes fadeInBanner {
-    from { opacity: 0; transform: translateY(-20px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-#vip-card-container.vip-banner:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6), 0 0 30px rgba(255, 215, 0, 0.2) inset;
-}
-
-/* Borde Animado (Efecto de Energía) */
-.banner-glow-border {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    border-radius: var(--radius-2xl, 20px);
-    padding: 2px;
-    background: conic-gradient(from 0deg at 50% 50%, rgba(255,215,0,0.8), rgba(255,165,0,0.5), rgba(255,215,0,0.8), rgba(200,160,0,0.6), rgba(255,215,0,0.8));
-    animation: spinBorder 8s linear infinite;
-    -webkit-mask: 
-        linear-gradient(#fff 0 0) content-box, 
-        linear-gradient(#fff 0 0);
-    mask: 
-        linear-gradient(#fff 0 0) content-box, 
-        linear-gradient(#fff 0 0);
-    -webkit-mask-composite: xor;
-    mask-composite: exclude;
-    z-index: 1;
-}
-
-@keyframes spinBorder {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
-}
-
-/* Orbes de Energía Flotantes */
-.glow-orb {
-    position: absolute;
-    border-radius: 50%;
-    background: radial-gradient(circle, rgba(255, 215, 0, 0.15) 0%, rgba(255, 215, 0, 0) 70%);
-    filter: blur(10px);
-    z-index: 0;
-    animation: float 15s ease-in-out infinite alternate;
-}
-.orb1 { width: 300px; height: 300px; top: -100px; left: -100px; animation-duration: 12s; }
-.orb2 { width: 250px; height: 250px; bottom: -80px; right: -80px; animation-duration: 18s; animation-delay: -5s; }
-.orb3 { width: 150px; height: 150px; top: 50%; left: 50%; transform: translate(-50%, -50%); animation: float 20s ease-in-out infinite alternate-reverse; }
-
-@keyframes float {
-    from { transform: translate(0, 0) scale(1); opacity: 0.7; }
-    to { transform: translate(20px, 30px) scale(1.1); opacity: 0.9; }
-}
-
-/* Contenedor del Contenido Principal */
-.vip-banner-content {
-    position: relative;
-    z-index: 2;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: var(--space-2, 8px);
-    text-align: center;
-}
-
-/* Estilos del Avatar */
-.avatar-wrapper {
-    position: relative;
-    margin-bottom: var(--space-2, 8px);
-}
-.user-avatar-img {
-    width: 90px;
-    height: 90px;
-    border-radius: 50%;
-    border: 3px solid rgba(255, 215, 0, 0.8);
-    box-shadow: 0 0 15px rgba(255, 215, 0, 0.6), 0 0 5px rgba(255, 255, 255, 0.5) inset;
-    transition: transform 0.3s ease;
-    object-fit: cover;
-}
-.user-avatar-img:hover {
-    transform: scale(1.05);
-}
-.change-avatar-btn {
-    position: absolute;
-    bottom: 0;
-    right: 0;
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-    background: #FFD700;
-    color: #333;
-    border: 1px solid #fff;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.3);
-}
-.change-avatar-btn:hover {
-    background: #fff;
-    transform: scale(1.1) rotate(15deg);
-}
-
-/* Detalles del Cliente (Nombre y Estatus) */
-.client-name {
-    font-size: clamp(1.5rem, 4vw, 2rem);
-    font-weight: 700;
-    margin: 0;
-    color: #fff;
-    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8);
-}
-.client-status {
-    font-size: var(--text-sm, 0.875rem);
-    font-weight: 500;
-    margin: 0 0 var(--space-4, 16px) 0;
-    color: #FFD700;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    opacity: 0.9;
-}
-
-/* Estilos de los Puntos (Elemento Hero) */
-.points-display-wrapper {
-    margin-bottom: var(--space-4, 16px);
-}
-.points-value {
-    font-size: clamp(3rem, 10vw, 4.5rem);
-    font-weight: 800;
-    line-height: 1;
-    background: linear-gradient(135deg, #FFFFFF, #FFD700, #FFFFFF);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    text-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
-    animation: pointsGlow 3s ease-in-out infinite alternate;
-}
-
-@keyframes pointsGlow {
-    from { text-shadow: 0 0 15px rgba(255, 215, 0, 0.4); }
-    to { text-shadow: 0 0 30px rgba(255, 215, 0, 0.8); }
-}
-.points-label {
-    font-size: var(--text-base, 1rem);
-    font-weight: 500;
-    color: rgba(255, 255, 255, 0.8);
-    margin-top: -5px;
-}
-
-/* Pie del Banner (Código de Referido y Teléfono) */
-.info-footer {
-    margin-top: var(--space-4, 16px);
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: var(--space-3, 12px);
-}
-.referral-code-wrapper {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 4px;
-}
-.referral-label {
-    font-size: var(--text-xs, 0.75rem);
-    color: rgba(255, 255, 255, 0.7);
-    text-transform: uppercase;
-    letter-spacing: 1px;
-}
-.referral-code-box {
-    background: rgba(0, 0, 0, 0.4);
-    border: 1px solid rgba(255, 215, 0, 0.3);
-    border-radius: var(--radius-md, 8px);
-    padding: var(--space-1, 4px) var(--space-3, 12px);
-    display: inline-flex;
-    align-items: center;
-    gap: var(--space-2, 8px);
-}
-.referral-code-text {
-    color: #FFD700 !important; /* Forzar color */
-    font-size: var(--text-lg, 1.125rem);
-    font-weight: 700;
-    letter-spacing: 1px;
-}
-.copy-code-btn {
-    background: none;
-    border: none;
-    color: rgba(255, 215, 0, 0.8);
-    cursor: pointer;
-    padding: var(--space-1, 4px);
-    transition: color 0.2s ease, transform 0.2s ease;
-}
-.copy-code-btn:hover {
-    color: #FFD700;
-    transform: scale(1.1);
-}
-.client-phone {
-    color: rgba(255, 255, 255, 0.6);
-    font-size: var(--text-sm, 0.875rem);
-}
-
-/* Ajustes para pantallas pequeñas */
-@media (max-width: 576px) {
-    #vip-card-container.vip-banner {
-        padding: var(--space-4, 16px);
-    }
-    .user-avatar-img {
-        width: 70px;
-        height: 70px;
-    }
-    .change-avatar-btn {
-        width: 26px;
-        height: 26px;
-        font-size: 0.8rem;
-    }
-    .client-name {
-        font-size: 1.5rem;
-    }
-    .points-value {
-        font-size: 3rem;
-    }
-    .referral-code-text {
-        font-size: 1rem;
-    }
-}
 </style>
 
 </head>
@@ -3167,9 +2811,7 @@ h6 { font-size: var(--text-sm); }
                         </a>
                         <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end" aria-labelledby="moreOptionsDropdown">
                             <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#presentationVideoModal"><i class="bi bi-play-btn-fill me-2"></i>Ver Video Intro</a></li>
-                            <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#sharePageModal"><i class="bi bi-share-fill me-2"></i>Compartir Página/App</a></li>
-                            <li><hr class="dropdown-divider border-secondary"></li>
-                            <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#downloadAppModal"><i class="bi bi-phone-vibrate-fill me-2"></i>Descargar App (Cuba)</a></li>
+                            <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#sharePageModal"><i class="bi bi-share-fill me-2"></i>Compartir Página</a></li>
                         </ul>
                     </li>
                      <li class="nav-item d-block d-sm-none my-2">
@@ -3193,46 +2835,55 @@ h6 { font-size: var(--text-sm); }
 
     <main>
         <div class="container mt-5 pt-4 pb-5">
-            <!-- START: NUEVO BANNER DE CLIENTE VIP DE LUJO -->
-            <div id="vip-card-container" class="vip-banner" style="display: none;">
-                <div class="banner-glow-border"></div>
-                <span class="glow-orb orb1"></span>
-                <span class="glow-orb orb2"></span>
-                <span class="glow-orb orb3"></span>
-
-                <div class="vip-banner-content">
-                    <div style="display: none;" class="avatar-wrapper">
-                        <img id="user-avatar" src="./img/placeholder-avatar.png" alt="User Avatar" class="user-avatar-img shadow-sm" style="cursor:pointer;" title="Haz clic para cambiar tu avatar">
-                        <button id="changeAvatarButton" class="change-avatar-btn" title="Cambiar avatar">
-                            <i class="bi bi-pencil-fill"></i>
-                        </button>
+            <!-- INICIO: Tarjeta VIP de Lujo -->
+            <div id="vip-card-container" class="vip-card animate__animated animate__fadeInDown" style="display: none;">
+                <!-- Capas de efectos de fondo -->
+                <div class="vip-card-glow"></div>
+                <div class="vip-card-noise"></div>
+                
+                <!-- Contenido principal de la tarjeta -->
+                <div class="vip-card-content">
+                    <div class="vip-card-header">
+                        <span id="vip-status-badge" class="vip-badge">Cliente VIP</span>
+                        <i class="bi bi-shield-check-fill vip-icon"></i>
                     </div>
-
-                    <div class="client-details">
-                        <h2 class="client-name" id="client-name">¡Hola!</h2>
-                        <p class="client-status" id="client-status">Miembro DL</p>
-                    </div>
-
-                    <div class="points-display-wrapper">
-                        <div class="points-value" id="client-points">0</div>
-                        <div class="points-label">Puntos VIP</div>
-                    </div>
-
-                    <div class="info-footer">
-                        <div id="client-referral-code-container" class="referral-code-wrapper" style="display: none;">
-                            <span class="referral-label">Tu Código:</span>
-                            <div class="referral-code-box">
-                                <strong id="clientReferralCode" class="referral-code-text">Cargando...</strong>
-                                <button class="copy-code-btn" onclick="copyReferralCode()" title="Copiar código">
-                                    <i class="bi bi-clipboard2-check-fill"></i>
+                    
+                    <div class="vip-card-body">
+                        <div style="display: none;" class="vip-avatar-section">
+                            <div class="avatar-wrapper">
+                                <img id="user-avatar" src="./img/placeholder-avatar.png" alt="Avatar del Cliente" class="vip-avatar">
+                                <button id="changeAvatarButton" class="change-avatar-btn" title="Cambiar avatar">
+                                    <i class="bi bi-camera-fill"></i>
                                 </button>
                             </div>
                         </div>
-                        <small id="client-phone-display" class="client-phone"></small>
+                        
+                        <div class="vip-info-section">
+                            <p id="client-status" class="client-status-text">Miembro de Doña Lucía</p>
+                            <h2 id="client-name" class="client-name-heading">¡Hola!</h2>
+                            
+                            <div class="points-display-wrapper">
+                                <span id="client-points" class="points-value">0</span>
+                                <span class="points-label">Puntos Disponibles</span>
+                            </div>
+                            
+                            <small id="client-phone-display" class="client-phone-text"></small>
+                        </div>
+                    </div>
+                    
+                    <div id="client-referral-code-container" class="vip-card-footer" style="display: none;">
+                        <div class="referral-info">
+                            <span class="referral-label">Tu Código de Referido</span>
+                            <strong id="clientReferralCode" class="referral-code">Cargando...</strong>
+                        </div>
+                        <button class="copy-referral-btn" onclick="copyReferralCodeWithFeedback(this)" title="Copiar código">
+                            <i class="bi bi-clipboard"></i>
+                            <span class="copy-text">Copiar</span>
+                        </button>
                     </div>
                 </div>
             </div>
-            <!-- END: NUEVO BANNER DE CLIENTE VIP DE LUJO -->
+            <!-- FIN: Tarjeta VIP de Lujo -->
 
              <div id="guest-prompt" class="alert alert-info text-center shadow-sm animate__animated animate__fadeInUp" style="display: block;">
                 <h4><i class="bi bi-gift-fill me-2"></i>¡Envía alegría a Cuba con DL Cumanayagua!</h4>
@@ -3249,7 +2900,7 @@ h6 { font-size: var(--text-sm); }
             <div class="tab-content" id="pills-tabContent">
                 <div class="tab-pane fade show active" id="menu-tab" role="tabpanel" aria-labelledby="menu-tab-link">
                     <div class="d-flex justify-content-center align-items-center mb-4">
-                        <h3 class="mb-0 me-3 text-center"><i class="bi bi-cup-straw me-2"></i>Menú y Combos para Enviar</h3>
+                        <h3 class="mb-0 me-3 text-center"><i class="bi bi-cup-straw me-2"></i>Catálogo de Productos</h3>
                         <button class="btn btn-sm btn-outline-secondary" id="refreshMenuButton" onclick="forceLoadMenuItems()" title="Actualizar menú">
                             <i class="bi bi-arrow-clockwise"></i>
                         </button>
@@ -3306,23 +2957,6 @@ h6 { font-size: var(--text-sm); }
         <div class="luxury-spinner-inner"></div>
         <span class="luxury-spinner-text">Cargando...</span>
       </div>
-    </div>
-    <div id="downloadAppBanner" class="fixed-bottom p-3 bg-dark text-light shadow-lg" style="z-index: 1040; display:none;">
-        <div class="container d-flex justify-content-between align-items-center flex-wrap">
-            <div class="me-3 mb-2 mb-md-0">
-                <strong class="d-block fs-5"><i class="bi bi-star-fill me-1 text-warning"></i> ¡Nuestra App para facilitar tu compra en Cuba!</strong>
-                <span class="small">Permite que gestiones tus pedidos y beneficios fácilmente.</span>
-            </div>
-            <div class="d-flex align-items-center">
-                <a href="https://drive.google.com/file/d/1JN1qbrX2JB7P5apVzzhtBy5x2hBPxCWa/view?usp=drive_link" download="DonaLucia_Cumanayagua.apk" class="btn btn-warning btn-sm me-2 py-2">
-                    <i class="bi bi-android2 me-1"></i> Descargar App
-                </a>
-                <button class="btn btn-outline-warning btn-sm me-3 py-2" onclick="shareAppLinkViaCopy()" title="Copiar enlace de descarga de la App">
-                    <i class="bi bi-share-fill me-1"></i> Compartir App
-                </button>
-                <button type="button" class="btn-close btn-close-white" aria-label="Cerrar banner"></button>
-            </div>
-        </div>
     </div>
     <div class="toast-container position-fixed bottom-0 start-0 p-3" id="toastPlacement" style="z-index: 2050"> </div>
 
@@ -3402,18 +3036,7 @@ h6 { font-size: var(--text-sm); }
     </div>
     <!-- FIN MODAL DE AUTENTICACIÓN UNIFICADO -->
 
-    <div class="modal fade" id="cartModal" tabindex="-1" aria-labelledby="cartModalLabel" aria-hidden="true"><div class="modal-dialog modal-lg modal-dialog-scrollable modal-dialog-centered"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="cartModalLabel"><i class="bi bi-cart3 me-2"></i>Mi Carrito de Envío</h5><button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button></div><div class="modal-body" id="cart-items-container"><p class="text-center">Tu carrito está vacío.</p></div><div class="modal-footer justify-content-between flex-wrap"><div id="cart-footer-info"><small class="text-muted d-block">Puntos a ganar: <span id="cart-points-to-earn" class="fw-bold">0</span></small><strong class="fs-5">Total: <span id="cart-total-price" style="color: var(--primary-color);">0.00</span> USD</strong><br><small class="text-warning"><i class="bi bi-credit-card-2-front-fill"></i> Pagos por Zelle.</small></div><div class="d-flex mt-2 mt-sm-0" id="cart-footer-buttons" style="display: none;"><button type="button" class="btn btn-outline-danger me-2" onclick="clearCart()"><i class="bi bi-trash3 me-1"></i>Vaciar</button><button type="button" class="btn btn-success" onclick="confirmAndPlaceOrder()"><i class="bi bi-check-circle me-1"></i>Confirmar Envío</button></div></div><div id="order-placement-feedback" class="m-3"></div></div></div></div>
-    <div class="modal fade" id="downloadAppModal" tabindex="-1" aria-labelledby="downloadAppModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
-        <div class="modal-dialog modal-dialog-centered"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="downloadAppModalLabel"><i class="bi bi-phone-vibrate-fill me-2" style="color:var(--primary-color);"></i> ¡App para tu Familia en Cuba!</h5><button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button></div><div class="modal-body text-center"><img src="https://i.postimg.cc/XJxYzHZW/striking-app-icon-the-letters-dl-in-a-custom-l.png" alt="Doña Lucía App Icon" class="img-fluid rounded-circle mb-3 shadow" style="width: 100px; height: 100px; border: 3px solid var(--primary-color);">
-            <p class="lead mb-2">Instala la App para que tu familia en Cuba pueda ver el menú, canjear puntos, obtener recompensas y estar al tanto de las novedades. ¡Una forma fácil de conectar!</p>
-            <p><strong>Nota:</strong> Esta app es para que tus familiares en Cuba exploren. Las compras y pagos se realizan desde esta página web.</p>
-            <a href="https://drive.google.com/file/d/1JN1qbrX2JB7P5apVzzhtBy5x2hBPxCWa/view?usp=drive_link" download="DonaLucia_Cumanayagua.apk" class="btn btn-primary btn-lg mt-3 w-100 animate__animated animate__pulse animate__infinite animate__slower">
-                <i class="bi bi-android2 me-2"></i> Descargar para Android
-            </a>
-                <p class="mt-3 mb-1">
-                    <small class="text-muted">Si su dispositivo lo solicita, deben habilitar "Instalar apps desconocidas" en Ajustes para poder instalarla.</small></p></div>
-                    </div></div>
-    </div>
+    <div style="display: none;" class="modal fade" id="cartModal" tabindex="-1" aria-labelledby="cartModalLabel" aria-hidden="true"><div class="modal-dialog modal-lg modal-dialog-scrollable modal-dialog-centered"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="cartModalLabel"><i class="bi bi-cart3 me-2"></i>Mi Carrito de Envío</h5><button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button></div><div class="modal-body" id="cart-items-container"><p class="text-center">Tu carrito está vacío.</p></div><div class="modal-footer justify-content-between flex-wrap"><div id="cart-footer-info"><small class="text-muted d-block">Puntos a ganar: <span id="cart-points-to-earn" class="fw-bold">0</span></small><strong class="fs-5">Total: <span id="cart-total-price" style="color: var(--primary-color);">0.00</span> USD</strong><br><small class="text-warning"><i class="bi bi-credit-card-2-front-fill"></i> Pagos por Zelle.</small></div><div class="d-flex mt-2 mt-sm-0" id="cart-footer-buttons" style="display: none;"><button type="button" class="btn btn-outline-danger me-2" onclick="clearCart()"><i class="bi bi-trash3 me-1"></i>Vaciar</button><button type="button" class="btn btn-success" onclick="confirmAndPlaceOrder()"><i class="bi bi-check-circle me-1"></i>Confirmar Envío</button></div></div><div id="order-placement-feedback" class="m-3"></div></div></div></div>
     <div class="modal fade" id="productDetailModal" tabindex="-1" aria-labelledby="productDetailModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg modal-dialog-centered"><div class="modal-content"><div class="modal-header border-0"><h5 class="modal-title" id="productDetailModalLabel">Detalles del Producto</h5><button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button></div><div class="modal-body pt-0"><div class="row g-4"><div class="col-md-6"><img src="./img/placeholder-product.png" id="modal-product-image" class="img-fluid" alt="Imagen del producto"></div><div class="col-md-6 d-flex flex-column"><h2 id="modal-product-name" class="mb-2">Nombre del Producto</h2><p id="modal-product-description" class="text-muted flex-grow-1">Descripción detallada del producto...</p><div class="d-flex justify-content-between align-items-center mb-3"><span id="modal-product-price">USD 0.00</span><span class="badge bg-success" id="modal-product-points">+0 Puntos</span></div><div id="modal-add-to-cart-button-container" class="mb-4"></div><div id="modal-recommendations-container"></div></div></div></div></div></div>
     </div>
@@ -3458,12 +3081,11 @@ h6 { font-size: var(--text-sm); }
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="sharePageModalLabel"><i class="bi bi-share-fill me-2" style="color:var(--primary-color);"></i>Compartir</h5>
+                    <h5 class="modal-title" id="sharePageModalLabel"><i class="bi bi-share-fill me-2" style="color:var(--primary-color);"></i>Compartir esta Página</h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body text-center">
-                    <h6 class="text-light">Compartir esta Página Web:</h6>
-                    <p class="mb-1 small text-muted">Para que otros puedan realizar compras y envíos.</p>
+                    <p class="mb-2">Comparte esta página para que otros puedan realizar compras y envíos.</p>
                     <div id="qrcodeCanvas" class="mx-auto mb-3 border border-secondary p-2 rounded" style="width: 150px; height: 150px; background-color: white;">
                     </div>
                     <div class="d-grid gap-2 mb-4">
@@ -3477,25 +3099,7 @@ h6 { font-size: var(--text-sm); }
                             <i class="bi bi-telegram me-2"></i>Página por Telegram
                         </a>
                     </div>
-
-                    <hr style="border-color: rgba(255,255,255,0.2);">
-
-                    <h6 class="text-light mt-3">Compartir la App (para familia en Cuba):</h6>
-                    <p class="mb-1 small text-muted">Para que tus familiares en Cuba vean el catálogo.</p>
-                     <div id="qrcodeAppCanvas" class="mx-auto mb-3 border border-secondary p-2 rounded" style="width: 150px; height: 150px; background-color: white;">
-                    </div>
-                    <div class="d-grid gap-2">
-                        <button class="btn btn-primary btn-sm" onclick="shareAppLinkViaCopy()">
-                            <i class="bi bi-clipboard-check-fill me-2"></i>Copiar Enlace de App
-                        </button>
-                        <a id="shareAppViaWhatsAppButtonModal" class="btn btn-success btn-sm" href="#" target="_blank">
-                            <i class="bi bi-whatsapp me-2"></i>App por WhatsApp
-                        </a>
-                         <a id="shareAppViaTelegramButtonModal" class="btn btn-info btn-sm text-dark" href="#" target="_blank">
-                            <i class="bi bi-telegram me-2"></i>App por Telegram
-                        </a>
-                    </div>
-                    <small class="d-block mt-3 text-muted">Muestra los códigos QR para escanear directamente.</small>
+                    <small class="d-block mt-3 text-muted">Muestra el código QR para escanear directamente.</small>
                 </div>
             </div>
         </div>
@@ -3639,24 +3243,6 @@ h6 { font-size: var(--text-sm); }
                                 </div>
                             </div>
                         </div>
-                         <div class="accordion-item">
-                            <h2 class="accordion-header" id="headingFiveHelp">
-                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFiveHelp" aria-expanded="false" aria-controls="collapseFiveHelp">
-                                    <i class="bi bi-phone-fill me-2"></i>App DL Cumanayagua (Para tu familia en Cuba)
-                                </button>
-                            </h2>
-                            <div id="collapseFiveHelp" class="accordion-collapse collapse" aria-labelledby="headingFiveHelp" data-bs-parent="#helpAccordion">
-                                <div class="accordion-body">
-                                    <p>Ofrecemos una aplicación Android (.apk) que puedes descargar y compartir con tus familiares en Cumanayagua.</p>
-                                    <ul>
-                                        <li><strong>Propósito de la App:</strong> Esta app permite a tus seres queridos en Cuba ver el catálogo de productos y las recompensas disponibles. Así, pueden decirte qué les gustaría recibir.</li>
-                                        <li><strong>¿Cómo Compartirla?:</strong> Puedes usar los botones de "Compartir Página/App" en el menú superior o el botón flotante <i class="bi bi-share-fill"></i> para obtener enlaces de descarga y QR.</li>
-                                        <li><strong>Instalación:</strong> Deberán descargar el archivo .apk e instalarlo en su teléfono Android. Es posible que necesiten habilitar "Instalar apps desconocidas" en los ajustes de su teléfono.</li>
-                                        <li><strong>Importante:</strong> La app es solo para visualización. Las compras, pagos y gestión de tu cuenta de cliente (acumulación de puntos, etc.) se realizan siempre a través de esta página web por ti, el comprador.</li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
                         <div class="accordion-item">
                             <h2 class="accordion-header" id="headingSixHelp">
                                 <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSixHelp" aria-expanded="false" aria-controls="collapseSixHelp">
@@ -3748,7 +3334,6 @@ h6 { font-size: var(--text-sm); }
                         <li><a href="#" onclick="showTabAndScroll('menu-tab-link'); return false;" class="footer-link">Menú</a></li>
                         <li><a href="#" onclick="showTabAndScroll('rewards-tab-link'); return false;" class="footer-link">Recompensas</a></li>
                         <li><a href="#" onclick="showTabAndScroll('my-orders-tab-link'); return false;" class="footer-link">Mis Envíos</a></li>
-                        <li><a href="#" data-bs-toggle="modal" data-bs-target="#downloadAppModal" class="footer-link">App para Cuba</a></li>
                          <li><a href="#" data-bs-toggle="modal" data-bs-target="#helpModal" class="footer-link">Ayuda</a></li>
                     </ul>
                 </div>
@@ -3787,13 +3372,9 @@ const USER_CART_KEY = 'cafeteriaUserCart_v5';
 const MAX_AVATAR_DIMENSION = 200;
 const AVATAR_JPEG_QUALITY = 0.75;
 const LOCAL_AVATAR_DATA_KEY = 'localAvatarDataUrl_v1';
-const DOWNLOAD_MODAL_DISMISSED_KEY = 'downloadModalDismissed_DL_v2';
-const DOWNLOAD_BANNER_DISMISSED_KEY = 'downloadBannerDismissed_DL_v1';
 const PRESENTATION_VIDEO_SHOWN_KEY = 'presentationVideoShown_v1';
-const APP_DOWNLOAD_LINK = "https://drive.google.com/file/d/1JN1qbrX2JB7P5apVzzhtBy5x2hBPxCWa/view?usp=drive_link";
 const REFERRAL_POINTS_FOR_REFERRER = 25;
 const REFERRAL_POINTS_FOR_REFEREE = 15;
-// NUEVA CONSTANTE
 const SEEN_MESSAGE_TIMESTAMP_KEY = 'seenGlobalMessageTimestamp_v1';
 
 
@@ -3805,14 +3386,13 @@ let currentFilterCategory = 'all';
 let currentSortOption = 'default';
 const loadingSpinnerUser = document.getElementById('loadingSpinnerUser');
 let authModalInstance, 
-    cartModalInstance, downloadAppModalInstance, productDetailModalInstance,
+    cartModalInstance, productDetailModalInstance,
     sharePageModalInstance, confirmClearCartModalInstance,
     confirmRedeemRewardModalInstance, presentationVideoModalInstance,
-    helpModalInstance, rewardDetailModalInstance, globalMessageModalInstance; // <-- AÑADIDO
+    helpModalInstance, rewardDetailModalInstance, globalMessageModalInstance;
 let floatingCartButtonEl;
 let floatingCartCountEl;
 let qrcodePageInstance = null;
-let qrcodeAppInstance = null;
 
 
 document.addEventListener('DOMContentLoaded', async function() {
@@ -3823,11 +3403,9 @@ document.addEventListener('DOMContentLoaded', async function() {
     loadClientDataFromStorage();
     updateClientDisplayAndUI();
     
-    // Lógica de carga de datos iniciales optimizada
     await loadInitialData();
     
     setupEventListeners();
-    handleAppDownloadPromotion();
     handleScroll();
     initializeShareModal();
     setupShareEventListeners();
@@ -3880,7 +3458,73 @@ document.addEventListener('DOMContentLoaded', async function() {
             button.setAttribute('aria-controls', newId);
         }
     });
+    
+    setupVipCardInteraction();
+    applyMobileOptimizations();
 });
+
+// --- INICIO: SCRIPT PARA TARJETA VIP DE LUJO ---
+
+function setupVipCardInteraction() {
+    const card = document.getElementById('vip-card-container');
+    if (!card) return;
+
+    const glow = card.querySelector('.vip-card-glow');
+
+    card.addEventListener('mousemove', (e) => {
+        const rect = card.getBoundingClientRect();
+        
+        // Efecto de brillo que sigue al mouse
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        if(glow) {
+            glow.style.transform = `translate(${x - rect.width}px, ${y - rect.height}px)`;
+        }
+
+        // Efecto de inclinación 3D
+        const mouseX = x - rect.width / 2;
+        const mouseY = y - rect.height / 2;
+        const rotateY = (1 / 20) * mouseX; // Ajusta el '20' para más/menos sensibilidad
+        const rotateX = (-1 / 20) * mouseY;
+        card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+    });
+
+    card.addEventListener('mouseleave', () => {
+        card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg)';
+        if(glow) {
+            glow.style.transform = 'translate(-50%, -50%)'; // Centrar de nuevo
+        }
+    });
+}
+
+// Función mejorada para copiar con feedback visual
+function copyReferralCodeWithFeedback(buttonElement) {
+    if (clientData && clientData.referralcode) {
+        navigator.clipboard.writeText(clientData.referralcode).then(() => {
+            const icon = buttonElement.querySelector('i');
+            const text = buttonElement.querySelector('.copy-text');
+            
+            if (icon && text) {
+                // Estado "Copiado"
+                icon.className = 'bi bi-check-lg';
+                text.textContent = 'Copiado';
+                buttonElement.style.background = '#10B981'; // Color éxito
+                
+                // Volver al estado original después de 2 segundos
+                setTimeout(() => {
+                    icon.className = 'bi bi-clipboard';
+                    text.textContent = 'Copiar';
+                    buttonElement.style.background = ''; // Vuelve al color por defecto
+                }, 2000);
+            }
+            showGlobalFeedback('¡Código de referido copiado!', 'success', 2000);
+        }).catch(err => {
+            showGlobalFeedback('Error al copiar el código.', 'danger');
+        });
+    }
+}
+// --- FIN: SCRIPT PARA TARJETA VIP DE LUJO ---
+
 
 function setupNavbarToggler() {
     const navLinks = document.querySelectorAll('#navbarNavContent .nav-link, #navbarNavContent .dropdown-item');
@@ -4017,11 +3661,10 @@ function initializeModals() {
         if (authModalEl) authModalInstance = new bootstrap.Modal(authModalEl);
         else console.warn("Modal con ID 'authModal' no encontrado.");
 
-        ['cartModal', 'downloadAppModal', 'productDetailModal', 'sharePageModal', 'confirmClearCartModal', 'confirmRedeemRewardModal', 'presentationVideoModal', 'helpModal', 'rewardDetailModal', 'globalMessageModal'].forEach(id => { // <-- AÑADIDO 'globalMessageModal'
+        ['cartModal', 'productDetailModal', 'sharePageModal', 'confirmClearCartModal', 'confirmRedeemRewardModal', 'presentationVideoModal', 'helpModal', 'rewardDetailModal', 'globalMessageModal'].forEach(id => {
             const el = document.getElementById(id);
             if (el) {
                 if (id === 'cartModal') cartModalInstance = new bootstrap.Modal(el);
-                else if (id === 'downloadAppModal') downloadAppModalInstance = new bootstrap.Modal(el);
                 else if (id === 'productDetailModal') productDetailModalInstance = new bootstrap.Modal(el);
                 else if (id === 'sharePageModal') sharePageModalInstance = new bootstrap.Modal(el);
                 else if (id === 'confirmClearCartModal') confirmClearCartModalInstance = new bootstrap.Modal(el);
@@ -4029,7 +3672,7 @@ function initializeModals() {
                 else if (id === 'presentationVideoModal') presentationVideoModalInstance = new bootstrap.Modal(el);
                 else if (id === 'helpModal') helpModalInstance = new bootstrap.Modal(el);
                 else if (id === 'rewardDetailModal') rewardDetailModalInstance = new bootstrap.Modal(el);
-                else if (id === 'globalMessageModal') globalMessageModalInstance = new bootstrap.Modal(el); // <-- AÑADIDO
+                else if (id === 'globalMessageModal') globalMessageModalInstance = new bootstrap.Modal(el);
             } else { console.warn(`Modal con ID '${id}' no encontrado.`); }
         });
     } catch (error) { console.error("Error inicializando modales:", error); }
@@ -4051,7 +3694,7 @@ function setupEventListeners() {
         document.getElementById('cart-footer-buttons').style.display = 'flex';
     });
     const avatarUploadInputEl = document.getElementById('avatarUploadInput');
-    const userAvatarImgEl = document.getElementById('user-avatar');
+    const avatarWrapper = document.querySelector('.avatar-wrapper');
     const changeAvatarBtnEl = document.getElementById('changeAvatarButton');
     const triggerAvatarUpload = () => {
         if (clientData && clientData.id && avatarUploadInputEl) {
@@ -4061,9 +3704,10 @@ function setupEventListeners() {
             openAuthModal('login');
         }
     };
-    if (userAvatarImgEl) userAvatarImgEl.addEventListener('click', triggerAvatarUpload);
+    if (avatarWrapper) avatarWrapper.addEventListener('click', triggerAvatarUpload);
     if (changeAvatarBtnEl) changeAvatarBtnEl.addEventListener('click', triggerAvatarUpload);
     if (avatarUploadInputEl) avatarUploadInputEl.addEventListener('change', handleAvatarFileSelect);
+    
     const rewardsTabEl = document.getElementById('rewards-tab-link');
     if (rewardsTabEl) {
         rewardsTabEl.addEventListener('shown.bs.tab', event => {
@@ -4100,7 +3744,6 @@ function openAuthModal(tabToActivate = 'login') {
 
 function adjustBodyPaddingAndFabPosition() {
     const bodyEl = document.body;
-    const bannerEl = document.getElementById('downloadAppBanner');
     const floatingButtonsContainer = document.querySelector('.floating-buttons-container');
     const quickNavButtons = document.getElementById('quick-nav-buttons');
     const navbarEl = document.querySelector('.navbar-custom.fixed-top');
@@ -4117,20 +3760,14 @@ function adjustBodyPaddingAndFabPosition() {
         fabContainerBottomOffset = 15;
         quickNavBottomOffset = 210;
     }
-
-    if (bannerEl && bannerEl.style.display !== 'none' && !bannerEl.classList.contains('animate__fadeOutDown')) {
-        const bannerHeight = bannerEl.offsetHeight;
-        totalPaddingBottom = bannerHeight + 10;
-        fabContainerBottomOffset += bannerHeight;
-        quickNavBottomOffset += bannerHeight;
-    }
-
+    
     bodyEl.style.paddingBottom = totalPaddingBottom + 'px';
 
     if (navbarEl) {
         const navbarHeight = navbarEl.offsetHeight;
-        if (parseFloat(bodyEl.style.paddingTop) !== navbarHeight) {
-            bodyEl.style.paddingTop = navbarHeight + 'px';
+        const mainEl = document.querySelector('main');
+        if (mainEl && parseFloat(mainEl.style.paddingTop) !== navbarHeight) {
+            mainEl.style.paddingTop = navbarHeight + 'px';
         }
     }
 
@@ -4143,65 +3780,6 @@ function adjustBodyPaddingAndFabPosition() {
      handleScroll();
 }
 
-
-function handleAppDownloadPromotion() {
-    const downloadModalEl = document.getElementById('downloadAppModal');
-    const bannerEl = document.getElementById('downloadAppBanner');
-    const videoAlreadyShown = localStorage.getItem(PRESENTATION_VIDEO_SHOWN_KEY);
-
-    // Mostrar modal de descarga de la app
-    if ((videoAlreadyShown === 'true' || !videoAlreadyShown ) && !localStorage.getItem(DOWNLOAD_MODAL_DISMISSED_KEY) && downloadAppModalInstance) {
-         setTimeout(() => {
-            if (!localStorage.getItem(DOWNLOAD_MODAL_DISMISSED_KEY)) {
-                const presentationModalIsActive = document.getElementById('presentationVideoModal')?.classList.contains('show');
-                if (!presentationModalIsActive) {
-                   downloadAppModalInstance.show();
-                }
-            }
-        }, (videoAlreadyShown !== 'true' && !videoAlreadyShown) ? 7000 : 2500);
-    }
-
-    if (downloadModalEl) {
-        downloadModalEl.addEventListener('hidden.bs.modal', function () {
-            localStorage.setItem(DOWNLOAD_MODAL_DISMISSED_KEY, 'true');
-        });
-    }
-    
-    // Mostrar banner de descarga
-    const bannerDismissed = localStorage.getItem(DOWNLOAD_BANNER_DISMISSED_KEY);
-    if (bannerEl && !bannerDismissed) {
-        let bannerDelay = 3500;
-        if (!localStorage.getItem(DOWNLOAD_MODAL_DISMISSED_KEY) || (videoAlreadyShown !== 'true' && !videoAlreadyShown) ) {
-            bannerDelay = 12000;
-        }
-        setTimeout(() => {
-            const presentationModalIsActive = document.getElementById('presentationVideoModal')?.classList.contains('show');
-            const downloadAppModalIsActive = document.getElementById('downloadAppModal')?.classList.contains('show');
-            if (!localStorage.getItem(DOWNLOAD_BANNER_DISMISSED_KEY) && !presentationModalIsActive && !downloadAppModalIsActive) {
-                bannerEl.style.display = 'block';
-                bannerEl.classList.remove('animate__fadeOutDown');
-                bannerEl.classList.add('animate__animated', 'animate__fadeInUp');
-                adjustBodyPaddingAndFabPosition();
-            }
-        }, bannerDelay);
-        const closeBannerButton = bannerEl.querySelector('.btn-close');
-        if (closeBannerButton) {
-            closeBannerButton.addEventListener('click', () => {
-                bannerEl.classList.remove('animate__fadeInUp');
-                bannerEl.classList.add('animate__animated', 'animate__fadeOutDown');
-                setTimeout(() => {
-                    bannerEl.style.display = 'none';
-                    localStorage.setItem(DOWNLOAD_BANNER_DISMISSED_KEY, 'true');
-                    adjustBodyPaddingAndFabPosition();
-                }, 500);
-            });
-        }
-    } else if (bannerEl && bannerDismissed) {
-         bannerEl.style.display = 'none';
-    }
-    adjustBodyPaddingAndFabPosition();
-}
-
 function handlePresentationVideo() {
     const videoAlreadyShown = localStorage.getItem(PRESENTATION_VIDEO_SHOWN_KEY);
     const videoElement = document.getElementById('introVideo');
@@ -4209,7 +3787,7 @@ function handlePresentationVideo() {
 
     if (!videoAlreadyShown) {
         if (presentationVideoModalInstance && videoElement) {
-            const anyMajorModalActive = ['authModal', 'cartModal', 'downloadAppModal', 'helpModal'].some(id => {
+            const anyMajorModalActive = ['authModal', 'cartModal', 'helpModal'].some(id => {
                 const modal = document.getElementById(id);
                 return modal && modal.classList.contains('show');
             });
@@ -4315,21 +3893,21 @@ function updateClientDisplayAndUI() {
     const myOrdersTabLink = el('my-orders-tab-link');
     const referralCodeContainerEl = el('client-referral-code-container');
     const clientReferralCodeEl = el('clientReferralCode');
-
+    const changeAvatarButton = el('changeAvatarButton');
 
     if (clientData && clientData.id && (clientData.verificado === true || String(clientData.verificado).toLowerCase() === 'true')) {
-        el('client-name').textContent = `¡Hola, ${clientData.nombre ? clientData.nombre.split(' ')[0] : 'Cliente'}!`;
+        el('client-name').textContent = `${clientData.nombre ? clientData.nombre : 'Cliente VIP'}`;
         el('client-points').textContent = clientData.puntos !== undefined ? clientData.puntos : 0;
         el('client-status').textContent = `Nivel: ${(clientData.puntos||0)>=150?"Oro":(clientData.puntos||0)>=75?"Plata":"Bronce"}`;
         el('client-phone-display').textContent = clientData.telefono ? `Tel: ${clientData.telefono}` : '';
-        
+        el('vip-status-badge').style.display = 'inline-block';
         if (userAvatarImg) {
             if (clientData[LOCAL_AVATAR_DATA_KEY] && typeof clientData[LOCAL_AVATAR_DATA_KEY] === 'string') {
                 userAvatarImg.src = clientData[LOCAL_AVATAR_DATA_KEY];
             } else if (clientData.avatarurl && typeof clientData.avatarurl === 'string' && clientData.avatarurl.trim() !== '') {
                  userAvatarImg.src = clientData.avatarurl + (clientData.avatarurl.includes('?') ? '&t=' : '?t=') + new Date().getTime();
             } else {
-                userAvatarImg.src = './img/placeholder-avatar.png'; // CORREGIDO
+                userAvatarImg.src = './img/placeholder-avatar.png';
             }
         }
         if(authNavContainer) authNavContainer.innerHTML = `<span class="navbar-text text-light me-2 small">Hola, ${clientData.nombre ? clientData.nombre.split(' ')[0] : 'VIP'}</span>`;
@@ -4344,22 +3922,26 @@ function updateClientDisplayAndUI() {
         } else if (referralCodeContainerEl) {
             referralCodeContainerEl.style.display = 'none';
         }
+        if(changeAvatarButton) changeAvatarButton.style.display = 'flex';
+        setupVipCardInteraction();
 
     } else {
         el('client-name').textContent = `¡Bienvenido!`;
         el('client-points').textContent = 0;
         el('client-status').textContent = "Inicia sesión o regístrate para enviar.";
         el('client-phone-display').textContent = '';
-        
-        if (userAvatarImg) userAvatarImg.src = './img/placeholder-avatar.png'; // CORREGIDO
+        el('vip-status-badge').style.display = 'none';
+        if (userAvatarImg) userAvatarImg.src = './img/placeholder-avatar.png';
         if(authNavContainer) authNavContainer.innerHTML = `
-            <button class="btn btn-sm btn-outline-light me-2" onclick="openAuthModal('login')"><i class="bi bi-box-arrow-in-right"></i> Login</button>
+            <button class="btn btn-sm btn-outline-primary me-2" onclick="openAuthModal('login')"><i class="bi bi-box-arrow-in-right"></i> Login</button>
             <button class="btn btn-sm btn-warning" onclick="openAuthModal('register')"><i class="bi bi-person-plus"></i> Registro</button>`;
         if(logoutNavButton) logoutNavButton.style.display = 'none';
         if(vipCardContainer) vipCardContainer.style.display = 'none';
         if(guestPromptContainer) guestPromptContainer.style.display = 'block';
         if(myOrdersTabLink) myOrdersTabLink.innerHTML = `<i class="bi bi-receipt me-1"></i>Mis Envíos`;
         if (referralCodeContainerEl) referralCodeContainerEl.style.display = 'none';
+        if(changeAvatarButton) changeAvatarButton.style.display = 'none';
+
         loadUserOrders();
         generateRewardsList();
     }
@@ -4374,7 +3956,6 @@ function logoutClient() {
     localStorage.removeItem(USER_CART_KEY);
     updateClientDisplayAndUI();
     showGlobalFeedback('Sesión cerrada. ¡Vuelve pronto!', 'info');
-    handleAppDownloadPromotion();
 }
 
 async function handleUserRegistrationAttempt() {
@@ -4618,7 +4199,6 @@ function generatePopularItems() {
         return;
     }
     
-    // FILTRAR PRODUCTOS AGOTADOS
     let availableItems = menuItems.filter(item => item.active !== false);
     
     let popularToShow = [...availableItems];
@@ -4630,7 +4210,6 @@ function generatePopularItems() {
          return;
     }
     
-    // SOLO PRODUCTOS DISPONIBLES
     popularContainer.innerHTML = '';
     popularToShow.forEach(item => {
         const itemId = String(item.id);
@@ -4703,7 +4282,6 @@ function generateMenu() {
 
     const searchTerm = document.getElementById('productSearchInput')?.value.toLowerCase().trim() || '';
     
-    // FILTRAR PRODUCTOS AGOTADOS
     let itemsToDisplay = [...menuItems].filter(item => item.active !== false);
 
     if (currentFilterCategory !== 'all') {
@@ -4759,7 +4337,6 @@ function generateMenu() {
 
     itemsToDisplay.forEach(item => {
         const itemId = String(item.id);
-        // SOLO PRODUCTOS DISPONIBLES - ELIMINAR LÓGICA DE DISPONIBILIDAD
         const buttonHtml = `<button class="btn btn-primary mt-3 w-100" onclick="addToCart('${itemId}')"><i class="bi bi-cart-plus-fill me-2"></i>Añadir</button>`;
 
         menuContainer.innerHTML += `
@@ -4833,7 +4410,6 @@ function generateRecommendations(currentProductId) {
     const currentProduct = menuItems.find(p => p.id === currentProductId);
     if (!currentProduct) return;
     
-    // FILTRAR PRODUCTOS AGOTADOS
     const candidates = menuItems.filter(p => p.id !== currentProductId && p.active !== false);
     
     const sameCategory = candidates.filter(p => p.category === currentProduct.category);
@@ -4990,7 +4566,6 @@ function updateCartDisplay() {
     adjustBodyPaddingAndFabPosition();
 }
 
-// ===== FUNCIONES AUXILIARES PARA RENDER CART ITEMS =====
 function handleQuantityChange(productId, change, button) {
     if (button) {
         button.style.transform = 'scale(0.9)';
@@ -5130,7 +4705,6 @@ function continueShopping() {
     showCartNotification('Puedes seguir agregando productos', 'info');
 }
 
-// ===== FUNCIÓN PRINCIPAL RENDER CART ITEMS =====
 function renderCartItems() {
     const container = document.getElementById('cart-items-container');
     const totalPriceEl = document.getElementById('cart-total-price');
@@ -5156,11 +4730,11 @@ function renderCartItems() {
         `;
         totalPriceEl.textContent = '0.00';
         pointsToEarnEl.textContent = '0';
-        cartFooterButtons.style.display = 'none'; // MODIFICADO: Ocultar botones
+        cartFooterButtons.style.display = 'none';
         updateCartDisplay();
         return;
     } else {
-        cartFooterButtons.style.display = 'flex'; // MODIFICADO: Mostrar botones
+        cartFooterButtons.style.display = 'flex';
     }
 
     const cartContainer = document.createElement('div');
@@ -5603,7 +5177,6 @@ function generateProductRecommendationsForRewardModal() {
         return;
     }
 
-    // FILTRAR PRODUCTOS AGOTADOS
     let candidates = [...menuItems].filter(item => item.active !== false);
     candidates.sort(() => 0.5 - Math.random());
 
@@ -5628,267 +5201,221 @@ function generateProductRecommendationsForRewardModal() {
 });
 }
 
-        function generateRewardWhatsAppMessage(rewardName, clientName) {
-            let message = `¡Hola! 👋 Acabo de canjear una recompensa desde DL Cumanayagua.\n\n`;
-            message += `*Cliente:* ${clientName}\n`;
-            message += `*Recompensa Canjeada:* ${rewardName}\n\n`;
-            message += `Por favor, tomar nota para mi próximo envío. ¡Gracias!`;
-            return encodeURIComponent(message);
-        }
+function generateRewardWhatsAppMessage(rewardName, clientName) {
+    let message = `¡Hola! 👋 Acabo de canjear una recompensa desde DL Cumanayagua.\n\n`;
+    message += `*Cliente:* ${clientName}\n`;
+    message += `*Recompensa Canjeada:* ${rewardName}\n\n`;
+    message += `Por favor, tomar nota para mi próximo envío. ¡Gracias!`;
+    return encodeURIComponent(message);
+}
 
-        async function attemptRedeemReward(rewardId) {
-            if (!clientData || !clientData.id) {
-                showGlobalFeedback("Debes iniciar sesión para canjear.", "warning");
-                openAuthModal('login');
-                return;
-            }
-            const reward = availableRewards.find(r => r.rewardid === rewardId);
-            if (!reward) {
-                showGlobalFeedback("Recompensa no encontrada.", "danger");
-                return;
-            }
+async function attemptRedeemReward(rewardId) {
+    if (!clientData || !clientData.id) {
+        showGlobalFeedback("Debes iniciar sesión para canjear.", "warning");
+        openAuthModal('login');
+        return;
+    }
+    const reward = availableRewards.find(r => r.rewardid === rewardId);
+    if (!reward) {
+        showGlobalFeedback("Recompensa no encontrada.", "danger");
+        return;
+    }
 
-            const modalTextEl = document.getElementById('confirmRedeemRewardText');
-            const modalFeedbackEl = document.getElementById('redeemRewardFeedback');
-            const modalFooterEl = document.getElementById('confirmRedeemRewardFooter');
+    const modalTextEl = document.getElementById('confirmRedeemRewardText');
+    const modalFeedbackEl = document.getElementById('redeemRewardFeedback');
+    const modalFooterEl = document.getElementById('confirmRedeemRewardFooter');
 
-            if (modalTextEl) modalTextEl.innerHTML = `¿Estás seguro de que quieres canjear "<strong>${reward.name}</strong>" por <strong>${reward.pointsrequired} puntos</strong>?`;
-            if (modalFeedbackEl) modalFeedbackEl.innerHTML = '';
+    if (modalTextEl) modalTextEl.innerHTML = `¿Estás seguro de que quieres canjear "<strong>${reward.name}</strong>" por <strong>${reward.pointsrequired} puntos</strong>?`;
+    if (modalFeedbackEl) modalFeedbackEl.innerHTML = '';
 
-            if (modalFooterEl) {
-                modalFooterEl.innerHTML = `
-                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="button" class="btn btn-warning" id="confirmRedeemRewardButtonDynamicInstance">
-                        <i class="bi bi-award-fill me-1"></i>Sí, Canjear Ahora
-                    </button>`;
+    if (modalFooterEl) {
+        modalFooterEl.innerHTML = `
+            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+            <button type="button" class="btn btn-warning" id="confirmRedeemRewardButtonDynamicInstance">
+                <i class="bi bi-award-fill me-1"></i>Sí, Canjear Ahora
+            </button>`;
 
-                const confirmButtonDynamic = document.getElementById('confirmRedeemRewardButtonDynamicInstance');
-                if (confirmButtonDynamic) {
-                    confirmButtonDynamic.onclick = async () => {
-                        if (modalFeedbackEl) modalFeedbackEl.innerHTML = `<div class="alert alert-info py-2 small"><div class="spinner-border spinner-border-sm me-2"></div>Procesando canje...</div>`;
-                        confirmButtonDynamic.disabled = true;
+        const confirmButtonDynamic = document.getElementById('confirmRedeemRewardButtonDynamicInstance');
+        if (confirmButtonDynamic) {
+            confirmButtonDynamic.onclick = async () => {
+                if (modalFeedbackEl) modalFeedbackEl.innerHTML = `<div class="alert alert-info py-2 small"><div class="spinner-border spinner-border-sm me-2"></div>Procesando canje...</div>`;
+                confirmButtonDynamic.disabled = true;
 
-                        const result = await fetchDataFromGAS('redeemReward', 'POST', { clientId: String(clientData.id), rewardId: rewardId });
+                const result = await fetchDataFromGAS('redeemReward', 'POST', { clientId: String(clientData.id), rewardId: rewardId });
 
-                        if (result.success && result.data) {
-                            const pointsBefore = clientData.puntos;
-                            clientData.puntos = (clientData.puntos || 0) - (reward.pointsrequired || 0);
-                            if (clientData.puntos < 0) clientData.puntos = 0;
+                if (result.success && result.data) {
+                    const pointsBefore = clientData.puntos;
+                    clientData.puntos = (clientData.puntos || 0) - (reward.pointsrequired || 0);
+                    if (clientData.puntos < 0) clientData.puntos = 0;
 
-                            if (result.data.updatedClient) {
-                                const serverPoints = result.data.updatedClient.puntos;
-                                const localAvatar = clientData[LOCAL_AVATAR_DATA_KEY];
-                                clientData = result.data.updatedClient;
-                                clientData.puntos = Math.min(pointsBefore - (reward.pointsrequired || 0), serverPoints);
-                                if(localAvatar && !clientData[LOCAL_AVATAR_DATA_KEY]) clientData[LOCAL_AVATAR_DATA_KEY] = localAvatar;
-                            }
+                    if (result.data.updatedClient) {
+                        const serverPoints = result.data.updatedClient.puntos;
+                        const localAvatar = clientData[LOCAL_AVATAR_DATA_KEY];
+                        clientData = result.data.updatedClient;
+                        clientData.puntos = Math.min(pointsBefore - (reward.pointsrequired || 0), serverPoints);
+                        if(localAvatar && !clientData[LOCAL_AVATAR_DATA_KEY]) clientData[LOCAL_AVATAR_DATA_KEY] = localAvatar;
+                    }
 
-                            localStorage.setItem(LOGGED_IN_CLIENT_KEY, JSON.stringify(clientData));
-                            updateClientDisplayAndUI();
+                    localStorage.setItem(LOGGED_IN_CLIENT_KEY, JSON.stringify(clientData));
+                    updateClientDisplayAndUI();
 
-                            const whatsappMessage = generateRewardWhatsAppMessage(reward.name, clientData.nombre);
-                            const whatsappUrl = `https://wa.me/5355189657?text=${whatsappMessage}`;
-                            if (modalFeedbackEl) {
-                                modalFeedbackEl.innerHTML = `
-                                    <div class="alert alert-success py-2 small">
-                                        ${result.message || "¡Recompensa canjeada con éxito!"}
-                                        <hr class="my-2">
-                                        <a href="${whatsappUrl}" target="_blank" class="btn btn-sm btn-success w-100"
-                                           onclick="if(confirmRedeemRewardModalInstance) confirmRedeemRewardModalInstance.hide(); if(rewardDetailModalInstance && rewardDetailModalInstance._isShown) rewardDetailModalInstance.hide();">
-                                            <i class="bi bi-whatsapp me-2"></i>Notificar Canje por WhatsApp
-                                        </a>
-                                    </div>`;
-                            }
-                            if (modalFooterEl) {
-                                modalFooterEl.innerHTML = `<button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="if(rewardDetailModalInstance && rewardDetailModalInstance._isShown) rewardDetailModalInstance.hide();">Cerrar</button>`;
-                            }
-                            forceLoadRewards();
-                        } else {
-                            if (modalFeedbackEl) modalFeedbackEl.innerHTML = `<div class="alert alert-danger py-2 small">${result.message || "No se pudo canjear. Intenta de nuevo."}</div>`;
-                            if(confirmButtonDynamic) confirmButtonDynamic.disabled = false;
-                        }
-                    };
+                    const whatsappMessage = generateRewardWhatsAppMessage(reward.name, clientData.nombre);
+                    const whatsappUrl = `https://wa.me/5355189657?text=${whatsappMessage}`;
+                    if (modalFeedbackEl) {
+                        modalFeedbackEl.innerHTML = `
+                            <div class="alert alert-success py-2 small">
+                                ${result.message || "¡Recompensa canjeada con éxito!"}
+                                <hr class="my-2">
+                                <a href="${whatsappUrl}" target="_blank" class="btn btn-sm btn-success w-100"
+                                   onclick="if(confirmRedeemRewardModalInstance) confirmRedeemRewardModalInstance.hide(); if(rewardDetailModalInstance && rewardDetailModalInstance._isShown) rewardDetailModalInstance.hide();">
+                                    <i class="bi bi-whatsapp me-2"></i>Notificar Canje por WhatsApp
+                                </a>
+                            </div>`;
+                    }
+                    if (modalFooterEl) {
+                        modalFooterEl.innerHTML = `<button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="if(rewardDetailModalInstance && rewardDetailModalInstance._isShown) rewardDetailModalInstance.hide();">Cerrar</button>`;
+                    }
+                    forceLoadRewards();
+                } else {
+                    if (modalFeedbackEl) modalFeedbackEl.innerHTML = `<div class="alert alert-danger py-2 small">${result.message || "No se pudo canjear. Intenta de nuevo."}</div>`;
+                    if(confirmButtonDynamic) confirmButtonDynamic.disabled = false;
                 }
-            }
-
-            if (confirmRedeemRewardModalInstance) {
-                confirmRedeemRewardModalInstance.show();
-            }
+            };
         }
+    }
+
+    if (confirmRedeemRewardModalInstance) {
+        confirmRedeemRewardModalInstance.show();
+    }
+}
 
 
-        function showFeedbackInModal(modalIdUnused, elId, msg, type='info', dur=4000) {
-            const div = document.getElementById(elId);
-            if (!div) return;
-            div.innerHTML = `<div class="alert alert-${type} alert-dismissible fade show small py-2" role="alert">${msg}<button type="button" class="btn-close btn-close-white btn-sm py-2" data-bs-dismiss="alert" aria-label="Close"></button></div>`;
-            if (dur !== null && type !== 'info' && !(String(msg).includes('spinner-border'))) {
-                 setTimeout(() => { if (div && div.innerHTML.includes(msg)) div.innerHTML = ''; }, dur);
-            }
+function showFeedbackInModal(modalIdUnused, elId, msg, type='info', dur=4000) {
+    const div = document.getElementById(elId);
+    if (!div) return;
+    div.innerHTML = `<div class="alert alert-${type} alert-dismissible fade show small py-2" role="alert">${msg}<button type="button" class="btn-close btn-close-white btn-sm py-2" data-bs-dismiss="alert" aria-label="Close"></button></div>`;
+    if (dur !== null && type !== 'info' && !(String(msg).includes('spinner-border'))) {
+         setTimeout(() => { if (div && div.innerHTML.includes(msg)) div.innerHTML = ''; }, dur);
+    }
+}
+
+function showGlobalFeedback(msg, type = 'info', dur = 4000) {
+    const toastPlacement = document.getElementById('toastPlacement');
+    if (!toastPlacement) {
+        alert(`${type.toUpperCase()}: ${msg}`);
+        return;
+    }
+    const toastId = 'liveToast-' + Date.now();
+    let tbc = 'bg-primary text-white', bcc = 'btn-close-white';
+    if (type === 'danger') { tbc = 'bg-danger text-white'; }
+    else if (type === 'success') { tbc = 'bg-success text-white'; }
+    else if (type === 'warning') { tbc = 'bg-warning text-dark'; bcc = 'btn-close-dark';}
+    const toastHTML = `
+        <div class="toast align-items-center ${tbc} border-0" role="alert" aria-live="assertive" aria-atomic="true" id="${toastId}">
+            <div class="d-flex"><div class="toast-body">${msg}</div><button type="button" class="btn-close ${bcc} me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button></div>
+        </div>`;
+    toastPlacement.insertAdjacentHTML('beforeend', toastHTML);
+    const toastEl = document.getElementById(toastId);
+    if (toastEl) {
+        const toastInstance = new bootstrap.Toast(toastEl, {
+            autohide: (dur !== null && !String(msg).includes('spinner-border')),
+            delay: dur
+        });
+        toastInstance.show();
+        toastEl.addEventListener('hidden.bs.toast', () => toastEl.remove());
+    }
+}
+
+function initializeShareModal() {
+     const shareModalEl = document.getElementById('sharePageModal');
+     if (shareModalEl) {
+        shareModalEl.addEventListener('shown.bs.modal', generateQrCodesForSharing);
+     }
+}
+
+function generateQrCodesForSharing() {
+    const qrPageCanvas = document.getElementById('qrcodeCanvas');
+
+    if (qrPageCanvas) {
+        qrPageCanvas.innerHTML = '';
+        if (qrcodePageInstance) {
+            qrcodePageInstance.clear();
+            qrcodePageInstance = null;
         }
+        const pageUrl = window.location.href;
+        qrcodePageInstance = new QRCode(qrPageCanvas, {
+            text: pageUrl, width: 130, height: 130,
+            colorDark : "#000000", colorLight : "#ffffff", correctLevel : QRCode.CorrectLevel.H
+        });
 
-        function showGlobalFeedback(msg, type = 'info', dur = 4000) {
-            const toastPlacement = document.getElementById('toastPlacement');
-            if (!toastPlacement) {
-                alert(`${type.toUpperCase()}: ${msg}`);
-                return;
-            }
-            const toastId = 'liveToast-' + Date.now();
-            let tbc = 'bg-primary text-white', bcc = 'btn-close-white';
-            if (type === 'danger') { tbc = 'bg-danger text-white'; }
-            else if (type === 'success') { tbc = 'bg-success text-white'; }
-            else if (type === 'warning') { tbc = 'bg-warning text-dark'; bcc = 'btn-close-dark';}
-            const toastHTML = `
-                <div class="toast align-items-center ${tbc} border-0" role="alert" aria-live="assertive" aria-atomic="true" id="${toastId}">
-                    <div class="d-flex"><div class="toast-body">${msg}</div><button type="button" class="btn-close ${bcc} me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button></div>
-                </div>`;
-            toastPlacement.insertAdjacentHTML('beforeend', toastHTML);
-            const toastEl = document.getElementById(toastId);
-            if (toastEl) {
-                const toastInstance = new bootstrap.Toast(toastEl, {
-                    autohide: (dur !== null && !String(msg).includes('spinner-border')),
-                    delay: dur
-                });
-                toastInstance.show();
-                toastEl.addEventListener('hidden.bs.toast', () => toastEl.remove());
-            }
-        }
+        const sharePageText = encodeURIComponent(`¡Echa un vistazo a DL Cumanayagua para enviar productos a Cuba! ${pageUrl}`);
+        document.getElementById('shareViaWhatsAppButton').href = `https://wa.me/?text=${sharePageText}`;
+        document.getElementById('shareViaTelegramButton').href = `https://t.me/share/url?url=${encodeURIComponent(pageUrl)}&text=${encodeURIComponent('¡Visita DL Cumanayagua!')}`;
+    }
+}
 
-        function initializeShareModal() {
-             const shareModalEl = document.getElementById('sharePageModal');
-             if (shareModalEl) {
-                shareModalEl.addEventListener('shown.bs.modal', generateQrCodesForSharing);
-             }
-        }
-
-        function generateQrCodesForSharing() {
-            const qrPageCanvas = document.getElementById('qrcodeCanvas');
-            const qrAppCanvas = document.getElementById('qrcodeAppCanvas');
-
-            if (qrPageCanvas) {
-                qrPageCanvas.innerHTML = '';
-                if (qrcodePageInstance) {
-                    qrcodePageInstance.clear();
-                    qrcodePageInstance = null;
-                }
-                const pageUrl = window.location.href;
-                qrcodePageInstance = new QRCode(qrPageCanvas, {
-                    text: pageUrl, width: 130, height: 130,
-                    colorDark : "#000000", colorLight : "#ffffff", correctLevel : QRCode.CorrectLevel.H
-                });
-
-                const sharePageText = encodeURIComponent(`¡Echa un vistazo a DL Cumanayagua para enviar productos a Cuba! ${pageUrl}`);
-                document.getElementById('shareViaWhatsAppButton').href = `https://wa.me/?text=${sharePageText}`;
-                document.getElementById('shareViaTelegramButton').href = `https://t.me/share/url?url=${encodeURIComponent(pageUrl)}&text=${encodeURIComponent('¡Visita DL Cumanayagua!')}`;
-            }
-
-            if (qrAppCanvas) {
-                qrAppCanvas.innerHTML = '';
-                 if (qrcodeAppInstance) {
-                    qrcodeAppInstance.clear();
-                    qrcodeAppInstance = null;
-                }
-                qrcodeAppInstance = new QRCode(qrAppCanvas, {
-                    text: APP_DOWNLOAD_LINK, width: 130, height: 130,
-                    colorDark : "#000000", colorLight : "#ffffff", correctLevel : QRCode.CorrectLevel.H
-                });
-                const shareAppText = encodeURIComponent(`Descarga la app de DL Cumanayagua para que tu familia en Cuba vea el catálogo: ${APP_DOWNLOAD_LINK}`);
-                document.getElementById('shareAppViaWhatsAppButtonModal').href = `https://wa.me/?text=${shareAppText}`;
-                document.getElementById('shareAppViaTelegramButtonModal').href = `https://t.me/share/url?url=${encodeURIComponent(APP_DOWNLOAD_LINK)}&text=${encodeURIComponent('Descarga la app DL Cumanayagua')}`;
-            }
-        }
-
-        function shareAppLinkViaCopy() {
-            navigator.clipboard.writeText(APP_DOWNLOAD_LINK).then(() => {
-                showGlobalFeedback('¡Enlace de descarga de la App copiado!', 'success', 2500);
-            }, (err) => {
-                showGlobalFeedback('Error al copiar enlace de la App.', 'danger');
-                console.error('Error al copiar enlace de la App: ', err);
+function setupShareEventListeners() {
+    const copyLinkButton = document.getElementById('copyLinkButton');
+    if (copyLinkButton) {
+        copyLinkButton.addEventListener('click', function() {
+            const pageUrl = window.location.href;
+            navigator.clipboard.writeText(pageUrl).then(function() {
+                showGlobalFeedback('¡Enlace de la página copiado!', 'success', 2000);
+            }, function(err) {
+                showGlobalFeedback('Error al copiar el enlace de la página.', 'danger', 3000);
+                console.error('Error al copiar: ', err);
             });
-        }
+        });
+    }
+}
 
-        function shareAppLinkViaWhatsApp() {
-            const message = encodeURIComponent(`Te comparto el enlace para descargar la App de DL Cumanayagua, para que tu familia en Cuba pueda ver el catálogo de productos: ${APP_DOWNLOAD_LINK}`);
-            window.open(`https://wa.me/?text=${message}`, '_blank');
-        }
+function setupFloatingButtonFeedback() {
+    if (floatingCartButtonEl) {
+        floatingCartButtonEl.addEventListener('click', function() {
+            floatingCartButtonEl.classList.add('clicked-animation');
+            setTimeout(() => {
+                floatingCartButtonEl.classList.remove('clicked-animation');
+            }, 400);
+        });
+    }
 
+    const floatingShareButtonEl = document.getElementById('floatingShareButton');
+    if (floatingShareButtonEl) {
+        floatingShareButtonEl.addEventListener('click', function() {
+            floatingShareButtonEl.classList.add('clicked-animation');
+            setTimeout(() => {
+                floatingShareButtonEl.classList.remove('clicked-animation');
+            }, 400);
+        });
+    }
 
-        function setupShareEventListeners() {
-            const copyLinkButton = document.getElementById('copyLinkButton');
-            if (copyLinkButton) {
-                copyLinkButton.addEventListener('click', function() {
-                    const pageUrl = window.location.href;
-                    navigator.clipboard.writeText(pageUrl).then(function() {
-                        showGlobalFeedback('¡Enlace de la página copiado!', 'success', 2000);
-                    }, function(err) {
-                        showGlobalFeedback('Error al copiar el enlace de la página.', 'danger', 3000);
-                        console.error('Error al copiar: ', err);
-                    });
-                });
-            }
-        }
+    const whatsappButtonEl = document.getElementById('whatsappButton');
+    if (whatsappButtonEl) {
+        whatsappButtonEl.addEventListener('click', function(event) {
+            whatsappButtonEl.classList.add('clicked-animation');
+            setTimeout(() => {
+                whatsappButtonEl.classList.remove('clicked-animation');
+            }, 400);
+        });
+    }
+}
 
-        function setupFloatingButtonFeedback() {
-            if (floatingCartButtonEl) {
-                floatingCartButtonEl.addEventListener('click', function() {
-                    floatingCartButtonEl.classList.add('clicked-animation');
-                    setTimeout(() => {
-                        floatingCartButtonEl.classList.remove('clicked-animation');
-                    }, 400);
-                });
-            }
+function copyReferralCode() {
+    if (clientData && clientData.referralcode) {
+        navigator.clipboard.writeText(clientData.referralcode).then(() => {
+            showGlobalFeedback('¡Tu código de referido ha sido copiado!', 'success', 2000);
+        }).catch(err => {
+            showGlobalFeedback('Error al copiar el código.', 'danger');
+            console.error('Error al copiar código de referido: ', err);
+        });
+    }
+}
 
-            const floatingShareButtonEl = document.getElementById('floatingShareButton');
-            if (floatingShareButtonEl) {
-                floatingShareButtonEl.addEventListener('click', function() {
-                    floatingShareButtonEl.classList.add('clicked-animation');
-                    setTimeout(() => {
-                        floatingShareButtonEl.classList.remove('clicked-animation');
-                    }, 400);
-                });
-            }
-
-            const whatsappButtonEl = document.getElementById('whatsappButton');
-            if (whatsappButtonEl) {
-                whatsappButtonEl.addEventListener('click', function(event) {
-                    whatsappButtonEl.classList.add('clicked-animation');
-                    setTimeout(() => {
-                        whatsappButtonEl.classList.remove('clicked-animation');
-                    }, 400);
-                });
-            }
-        }
-
-        function copyReferralCode() {
-            if (clientData && clientData.referralcode) {
-                navigator.clipboard.writeText(clientData.referralcode).then(() => {
-                    showGlobalFeedback('¡Tu código de referido ha sido copiado!', 'success', 2000);
-                }).catch(err => {
-                    showGlobalFeedback('Error al copiar el código.', 'danger');
-                    console.error('Error al copiar código de referido: ', err);
-                });
-            }
-        }
-
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('./sw.js', { scope: '/TheDo-aLuc-aGroup/' }) 
-                    .then(registration => {
-                        console.log('Service Worker registrado con éxito:', registration);
-                    })
-                    .catch(error => {
-                        console.log('Error al registrar el Service Worker:', error);
-                    });
-            });
-        }
-// Agrega esto al final de tu archivo JavaScript
 window.addEventListener('resize', function() {
     applyMobileOptimizations();
 });
 
 document.addEventListener('DOMContentLoaded', function() {
-    applyMobileOptimizations();
-    
-    // Inicializar funciones globales
     if (typeof handleQuantityChange === 'undefined') {
         window.handleQuantityChange = handleQuantityChange;
     }
@@ -5899,7 +5426,6 @@ document.addEventListener('DOMContentLoaded', function() {
         window.handlePayment = handlePayment;
     }
 });
-    </script>
+  </script>
 </body>
 </html>
-
