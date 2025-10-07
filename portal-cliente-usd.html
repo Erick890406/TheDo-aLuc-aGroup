@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mi Cuenta VIP - Doña Lucía</title>
+    <link rel="icon" type="image/png" href="./img/Logo-DL-Cumanayagua.png">
 
     <!-- =================================================================== -->
     <!-- ================ INICIO: CONFIGURACIÓN PWA ======================== -->
@@ -702,11 +703,9 @@ h6 { font-size: var(--text-sm); }
 /* Sección del Avatar */
 .vip-avatar-section {
     flex-shrink: 0;
+    cursor: pointer; /* MODIFICADO: Ahora toda la sección es clickeable */
 }
-.avatar-wrapper {
-    position: relative;
-    cursor: pointer;
-}
+
 .vip-avatar {
     width: 96px;
     height: 96px;
@@ -716,28 +715,9 @@ h6 { font-size: var(--text-sm); }
     box-shadow: 0 0 20px rgba(102, 126, 234, 0.5), inset 0 0 10px rgba(0,0,0,0.3);
     transition: transform 0.3s ease;
 }
-.avatar-wrapper:hover .vip-avatar {
+
+.vip-avatar-section:hover .vip-avatar {
     transform: scale(1.05);
-}
-.change-avatar-btn {
-    position: absolute;
-    bottom: 0;
-    right: 0;
-    width: 32px;
-    height: 32px;
-    background: var(--primary-600, #2563EB);
-    color: var(--white);
-    border: 2px solid #1a202c;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: all 0.2s ease;
-}
-.change-avatar-btn:hover {
-    transform: scale(1.1);
-    background: var(--primary-500, #3B82F6);
 }
 
 /* Sección de Información */
@@ -2580,6 +2560,29 @@ h6 { font-size: var(--text-sm); }
     border-top: 1px solid var(--border-primary);
 }
 
+/* NUEVO: Estilos para la galería de avatares */
+#avatar-gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+    gap: var(--space-3);
+    max-height: 40vh;
+    overflow-y: auto;
+    padding: var(--space-2);
+}
+.gallery-avatar {
+    width: 100%;
+    aspect-ratio: 1/1;
+    border-radius: 50%;
+    object-fit: cover;
+    cursor: pointer;
+    border: 3px solid transparent;
+    transition: var(--transition-fast);
+}
+.gallery-avatar:hover {
+    transform: scale(1.05);
+    border-color: var(--primary-500);
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
     .container {
@@ -2789,11 +2792,25 @@ h6 { font-size: var(--text-sm); }
 }
 
 </style>
-
 </head>
 <body id="top">
-    <input type="file" id="avatarUploadInput" accept="image/jpeg, image/png, image/gif" style="display: none;">
-
+    <!-- MODAL DE GALERÍA DE AVATARES -->
+    <div class="modal fade" id="avatarGalleryModal" tabindex="-1" aria-labelledby="avatarGalleryModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="avatarGalleryModalLabel"><i class="bi bi-person-bounding-box me-2"></i>Elige tu Avatar</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="avatar-gallery">
+                        <!-- La galería de avatares se poblará aquí dinámicamente -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
     <nav class="navbar navbar-expand-sm navbar-custom fixed-top">
         <div class="container">
             <a class="navbar-brand d-flex align-items-center" href="#top">
@@ -2824,7 +2841,6 @@ h6 { font-size: var(--text-sm); }
                         <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end" aria-labelledby="moreOptionsDropdown">
                             <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#presentationVideoModal"><i class="bi bi-play-btn-fill me-2"></i>Ver Video Intro</a></li>
                             <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#sharePageModal"><i class="bi bi-share-fill me-2"></i>Compartir Página</a></li>
-                            <!-- ================ BOTÓN DE INSTALACIÓN PWA ================== -->
                             <li><a class="dropdown-item" href="#" id="installAppButton" style="display: none;"><i class="bi bi-download me-2"></i>Instalar App</a></li>
                         </ul>
                     </li>
@@ -2846,45 +2862,30 @@ h6 { font-size: var(--text-sm); }
             </div>
         </div>
     </nav>
-
     <main>
         <div class="container mt-5 pt-4 pb-5">
-            <!-- INICIO: Tarjeta VIP de Lujo -->
-            <div id="vip-card-container" class="vip-card animate__animated animate__fadeInDown" style="display: none;">
-                <!-- Capas de efectos de fondo -->
+            <div id="vip-card-container" class="vip-card animate__animated animate__fadeInDown" >
                 <div class="vip-card-glow"></div>
                 <div class="vip-card-noise"></div>
-                
-                <!-- Contenido principal de la tarjeta -->
                 <div class="vip-card-content">
                     <div class="vip-card-header">
                         <span id="vip-status-badge" class="vip-badge">Cliente VIP</span>
                         <i class="bi bi-shield-check-fill vip-icon"></i>
                     </div>
-                    
                     <div class="vip-card-body">
-                        <div style="display: none;" class="vip-avatar-section">
-                            <div class="avatar-wrapper">
-                                <img id="user-avatar" src="./img/placeholder-avatar.png" alt="Avatar del Cliente" class="vip-avatar">
-                                <button id="changeAvatarButton" class="change-avatar-btn" title="Cambiar avatar">
-                                    <i class="bi bi-camera-fill"></i>
-                                </button>
-                            </div>
+                        <div class="vip-avatar-section" title="Cambiar avatar">
+                            <img id="user-avatar" src="./img/placeholder-avatar.png" alt="Avatar del Cliente" class="vip-avatar">
                         </div>
-                        
                         <div class="vip-info-section">
                             <p id="client-status" class="client-status-text">Miembro de Doña Lucía</p>
                             <h2 id="client-name" class="client-name-heading">¡Hola!</h2>
-                            
                             <div class="points-display-wrapper">
                                 <span id="client-points" class="points-value">0</span>
                                 <span class="points-label">Puntos Disponibles</span>
                             </div>
-                            
                             <small id="client-phone-display" class="client-phone-text"></small>
                         </div>
                     </div>
-                    
                     <div id="client-referral-code-container" class="vip-card-footer" style="display: none;">
                         <div class="referral-info">
                             <span class="referral-label">Tu Código de Referido</span>
@@ -2897,20 +2898,16 @@ h6 { font-size: var(--text-sm); }
                     </div>
                 </div>
             </div>
-            <!-- FIN: Tarjeta VIP de Lujo -->
-
              <div id="guest-prompt" class="alert alert-info text-center shadow-sm animate__animated animate__fadeInUp" style="display: block;">
                 <h4><i class="bi bi-gift-fill me-2"></i>¡Envía alegría a Cuba con DL Cumanayagua!</h4>
                 <p class="lead mb-2">Compra para tus familiares y amigos en Cumanayagua desde cualquier parte del mundo. Paga fácilmente con Zelle.</p>
                 <p>Inicia sesión o regístrate para gestionar tus envíos y acumular puntos para futuras compras.</p>
             </div>
-
             <ul class="nav nav-pills mb-4">
                 <li class="nav-item" role="presentation"><a class="nav-link active" id="menu-tab-link" data-bs-toggle="pill" href="#menu-tab" role="tab" aria-controls="menu-tab" aria-selected="true"><i class="bi bi-card-list me-1"></i>Menú y Combos</a></li>
                 <li class="nav-item" role="presentation"><a class="nav-link" id="rewards-tab-link" data-bs-toggle="pill" href="#rewards-tab" role="tab" aria-controls="rewards-tab" aria-selected="false"><i class="bi bi-gift me-1"></i>Recompensas</a></li>
                 <li class="nav-item" role="presentation"><a class="nav-link" id="my-orders-tab-link" data-bs-toggle="pill" href="#my-orders-tab" role="tab" aria-controls="my-orders-tab" aria-selected="false"><i class="bi bi-receipt me-1"></i>Mis Envíos</a></li>
             </ul>
-
             <div class="tab-content" id="pills-tabContent">
                 <div class="tab-pane fade show active" id="menu-tab" role="tabpanel" aria-labelledby="menu-tab-link">
                     <div class="d-flex justify-content-center align-items-center mb-4">
@@ -2919,7 +2916,6 @@ h6 { font-size: var(--text-sm); }
                             <i class="bi bi-arrow-clockwise"></i>
                         </button>
                     </div>
-
                     <div id="popular-items-section" class="mb-5">
                         <h4 class="mb-3 text-center"><i class="bi bi-star-fill text-warning me-2"></i>¡Lo Más Pedido Hoy!</h4>
                         <div class="row g-3 g-md-4" id="popular-items-container">
@@ -2927,7 +2923,6 @@ h6 { font-size: var(--text-sm); }
                         </div>
                         <hr class="my-4 border-secondary">
                     </div>
-
                     <div class="mb-4 position-relative">
                         <input type="text" id="productSearchInput" class="form-control form-control-lg" placeholder="Buscar productos por nombre..." aria-label="Buscar productos">
                         <button id="clearSearchButton" class="btn btn-sm position-absolute end-0 top-50 translate-middle-y me-2" style="display:none;" title="Limpiar búsqueda">
@@ -2938,7 +2933,7 @@ h6 { font-size: var(--text-sm); }
                         <div id="filter-container" class="d-flex flex-wrap justify-content-center align-items-center">
                         </div>
                         <div class="ms-auto">
-                            <select id="sortProductsSelect" class="form-select form-select-sm bg-dark text-light border-secondary" style="min-width: 200px;">
+                            <select id="sortProductsSelect" class="form-select form-select-sm" style="min-width: 200px;">
                                 <option value="default" selected>Ordenar por...</option>
                                 <option value="name-asc">Nombre (A-Z)</option>
                                 <option value="name-desc">Nombre (Z-A)</option>
@@ -2947,7 +2942,7 @@ h6 { font-size: var(--text-sm); }
                             </select>
                         </div>
                     </div>
-                    <div class="row g-3 g-md-4" id="menu-container"><div class="col-12 text-center p-5"><div class="spinner-border" style="width: 3rem; height: 3rem; color: var(--primary-color);" role="status"></div><p class="mt-2 fs-5">Cargando...</p></div></div>
+                    <div class="row g-3 g-md-4" id="menu-container"><div class="col-12 text-center p-5"><div class="spinner-border" style="width: 3rem; height: 3rem;" role="status"></div><p class="mt-2 fs-5">Cargando...</p></div></div>
                 </div>
                 <div class="tab-pane fade" id="rewards-tab" role="tabpanel" aria-labelledby="rewards-tab-link">
                     <div class="d-flex justify-content-center align-items-center mb-4">
@@ -2956,7 +2951,7 @@ h6 { font-size: var(--text-sm); }
                             <i class="bi bi-arrow-clockwise"></i>
                         </button>
                     </div>
-                    <div class="row g-3 g-md-4" id="rewards-container"><div class="col-12 text-center p-5"><div class="spinner-border" style="width: 3rem; height: 3rem; color: var(--primary-color);" role="status"></div><p class="mt-2 fs-5">Cargando...</p></div></div>
+                    <div class="row g-3 g-md-4" id="rewards-container"><div class="col-12 text-center p-5"><div class="spinner-border" style="width: 3rem; height: 3rem;" role="status"></div><p class="mt-2 fs-5">Cargando...</p></div></div>
                 </div>
                 <div class="tab-pane fade" id="my-orders-tab" role="tabpanel" aria-labelledby="my-orders-tab-link">
                     <h3 class="mb-4 text-center"><i class="bi bi-clock-history me-2"></i>Historial de Envíos</h3>
@@ -2965,7 +2960,6 @@ h6 { font-size: var(--text-sm); }
             </div>
         </div>
     </main>
-
     <div id="loadingSpinnerUser" class="loading-spinner">
       <div class="luxury-spinner">
         <div class="luxury-spinner-inner"></div>
@@ -2973,14 +2967,12 @@ h6 { font-size: var(--text-sm); }
       </div>
     </div>
     <div class="toast-container position-fixed bottom-0 start-0 p-3" id="toastPlacement" style="z-index: 2050"> </div>
-
-    <!-- INICIO MODAL DE AUTENTICACIÓN UNIFICADO -->
     <div class="modal fade" id="authModal" tabindex="-1" aria-labelledby="authModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="authModalLabel">Acceso / Registro</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <ul class="nav nav-tabs nav-fill mb-3" id="authTab" role="tablist">
@@ -3035,6 +3027,9 @@ h6 { font-size: var(--text-sm); }
                                 <div class="mb-3">
                                     <label for="newUserReferralCodeUsed" class="form-label">Código de Referido (Opcional)</label>
                                     <input type="text" class="form-control" id="newUserReferralCodeUsed" placeholder="Ingresa un código si tienes uno">
+                                    <div id="referral-code-feedback" class="form-text text-success mt-1" style="display: none;">
+                                        <i class="bi bi-check-circle-fill"></i> Código de referido aplicado.
+                                    </div>
                                 </div>
                                 <div id="registration-feedback" class="mt-3 mb-3"></div>
                                 <button type="button" class="btn btn-primary w-100" onclick="handleUserRegistrationAttempt()">Registrarme</button>
@@ -3042,30 +3037,37 @@ h6 { font-size: var(--text-sm); }
                         </div>
                     </div>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
-                </div>
             </div>
         </div>
     </div>
-    <!-- FIN MODAL DE AUTENTICACIÓN UNIFICADO -->
-
-    <div style="display: none;" class="modal fade" id="cartModal" tabindex="-1" aria-labelledby="cartModalLabel" aria-hidden="true"><div class="modal-dialog modal-lg modal-dialog-scrollable modal-dialog-centered"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="cartModalLabel"><i class="bi bi-cart3 me-2"></i>Mi Carrito de Envío</h5><button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button></div><div class="modal-body" id="cart-items-container"><p class="text-center">Tu carrito está vacío.</p></div><div class="modal-footer justify-content-between flex-wrap"><div id="cart-footer-info"><small class="text-muted d-block">Puntos a ganar: <span id="cart-points-to-earn" class="fw-bold">0</span></small><strong class="fs-5">Total: <span id="cart-total-price" style="color: var(--primary-color);">0.00</span> USD</strong><br><small class="text-warning"><i class="bi bi-credit-card-2-front-fill"></i> Pagos por Zelle.</small></div><div class="d-flex mt-2 mt-sm-0" id="cart-footer-buttons" style="display: none;"><button type="button" class="btn btn-outline-danger me-2" onclick="clearCart()"><i class="bi bi-trash3 me-1"></i>Vaciar</button><button type="button" class="btn btn-success" onclick="confirmAndPlaceOrder()"><i class="bi bi-check-circle me-1"></i>Confirmar Envío</button></div></div><div id="order-placement-feedback" class="m-3"></div></div></div></div>
-    <div class="modal fade" id="productDetailModal" tabindex="-1" aria-labelledby="productDetailModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg modal-dialog-centered"><div class="modal-content"><div class="modal-header border-0"><h5 class="modal-title" id="productDetailModalLabel">Detalles del Producto</h5><button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button></div><div class="modal-body pt-0"><div class="row g-4"><div class="col-md-6"><img src="./img/placeholder-product.png" id="modal-product-image" class="img-fluid" alt="Imagen del producto"></div><div class="col-md-6 d-flex flex-column"><h2 id="modal-product-name" class="mb-2">Nombre del Producto</h2><p id="modal-product-description" class="text-muted flex-grow-1">Descripción detallada del producto...</p><div class="d-flex justify-content-between align-items-center mb-3"><span id="modal-product-price">USD 0.00</span><span class="badge bg-success" id="modal-product-points">+0 Puntos</span></div><div id="modal-add-to-cart-button-container" class="mb-4"></div><div id="modal-recommendations-container"></div></div></div></div></div></div>
+    <div class="modal fade" id="cartModal" tabindex="-1" aria-labelledby="cartModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="cartModalLabel"><i class="bi bi-cart-fill me-2"></i> Mi Carrito de Envío</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body p-0">
+             <div class="p-3" id="cart-items-container"></div>
+             <div class="p-3" id="order-placement-feedback"></div>
+          </div>
+        </div>
+      </div>
     </div>
-
+    <div class="modal fade" id="productDetailModal" tabindex="-1" aria-labelledby="productDetailModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered"><div class="modal-content"><div class="modal-header border-0"><h5 class="modal-title" id="productDetailModalLabel">Detalles del Producto</h5><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button></div><div class="modal-body pt-0"><div class="row g-4"><div class="col-md-6"><img src="./img/placeholder-product.png" id="modal-product-image" class="img-fluid" alt="Imagen del producto"></div><div class="col-md-6 d-flex flex-column"><h2 id="modal-product-name" class="mb-2">Nombre del Producto</h2><p id="modal-product-description" class="text-muted flex-grow-1">Descripción detallada del producto...</p><div class="d-flex justify-content-between align-items-center mb-3"><span id="modal-product-price">USD 0.00</span><span class="badge bg-success" id="modal-product-points">+0 Puntos</span></div><div id="modal-add-to-cart-button-container" class="mb-4"></div><div id="modal-recommendations-container"></div></div></div></div></div></div>
+    </div>
     <div class="modal fade" id="rewardDetailModal" tabindex="-1" aria-labelledby="rewardDetailModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header border-0">
                 <h5 class="modal-title" id="rewardDetailModalLabel">Detalles de la Recompensa</h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body pt-0">
                 <div class="row g-4">
                     <div class="col-md-5">
-                        <img src="./img/placeholder-product.png" id="modal-reward-image" class="img-fluid" alt="Imagen de la recompensa" style="aspect-ratio: 4 / 5; object-fit: cover; border-radius: 1rem; border: 2px solid var(--accent-color);">
+                        <img src="./img/placeholder-product.png" id="modal-reward-image" class="img-fluid" alt="Imagen de la recompensa" style="aspect-ratio: 4 / 5; object-fit: cover; border-radius: 1rem; border: 2px solid var(--accent-500);">
                     </div>
                     <div class="col-md-7 d-flex flex-column">
                         <h2 id="modal-reward-name" class="mb-2" style="font-family: 'Playfair Display', serif; color: var(--accent-color);">Nombre de la Recompensa</h2>
@@ -3074,15 +3076,11 @@ h6 { font-size: var(--text-sm); }
                             <span id="modal-reward-points-required" style="color: var(--accent-color); font-size: 1.75rem; font-weight: 700;">0 Puntos</span>
                             <span class="badge" id="modal-reward-stock-info"></span>
                         </div>
-                        <div id="modal-redeem-reward-button-container" class="mb-3">
-                            <!-- Botón de canje se insertará aquí -->
-                        </div>
+                        <div id="modal-redeem-reward-button-container" class="mb-3"></div>
                         <hr class="border-secondary my-3">
                         <div id="modal-product-recommendations-for-reward-container">
-                            <h5 class="text-light mb-3" style="font-weight: 600;"><i class="bi bi-hand-thumbs-up-fill me-2"></i>Productos que te podrían gustar:</h5>
-                            <div id="reward-modal-product-recs-row" class="row g-2">
-                                <!-- Recomendaciones de productos -->
-                            </div>
+                            <h5 class="mb-3" style="font-weight: 600;"><i class="bi bi-hand-thumbs-up-fill me-2"></i>Productos que te podrían gustar:</h5>
+                            <div id="reward-modal-product-recs-row" class="row g-2"></div>
                         </div>
                     </div>
                 </div>
@@ -3090,17 +3088,16 @@ h6 { font-size: var(--text-sm); }
         </div>
     </div>
 </div>
-
     <div class="modal fade" id="sharePageModal" tabindex="-1" aria-labelledby="sharePageModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="sharePageModalLabel"><i class="bi bi-share-fill me-2" style="color:var(--primary-color);"></i>Compartir esta Página</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <h5 class="modal-title" id="sharePageModalLabel"><i class="bi bi-share-fill me-2"></i>Compartir esta Página</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body text-center">
                     <p class="mb-2">Comparte esta página para que otros puedan realizar compras y envíos.</p>
-                    <div id="qrcodeCanvas" class="mx-auto mb-3 border border-secondary p-2 rounded" style="width: 150px; height: 150px; background-color: white;">
+                    <div id="qrcodeCanvas" class="mx-auto mb-3 border p-2 rounded" style="width: 150px; height: 150px; background-color: white;">
                     </div>
                     <div class="d-grid gap-2 mb-4">
                         <button class="btn btn-primary btn-sm" id="copyLinkButton">
@@ -3109,7 +3106,7 @@ h6 { font-size: var(--text-sm); }
                         <a id="shareViaWhatsAppButton" class="btn btn-success btn-sm" href="#" target="_blank">
                             <i class="bi bi-whatsapp me-2"></i>Página por WhatsApp
                         </a>
-                        <a id="shareViaTelegramButton" class="btn btn-info btn-sm text-dark" href="#" target="_blank">
+                        <a id="shareViaTelegramButton" class="btn btn-info btn-sm" href="#" target="_blank">
                             <i class="bi bi-telegram me-2"></i>Página por Telegram
                         </a>
                     </div>
@@ -3118,13 +3115,12 @@ h6 { font-size: var(--text-sm); }
             </div>
         </div>
     </div>
-
     <div class="modal fade" id="confirmClearCartModal" tabindex="-1" aria-labelledby="confirmClearCartModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="confirmClearCartModalLabel"><i class="bi bi-exclamation-triangle-fill text-danger me-2"></i>Confirmar Acción</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <p>¿Estás seguro de que quieres vaciar completamente tu carrito de envío? Esta acción no se puede deshacer.</p>
@@ -3138,13 +3134,12 @@ h6 { font-size: var(--text-sm); }
             </div>
         </div>
     </div>
-
     <div class="modal fade" id="confirmRedeemRewardModal" tabindex="-1" aria-labelledby="confirmRedeemRewardModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="confirmRedeemRewardModalLabel"><i class="bi bi-patch-check-fill text-warning me-2"></i>Confirmar Canje de Recompensa</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <p id="confirmRedeemRewardText">¿Estás seguro de que quieres canjear esta recompensa?</p>
@@ -3159,7 +3154,6 @@ h6 { font-size: var(--text-sm); }
             </div>
         </div>
     </div>
-
     <div class="modal fade" id="presentationVideoModal" tabindex="-1" aria-labelledby="presentationVideoModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
         <div class="modal-dialog modal-dialog-centered modal-xl" id="presentationVideoDialog">
             <div class="modal-content" id="presentationVideoContent" style="background-color: transparent; border: none; box-shadow: none;">
@@ -3175,127 +3169,30 @@ h6 { font-size: var(--text-sm); }
             </div>
         </div>
     </div>
-
     <div class="modal fade" id="helpModal" tabindex="-1" aria-labelledby="helpModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="helpModalLabel"><i class="bi bi-question-circle-fill me-2" style="color:var(--primary-color);"></i>Ayuda y Cómo Funciona DL Cumanayagua</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <h5 class="modal-title" id="helpModalLabel"><i class="bi bi-question-circle-fill me-2"></i>Ayuda y Cómo Funciona</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <p class="lead">¡Bienvenido a DL Cumanayagua! Aquí te explicamos cómo funciona nuestra plataforma para que puedas enviar productos y cariño a tus seres queridos en Cumanayagua, Cuba, de forma fácil y segura.</p>
-
                     <div class="accordion" id="helpAccordion">
-                        <div class="accordion-item">
-                            <h2 class="accordion-header" id="headingOneHelp">
-                                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOneHelp" aria-expanded="true" aria-controls="collapseOneHelp">
-                                    <i class="bi bi-person-circle me-2"></i>Tu Cuenta (Cliente Comprador)
-                                </button>
-                            </h2>
-                            <div id="collapseOneHelp" class="accordion-collapse collapse show" aria-labelledby="headingOneHelp" data-bs-parent="#helpAccordion">
-                                <div class="accordion-body">
-                                    <p>Esta página web es para ti, el cliente que realiza la compra desde fuera de Cuba (ej. USA) para enviar a Cumanayagua.</p>
-                                    <ul>
-                                        <li><strong>Registro e Inicio de Sesión:</strong> Crea una cuenta o inicia sesión con tu número de teléfono, correo y contraseña. Esto te permitirá guardar tu historial de envíos, acumular puntos y acceder a recompensas.</li>
-                                        <li><strong>Información Personal:</strong> Tu nombre, teléfono y correo son para gestionar tus pedidos y comunicarnos contigo.</li>
-
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="accordion-item">
-                            <h2 class="accordion-header" id="headingTwoHelp">
-                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwoHelp" aria-expanded="false" aria-controls="collapseTwoHelp">
-                                   <i class="bi bi-card-list me-2"></i> Menú y Combos (Realizar un Envío)
-                                </button>
-                            </h2>
-                            <div id="collapseTwoHelp" class="accordion-collapse collapse" aria-labelledby="headingTwoHelp" data-bs-parent="#helpAccordion">
-                                <div class="accordion-body">
-                                    <p>Explora nuestro catálogo de productos y combos disponibles para enviar.</p>
-                                    <ul>
-                                        <li><strong>Añadir al Carrito:</strong> Selecciona los productos que deseas enviar y añádelos a tu carrito de envío.</li>
-                                        <li><strong>Ver Detalles:</strong> Haz clic en la imagen de un producto para ver más detalles, descripción y recomendaciones.</li>
-                                        <li><strong>Carrito de Envío:</strong> Revisa tu selección, ajusta cantidades y ve el total en USD.</li>
-                                        <li><strong>Confirmar Envío:</strong> Una vez listo, confirma tu envío. Se generará un número de pedido.</li>
-                                        <li><strong>Pago con Zelle:</strong> Tras confirmar, te proporcionaremos instrucciones para realizar el pago mediante Zelle. Deberás notificarnos por WhatsApp una vez realizado el pedido para coordinar el pago.</li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="accordion-item">
-                            <h2 class="accordion-header" id="headingThreeHelp">
-                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThreeHelp" aria-expanded="false" aria-controls="collapseThreeHelp">
-                                    <i class="bi bi-star-fill me-2"></i>Puntos y Recompensas
-                                </button>
-                            </h2>
-                            <div id="collapseThreeHelp" class="accordion-collapse collapse" aria-labelledby="headingThreeHelp" data-bs-parent="#helpAccordion">
-                                <div class="accordion-body">
-                                    <p>¡Premiamos tu fidelidad!</p>
-                                    <ul>
-                                        <li><strong>Acumular Puntos:</strong> Con cada compra que realices (y una vez confirmado el pago), acumularás puntos en tu cuenta. La cantidad de puntos por producto se indica en el menú.</li>
-                                        <li><strong>Ver tus Puntos:</strong> El total de tus puntos disponibles se muestra en tu tarjeta VIP al iniciar sesión.</li>
-                                        <li><strong>Sección Recompensas:</strong> Aquí encontrarás productos o beneficios especiales que puedes canjear utilizando tus puntos acumulados.</li>
-                                        <li><strong>Canjear Recompensas:</strong> Si tienes suficientes puntos, podrás canjear una recompensa. Esta se aplicará a un futuro envío o según se especifique. Deberás notificarnos por WhatsApp al canjear para coordinar.</li>
-                                        <li><strong>Puntos de Bienvenida:</strong> Actualmente, no se otorgan puntos de bienvenida al registrarse. Los puntos se ganan a través de las compras. (Excepción: Ver Programa de Referidos).</li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="accordion-item">
-                            <h2 class="accordion-header" id="headingFourHelp">
-                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFourHelp" aria-expanded="false" aria-controls="collapseFourHelp">
-                                    <i class="bi bi-receipt-cutoff me-2"></i>Mis Envíos
-                                </button>
-                            </h2>
-                            <div id="collapseFourHelp" class="accordion-collapse collapse" aria-labelledby="headingFourHelp" data-bs-parent="#helpAccordion">
-                                <div class="accordion-body">
-                                    <p>En esta sección podrás ver un historial de todos los envíos que has realizado, su estado (Pendiente, Procesado, Entregado, Cancelado), los productos incluidos y los puntos otorgados.</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="accordion-item">
-                            <h2 class="accordion-header" id="headingSixHelp">
-                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSixHelp" aria-expanded="false" aria-controls="collapseSixHelp">
-                                    <i class="bi bi-person-hearts me-2"></i>Programa de Referidos
-                                </button>
-                            </h2>
-                            <div id="collapseSixHelp" class="accordion-collapse collapse" aria-labelledby="headingSixHelp" data-bs-parent="#helpAccordion">
-                                <div class="accordion-body">
-                                    <p>¡Invita a tus amigos y ambos ganan!</p>
-                                    <ul>
-                                        <li><strong>Tu Código de Referido:</strong> Cuando inicias sesión, verás tu código de referido personal en tu tarjeta VIP. Compártelo con amigos que quieran hacer envíos a Cumanayagua.</li>
-                                        <li><strong>Para tus Amigos (Nuevos Clientes):</strong> Al registrarse, tu amigo puede ingresar tu código de referido en el campo "Código de Referido". Si el código es válido, tu amigo recibirá <strong>15 puntos extra</strong> de bienvenida.</li>
-                                        <li><strong>Para Ti (Quien Refiere):</strong> Cuando tu amigo se registra exitosamente usando tu código, tú recibirás <strong>25 puntos</strong> como agradecimiento.</li>
-                                        <li>Los puntos se añaden automáticamente a sus respectivas cuentas.</li>
-                                    </ul>
-                                    <p class="small text-muted">Nota: Los puntos y condiciones del programa de referidos pueden cambiar.</p>
-                                </div>
-                            </div>
-                        </div>
                     </div>
-                    <p class="mt-4">Si tienes más preguntas, no dudes en contactarnos a través del botón de WhatsApp flotante. ¡Estamos para ayudarte!</p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Entendido</button>
                 </div>
             </div>
         </div>
     </div>
-    
-    <!-- INICIO: NUEVO MODAL PARA MENSAJE GLOBAL -->
     <div class="modal fade" id="globalMessageModal" tabindex="-1" aria-labelledby="globalMessageModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="globalMessageModalTitle">
-                        <i class="bi bi-info-circle-fill me-2" style="color:var(--primary-color);"></i>
+                        <i class="bi bi-info-circle-fill me-2"></i>
                         Anuncio Importante
                     </h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body" id="globalMessageModalBody">
                     <p>Cargando mensaje...</p>
@@ -3306,9 +3203,6 @@ h6 { font-size: var(--text-sm); }
             </div>
         </div>
     </div>
-    <!-- FIN: NUEVO MODAL PARA MENSAJE GLOBAL -->
-
-
     <div class="floating-buttons-container">
         <a id="whatsappButton" href="https://wa.me/5355189657?text=Hola,%20tengo%20una%20consulta%20sobre%20DL%20Cumanayagua." class="floating-button" target="_blank" title="Chatea con nosotros">
             <i class="bi bi-whatsapp"></i>
@@ -3321,12 +3215,10 @@ h6 { font-size: var(--text-sm); }
             <i class="bi bi-share-fill"></i>
         </button>
     </div>
-
     <div id="quick-nav-buttons">
         <a href="#top" class="quick-nav-btn" title="Ir arriba"><i class="bi bi-arrow-up"></i></a>
         <a href="#bottom" id="go-down-btn" class="quick-nav-btn" title="Ir abajo"><i class="bi bi-arrow-down"></i></a>
     </div>
-
     <footer id="bottom" class="footer-custom pt-5 pb-4">
         <div class="container text-center text-md-start">
             <div class="row gy-4">
@@ -3334,7 +3226,7 @@ h6 { font-size: var(--text-sm); }
                     <div class="d-flex align-items-center justify-content-center justify-content-md-start mb-3">
                          <img src="https://i.postimg.cc/rsFSGFt2/Generated-Image-June-11-2025-1-22-AM.jpg" alt="Erick Olivera" class="footer-avatar me-3">
                          <div>
-                            <h5 class="text-uppercase fw-bold mb-1" style="color: var(--primary-color);">DL Cumanayagua</h5>
+                            <h5 class="text-uppercase fw-bold mb-1">DL Cumanayagua</h5>
                             <p class="footer-name mb-0">Erick Olivera</p>
                          </div>
                     </div>
@@ -3365,7 +3257,7 @@ h6 { font-size: var(--text-sm); }
                     </div>
                 </div>
             </div>
-            <hr class="my-4" style="border-color: rgba(255,255,255,0.1);">
+            <hr class="my-4">
             <div class="footer-copyright-container d-flex justify-content-center align-items-center">
                 <span class="small text-muted">© 2024 DL Cumanayagua. Todos los derechos reservados.</span>
                 <button class="footer-refresh-btn ms-3" onclick="forceFullCacheRefresh()" title="Actualizar datos de la página">
@@ -3375,78 +3267,32 @@ h6 { font-size: var(--text-sm); }
         </div>
     </footer>
 
-
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script>
-
 // ===================================================================
-// ==================== INICIO: LÓGICA PWA ===========================
+// ==================== CONFIGURACIÓN Y CONSTANTES ===================
 // ===================================================================
-
-// Variable para guardar el evento de instalación
-let deferredPrompt;
-
-// 1. REGISTRAR EL SERVICE WORKER
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('./sw.js')
-      .then(registration => {
-        console.log('Service Worker registrado con éxito:', registration);
-      })
-      .catch(error => {
-        console.log('Error al registrar el Service Worker:', error);
-      });
-  });
-}
-
-// 2. GESTIONAR EL PROMPT DE INSTALACIÓN
-const installAppButton = document.getElementById('installAppButton');
-
-window.addEventListener('beforeinstallprompt', (e) => {
-  // Prevenir que el navegador muestre su propio mini-infobar
-  e.preventDefault();
-  // Guardar el evento para poder dispararlo más tarde
-  deferredPrompt = e;
-  // Mostrar nuestro botón de instalación personalizado
-  if(installAppButton) {
-      installAppButton.style.display = 'flex';
-  }
-});
-
-if(installAppButton) {
-    installAppButton.addEventListener('click', async (e) => {
-      // Ocultar el botón, ya que solo se puede usar una vez
-      installAppButton.style.display = 'none';
-      
-      if (deferredPrompt) {
-        // Mostrar el diálogo de instalación
-        deferredPrompt.prompt();
-        // Esperar a que el usuario responda
-        const { outcome } = await deferredPrompt.userChoice;
-        console.log(`Respuesta del usuario a la instalación: ${outcome}`);
-        // Limpiar la variable, ya que no se puede volver a usar
-        deferredPrompt = null;
-      }
-    });
-}
-// ===================================================================
-// ====================== FIN: LÓGICA PWA ============================
-// ===================================================================
-
-      
-const GOOGLE_SCRIPT_URL_USER = 'https://script.google.com/macros/s/AKfycbyG77ab1DSxczn02VlA99PtBYAVZzoJXr0vbjvXhbXtQno_Cypjyl5HQWHfg-cMXBZMlg/exec';
-const LOGGED_IN_CLIENT_KEY = 'cafeteriaVipClientLoggedIn_v8';
-const USER_CART_KEY = 'cafeteriaUserCart_v5';
-const MAX_AVATAR_DIMENSION = 200;
-const AVATAR_JPEG_QUALITY = 0.75;
-const LOCAL_AVATAR_DATA_KEY = 'localAvatarDataUrl_v1';
+const GOOGLE_SCRIPT_URL_USER = 'https://script.google.com/macros/s/AKfycbzbbeuK7TA0VBDucZZALIK_Q2XFwLoT_mD-gEmkecd2Gr8IE7uFoWDOex6B58SRpEWrVg/exec';
+const LOGGED_IN_CLIENT_KEY = 'cafeteriaVipClientLoggedIn_v9';
+const USER_CART_KEY = 'cafeteriaUserCart_v6';
 const PRESENTATION_VIDEO_SHOWN_KEY = 'presentationVideoShown_v1';
 const REFERRAL_POINTS_FOR_REFERRER = 25;
 const REFERRAL_POINTS_FOR_REFEREE = 15;
 const SEEN_MESSAGE_TIMESTAMP_KEY = 'seenGlobalMessageTimestamp_v1';
 
+const AVATAR_GALLERY_IMAGES = [
+    'https://i.postimg.cc/DZJmXb0N/Caricature1.png', 'https://i.postimg.cc/NM9LHrFz/Caricature2.png',
+    'https://i.postimg.cc/76Gb2Thc/Caricature3.png', 'https://i.postimg.cc/mDzhHFkJ/Caricature4.png',
+    'https://i.postimg.cc/sXQ1hZ1x/Caricature5.png', 'https://i.postimg.cc/76FhMYTq/Caricature6.png',
+    'https://i.postimg.cc/V6xvBLbs/Caricature7.png', 'https://i.postimg.cc/RFkhQVnZ/Caricature8.png',
+    'https://i.postimg.cc/Kz6jrvgT/Caricature9.png', 'https://i.postimg.cc/B6rbcQ1D/Caricature10.png',
+    'https://i.postimg.cc/V6xvBLbq/Caricature11.png', 'https://i.postimg.cc/Kz6jrvgr/Caricature12.png'
+];
 
+// ===================================================================
+// ==================== VARIABLES GLOBALES ===========================
+// ===================================================================
 let clientData = null;
 let menuItems = [];
 let availableRewards = [];
@@ -3454,19 +3300,35 @@ let shoppingCart = [];
 let currentFilterCategory = 'all';
 let currentSortOption = 'default';
 const loadingSpinnerUser = document.getElementById('loadingSpinnerUser');
-let authModalInstance, 
-    cartModalInstance, productDetailModalInstance,
-    sharePageModalInstance, confirmClearCartModalInstance,
-    confirmRedeemRewardModalInstance, presentationVideoModalInstance,
-    helpModalInstance, rewardDetailModalInstance, globalMessageModalInstance;
-let floatingCartButtonEl;
-let floatingCartCountEl;
+let authModalInstance, cartModalInstance, productDetailModalInstance,
+    sharePageModalInstance, confirmClearCartModalInstance, confirmRedeemRewardModalInstance,
+    presentationVideoModalInstance, helpModalInstance, rewardDetailModalInstance,
+    globalMessageModalInstance, avatarGalleryModalInstance;
+let floatingCartButtonEl, floatingCartCountEl;
 let qrcodePageInstance = null;
+let lastOrderDetails = null;
+let initialReferralCode = null; // Variable para almacenar el código de referido de la URL
 
-
+// ===================================================================
+// ==================== INICIALIZACIÓN DE LA PÁGINA ==================
+// ===================================================================
 document.addEventListener('DOMContentLoaded', async function() {
     floatingCartButtonEl = document.getElementById('floatingCartButton');
     floatingCartCountEl = document.getElementById('floating-cart-count');
+    
+    handleInitialReferral();
+    
+    // ================== CÓDIGO MODIFICADO ==================
+    // Si se detectó un código de referido Y el modal no se ha mostrado en esta sesión...
+    if (initialReferralCode && !sessionStorage.getItem('referralModalShown')) {
+        setTimeout(() => {
+            openAuthModal('register');
+            // Establecer una bandera para no volver a mostrar el modal en esta sesión.
+            sessionStorage.setItem('referralModalShown', 'true');
+        }, 1000); // Pequeño retraso para mejorar la experiencia del usuario.
+    }
+    // ========================================================
+    
     initializeModals();
     loadCartFromStorage();
     loadClientDataFromStorage();
@@ -3477,324 +3339,88 @@ document.addEventListener('DOMContentLoaded', async function() {
     setupEventListeners();
     handleScroll();
     initializeShareModal();
-    setupShareEventListeners();
     setupFloatingButtonFeedback();
     handlePresentationVideo();
     setupNavbarToggler();
-
-    const confirmClearCartBtn = document.getElementById('confirmClearCartButton');
-    if (confirmClearCartBtn) {
-        confirmClearCartBtn.addEventListener('click', performClearCartActions);
-    }
-
-    const productSearchInput = document.getElementById('productSearchInput');
-    const clearSearchButton = document.getElementById('clearSearchButton');
-    const sortProductsSelect = document.getElementById('sortProductsSelect');
-
-    if (productSearchInput) {
-        productSearchInput.addEventListener('input', function() {
-            generateMenu();
-            if (this.value.length > 0 && clearSearchButton) {
-                clearSearchButton.style.display = 'block';
-            } else if (clearSearchButton) {
-                clearSearchButton.style.display = 'none';
-            }
-        });
-    }
-    if (clearSearchButton) {
-        clearSearchButton.addEventListener('click', function() {
-            if(productSearchInput) productSearchInput.value = '';
-            clearSearchButton.style.display = 'none';
-            generateMenu();
-        });
-    }
-    if (sortProductsSelect) {
-        sortProductsSelect.addEventListener('change', function() {
-            currentSortOption = this.value;
-            generateMenu();
-        });
-    }
-
-    const helpAccordionItems = document.querySelectorAll('#helpAccordion .accordion-collapse');
-    let hasDynamicHelpItems = false;
-    helpAccordionItems.forEach((item, index) => {
-        const button = item.previousElementSibling.querySelector('button');
-        if (button && button.getAttribute('data-bs-target').startsWith('#collapseHelp')) { 
-            hasDynamicHelpItems = true;
-            const newId = `collapseHelp${index}`; 
-            item.id = newId;
-            button.setAttribute('data-bs-target', `#${newId}`);
-            button.setAttribute('aria-controls', newId);
-        }
-    });
-    
+    populateAvatarGallery();
+    setupSearchAndSort();
     setupVipCardInteraction();
-    applyMobileOptimizations();
 });
 
-// --- INICIO: SCRIPT PARA TARJETA VIP DE LUJO ---
+// ===================================================================
+// ==================== SISTEMA DE REFERIDOS =========================
+// ===================================================================
 
-function setupVipCardInteraction() {
-    const card = document.getElementById('vip-card-container');
-    if (!card) return;
-
-    const glow = card.querySelector('.vip-card-glow');
-
-    card.addEventListener('mousemove', (e) => {
-        const rect = card.getBoundingClientRect();
-        
-        // Efecto de brillo que sigue al mouse
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
-        if(glow) {
-            glow.style.transform = `translate(${x - rect.width}px, ${y - rect.height}px)`;
-        }
-
-        // Efecto de inclinación 3D
-        const mouseX = x - rect.width / 2;
-        const mouseY = y - rect.height / 2;
-        const rotateY = (1 / 20) * mouseX; // Ajusta el '20' para más/menos sensibilidad
-        const rotateX = (-1 / 20) * mouseY;
-        card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
-    });
-
-    card.addEventListener('mouseleave', () => {
-        card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg)';
-        if(glow) {
-            glow.style.transform = 'translate(-50%, -50%)'; // Centrar de nuevo
-        }
-    });
+function handleInitialReferral() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const refCode = urlParams.get('ref');
+    if (refCode) {
+        initialReferralCode = refCode.trim();
+        console.log('Referral code detected:', initialReferralCode);
+        showGlobalFeedback(`¡Código de referido detectado! Recibirás puntos extra al registrarte.`, 'success', 5000);
+    }
 }
 
-// Función mejorada para copiar con feedback visual
-function copyReferralCodeWithFeedback(buttonElement) {
+function generateReferralLink() {
+    const baseUrl = window.location.origin + window.location.pathname;
     if (clientData && clientData.referralcode) {
-        navigator.clipboard.writeText(clientData.referralcode).then(() => {
-            const icon = buttonElement.querySelector('i');
-            const text = buttonElement.querySelector('.copy-text');
+        return `${baseUrl}?ref=${clientData.referralcode}`;
+    }
+    return baseUrl;
+}
+
+function applyReferralCodeToForm() {
+    if (initialReferralCode) {
+        const referralInput = document.getElementById('newUserReferralCodeUsed');
+        const referralFeedback = document.getElementById('referral-code-feedback');
+        if (referralInput) {
+            referralInput.value = initialReferralCode;
+            referralInput.readOnly = true;
+            if (referralFeedback) {
+                referralFeedback.style.display = 'block';
+            }
+        }
+    }
+}
+
+function initializeShareModal() {
+     const shareModalEl = document.getElementById('sharePageModal');
+     if (shareModalEl) {
+        shareModalEl.addEventListener('shown.bs.modal', () => {
+            const qrPageCanvas = document.getElementById('qrcodeCanvas');
+            const pageUrl = generateReferralLink();
+
+            if (qrPageCanvas) {
+                qrPageCanvas.innerHTML = '';
+                if (qrcodePageInstance) {
+                    qrcodePageInstance.clear();
+                    qrcodePageInstance = null;
+                }
+                qrcodePageInstance = new QRCode(qrPageCanvas, {
+                    text: pageUrl, width: 130, height: 130,
+                    colorDark : "#000000", colorLight : "#ffffff", correctLevel : QRCode.CorrectLevel.H
+                });
+
+                let shareText = "¡Echa un vistazo a DL Cumanayagua para enviar productos a Cuba!";
+                if (clientData && clientData.referralcode) {
+                    shareText = "¡Usa mi enlace para registrarte en DL Cumanayagua y obtén puntos de bienvenida! Es genial para enviar productos a Cuba.";
+                }
+
+                const encodedShareText = encodeURIComponent(`${shareText} ${pageUrl}`);
+                document.getElementById('shareViaWhatsAppButton').href = `https://wa.me/?text=${encodedShareText}`;
+                document.getElementById('shareViaTelegramButton').href = `https://t.me/share/url?url=${encodeURIComponent(pageUrl)}&text=${encodeURIComponent(shareText)}`;
             
-            if (icon && text) {
-                // Estado "Copiado"
-                icon.className = 'bi bi-check-lg';
-                text.textContent = 'Copiado';
-                buttonElement.style.background = '#10B981'; // Color éxito
-                
-                // Volver al estado original después de 2 segundos
-                setTimeout(() => {
-                    icon.className = 'bi bi-clipboard';
-                    text.textContent = 'Copiar';
-                    buttonElement.style.background = ''; // Vuelve al color por defecto
-                }, 2000);
-            }
-            showGlobalFeedback('¡Código de referido copiado!', 'success', 2000);
-        }).catch(err => {
-            showGlobalFeedback('Error al copiar el código.', 'danger');
-        });
-    }
-}
-// --- FIN: SCRIPT PARA TARJETA VIP DE LUJO ---
-
-
-function setupNavbarToggler() {
-    const navLinks = document.querySelectorAll('#navbarNavContent .nav-link, #navbarNavContent .dropdown-item');
-    const navbarToggler = document.querySelector('.navbar-toggler');
-    const navbarCollapseEl = document.getElementById('navbarNavContent');
-    let navbarCollapseInstance = null;
-
-    if (navbarCollapseEl) {
-        navbarCollapseInstance = bootstrap.Collapse.getOrCreateInstance(navbarCollapseEl, {toggle: false});
-    }
-
-    navLinks.forEach(link => {
-        link.addEventListener('click', (event) => {
-            const isTogglerVisible = getComputedStyle(navbarToggler).display !== 'none';
-            const isMenuExpanded = navbarCollapseEl.classList.contains('show');
-
-            if (isMenuExpanded && isTogglerVisible) {
-                const opensModal = link.getAttribute('data-bs-toggle') === 'modal';
-                const isDropdownToggle = link.classList.contains('dropdown-toggle');
-
-                if (!opensModal && !isDropdownToggle) {
-                    if (navbarCollapseInstance) {
-                        navbarCollapseInstance.hide();
-                    }
-                }
+                const copyLinkButton = document.getElementById('copyLinkButton');
+                copyLinkButton.onclick = function() {
+                    navigator.clipboard.writeText(pageUrl).then(() => {
+                        showGlobalFeedback('¡Enlace de referido copiado!', 'success', 2000);
+                    }, (err) => {
+                        showGlobalFeedback('Error al copiar el enlace.', 'danger');
+                    });
+                };
             }
         });
-    });
-}
-
-function showTabAndScroll(tabLinkId) {
-    const tabLink = document.getElementById(tabLinkId);
-    if (tabLink) {
-        const tabInstance = bootstrap.Tab.getOrCreateInstance(tabLink);
-        tabInstance.show();
-
-        const tabPaneId = tabLink.getAttribute('href');
-        if (tabPaneId) {
-            const tabPane = document.querySelector(tabPaneId);
-            if (tabPane) {
-                setTimeout(() => {
-                    tabPane.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                }, 150);
-            }
-        }
-    }
-}
-
-
-function handleScroll() {
-    const quickNav = document.getElementById('quick-nav-buttons');
-    const goDownBtn = document.getElementById('go-down-btn');
-    if (!quickNav || !goDownBtn) return;
-
-    const floatingButtonsContainer = document.querySelector('.floating-buttons-container');
-    let fabContainerBottom = 25;
-     if (floatingButtonsContainer) {
-        const style = window.getComputedStyle(floatingButtonsContainer);
-        fabContainerBottom = parseFloat(style.bottom) || fabContainerBottom;
-    }
-
-    if (window.scrollY > 300) {
-        quickNav.style.display = 'flex';
-    } else {
-        quickNav.style.display = 'none';
-    }
-
-    let pageBottomOffset = 100;
-    const footer = document.getElementById('bottom');
-    if (footer) pageBottomOffset += footer.offsetHeight;
-
-    const nearBottom = (window.innerHeight + window.scrollY) >= (document.body.offsetHeight - pageBottomOffset);
-    goDownBtn.style.display = nearBottom ? 'none' : 'flex';
-}
-
-
-async function forceFullCacheRefresh() {
-    if (confirm("Esto borrará TODOS los datos de navegación (incluyendo sesión iniciada, carrito, etc.) y recargará la página desde cero para obtener la versión más reciente. ¿Deseas continuar?")) {
-        showGlobalFeedback("Limpiando datos y actualizando...", "info", null);
-        try {
-            console.log("Limpiando localStorage...");
-            localStorage.clear();
-            console.log("localStorage limpiado.");
-
-            console.log("Limpiando sessionStorage...");
-            sessionStorage.clear();
-            console.log("sessionStorage limpiado.");
-
-            if ('serviceWorker' in navigator && navigator.serviceWorker.getRegistrations) {
-                console.log("Intentando desregistrar Service Workers...");
-                const registrations = await navigator.serviceWorker.getRegistrations();
-                for (let registration of registrations) {
-                    await registration.unregister();
-                    console.log('Service Worker desregistrado:', registration.scope);
-                }
-                console.log("Service Workers desregistrados (si los había).");
-            }
-
-            if (window.caches && window.caches.keys) {
-                console.log("Intentando limpiar caché de la API de Cache...");
-                const keys = await window.caches.keys();
-                await Promise.all(keys.map(key => window.caches.delete(key)));
-                console.log("Cachés de la API eliminados.");
-            }
-        } catch (error) {
-            console.error("Error durante la limpieza de caché:", error);
-            showGlobalFeedback("Error al limpiar algunos datos de caché.", "warning");
-        }
-
-        try {
-            const baseUrl = window.location.origin + window.location.pathname;
-            const timestamp = new Date().getTime();
-            const newUrl = `${baseUrl}?t=${timestamp}`;
-            console.log(`Intentando recargar con URL para evitar caché: ${newUrl}`);
-            window.location.href = newUrl;
-
-            setTimeout(() => {
-                console.log("Fallback: intentando location.reload(true) después de la navegación por URL.");
-                window.location.reload(true);
-            }, 1500);
-        } catch (e) {
-            console.error("Error al intentar recargar la página con URL:", e);
-            console.log("Fallback final: intentando location.reload(true) directamente.");
-            setTimeout(() => {
-                window.location.reload(true);
-            }, 1500);
-        }
-    }
-}
-
-function initializeModals() {
-    try {
-        const authModalEl = document.getElementById('authModal');
-        if (authModalEl) authModalInstance = new bootstrap.Modal(authModalEl);
-        else console.warn("Modal con ID 'authModal' no encontrado.");
-
-        ['cartModal', 'productDetailModal', 'sharePageModal', 'confirmClearCartModal', 'confirmRedeemRewardModal', 'presentationVideoModal', 'helpModal', 'rewardDetailModal', 'globalMessageModal'].forEach(id => {
-            const el = document.getElementById(id);
-            if (el) {
-                if (id === 'cartModal') cartModalInstance = new bootstrap.Modal(el);
-                else if (id === 'productDetailModal') productDetailModalInstance = new bootstrap.Modal(el);
-                else if (id === 'sharePageModal') sharePageModalInstance = new bootstrap.Modal(el);
-                else if (id === 'confirmClearCartModal') confirmClearCartModalInstance = new bootstrap.Modal(el);
-                else if (id === 'confirmRedeemRewardModal') confirmRedeemRewardModalInstance = new bootstrap.Modal(el);
-                else if (id === 'presentationVideoModal') presentationVideoModalInstance = new bootstrap.Modal(el);
-                else if (id === 'helpModal') helpModalInstance = new bootstrap.Modal(el);
-                else if (id === 'rewardDetailModal') rewardDetailModalInstance = new bootstrap.Modal(el);
-                else if (id === 'globalMessageModal') globalMessageModalInstance = new bootstrap.Modal(el);
-            } else { console.warn(`Modal con ID '${id}' no encontrado.`); }
-        });
-    } catch (error) { console.error("Error inicializando modales:", error); }
-}
-
-function setupEventListeners() {
-    const authModalEl = document.getElementById('authModal');
-    if (authModalEl) {
-        authModalEl.addEventListener('hidden.bs.modal', () => {
-            clearFormAndFeedback('newUserRegistrationForm', 'registration-feedback');
-            clearFormAndFeedback('loginForm', 'login-feedback');
-        });
-    }
-    
-    document.getElementById('cartModal')?.addEventListener('show.bs.modal', renderCartItems);
-    document.getElementById('cartModal')?.addEventListener('hidden.bs.modal', () => {
-        document.getElementById('order-placement-feedback').innerHTML = '';
-        document.getElementById('cart-footer-info').style.display = 'block';
-        document.getElementById('cart-footer-buttons').style.display = 'flex';
-    });
-    const avatarUploadInputEl = document.getElementById('avatarUploadInput');
-    const avatarWrapper = document.querySelector('.avatar-wrapper');
-    const changeAvatarBtnEl = document.getElementById('changeAvatarButton');
-    const triggerAvatarUpload = () => {
-        if (clientData && clientData.id && avatarUploadInputEl) {
-            avatarUploadInputEl.click();
-        } else if (!clientData || !clientData.id) {
-            showGlobalFeedback("Inicia sesión para cambiar tu avatar.", "warning");
-            openAuthModal('login');
-        }
-    };
-    if (avatarWrapper) avatarWrapper.addEventListener('click', triggerAvatarUpload);
-    if (changeAvatarBtnEl) changeAvatarBtnEl.addEventListener('click', triggerAvatarUpload);
-    if (avatarUploadInputEl) avatarUploadInputEl.addEventListener('change', handleAvatarFileSelect);
-    
-    const rewardsTabEl = document.getElementById('rewards-tab-link');
-    if (rewardsTabEl) {
-        rewardsTabEl.addEventListener('shown.bs.tab', event => {
-            if (!clientData || !clientData.id) {
-                 generateRewardsList();
-                return;
-            }
-            if (availableRewards.length === 0) forceLoadRewards();
-        });
-    }
-    const ordersTabEl = document.getElementById('my-orders-tab-link');
-    if (ordersTabEl) {
-        ordersTabEl.addEventListener('shown.bs.tab', event => {
-            loadUserOrders();
-        });
-    }
-    window.addEventListener('resize', adjustBodyPaddingAndFabPosition);
-    window.addEventListener('scroll', handleScroll);
+     }
 }
 
 function openAuthModal(tabToActivate = 'login') {
@@ -3803,228 +3429,226 @@ function openAuthModal(tabToActivate = 'login') {
         const tabButtonId = (tabToActivate === 'register') ? 'register-tab-btn' : 'login-tab-btn';
         const tabButton = document.getElementById(tabButtonId);
         if (tabButton) {
-            const tab = bootstrap.Tab.getOrCreateInstance(tabButton);
-            tab.show();
+            bootstrap.Tab.getOrCreateInstance(tabButton).show();
         }
-    } else {
-        console.error("Auth modal instance not found");
-    }
-}
 
-function adjustBodyPaddingAndFabPosition() {
-    const bodyEl = document.body;
-    const floatingButtonsContainer = document.querySelector('.floating-buttons-container');
-    const quickNavButtons = document.getElementById('quick-nav-buttons');
-    const navbarEl = document.querySelector('.navbar-custom.fixed-top');
-
-    let totalPaddingBottom = 0;
-    let fabContainerBottomOffset = 25;
-    let quickNavBottomOffset = 260;
-
-    if (window.matchMedia("(max-width: 768px)").matches) {
-        fabContainerBottomOffset = 20;
-        quickNavBottomOffset = 235;
-    }
-    if (window.matchMedia("(max-width: 576px)").matches) {
-        fabContainerBottomOffset = 15;
-        quickNavBottomOffset = 210;
-    }
-    
-    bodyEl.style.paddingBottom = totalPaddingBottom + 'px';
-
-    if (navbarEl) {
-        const navbarHeight = navbarEl.offsetHeight;
-        const mainEl = document.querySelector('main');
-        if (mainEl && parseFloat(mainEl.style.paddingTop) !== navbarHeight) {
-            mainEl.style.paddingTop = navbarHeight + 'px';
+        if (tabToActivate === 'register') {
+            applyReferralCodeToForm();
         }
-    }
-
-    if (floatingButtonsContainer) {
-         floatingButtonsContainer.style.bottom = fabContainerBottomOffset + 'px';
-    }
-    if (quickNavButtons && quickNavButtons.style.display !== 'none') {
-        quickNavButtons.style.bottom = quickNavBottomOffset + 'px';
-    }
-     handleScroll();
-}
-
-function handlePresentationVideo() {
-    const videoAlreadyShown = localStorage.getItem(PRESENTATION_VIDEO_SHOWN_KEY);
-    const videoElement = document.getElementById('introVideo');
-    const presentationModalEl = document.getElementById('presentationVideoModal');
-
-    if (!videoAlreadyShown) {
-        if (presentationVideoModalInstance && videoElement) {
-            const anyMajorModalActive = ['authModal', 'cartModal', 'helpModal'].some(id => {
-                const modal = document.getElementById(id);
-                return modal && modal.classList.contains('show');
-            });
-
-            if (!anyMajorModalActive) {
-                setTimeout(() => presentationVideoModalInstance.show(), 1000);
-            }
-        } else {
-            console.warn("Modal de video o elemento de video no encontrado para mostrar automáticamente.");
-        }
-    }
-
-    if (presentationModalEl && videoElement) {
-        presentationModalEl.addEventListener('shown.bs.modal', function () {
-            videoElement.currentTime = 0;
-            videoElement.play().catch(error => {
-                console.warn("Autoplay del video bloqueado por el navegador:", error);
-            });
-        });
-
-        presentationModalEl.addEventListener('hidden.bs.modal', function () {
-            videoElement.pause();
-            localStorage.setItem(PRESENTATION_VIDEO_SHOWN_KEY, 'true');
-        });
-
-        videoElement.addEventListener('ended', function() {
-            if (presentationVideoModalInstance) {
-                presentationVideoModalInstance.hide();
-            }
-        });
     }
 }
 
 function clearFormAndFeedback(formId, feedbackId) {
-    if (formId) {
-        const form = document.getElementById(formId);
-        if (form) form.reset();
-    }
-    if (feedbackId) {
-        const feedbackEl = document.getElementById(feedbackId);
-        if (feedbackEl) feedbackEl.innerHTML = '';
+    document.getElementById(formId)?.reset();
+    document.getElementById(feedbackId).innerHTML = '';
+
+    if (formId === 'newUserRegistrationForm') {
+        const referralInput = document.getElementById('newUserReferralCodeUsed');
+        const referralFeedback = document.getElementById('referral-code-feedback');
+        if (referralInput) {
+            referralInput.readOnly = false;
+        }
+        if (referralFeedback) {
+            referralFeedback.style.display = 'none';
+        }
     }
 }
 
-async function fetchDataFromGAS(action, method = 'POST', payloadData = null) {
-    if (loadingSpinnerUser) loadingSpinnerUser.classList.add('show');
-    try {
-        let url = GOOGLE_SCRIPT_URL_USER;
-        const options = { method: method, headers: {}, mode: 'cors', redirect: 'follow' };
-        if (method === 'GET') {
-            const params = new URLSearchParams({ action: action, cacheBuster: new Date().getTime() });
-            if (payloadData) {
-                for (const key in payloadData) {
-                    if (payloadData.hasOwnProperty(key)) { params.append(key, payloadData[key]); }
-                }
-            }
-            url += `?${params.toString()}`;
+// ===================================================================
+// ==================== RESTO DEL SCRIPT (COMPLETO) ==================
+// ===================================================================
+
+function setupFloatingButtonFeedback() {
+    if (floatingCartButtonEl) {
+        floatingCartButtonEl.addEventListener('click', function() {
+            floatingCartButtonEl.classList.add('clicked-animation');
+            setTimeout(() => {
+                floatingCartButtonEl.classList.remove('clicked-animation');
+            }, 400);
+        });
+    }
+
+    const floatingShareButtonEl = document.getElementById('floatingShareButton');
+    if (floatingShareButtonEl) {
+        floatingShareButtonEl.addEventListener('click', function() {
+            floatingShareButtonEl.classList.add('clicked-animation');
+            setTimeout(() => {
+                floatingShareButtonEl.classList.remove('clicked-animation');
+            }, 400);
+        });
+    }
+
+    const whatsappButtonEl = document.getElementById('whatsappButton');
+    if (whatsappButtonEl) {
+        whatsappButtonEl.addEventListener('click', function(event) {
+            whatsappButtonEl.classList.add('clicked-animation');
+            setTimeout(() => {
+                whatsappButtonEl.classList.remove('clicked-animation');
+            }, 400);
+        });
+    }
+}
+
+
+function initializeModals() {
+    const modalIds = [
+        'authModal', 'cartModal', 'productDetailModal', 'sharePageModal', 
+        'confirmClearCartModal', 'confirmRedeemRewardModal', 'presentationVideoModal', 
+        'helpModal', 'rewardDetailModal', 'globalMessageModal', 'avatarGalleryModal'
+    ];
+    modalIds.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) {
+            const instance = new bootstrap.Modal(el);
+            if (id === 'authModal') authModalInstance = instance;
+            if (id === 'cartModal') cartModalInstance = instance;
+            if (id === 'productDetailModal') productDetailModalInstance = instance;
+            if (id === 'sharePageModal') sharePageModalInstance = instance;
+            if (id === 'confirmClearCartModal') confirmClearCartModalInstance = instance;
+            if (id === 'confirmRedeemRewardModal') confirmRedeemRewardModalInstance = instance;
+            if (id === 'presentationVideoModal') presentationVideoModalInstance = instance;
+            if (id === 'helpModal') helpModalInstance = instance;
+            if (id === 'rewardDetailModal') rewardDetailModalInstance = instance;
+            if (id === 'globalMessageModal') globalMessageModalInstance = instance;
+            if (id === 'avatarGalleryModal') avatarGalleryModalInstance = instance;
+        } else { console.warn(`Modal con ID '${id}' no encontrado.`); }
+    });
+}
+
+function setupEventListeners() {
+    document.getElementById('authModal')?.addEventListener('hidden.bs.modal', () => {
+        clearFormAndFeedback('newUserRegistrationForm', 'registration-feedback');
+        clearFormAndFeedback('loginForm', 'login-feedback');
+    });
+    
+    document.getElementById('cartModal')?.addEventListener('show.bs.modal', renderCartItems);
+    document.getElementById('cartModal')?.addEventListener('hidden.bs.modal', () => {
+        document.getElementById('order-placement-feedback').innerHTML = '';
+    });
+
+    document.querySelector('.vip-avatar-section')?.addEventListener('click', () => {
+        if (clientData && clientData.id) {
+            avatarGalleryModalInstance?.show();
         } else {
-            options.headers['Content-Type'] = 'application/x-www-form-urlencoded';
-            const dataToSend = { action: action, payload: payloadData };
-            const formBody = new URLSearchParams();
-            formBody.append("data", JSON.stringify(dataToSend));
-            options.body = formBody.toString();
+            showGlobalFeedback("Inicia sesión para cambiar tu avatar.", "warning");
+            openAuthModal('login');
         }
-        const res = await fetch(url, options);
-        const responseText = await res.text();
-        let responseData;
-        try {
-            responseData = JSON.parse(responseText);
-        } catch (parseError) {
-            throw new Error(`Respuesta no es JSON válido del servidor: ${responseText.substring(0,150)}`);
-        }
-        return responseData;
-    } catch (error) {
-        showGlobalFeedback(`Error de conexión o servidor: ${error.message || 'Desconocido'}. Intenta de nuevo.`, "danger", 7000);
-        return { success: false, message: `Error de conexión o servidor: ${error.message || 'Desconocido'}.` };
-    } finally {
-        if (loadingSpinnerUser) loadingSpinnerUser.classList.remove('show');
-    }
+    });
+    
+    document.getElementById('rewards-tab-link')?.addEventListener('shown.bs.tab', () => {
+        if (!clientData || !clientData.id) generateRewardsList();
+        else if (availableRewards.length === 0) forceLoadRewards();
+    });
+
+    document.getElementById('my-orders-tab-link')?.addEventListener('shown.bs.tab', loadUserOrders);
+    
+    window.addEventListener('resize', adjustBodyPaddingAndFabPosition);
+    window.addEventListener('scroll', handleScroll);
 }
 
-function loadClientDataFromStorage() {
-    const storedClientData = localStorage.getItem(LOGGED_IN_CLIENT_KEY);
-    if (storedClientData) {
-        try {
-            clientData = JSON.parse(storedClientData);
-        } catch (e) {
-            localStorage.removeItem(LOGGED_IN_CLIENT_KEY);
-            clientData = null;
+function setupSearchAndSort() {
+    const productSearchInput = document.getElementById('productSearchInput');
+    const clearSearchButton = document.getElementById('clearSearchButton');
+    const sortProductsSelect = document.getElementById('sortProductsSelect');
+
+    productSearchInput?.addEventListener('input', () => {
+        generateMenu();
+        if (clearSearchButton) clearSearchButton.style.display = productSearchInput.value.length > 0 ? 'block' : 'none';
+    });
+    clearSearchButton?.addEventListener('click', () => {
+        if (productSearchInput) productSearchInput.value = '';
+        clearSearchButton.style.display = 'none';
+        generateMenu();
+    });
+    sortProductsSelect?.addEventListener('change', function() {
+        currentSortOption = this.value;
+        generateMenu();
+    });
+}
+
+function populateAvatarGallery() {
+    const galleryContainer = document.getElementById('avatar-gallery');
+    if (!galleryContainer) return;
+    galleryContainer.innerHTML = AVATAR_GALLERY_IMAGES.map(imageUrl => 
+        `<img src="${imageUrl}" alt="Avatar" class="gallery-avatar" loading="lazy" onclick="selectAvatar('${imageUrl}')">`
+    ).join('');
+}
+
+async function selectAvatar(imageUrl) {
+    if (!clientData || !clientData.id) {
+        showGlobalFeedback('Debes iniciar sesión para cambiar tu avatar.', 'warning');
+        return;
+    }
+    document.getElementById('user-avatar').src = imageUrl;
+    clientData.avatarurl = imageUrl;
+    localStorage.setItem(LOGGED_IN_CLIENT_KEY, JSON.stringify(clientData));
+    
+    avatarGalleryModalInstance?.hide();
+    showGlobalFeedback('Avatar actualizado. Guardando en el servidor...', 'info', 3000);
+
+    const payload = { clientId: clientData.id, newAvatarUrl: imageUrl };
+    const result = await fetchDataFromGAS('updateClientAvatarUrl', 'POST', payload);
+
+    if (result.success) {
+        showGlobalFeedback('¡Avatar guardado con éxito!', 'success');
+        if(result.data && result.data.clientData) {
+            clientData = result.data.clientData;
+            localStorage.setItem(LOGGED_IN_CLIENT_KEY, JSON.stringify(clientData));
         }
     } else {
-        clientData = null;
+        showGlobalFeedback(result.message || 'Error al guardar el avatar.', 'warning');
     }
 }
 
 function updateClientDisplayAndUI() {
     const el = id => document.getElementById(id);
-    const authNavContainer = el('auth-buttons-nav');
-    const logoutNavButton = el('logoutButtonNav');
-    const vipCardContainer = el('vip-card-container');
-    const guestPromptContainer = el('guest-prompt');
+    const vipCard = el('vip-card-container'), guestPrompt = el('guest-prompt');
     const userAvatarImg = el('user-avatar');
-    const myOrdersTabLink = el('my-orders-tab-link');
-    const referralCodeContainerEl = el('client-referral-code-container');
-    const clientReferralCodeEl = el('clientReferralCode');
-    const changeAvatarButton = el('changeAvatarButton');
 
-    if (clientData && clientData.id && (clientData.verificado === true || String(clientData.verificado).toLowerCase() === 'true')) {
-        el('client-name').textContent = `${clientData.nombre ? clientData.nombre : 'Cliente VIP'}`;
-        el('client-points').textContent = clientData.puntos !== undefined ? clientData.puntos : 0;
+    if (clientData && clientData.id) {
+        el('client-name').textContent = clientData.nombre || 'Cliente VIP';
+        el('client-points').textContent = clientData.puntos || 0;
         el('client-status').textContent = `Nivel: ${(clientData.puntos||0)>=150?"Oro":(clientData.puntos||0)>=75?"Plata":"Bronce"}`;
-        el('client-phone-display').textContent = clientData.telefono ? `Tel: ${clientData.telefono}` : '';
-        el('vip-status-badge').style.display = 'inline-block';
-        if (userAvatarImg) {
-            if (clientData[LOCAL_AVATAR_DATA_KEY] && typeof clientData[LOCAL_AVATAR_DATA_KEY] === 'string') {
-                userAvatarImg.src = clientData[LOCAL_AVATAR_DATA_KEY];
-            } else if (clientData.avatarurl && typeof clientData.avatarurl === 'string' && clientData.avatarurl.trim() !== '') {
-                 userAvatarImg.src = clientData.avatarurl + (clientData.avatarurl.includes('?') ? '&t=' : '?t=') + new Date().getTime();
-            } else {
-                userAvatarImg.src = './img/placeholder-avatar.png';
-            }
+        userAvatarImg.src = clientData.avatarurl || './img/placeholder-avatar.png';
+        el('auth-buttons-nav').innerHTML = `<span class="navbar-text me-2 small">Hola, ${clientData.nombre ? clientData.nombre.split(' ')[0] : 'VIP'}</span>`;
+        el('logoutButtonNav').style.display = 'inline-block';
+        vipCard.style.display = 'block';
+        guestPrompt.style.display = 'none';
+        if (clientData.referralcode) {
+            el('clientReferralCode').textContent = clientData.referralcode;
+            el('client-referral-code-container').style.display = 'flex';
         }
-        if(authNavContainer) authNavContainer.innerHTML = `<span class="navbar-text text-light me-2 small">Hola, ${clientData.nombre ? clientData.nombre.split(' ')[0] : 'VIP'}</span>`;
-        if(logoutNavButton) logoutNavButton.style.display = 'inline-block';
-        if(vipCardContainer) vipCardContainer.style.display = 'block';
-        if(guestPromptContainer) guestPromptContainer.style.display = 'none';
-        if(myOrdersTabLink) myOrdersTabLink.innerHTML = `<i class="bi bi-receipt me-1"></i>Mis Envíos`;
-
-        if (clientData.referralcode && clientReferralCodeEl && referralCodeContainerEl) {
-            clientReferralCodeEl.textContent = clientData.referralcode;
-            referralCodeContainerEl.style.display = 'flex';
-        } else if (referralCodeContainerEl) {
-            referralCodeContainerEl.style.display = 'none';
-        }
-        if(changeAvatarButton) changeAvatarButton.style.display = 'flex';
-        setupVipCardInteraction();
-
     } else {
-        el('client-name').textContent = `¡Bienvenido!`;
-        el('client-points').textContent = 0;
-        el('client-status').textContent = "Inicia sesión o regístrate para enviar.";
-        el('client-phone-display').textContent = '';
-        el('vip-status-badge').style.display = 'none';
-        if (userAvatarImg) userAvatarImg.src = './img/placeholder-avatar.png';
-        if(authNavContainer) authNavContainer.innerHTML = `
-            <button class="btn btn-sm btn-outline-primary me-2" onclick="openAuthModal('login')"><i class="bi bi-box-arrow-in-right"></i> Login</button>
-            <button class="btn btn-sm btn-warning" onclick="openAuthModal('register')"><i class="bi bi-person-plus"></i> Registro</button>`;
-        if(logoutNavButton) logoutNavButton.style.display = 'none';
-        if(vipCardContainer) vipCardContainer.style.display = 'none';
-        if(guestPromptContainer) guestPromptContainer.style.display = 'block';
-        if(myOrdersTabLink) myOrdersTabLink.innerHTML = `<i class="bi bi-receipt me-1"></i>Mis Envíos`;
-        if (referralCodeContainerEl) referralCodeContainerEl.style.display = 'none';
-        if(changeAvatarButton) changeAvatarButton.style.display = 'none';
-
+        vipCard.style.display = 'none';
+        guestPrompt.style.display = 'block';
+        el('auth-buttons-nav').innerHTML = `<button class="btn btn-sm btn-outline-primary me-2" onclick="openAuthModal('login')"><i class="bi bi-box-arrow-in-right"></i> Login</button> <button class="btn btn-sm btn-warning" onclick="openAuthModal('register')"><i class="bi bi-person-plus"></i> Registro</button>`;
+        el('logoutButtonNav').style.display = 'none';
         loadUserOrders();
         generateRewardsList();
     }
     updateCartDisplay();
 }
 
-function logoutClient() {
-    clientData = null;
-    localStorage.removeItem(LOGGED_IN_CLIENT_KEY);
-    shoppingCart = [];
-    availableRewards = [];
-    localStorage.removeItem(USER_CART_KEY);
-    updateClientDisplayAndUI();
-    showGlobalFeedback('Sesión cerrada. ¡Vuelve pronto!', 'info');
+async function handleLoginAttempt() {
+    const telefono = document.getElementById('loginPhone').value.trim();
+    const password = document.getElementById('loginPassword').value;
+    const feedbackElId = 'login-feedback';
+    if (!telefono || !password) {
+        showFeedbackInModal(null, feedbackElId, 'Teléfono y contraseña son requeridos.', 'danger'); return;
+    }
+    showFeedbackInModal(null, feedbackElId, '<div class="spinner-border spinner-border-sm me-2"></div>Iniciando sesión...', 'info', null);
+    const payload = { telefono, password };
+    const result = await fetchDataFromGAS('loginUser', 'POST', payload);
+    if (result.success && result.data) {
+        clientData = result.data;
+        localStorage.setItem(LOGGED_IN_CLIENT_KEY, JSON.stringify(clientData));
+        updateClientDisplayAndUI();
+        showFeedbackInModal(null, feedbackElId, `¡Bienvenido de nuevo, ${clientData.nombre.split(' ')[0]}! Listo para enviar.`, 'success', 3000);
+        setTimeout(() => authModalInstance?.hide(), 2000);
+        loadUserOrders();
+    } else {
+        showFeedbackInModal(null, feedbackElId, result.message || 'Error al iniciar sesión. Verifica tus datos.', 'danger');
+    }
 }
 
 async function handleUserRegistrationAttempt() {
@@ -4071,125 +3695,307 @@ async function handleUserRegistrationAttempt() {
     }
 }
 
-async function handleLoginAttempt() {
-    const telefono = document.getElementById('loginPhone').value.trim();
-    const password = document.getElementById('loginPassword').value;
-    const feedbackElId = 'login-feedback';
-    if (!telefono || !password) {
-        showFeedbackInModal(null, feedbackElId, 'Teléfono y contraseña son requeridos.', 'danger'); return;
-    }
-    showFeedbackInModal(null, feedbackElId, '<div class="spinner-border spinner-border-sm me-2"></div>Iniciando sesión...', 'info', null);
-    const payload = { telefono, password };
-    const result = await fetchDataFromGAS('loginUser', 'POST', payload);
-    if (result.success && result.data) {
-        clientData = result.data;
-        localStorage.setItem(LOGGED_IN_CLIENT_KEY, JSON.stringify(clientData));
-        updateClientDisplayAndUI();
-        showFeedbackInModal(null, feedbackElId, `¡Bienvenido de nuevo, ${clientData.nombre.split(' ')[0]}! Listo para enviar.`, 'success', 3000);
-        setTimeout(() => authModalInstance?.hide(), 2000);
-        loadUserOrders();
-    } else {
-        showFeedbackInModal(null, feedbackElId, result.message || 'Error al iniciar sesión. Verifica tus datos.', 'danger');
-    }
+function logoutClient() {
+    clientData = null;
+    localStorage.removeItem(LOGGED_IN_CLIENT_KEY);
+    shoppingCart = [];
+    availableRewards = [];
+    localStorage.removeItem(USER_CART_KEY);
+    updateClientDisplayAndUI();
+    showGlobalFeedback('Sesión cerrada. ¡Vuelve pronto!', 'info');
 }
 
-async function handleAvatarFileSelect(event) {
-    const file = event.target.files[0];
-    if (!file) return;
-    if (!file.type.startsWith('image/')) {
-        showGlobalFeedback('Por favor, selecciona un archivo de imagen (JPEG, PNG, GIF).', 'warning');
-        event.target.value = null; return;
-    }
-    const maxSizeInBytes = 2 * 1024 * 1024;
-    if (file.size > maxSizeInBytes) {
-        showGlobalFeedback('La imagen es demasiado grande (máx 2MB antes de comprimir).', 'warning');
-        event.target.value = null; return;
-    }
-    showGlobalFeedback('Procesando imagen...', 'info', null);
-    try {
-        const compressedDataUrl = await compressImage(file, file.type);
-        if (clientData && clientData.id) {
-            clientData[LOCAL_AVATAR_DATA_KEY] = compressedDataUrl;
-            localStorage.setItem(LOGGED_IN_CLIENT_KEY, JSON.stringify(clientData));
-            const userAvatarImg = document.getElementById('user-avatar');
-            if(userAvatarImg) userAvatarImg.src = compressedDataUrl;
-            showGlobalFeedback('Avatar actualizado localmente. Subiendo al servidor...', 'info', 3000);
-        } else {
-            showGlobalFeedback('Error: No hay sesión de usuario activa para guardar el avatar local.', 'danger');
-            event.target.value = null; return;
-        }
-        const parts = compressedDataUrl.split(';base64,');
-        const contentType = parts[0].split(':')[1];
-        const imageData = parts[1];
-        await uploadClientAvatar(imageData, contentType, file.name);
-    } catch (error) {
-        showGlobalFeedback(`Error al procesar la imagen: ${error.message}`, 'danger');
-    } finally {
-        event.target.value = null;
-    }
-}
+function setupVipCardInteraction() {
+    const card = document.getElementById('vip-card-container');
+    if (!card) return;
+    const glow = card.querySelector('.vip-card-glow');
 
-function compressImage(file, originalMimeType) {
-    return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.readAsDataURL(file);
-        reader.onload = (event) => {
-            const img = new Image();
-            img.src = event.target.result;
-            img.onload = () => {
-                const canvas = document.createElement('canvas');
-                let width = img.width;
-                let height = img.height;
-                if (width > height) {
-                    if (width > MAX_AVATAR_DIMENSION) {
-                        height = Math.round(height * MAX_AVATAR_DIMENSION / width);
-                        width = MAX_AVATAR_DIMENSION;
-                    }
-                } else {
-                    if (height > MAX_AVATAR_DIMENSION) {
-                        width = Math.round(width * MAX_AVATAR_DIMENSION / height);
-                        height = MAX_AVATAR_DIMENSION;
-                    }
-                }
-                canvas.width = width;
-                canvas.height = height;
-                const ctx = canvas.getContext('2d');
-                ctx.drawImage(img, 0, 0, width, height);
-                resolve(canvas.toDataURL('image/jpeg', AVATAR_JPEG_QUALITY));
-            };
-            img.onerror = () => reject(new Error("No se pudo cargar la imagen para compresión."));
-        };
-        reader.onerror = () => reject(new Error("Error leyendo el archivo de imagen."));
+    card.addEventListener('mousemove', (e) => {
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left, y = e.clientY - rect.top;
+        if(glow) glow.style.transform = `translate(${x - rect.width}px, ${y - rect.height}px)`;
+        const mouseX = x - rect.width / 2, mouseY = y - rect.height / 2;
+        card.style.transform = `perspective(1000px) rotateX(${-mouseY/20}deg) rotateY(${mouseX/20}deg)`;
+    });
+
+    card.addEventListener('mouseleave', () => {
+        card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg)';
+        if(glow) glow.style.transform = 'translate(-50%, -50%)';
     });
 }
 
-async function uploadClientAvatar(imageData, contentType, filename) {
-    if (!clientData || !clientData.id) {
-        showGlobalFeedback('Debes iniciar sesión para cambiar tu avatar.', 'warning'); return;
-    }
-    const payload = {
-        clientId: clientData.id,
-        imageData: imageData,
-        contentType: contentType,
-        filename: "avatar_" + clientData.id + "_" + Date.now() + "." + (contentType.split('/')[1] || 'jpg')
-    };
-    const result = await fetchDataFromGAS('updateClientAvatar', 'POST', payload);
-    if (result.success && result.data && result.data.newAvatarUrl) {
-        if (result.data.clientData) {
-            const localAvatarTemp = clientData[LOCAL_AVATAR_DATA_KEY];
-            clientData = result.data.clientData;
-            if (localAvatarTemp && !clientData[LOCAL_AVATAR_DATA_KEY]) {
-                clientData[LOCAL_AVATAR_DATA_KEY] = localAvatarTemp;
+function copyReferralCodeWithFeedback(buttonElement) {
+    if (clientData && clientData.referralcode) {
+        navigator.clipboard.writeText(clientData.referralcode).then(() => {
+            const icon = buttonElement.querySelector('i'), text = buttonElement.querySelector('.copy-text');
+            if (icon && text) {
+                icon.className = 'bi bi-check-lg'; text.textContent = 'Copiado';
+                buttonElement.style.background = '#10B981';
+                setTimeout(() => {
+                    icon.className = 'bi bi-clipboard'; text.textContent = 'Copiar';
+                    buttonElement.style.background = '';
+                }, 2000);
             }
-            if (result.data.newAvatarUrl) clientData.avatarurl = result.data.newAvatarUrl;
-        } else {
-             clientData.avatarurl = result.data.newAvatarUrl;
-        }
-        localStorage.setItem(LOGGED_IN_CLIENT_KEY, JSON.stringify(clientData));
-        showGlobalFeedback('¡Avatar guardado con éxito en el servidor!', 'success');
-    } else {
-        showGlobalFeedback(result.message || 'Error al guardar el avatar en el servidor. Se mantiene la versión local.', 'warning');
+            showGlobalFeedback('¡Código de referido copiado!', 'success', 2000);
+        }).catch(err => showGlobalFeedback('Error al copiar el código.', 'danger'));
     }
+}
+
+function formatOrderDate(dateStr) {
+    if (!dateStr) return 'Fecha no disponible';
+    const date = new Date(dateStr);
+    if (isNaN(date.getTime()) || date.getFullYear() < 2000) {
+        return 'Fecha inválida';
+    }
+    return date.toLocaleDateString('es-ES', { 
+        year: 'numeric', month: 'short', day: 'numeric', 
+        hour: '2-digit', minute: '2-digit', hour12: true 
+    });
+}
+
+// ====== MODIFICADO: Añadido console.log para depuración ======
+async function loadUserOrders() {
+    const container = document.getElementById('orders-history-container');
+    if (!container) return;
+    if (!clientData || !clientData.id) {
+        container.innerHTML = `<div class="text-center p-5"><p>Inicia sesión para ver tus envíos.</p></div>`;
+        return;
+    }
+    
+    container.innerHTML = `<div class="text-center p-5"><div class="spinner-border text-primary"></div><p class="mt-2">Cargando envíos...</p></div>`;
+    const result = await fetchDataFromGAS('getUserOrders', 'POST', { clientId: String(clientData.id) });
+
+    console.log("Datos de envíos recibidos del servidor:", result); 
+
+    if (result.success && Array.isArray(result.data)) {
+        if (result.data.length === 0) {
+            container.innerHTML = `<div class="text-center p-5"><p>Aún no tienes envíos registrados.</p></div>`;
+            return;
+        }
+
+        let html = '<div class="accordion shadow-sm" id="ordersAccordion">';
+        result.data.forEach((order, index) => {
+            
+            // Leemos directamente 'itemsjson' que ahora viene parseado del servidor.
+            let items = order.itemsjson || []; 
+            let itemsHtml = '<div class="table-responsive"><table class="table table-sm table-borderless small mt-2">';
+            itemsHtml += '<thead class="text-muted"><tr><th>Cant.</th><th>Producto</th><th class="text-end">Precio Unit.</th><th class="text-end">Subtotal</th></tr></thead><tbody>';
+            
+            if (items.length > 0) {
+                items.forEach(item => {
+                    const unitPrice = parseFloat(item.price) || 0;
+                    const quantity = parseInt(item.quantity) || 0;
+                    const subtotal = unitPrice * quantity;
+                    itemsHtml += `<tr><td>${quantity}x</td><td>${item.name}</td><td class="text-end">$${unitPrice.toFixed(2)}</td><td class="text-end fw-bold">$${subtotal.toFixed(2)}</td></tr>`;
+                });
+            } else { 
+                itemsHtml += '<tr><td colspan="4">No hay detalles de ítems.</td></tr>'; 
+            }
+            itemsHtml += '</tbody></table></div>';
+            
+            let sbc = 'bg-secondary';
+            // Leemos 'status', que ahora vendrá como clave fija.
+            const os = String(order.status || '').toLowerCase();
+            if (os.includes('pendiente')) sbc = 'bg-warning text-dark';
+            else if (os.includes('procesado') || os.includes('preparación')) sbc = 'bg-info text-dark';
+            else if (os.includes('entregado') || os.includes('completado')) sbc = 'bg-success';
+            else if (os.includes('cancelado')) sbc = 'bg-danger';
+
+            // Usamos 'orderdateiso' (si existe) o 'orderdate'. Ambos vienen del servidor.
+            const formattedDate = formatOrderDate(order.orderdateiso || order.orderdate);
+            
+            html += `
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="hO${order.orderid}"><button class="accordion-button ${index > 0 ? 'collapsed' : ''}" type="button" data-bs-toggle="collapse" data-bs-target="#cO${order.orderid}" aria-expanded="${index===0}"><span class="me-auto">${formattedDate} - Envío #${String(order.orderid || '').substr(-6)}</span><span class="badge ${sbc} text-uppercase">${order.status||'N/A'}</span></button></h2>
+                    <div id="cO${order.orderid}" class="accordion-collapse collapse ${index===0 ? 'show' : ''}" data-bs-parent="#ordersAccordion">
+                        <div class="accordion-body">
+                            <h6>Detalles del Envío</h6>
+                            ${itemsHtml}
+                            <hr>
+                            <div class="d-flex justify-content-between">
+                                <span class="text-muted">Puntos Otorgados:</span>
+                                <span><strong>${order.totalpointsawarded || 0}</strong> Pts</span>
+                            </div>
+                            <div class="d-flex justify-content-between mt-2 fs-5">
+                                <span class="fw-bold">TOTAL:</span>
+                                <span class="fw-bold text-primary">USD ${(parseFloat(order.totalamount)||0).toFixed(2)}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>`;
+        });
+        html += '</div>';
+        container.innerHTML = html;
+    } else {
+        container.innerHTML = `<div class="text-center p-5 text-danger"><p>Error al cargar envíos: ${result.message}</p></div>`;
+    }
+}
+
+function generateEmailBody(orderId, cart, total) {
+    let body = `¡Hola! He realizado un nuevo pedido desde DL Cumanayagua.\n\n`;
+    body += `*Nro. de Envío:* ${orderId}\n\n`;
+    body += `*Resumen del pedido:*\n`;
+    cart.forEach(item => {
+        body += `- ${item.quantity}x ${item.name}\n`;
+    });
+    body += `\n*Total:* USD ${total.toFixed(2)}\n\n`;
+    body += `Espero instrucciones para el pago. ¡Gracias!`;
+    body = body.replace(/\*/g, '').replace(/\n/g, '%0D%0A');
+    return body;
+}
+
+async function confirmAndPlaceOrder() {
+    if (shoppingCart.length === 0) {
+        showFeedbackInModal(null, 'order-placement-feedback', "Tu carrito está vacío.", "warning");
+        return;
+    }
+    if (!clientData || !clientData.id) {
+        showFeedbackInModal(null, 'order-placement-feedback', 'Inicia sesión para realizar un envío.', 'warning');
+        cartModalInstance?.hide(); openAuthModal('login'); return;
+    }
+
+    showFeedbackInModal(null, 'order-placement-feedback', '<div class="spinner-border spinner-border-sm me-2"></div>Procesando envío...', 'info', null);
+    
+    const cartPayload = shoppingCart.map(item => ({ productId: String(item.productId), quantity: item.quantity }));
+    const result = await fetchDataFromGAS('placeOrder', 'POST', { clientId: String(clientData.id), cartItems: cartPayload });
+
+    if (result.success && result.data) {
+        const orderTotal = shoppingCart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+        lastOrderDetails = { orderId: result.data.orderId, cart: [...shoppingCart], total: orderTotal };
+
+        const whatsappMessage = generateWhatsAppMessage(lastOrderDetails.orderId, lastOrderDetails.cart, lastOrderDetails.total);
+        const whatsappUrl = `https://wa.me/5355189657?text=${whatsappMessage}`;
+
+        document.getElementById('order-placement-feedback').innerHTML = `
+            <div class="alert alert-success" role="alert">
+              <h4 class="alert-heading">¡Envío Registrado con Éxito!</h4>
+              <p>Tu pedido <strong>#${lastOrderDetails.orderId}</strong> ha sido creado. Por favor, notifícanos para coordinar el pago.</p>
+              <hr>
+              <div class="d-grid gap-2">
+                  <a href="${whatsappUrl}" target="_blank" class="btn btn-success btn-lg" onclick="postWhatsAppNotification()">
+                    <i class="bi bi-whatsapp me-2"></i><strong>Notificar por WhatsApp</strong>
+                  </a>
+                  <button class="btn btn-outline-primary btn-lg" onclick="sendOrderViaEmail()">
+                    <i class="bi bi-envelope-fill me-2"></i>Notificar (Abrir App de Email)
+                  </button>
+              </div>
+            </div>`;
+        
+        shoppingCart = [];
+        saveCartToStorage();
+        if (result.data.updatedClient) {
+            clientData = result.data.updatedClient;
+            localStorage.setItem(LOGGED_IN_CLIENT_KEY, JSON.stringify(clientData));
+        }
+        updateClientDisplayAndUI();
+        renderCartItems();
+        loadUserOrders();
+    } else {
+        showFeedbackInModal(null, 'order-placement-feedback', result.message || 'Error al programar el envío.', 'danger');
+    }
+}
+
+function sendOrderViaEmail() {
+    if (!lastOrderDetails) {
+        showGlobalFeedback("No hay información del último pedido para enviar.", "warning");
+        return;
+    }
+    
+    const recipientEmail = "erick890406@gmail.com"; 
+    const subject = encodeURIComponent(`Notificación de Nuevo Pedido #${lastOrderDetails.orderId}`);
+    const body = generateEmailBody(lastOrderDetails.orderId, lastOrderDetails.cart, lastOrderDetails.total);
+
+    const mailtoLink = `mailto:${recipientEmail}?subject=${subject}&body=${body}`;
+    window.open(mailtoLink, '_self');
+}
+
+function generateWhatsAppMessage(orderId, cart, total) {
+    let message = `¡Hola! 👋 He realizado un nuevo pedido desde DL Cumanayagua.\n\n`;
+    message += `*Nro. de Envío:* ${orderId}\n\n`;
+    message += "*Resumen del pedido:*\n";
+    cart.forEach(item => {
+        message += `- ${item.quantity}x ${item.name}\n`;
+    });
+    message += `\n*Total:* USD ${total.toFixed(2)}\n\n`;
+    message += `Espero instrucciones para el pago. ¡Gracias!`;
+    return encodeURIComponent(message);
+}
+
+function renderCartItems() {
+    const container = document.getElementById('cart-items-container');
+    if (!container) return;
+    
+    container.innerHTML = ''; 
+
+    if (!Array.isArray(shoppingCart) || shoppingCart.length === 0) {
+        container.innerHTML = `<div class="cart-empty-state"><i class="bi bi-cart-x cart-empty-icon"></i><p class="cart-empty-text">Tu carrito de envío está vacío</p><p class="cart-empty-subtext">Añade productos desde el menú para empezar.</p></div>`;
+        updateCartDisplay();
+        return;
+    }
+    
+    let currentTotal = 0, totalPoints = 0, totalItems = 0;
+    const cartItemsWrapper = document.createElement('div');
+    cartItemsWrapper.className = 'cart-items';
+
+    shoppingCart.forEach(item => {
+        const itemTotal = (item.price || 0) * (item.quantity || 1);
+        const itemPoints = (item.points || 0) * (item.quantity || 1);
+        currentTotal += itemTotal;
+        totalPoints += itemPoints;
+        totalItems += (item.quantity || 1);
+        const itemProductId = String(item.productId || '');
+        const productInfo = menuItems.find(p => p.id === itemProductId);
+        const imageUrl = productInfo ? productInfo.imageurl : '';
+
+        cartItemsWrapper.innerHTML += `
+            <div class="cart-item" data-product-id="${itemProductId}">
+                <div class="item-thumbnail-container">
+                    <img src="${imageUrl || './img/placeholder-product.png'}" alt="${item.name}" class="item-thumbnail" loading="lazy">
+                    <span class="quantity-badge">${item.quantity}</span>
+                </div>
+                <div class="item-info">
+                    <p class="item-name">${item.name}</p>
+                    <div class="item-details">
+                        <span class="item-price">USD ${itemTotal.toFixed(2)}</span>
+                        <span class="item-unit-price">(${item.quantity} × $${item.price.toFixed(2)})</span>
+                        ${itemPoints > 0 ? `<span class="item-points">+${itemPoints} pts</span>` : ''}
+                    </div>
+                </div>
+                <div class="cart-controls">
+                    <button class="quantity-btn decrease" onclick="handleQuantityChange('${itemProductId}', -1, this)">-</button>
+                    <span class="quantity-display">${item.quantity}</span>
+                    <button class="quantity-btn increase" onclick="handleQuantityChange('${itemProductId}', 1, this)">+</button>
+                </div>
+                <button class="remove-btn" onclick="handleRemoveItem('${itemProductId}', this)"><i class="bi bi-trash3"></i></button>
+            </div>`;
+    });
+    container.appendChild(cartItemsWrapper);
+    
+    container.innerHTML += `
+        <div class="cart-summary">
+            <div class="summary-row">
+                <span class="summary-label">Subtotal (${totalItems} items)</span>
+                <span class="summary-value">USD ${currentTotal.toFixed(2)}</span>
+            </div>
+            <div class="points-summary">
+                <div class="points-text"><i class="bi bi-star-fill points-icon"></i> Puntos a ganar: <strong>${totalPoints}</strong></div>
+            </div>
+        </div>
+        <div class="total-section">
+            <div class="total-row">
+                <span class="total-label">Total del Envío</span>
+                <span class="total-amount">USD ${currentTotal.toFixed(2)}</span>
+            </div>
+        </div>
+        <div class="cart-actions">
+            <button class="cart-action-btn danger" onclick="clearCart()"><i class="bi bi-trash3"></i> Vaciar Carrito</button>
+            <button class="cart-action-btn" onclick="continueShopping()"><i class="bi bi-arrow-left-circle"></i> Seguir Comprando</button>
+        </div>
+        <a href="#" class="payment-method" onclick="event.preventDefault(); handlePayment();">
+            <div class="payment-info"><div class="payment-icon">Z</div><span class="payment-text">Pagar con Zelle</span></div>
+            <i class="bi bi-arrow-right-circle payment-arrow"></i>
+        </a>`;
+    updateCartDisplay();
 }
 
 async function loadInitialData() {
@@ -4197,34 +4003,29 @@ async function loadInitialData() {
     const rewardsContainer = document.getElementById('rewards-container');
     const popularContainer = document.getElementById('popular-items-container');
     
-    menuContainer.innerHTML = `<div class="col-12 text-center p-5"><div class="spinner-border" style="width: 3rem; height: 3rem; color: var(--primary-color);" role="status"></div><p class="mt-2 fs-5">Cargando...</p></div>`;
-    rewardsContainer.innerHTML = `<div class="col-12 text-center p-5"><div class="spinner-border" style="width: 3rem; height: 3rem; color: var(--primary-color);" role="status"></div><p class="mt-2 fs-5">Cargando...</p></div>`;
-    if (popularContainer) popularContainer.innerHTML = '<div class="col-12 text-center p-3"><div class="spinner-border spinner-border-sm text-primary" role="status"></div><span class="ms-2">Cargando...</span></div>';
+    if (menuContainer) menuContainer.innerHTML = `<div class="col-12 text-center p-5"><div class="spinner-border text-primary" style="width: 3rem; height: 3rem;"></div><p class="mt-3">Cargando menú...</p></div>`;
+    if (rewardsContainer) rewardsContainer.innerHTML = `<div class="col-12 text-center p-5"><div class="spinner-border text-info" style="width: 3rem; height: 3rem;"></div><p class="mt-3">Cargando recompensas...</p></div>`;
+    if (popularContainer) popularContainer.innerHTML = `<div class="col-12 text-center p-3"><div class="spinner-border spinner-border-sm text-warning"></div><span class="ms-2">Buscando lo más popular...</span></div>`;
 
     const res = await fetchDataFromGAS('getInitialClientData', 'GET');
 
     if (res.success && res.data) {
-        menuItems = (res.data.products || []).map(p => ({
-            ...p, price: parseFloat(p.price) || 0, points: parseInt(p.points) || 0,
-            id: String(p.id), category: p.category || "Otros"
-        }));
+        menuItems = (res.data.products || []).map(p => ({ ...p, price: parseFloat(p.price) || 0, points: parseInt(p.points) || 0, id: String(p.id), category: p.category || "Otros" }));
         generatePopularItems();
         generateCategoryFilters();
         generateMenu();
 
-        availableRewards = (res.data.rewards || []).map(r => ({
-            ...r, rewardid: String(r.rewardid), pointsrequired: parseInt(r.pointsrequired) || 0, stock: parseInt(r.stock)
-        }));
+        availableRewards = (res.data.rewards || []).map(r => ({ ...r, rewardid: String(r.rewardid), pointsrequired: parseInt(r.pointsrequired) || 0, stock: parseInt(r.stock) }));
         generateRewardsList();
 
         if (res.data.globalMessage && res.data.globalMessage.lastUpdated) {
             handleGlobalMessage(res.data.globalMessage);
         }
-
     } else {
-        menuContainer.innerHTML = `<div class="col-12 text-center p-5"><p class="text-danger fs-5">Error al cargar los datos: ${res.message || 'Desconocido.'}</p></div>`;
-        rewardsContainer.innerHTML = `<div class="col-12 text-center p-5"><p class="text-danger fs-5">Error al cargar las recompensas.</p></div>`;
-        if (popularContainer) popularContainer.innerHTML = '<div class="col-12 text-center p-3"><p class="text-danger">Error al cargar populares.</p></div>';
+        const errorMessage = `<div class="col-12 text-center text-danger p-5"><h4>Error al cargar</h4><p>${res.message || 'No se pudieron obtener los datos del servidor.'}</p></div>`;
+        if (menuContainer) menuContainer.innerHTML = errorMessage;
+        if (rewardsContainer) rewardsContainer.innerHTML = errorMessage;
+        if (popularContainer) popularContainer.innerHTML = errorMessage;
     }
 }
 
@@ -4609,7 +4410,6 @@ function performClearCartActions() {
     }
 }
 
-
 function updateCartDisplay() {
     let totalItems = Array.isArray(shoppingCart) ? shoppingCart.reduce((s, i) => s + (i.quantity || 0), 0) : 0;
     if (floatingCartButtonEl && floatingCartCountEl) {
@@ -4774,338 +4574,11 @@ function continueShopping() {
     showCartNotification('Puedes seguir agregando productos', 'info');
 }
 
-function renderCartItems() {
-    const container = document.getElementById('cart-items-container');
-    const totalPriceEl = document.getElementById('cart-total-price');
-    const pointsToEarnEl = document.getElementById('cart-points-to-earn');
-    const cartFooterButtons = document.getElementById('cart-footer-buttons');
-    
-    if (!container || !totalPriceEl || !pointsToEarnEl || !cartFooterButtons) return;
-    
-    container.innerHTML = '';
-    let currentTotal = 0;
-    let totalPoints = 0;
-    let totalItems = 0;
-
-    if (!Array.isArray(shoppingCart) || shoppingCart.length === 0) {
-        container.innerHTML = `
-            <div class="cart-empty-state">
-                <div class="cart-empty-icon">
-                    <i class="bi bi-cart-x"></i>
-                </div>
-                <div class="cart-empty-text">Tu carrito está vacío</div>
-                <div class="cart-empty-subtext">Agrega algunos productos para comenzar</div>
-            </div>
-        `;
-        totalPriceEl.textContent = '0.00';
-        pointsToEarnEl.textContent = '0';
-        cartFooterButtons.style.display = 'none';
-        updateCartDisplay();
-        return;
-    } else {
-        cartFooterButtons.style.display = 'flex';
-    }
-
-    const cartContainer = document.createElement('div');
-    cartContainer.className = 'cart-items';
-
-    shoppingCart.forEach((item, index) => {
-        const itemTotal = (parseFloat(item.price) || 0) * (item.quantity || 1);
-        const itemPoints = (parseInt(item.points) || 0) * (item.quantity || 1);
-        currentTotal += itemTotal;
-        totalPoints += itemPoints;
-        totalItems += (item.quantity || 1);
-
-        const itemProductId = String(item.productId || item.id || '');
-        const hasImage = item.image || item.imageUrl || item.img || item.photo || item.thumbnail || item.picture;
-
-        const placeholderSVG = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTAiIGhlaWdodD0iNTAiIHZpZXdCb3g9IjAgMCA1MCA1MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjUwIiBoZWlnaHQ9IjUwIiByeD0iOCIgZmlsbD0idXJsKCNncmFkaWVudCkiLz4KPHRleHQgeD0iMjUiIHk9IjI4IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSJ3aGl0ZSIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjEyIiBmb250LXdlaWdodD0iYm9sZCI+REw8L3RleHQ+CjxkZWZzPgo8bGluZWFyR3JhZGllbnQgaWQ9ImdyYWRpZW50IiB4MT0iMjUiIHkxPSIwIiB4Mj0iMjUiIHkyPSI1MCIgZ3JhZGllbnRVbml0cz0idXNlclNwYWNlT25Vc2UiPgo8c3RvcCBzdG9wLWNvbG9yPSIjNjY3ZWVhIi8+CjxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iIzc2NGJhMiIvPgo8L2xpbmVhckdyYWRpZW50Pgo8L2RlZnM+Cjwvc3ZnPgo=';
-
-        const cartItem = document.createElement('div');
-        cartItem.className = 'cart-item';
-        cartItem.setAttribute('data-product-id', itemProductId);
-
-        cartItem.innerHTML = `
-            <div class="item-thumbnail-container">
-                ${hasImage ? 
-                    `<img src="${hasImage}" 
-                         alt="${item.name || 'Producto'}" 
-                         class="item-thumbnail"
-                         loading="lazy"
-                         onerror="this.onerror=null; this.classList.add('fallback'); this.src='${placeholderSVG}';">` :
-                    `<div class="item-thumbnail fallback"></div>`
-                }
-                <div class="quantity-badge ${(item.quantity || 1) > 5 ? 'high-quantity' : ''}">
-                    ${item.quantity || 1}
-                </div>
-            </div>
-            
-            <div class="item-info">
-                <div class="item-name" title="${item.name || 'Producto'}">
-                    ${item.name || 'Producto'}
-                </div>
-                <div class="item-details">
-                    <span class="item-price">USD ${itemTotal.toFixed(2)}</span>
-                    <span class="item-unit-price">${item.quantity || 1} × $${(parseFloat(item.price) || 0).toFixed(2)}</span>
-                    ${itemPoints > 0 ? `<span class="item-points">+${itemPoints} pts</span>` : ''}
-                </div>
-            </div>
-            
-            <div class="cart-controls">
-                <button class="quantity-btn decrease" 
-                        onclick="handleQuantityChange('${itemProductId}', -1, this)"
-                        title="Disminuir cantidad"
-                        aria-label="Reducir cantidad de ${item.name || 'producto'}">
-                    <i class="bi bi-dash-lg"></i>
-                </button>
-                <span class="quantity-display" aria-live="polite">${item.quantity || 1}</span>
-                <button class="quantity-btn increase" 
-                        onclick="handleQuantityChange('${itemProductId}', 1, this)"
-                        title="Aumentar cantidad"
-                        aria-label="Aumentar cantidad de ${item.name || 'producto'}">
-                    <i class="bi bi-plus-lg"></i>
-                </button>
-                <button class="remove-btn" 
-                        onclick="handleRemoveItem('${itemProductId}', this)"
-                        title="Eliminar producto"
-                        aria-label="Eliminar ${item.name || 'producto'} del carrito">
-                    <i class="bi bi-trash"></i>
-                </button>
-            </div>
-        `;
-
-        cartContainer.appendChild(cartItem);
-    });
-
-    container.appendChild(cartContainer);
-
-    const cartSummary = document.createElement('div');
-    cartSummary.className = 'cart-summary';
-    cartSummary.innerHTML = `
-        <div class="summary-row">
-            <span class="summary-label">Subtotal (${totalItems} ${totalItems === 1 ? 'producto' : 'productos'})</span>
-            <span class="summary-value">USD ${currentTotal.toFixed(2)}</span>
-        </div>
-        <div class="summary-row">
-            <span class="summary-label">Envío</span>
-            <span class="summary-value">Gratis</span>
-        </div>
-        
-        <div class="points-summary">
-            <div class="points-badge">
-                <i class="bi bi-star-fill"></i> Puntos a ganar
-            </div>
-            <div class="points-text">
-                <i class="bi bi-trophy points-icon"></i> ${totalPoints} puntos
-            </div>
-            <div style="margin-top: 8px; font-size: 0.75rem; color: rgba(255,255,255,0.8);">
-                Estos puntos se agregarán después del pago
-            </div>
-        </div>
-    `;
-    container.appendChild(cartSummary);
-
-    const totalSection = document.createElement('div');
-    totalSection.className = 'total-section';
-    totalSection.innerHTML = `
-        <div class="total-row">
-            <span class="total-label">Total del envío</span>
-            <span class="total-amount">USD ${currentTotal.toFixed(2)}</span>
-        </div>
-        <div style="text-align: center; margin-top: 12px; opacity: 0.8; font-size: 0.8rem;">
-            Incluye todos los productos seleccionados
-        </div>
-    `;
-    container.appendChild(totalSection);
-
-    const cartActions = document.createElement('div');
-    cartActions.className = 'cart-actions';
-    cartActions.innerHTML = `
-        <button class="cart-action-btn danger" onclick="clearCart()">
-            <i class="bi bi-trash"></i>
-            Vaciar Carrito
-        </button>
-        <button class="cart-action-btn" onclick="continueShopping()">
-            <i class="bi bi-arrow-left"></i>
-            Seguir Comprando
-        </button>
-    `;
-    container.appendChild(cartActions);
-
-    const paymentMethod = document.createElement('a');
-    paymentMethod.href = '#';
-    paymentMethod.className = 'payment-method';
-    paymentMethod.setAttribute('role', 'button');
-    paymentMethod.onclick = (e) => {
-        e.preventDefault();
-        handlePayment();
-    };
-    paymentMethod.innerHTML = `
-        <div class="payment-info">
-            <div class="payment-icon">Z</div>
-            <div class="payment-text-content">
-                <div class="payment-text">Pagar con Zelle</div>
-                <div class="payment-subtext">Procesamiento seguro</div>
-            </div>
-        </div>
-        <i class="bi bi-arrow-right payment-arrow"></i>
-    `;
-    container.appendChild(paymentMethod);
-
-    totalPriceEl.textContent = currentTotal.toFixed(2);
-    pointsToEarnEl.textContent = totalPoints;
-    
-    updateCartDisplay();
-    applyMobileOptimizations();
-    setTimeout(animateCartItems, 100);
-}
-
-
-
-function generateWhatsAppMessage(orderId, cart, total) {
-    let message = `¡Hola! 👋 He realizado un nuevo pedido desde DL Cumanayagua.\n\n`;
-    message += `*Nro. de Envío:* ${orderId}\n\n`;
-    message += "*Resumen del pedido:*\n";
-    cart.forEach(item => {
-        message += `- ${item.quantity}x ${item.name}\n`;
-    });
-    message += `\n*Total:* USD ${total.toFixed(2)}\n\n`;
-    message += `Espero instrucciones para el pago. ¡Gracias!`;
-    return encodeURIComponent(message);
-}
-
 function postWhatsAppNotification() {
     showGlobalFeedback("Serás redirigido a WhatsApp. Una vez enviado el mensaje, puedes cerrar esta ventana.", "info", 8000);
     setTimeout(() => {
         cartModalInstance?.hide();
     }, 5000);
-}
-
-async function confirmAndPlaceOrder() {
-    if (!Array.isArray(shoppingCart) || shoppingCart.length === 0) {
-        showFeedbackInModal(null, 'order-placement-feedback', "Tu carrito de envío está vacío.", "warning");
-        return;
-    }
-    if (!clientData || !clientData.id) {
-        showFeedbackInModal(null, 'order-placement-feedback', 'Inicia sesión para realizar un envío.', 'warning');
-        cartModalInstance?.hide();
-        openAuthModal('login');
-        return;
-    }
-    showFeedbackInModal(null, 'order-placement-feedback', '<div class="spinner-border spinner-border-sm me-2"></div>Procesando envío...', 'info', null);
-    const cartPayload = shoppingCart.map(item => ({ productId: String(item.productId), quantity: item.quantity || 0 }));
-    const result = await fetchDataFromGAS('placeOrder', 'POST', { clientId: String(clientData.id), cartItems: cartPayload });
-
-    if (result.success && result.data) {
-        const orderTotal = shoppingCart.reduce((sum, item) => sum + ((item.price || 0) * (item.quantity || 0)), 0);
-        const whatsappMessage = generateWhatsAppMessage(result.data.orderId, shoppingCart, orderTotal);
-        const whatsappUrl = `https://wa.me/5355189657?text=${whatsappMessage}`;
-
-        const feedbackEl = document.getElementById('order-placement-feedback');
-        feedbackEl.innerHTML = `
-            <div class="alert alert-success" role="alert">
-              <h4 class="alert-heading">¡Envío Programado con Éxito!</h4>
-              <p>Tu pedido con ID <strong>#${result.data.orderId}</strong> ha sido registrado. El siguiente paso es notificarnos por WhatsApp para coordinar el pago.</p>
-              <hr>
-              <a href="${whatsappUrl}" target="_blank" class="btn btn-success btn-lg w-100" onclick="postWhatsAppNotification()">
-                <i class="bi bi-whatsapp me-2"></i><strong>Notificar Pedido por WhatsApp</strong>
-              </a>
-            </div>
-        `;
-
-        document.getElementById('cart-footer-info').style.display = 'none';
-        document.getElementById('cart-footer-buttons').style.display = 'none';
-
-        shoppingCart = [];
-        saveCartToStorage();
-
-        if (result.data.updatedClient) {
-            const localAvatar = clientData[LOCAL_AVATAR_DATA_KEY];
-            clientData = result.data.updatedClient;
-            if (localAvatar && !clientData[LOCAL_AVATAR_DATA_KEY]) clientData[LOCAL_AVATAR_DATA_KEY] = localAvatar;
-            localStorage.setItem(LOGGED_IN_CLIENT_KEY, JSON.stringify(clientData));
-            updateClientDisplayAndUI();
-        }
-
-        renderCartItems();
-        loadUserOrders();
-
-    } else {
-        showFeedbackInModal(null, 'order-placement-feedback', result.message || 'Error al programar el envío.', 'danger');
-    }
-}
-
-async function loadUserOrders() {
-    const container = document.getElementById('orders-history-container');
-    if (!container) return;
-    if (!clientData || !clientData.id) {
-        container.innerHTML = `
-            <div class="col-12 text-center p-md-5 p-4">
-                <i class="bi bi-person-fill-lock display-1 text-muted opacity-50 mb-3"></i>
-                <h4 class="text-light mb-2">Acceso VIP Requerido</h4>
-                <p class="text-muted mb-3">Inicia sesión o regístrate para ver tu historial de envíos.</p>
-                <button class="btn btn-warning me-2" onclick="openAuthModal('login')">
-                    <i class="bi bi-box-arrow-in-right me-2"></i>Iniciar Sesión
-                </button>
-                <button class="btn btn-outline-light" onclick="openAuthModal('register')">
-                    <i class="bi bi-person-plus me-2"></i>Registrarme
-                </button>
-            </div>`;
-        return;
-    }
-    container.innerHTML = `<div class="col-12 text-center p-5"><div class="spinner-border" style="width: 3rem; height: 3rem; color: var(--primary-color);"></div><p class="mt-2 fs-5">Cargando historial de envíos...</p></div>`;
-    const result = await fetchDataFromGAS('getUserOrders', 'POST', { clientId: String(clientData.id) });
-    if (result.success && Array.isArray(result.data)) {
-        if (result.data.length === 0) {
-            container.innerHTML = `
-                <div class="col-12 text-center p-md-5 p-4">
-                    <i class="bi bi-box-seam-fill display-1 text-muted opacity-50 mb-3"></i>
-                    <h4 class="text-light mb-2">Aún no tienes envíos registrados</h4>
-                    <p class="text-muted mb-3">Parece que todavía no has enviado nada. ¿Listo para sorprender a alguien?</p>
-                    <button class="btn btn-primary" onclick="showTabAndScroll('menu-tab-link')">
-                        <i class="bi bi-card-list me-2"></i>Explorar Menú y Combos
-                    </button>
-                </div>`;
-            return;
-        }
-        let html = '<div class="accordion shadow-sm" id="ordersAccordion">';
-        result.data.sort((a,b) => new Date(b.orderdateiso || b.orderdate) - new Date(a.orderdateiso || a.orderdate));
-        result.data.forEach((order, index) => {
-            const items = order.itemsjson;
-            let itemsHtml = '<ul class="list-unstyled small ms-3 mt-1">';
-            if (Array.isArray(items) && items.length > 0) {
-                items.forEach(item => {
-                    itemsHtml += `<li>${item.quantity}x ${item.name} (USD ${((parseFloat(item.price)||0) * (item.quantity||0)).toFixed(2)})</li>`;
-                });
-            } else { itemsHtml += '<li>No hay detalles de ítems.</li>'; }
-            itemsHtml += '</ul>';
-            let sbc = 'bg-secondary';
-            const os = String(order.status || '').toLowerCase();
-            if (os === 'pendiente de pago' || os === 'pendiente') sbc = 'bg-warning text-dark';
-            else if (os === 'procesado' || os === 'en preparación') sbc = 'bg-info text-dark';
-            else if (os === 'entregado' || os === 'completado') sbc = 'bg-success';
-            else if (os === 'cancelado') sbc = 'bg-danger';
-            const dateStr = order.orderdateiso || order.orderdate;
-            const odf = dateStr ? new Date(dateStr).toLocaleDateString('es-ES', { year: 'numeric', month: 'short', day: 'numeric', hour:'2-digit', minute:'2-digit' }) : 'Fecha N/A';
-            html += `
-                <div class="accordion-item">
-                    <h2 class="accordion-header" id="hO${order.orderid}"><button class="accordion-button ${index>0?'collapsed':''}" type="button" data-bs-toggle="collapse" data-bs-target="#cO${order.orderid}" aria-expanded="${index===0}" aria-controls="cO${order.orderid}"><span class="me-auto">${odf} - Envío #${String(order.orderid).substr(-6)} - USD ${(parseFloat(order.totalamount)||0).toFixed(2)}</span><span class="badge ${sbc} text-uppercase">${order.status||'N/A'}</span></button></h2>
-                    <div id="cO${order.orderid}" class="accordion-collapse collapse ${index===0?'show':''}" aria-labelledby="hO${order.orderid}" data-bs-parent="#ordersAccordion"><div class="accordion-body"><strong>Puntos ${order.pointsgiven?'Otorgados':'A Otorgar'}:</strong> ${order.totalpointsawarded||0}<br><strong>Ítems:</strong>${itemsHtml}</div></div>
-                </div>`;
-        });
-        html += '</div>';
-        container.innerHTML = html;
-    } else {
-         container.innerHTML = `
-            <div class="col-12 text-center p-md-5 p-4">
-                <i class="bi bi-emoji-frown display-1 text-danger opacity-75 mb-3"></i>
-                <h4 class="text-light mb-2">Error al cargar envíos</h4>
-                <p class="text-danger mb-3">${result.message || 'Ocurrió un problema al intentar obtener tu historial.'}</p>
-                <button class="btn btn-outline-secondary" onclick="loadUserOrders()">
-                    <i class="bi bi-arrow-clockwise me-2"></i>Intentar de nuevo
-                </button>
-            </div>`;
-    }
 }
 
 async function forceLoadRewards() {
@@ -5236,6 +4709,7 @@ function redeemFromDetailModal(rewardId) {
     if(rewardDetailModalInstance) rewardDetailModalInstance.hide();
     attemptRedeemReward(rewardId);
 }
+
 function generateProductRecommendationsForRewardModal() {
     const recommendationsContainer = document.getElementById('reward-modal-product-recs-row');
     if (!recommendationsContainer) return;
@@ -5319,10 +4793,8 @@ async function attemptRedeemReward(rewardId) {
 
                     if (result.data.updatedClient) {
                         const serverPoints = result.data.updatedClient.puntos;
-                        const localAvatar = clientData[LOCAL_AVATAR_DATA_KEY];
                         clientData = result.data.updatedClient;
                         clientData.puntos = Math.min(pointsBefore - (reward.pointsrequired || 0), serverPoints);
-                        if(localAvatar && !clientData[LOCAL_AVATAR_DATA_KEY]) clientData[LOCAL_AVATAR_DATA_KEY] = localAvatar;
                     }
 
                     localStorage.setItem(LOGGED_IN_CLIENT_KEY, JSON.stringify(clientData));
@@ -5357,7 +4829,6 @@ async function attemptRedeemReward(rewardId) {
         confirmRedeemRewardModalInstance.show();
     }
 }
-
 
 function showFeedbackInModal(modalIdUnused, elId, msg, type='info', dur=4000) {
     const div = document.getElementById(elId);
@@ -5395,91 +4866,6 @@ function showGlobalFeedback(msg, type = 'info', dur = 4000) {
     }
 }
 
-function initializeShareModal() {
-     const shareModalEl = document.getElementById('sharePageModal');
-     if (shareModalEl) {
-        shareModalEl.addEventListener('shown.bs.modal', generateQrCodesForSharing);
-     }
-}
-
-function generateQrCodesForSharing() {
-    const qrPageCanvas = document.getElementById('qrcodeCanvas');
-
-    if (qrPageCanvas) {
-        qrPageCanvas.innerHTML = '';
-        if (qrcodePageInstance) {
-            qrcodePageInstance.clear();
-            qrcodePageInstance = null;
-        }
-        const pageUrl = window.location.href;
-        qrcodePageInstance = new QRCode(qrPageCanvas, {
-            text: pageUrl, width: 130, height: 130,
-            colorDark : "#000000", colorLight : "#ffffff", correctLevel : QRCode.CorrectLevel.H
-        });
-
-        const sharePageText = encodeURIComponent(`¡Echa un vistazo a DL Cumanayagua para enviar productos a Cuba! ${pageUrl}`);
-        document.getElementById('shareViaWhatsAppButton').href = `https://wa.me/?text=${sharePageText}`;
-        document.getElementById('shareViaTelegramButton').href = `https://t.me/share/url?url=${encodeURIComponent(pageUrl)}&text=${encodeURIComponent('¡Visita DL Cumanayagua!')}`;
-    }
-}
-
-function setupShareEventListeners() {
-    const copyLinkButton = document.getElementById('copyLinkButton');
-    if (copyLinkButton) {
-        copyLinkButton.addEventListener('click', function() {
-            const pageUrl = window.location.href;
-            navigator.clipboard.writeText(pageUrl).then(function() {
-                showGlobalFeedback('¡Enlace de la página copiado!', 'success', 2000);
-            }, function(err) {
-                showGlobalFeedback('Error al copiar el enlace de la página.', 'danger', 3000);
-                console.error('Error al copiar: ', err);
-            });
-        });
-    }
-}
-
-function setupFloatingButtonFeedback() {
-    if (floatingCartButtonEl) {
-        floatingCartButtonEl.addEventListener('click', function() {
-            floatingCartButtonEl.classList.add('clicked-animation');
-            setTimeout(() => {
-                floatingCartButtonEl.classList.remove('clicked-animation');
-            }, 400);
-        });
-    }
-
-    const floatingShareButtonEl = document.getElementById('floatingShareButton');
-    if (floatingShareButtonEl) {
-        floatingShareButtonEl.addEventListener('click', function() {
-            floatingShareButtonEl.classList.add('clicked-animation');
-            setTimeout(() => {
-                floatingShareButtonEl.classList.remove('clicked-animation');
-            }, 400);
-        });
-    }
-
-    const whatsappButtonEl = document.getElementById('whatsappButton');
-    if (whatsappButtonEl) {
-        whatsappButtonEl.addEventListener('click', function(event) {
-            whatsappButtonEl.classList.add('clicked-animation');
-            setTimeout(() => {
-                whatsappButtonEl.classList.remove('clicked-animation');
-            }, 400);
-        });
-    }
-}
-
-function copyReferralCode() {
-    if (clientData && clientData.referralcode) {
-        navigator.clipboard.writeText(clientData.referralcode).then(() => {
-            showGlobalFeedback('¡Tu código de referido ha sido copiado!', 'success', 2000);
-        }).catch(err => {
-            showGlobalFeedback('Error al copiar el código.', 'danger');
-            console.error('Error al copiar código de referido: ', err);
-        });
-    }
-}
-
 window.addEventListener('resize', function() {
     applyMobileOptimizations();
 });
@@ -5495,6 +4881,243 @@ document.addEventListener('DOMContentLoaded', function() {
         window.handlePayment = handlePayment;
     }
 });
-  </script>
+
+function setupNavbarToggler() {
+    const navLinks = document.querySelectorAll('#navbarNavContent .nav-link, #navbarNavContent .dropdown-item');
+    const navbarToggler = document.querySelector('.navbar-toggler');
+    const navbarCollapseEl = document.getElementById('navbarNavContent');
+    let navbarCollapseInstance = null;
+
+    if (navbarCollapseEl) {
+        navbarCollapseInstance = bootstrap.Collapse.getOrCreateInstance(navbarCollapseEl, {toggle: false});
+    }
+
+    navLinks.forEach(link => {
+        link.addEventListener('click', (event) => {
+            const isTogglerVisible = getComputedStyle(navbarToggler).display !== 'none';
+            const isMenuExpanded = navbarCollapseEl.classList.contains('show');
+
+            if (isMenuExpanded && isTogglerVisible) {
+                const opensModal = link.getAttribute('data-bs-toggle') === 'modal';
+                const isDropdownToggle = link.classList.contains('dropdown-toggle');
+
+                if (!opensModal && !isDropdownToggle) {
+                    if (navbarCollapseInstance) {
+                        navbarCollapseInstance.hide();
+                    }
+                }
+            }
+        });
+    });
+}
+
+function showTabAndScroll(tabLinkId) {
+    const tabLink = document.getElementById(tabLinkId);
+    if (tabLink) {
+        const tabInstance = bootstrap.Tab.getOrCreateInstance(tabLink);
+        tabInstance.show();
+
+        const tabPaneId = tabLink.getAttribute('href');
+        if (tabPaneId) {
+            const tabPane = document.querySelector(tabPaneId);
+            if (tabPane) {
+                setTimeout(() => {
+                    tabPane.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }, 150);
+            }
+        }
+    }
+}
+
+function handleScroll() {
+    const quickNav = document.getElementById('quick-nav-buttons');
+    const goDownBtn = document.getElementById('go-down-btn');
+    if (!quickNav || !goDownBtn) return;
+
+    const floatingButtonsContainer = document.querySelector('.floating-buttons-container');
+    let fabContainerBottom = 25;
+     if (floatingButtonsContainer) {
+        const style = window.getComputedStyle(floatingButtonsContainer);
+        fabContainerBottom = parseFloat(style.bottom) || fabContainerBottom;
+    }
+
+    if (window.scrollY > 300) {
+        quickNav.style.display = 'flex';
+    } else {
+        quickNav.style.display = 'none';
+    }
+
+    let pageBottomOffset = 100;
+    const footer = document.getElementById('bottom');
+    if (footer) pageBottomOffset += footer.offsetHeight;
+
+    const nearBottom = (window.innerHeight + window.scrollY) >= (document.body.offsetHeight - pageBottomOffset);
+    goDownBtn.style.display = nearBottom ? 'none' : 'flex';
+}
+
+async function forceFullCacheRefresh() {
+    if (confirm("Esto borrará TODOS los datos de navegación (incluyendo sesión iniciada, carrito, etc.) y recargará la página desde cero para obtener la versión más reciente. ¿Deseas continuar?")) {
+        showGlobalFeedback("Limpiando datos y actualizando...", "info", null);
+        try {
+            localStorage.clear();
+            sessionStorage.clear();
+            if ('serviceWorker' in navigator && navigator.serviceWorker.getRegistrations) {
+                const registrations = await navigator.serviceWorker.getRegistrations();
+                for (let registration of registrations) {
+                    await registration.unregister();
+                }
+            }
+            if (window.caches && window.caches.keys) {
+                const keys = await window.caches.keys();
+                await Promise.all(keys.map(key => window.caches.delete(key)));
+            }
+        } catch (error) {
+            console.error("Error durante la limpieza de caché:", error);
+            showGlobalFeedback("Error al limpiar algunos datos de caché.", "warning");
+        }
+
+        try {
+            const baseUrl = window.location.origin + window.location.pathname;
+            const timestamp = new Date().getTime();
+            const newUrl = `${baseUrl}?t=${timestamp}`;
+            window.location.href = newUrl;
+            setTimeout(() => { window.location.reload(true); }, 1500);
+        } catch (e) {
+            setTimeout(() => { window.location.reload(true); }, 1500);
+        }
+    }
+}
+
+function adjustBodyPaddingAndFabPosition() {
+    const bodyEl = document.body;
+    const floatingButtonsContainer = document.querySelector('.floating-buttons-container');
+    const quickNavButtons = document.getElementById('quick-nav-buttons');
+    const navbarEl = document.querySelector('.navbar-custom.fixed-top');
+
+    let totalPaddingBottom = 0;
+    let fabContainerBottomOffset = 25;
+    let quickNavBottomOffset = 260;
+
+    if (window.matchMedia("(max-width: 768px)").matches) {
+        fabContainerBottomOffset = 20;
+        quickNavBottomOffset = 235;
+    }
+    if (window.matchMedia("(max-width: 576px)").matches) {
+        fabContainerBottomOffset = 15;
+        quickNavBottomOffset = 210;
+    }
+    
+    bodyEl.style.paddingBottom = totalPaddingBottom + 'px';
+
+    if (navbarEl) {
+        const navbarHeight = navbarEl.offsetHeight;
+        const mainEl = document.querySelector('main');
+        if (mainEl && parseFloat(mainEl.style.paddingTop) !== navbarHeight) {
+            mainEl.style.paddingTop = navbarHeight + 'px';
+        }
+    }
+
+    if (floatingButtonsContainer) {
+         floatingButtonsContainer.style.bottom = fabContainerBottomOffset + 'px';
+    }
+    if (quickNavButtons && quickNavButtons.style.display !== 'none') {
+        quickNavButtons.style.bottom = quickNavBottomOffset + 'px';
+    }
+     handleScroll();
+}
+
+function handlePresentationVideo() {
+    const videoAlreadyShown = localStorage.getItem(PRESENTATION_VIDEO_SHOWN_KEY);
+    const videoElement = document.getElementById('introVideo');
+    const presentationModalEl = document.getElementById('presentationVideoModal');
+
+    if (!videoAlreadyShown) {
+        if (presentationVideoModalInstance && videoElement) {
+            const anyMajorModalActive = ['authModal', 'cartModal', 'helpModal'].some(id => {
+                const modal = document.getElementById(id);
+                return modal && modal.classList.contains('show');
+            });
+
+            if (!anyMajorModalActive) {
+                setTimeout(() => presentationVideoModalInstance.show(), 1000);
+            }
+        } else {
+            console.warn("Modal de video o elemento de video no encontrado para mostrar automáticamente.");
+        }
+    }
+
+    if (presentationModalEl && videoElement) {
+        presentationModalEl.addEventListener('shown.bs.modal', function () {
+            videoElement.currentTime = 0;
+            videoElement.play().catch(error => {
+                console.warn("Autoplay del video bloqueado por el navegador:", error);
+            });
+        });
+
+        presentationModalEl.addEventListener('hidden.bs.modal', function () {
+            videoElement.pause();
+            localStorage.setItem(PRESENTATION_VIDEO_SHOWN_KEY, 'true');
+        });
+
+        videoElement.addEventListener('ended', function() {
+            if (presentationVideoModalInstance) {
+                presentationVideoModalInstance.hide();
+            }
+        });
+    }
+}
+
+function loadClientDataFromStorage() {
+    const storedClientData = localStorage.getItem(LOGGED_IN_CLIENT_KEY);
+    if (storedClientData) {
+        try {
+            clientData = JSON.parse(storedClientData);
+        } catch (e) {
+            localStorage.removeItem(LOGGED_IN_CLIENT_KEY);
+            clientData = null;
+        }
+    } else {
+        clientData = null;
+    }
+}
+
+async function fetchDataFromGAS(action, method = 'POST', payloadData = null) {
+    if (loadingSpinnerUser) loadingSpinnerUser.classList.add('show');
+    try {
+        let url = GOOGLE_SCRIPT_URL_USER;
+        const options = { method: method, headers: {}, mode: 'cors', redirect: 'follow' };
+        if (method === 'GET') {
+            const params = new URLSearchParams({ action: action, cacheBuster: new Date().getTime() });
+            if (payloadData) {
+                for (const key in payloadData) {
+                    if (payloadData.hasOwnProperty(key)) { params.append(key, payloadData[key]); }
+                }
+            }
+            url += `?${params.toString()}`;
+        } else {
+            options.headers['Content-Type'] = 'application/x-www-form-urlencoded';
+            const dataToSend = { action: action, payload: payloadData };
+            const formBody = new URLSearchParams();
+            formBody.append("data", JSON.stringify(dataToSend));
+            options.body = formBody.toString();
+        }
+        const res = await fetch(url, options);
+        const responseText = await res.text();
+        let responseData;
+        try {
+            responseData = JSON.parse(responseText);
+        } catch (parseError) {
+            throw new Error(`Respuesta no es JSON válido del servidor: ${responseText.substring(0,150)}`);
+        }
+        return responseData;
+    } catch (error) {
+        showGlobalFeedback(`Error de conexión o servidor: ${error.message || 'Desconocido'}. Intenta de nuevo.`, "danger", 7000);
+        return { success: false, message: `Error de conexión o servidor: ${error.message || 'Desconocido'}.` };
+    } finally {
+        if (loadingSpinnerUser) loadingSpinnerUser.classList.remove('show');
+    }
+}
+
+</script>
 </body>
 </html>
