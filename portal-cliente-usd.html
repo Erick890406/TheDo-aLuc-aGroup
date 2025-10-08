@@ -6,13 +6,19 @@
     <title>Mi Cuenta VIP - Doña Lucía</title>
     <link rel="icon" type="image/png" href="./img/Logo-DL-Cumanayagua.png">
 
-    <!-- =================================================================== -->
+     <!-- =================================================================== -->
     <!-- ================ INICIO: CONFIGURACIÓN PWA ======================== -->
     <!-- =================================================================== -->
     <!-- Enlace al Web App Manifest -->
     <link rel="manifest" href="./manifest.json">
     <!-- Color de la barra de estado/direcciones del navegador en móviles -->
     <meta name="theme-color" content="#2563EB">
+    <!-- Meta tags para iOS -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes"> <!-- Añadido para estándares modernos -->
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="DL Cumanayagua">
+    <link rel="apple-touch-icon" href="./icons/icon-192.png">
     <!-- =================================================================== -->
     <!-- ================= FIN: CONFIGURACIÓN PWA ========================== -->
     <!-- =================================================================== -->
@@ -39,6 +45,116 @@
     <meta name="twitter:image" content="https://i.postimg.cc/jjNmrcyw/Meta-Etiqueta.png" />
     <meta name="twitter:image:alt" content="Promoción DL USD Cumanayagua para compras familiares en Cuba" />
 <style>
+ /* =================================================================== */
+/* ======== DISEÑO PREMIUM v2: BANNER DE INSTALACIÓN PWA =========== */
+/* =================================================================== */
+#pwa-install-banner {
+    display: none; /* Se activa con JS */
+    position: fixed;
+    /* AJUSTE 1: Posición más abajo y debajo del navbar */
+    top: 0; /* Se ajustará con JS para quedar debajo del navbar */
+    left: 0;
+    width: 100%;
+    z-index: 1050; /* Por encima del navbar (que suele ser 1000-1030) */
+    
+    /* Apariencia de lujo, ahora como una barra */
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08); /* Solo un borde inferior */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    padding: 12px 16px;
+    
+    /* Organización interna */
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+/* Contenedor del icono/logo */
+#pwa-install-banner .banner-icon-wrapper img {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    object-fit: cover;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+/* Contenedor del texto */
+#pwa-install-banner .banner-text-wrapper {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+#pwa-install-banner .banner-title {
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: var(--text-primary);
+    line-height: 1.2;
+}
+#pwa-install-banner .banner-subtitle {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    /* AJUSTE 2: Permitir que el texto se ajuste en varias líneas */
+    white-space: normal; /* En lugar de 'nowrap' */
+    line-height: 1.3;
+}
+
+/* Contenedor de los botones */
+#pwa-install-banner .banner-actions-wrapper {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+    gap: 15px;
+}
+
+/* Botón "Obtener" */
+#pwa-install-banner .btn-install {
+    background-color: var(--primary-100);
+    color: var(--primary-700);
+    font-weight: 600;
+    font-size: 0.85rem;
+    padding: 6px 16px;
+    border-radius: 20px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+#pwa-install-banner .btn-install:hover {
+    background-color: var(--primary-200);
+}
+
+/* Botón de cierre "X" */
+#pwa-install-banner .btn-close-banner {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    font-weight: 300;
+    color: var(--text-tertiary);
+    cursor: pointer;
+    padding: 0;
+    line-height: 1;
+    opacity: 0.7;
+    transition: opacity 0.2s ease;
+}
+#pwa-install-banner .btn-close-banner:hover {
+    opacity: 1;
+}
+
+/* Responsive para móviles */
+@media (max-width: 380px) {
+    /* En pantallas muy pequeñas, hacemos el texto y el logo un poco más pequeños */
+    #pwa-install-banner .banner-icon-wrapper img {
+        width: 36px;
+        height: 36px;
+    }
+    #pwa-install-banner .banner-title {
+        font-size: 0.85rem;
+    }
+    #pwa-install-banner .banner-subtitle {
+        font-size: 0.75rem;
+    }
+}
 :root {
     /* Sistema de Design - Paleta Clara Moderna */
     --primary-50: #EFF6FF;
@@ -2790,10 +2906,78 @@ h6 { font-size: var(--text-sm); }
         transition-duration: 0.01ms !important;
     }
 }
+/* Estilos para botones de compartir */
+.btn-sm {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.875rem;
+}
+
+/* Efectos hover para botones de redes sociales */
+#shareViaWhatsAppButton:hover {
+    background-color: #128C7E !important;
+    transform: translateY(-1px);
+}
+
+#shareViaFacebookButton:hover {
+    background-color: #0e63b8 !important;
+    transform: translateY(-1px);
+}
+
+#shareViaTwitterButton:hover {
+    background-color: #1a91da !important;
+    transform: translateY(-1px);
+}
+
+#shareViaInstagramButton:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+}
+
+#shareViaTelegramButton:hover {
+    background-color: #0088cc !important;
+    transform: translateY(-1px);
+}
+
+#shareViaEmailButton:hover {
+    background-color: #5a6268 !important;
+    transform: translateY(-1px);
+}
+
+/* Transiciones suaves */
+.btn {
+    transition: all 0.2s ease-in-out;
+}
+
+/* Responsive para móviles pequeños */
+@media (max-width: 576px) {
+    .modal-body .row .col-4 {
+        padding: 0 2px;
+    }
+    
+    .btn-sm {
+        padding: 0.4rem 0.5rem;
+        font-size: 0.8rem;
+    }
+}
 
 </style>
 </head>
 <body id="top">
+ <!-- INICIO: Banner de Instalación de PWA (Diseño Premium) -->
+<div id="pwa-install-banner" class="animate__animated">
+    <div class="banner-icon-wrapper">
+        <img src="./img/Logo-DL-Cumanayagua.png" alt="App Icon">
+    </div>
+    <div class="banner-text-wrapper">
+        <span class="banner-title">DL Cumanayagua</span>
+        <span class="banner-subtitle">Instala la app para una mejor experiencia.</span>
+    </div>
+    <div class="banner-actions-wrapper">
+        <button id="pwa-install-button" class="btn-install">Instalar</button>
+        <button id="pwa-close-banner-button" class="btn-close-banner" aria-label="Cerrar">&times;</button>
+    </div>
+</div>
+<!-- FIN: Banner de Instalación de PWA -->
     <!-- MODAL DE GALERÍA DE AVATARES -->
     <div class="modal fade" id="avatarGalleryModal" tabindex="-1" aria-labelledby="avatarGalleryModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
@@ -3088,33 +3272,77 @@ h6 { font-size: var(--text-sm); }
         </div>
     </div>
 </div>
-    <div class="modal fade" id="sharePageModal" tabindex="-1" aria-labelledby="sharePageModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="sharePageModalLabel"><i class="bi bi-share-fill me-2"></i>Compartir esta Página</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+   <div class="modal fade" id="sharePageModal" tabindex="-1" aria-labelledby="sharePageModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="sharePageModalLabel"><i class="bi bi-share-fill me-2"></i>Compartir esta Página</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-center">
+                <p class="mb-3">Comparte esta página para que otros puedan realizar compras y envíos.</p>
+                
+                <!-- Código QR -->
+                <div id="qrcodeCanvas" class="mx-auto mb-4 border p-2 rounded" style="width: 150px; height: 150px; background-color: white;">
                 </div>
-                <div class="modal-body text-center">
-                    <p class="mb-2">Comparte esta página para que otros puedan realizar compras y envíos.</p>
-                    <div id="qrcodeCanvas" class="mx-auto mb-3 border p-2 rounded" style="width: 150px; height: 150px; background-color: white;">
-                    </div>
-                    <div class="d-grid gap-2 mb-4">
-                        <button class="btn btn-primary btn-sm" id="copyLinkButton">
-                            <i class="bi bi-clipboard-check-fill me-2"></i>Copiar Enlace de Página
+                
+                <!-- Botones de Compartir - Primera Fila -->
+                <div class="row g-2 mb-3">
+                    <div class="col-6">
+                        <button class="btn btn-primary btn-sm w-100" id="copyLinkButton">
+                            <i class="bi bi-clipboard-check-fill me-1"></i>Copiar Enlace
                         </button>
-                        <a id="shareViaWhatsAppButton" class="btn btn-success btn-sm" href="#" target="_blank">
-                            <i class="bi bi-whatsapp me-2"></i>Página por WhatsApp
-                        </a>
-                        <a id="shareViaTelegramButton" class="btn btn-info btn-sm" href="#" target="_blank">
-                            <i class="bi bi-telegram me-2"></i>Página por Telegram
+                    </div>
+                    <div class="col-6">
+                        <button class="btn btn-outline-dark btn-sm w-100" id="shareViaSystemButton">
+                            <i class="bi bi-share me-1"></i>Compartir
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Redes Sociales Principales -->
+                <div class="row g-2 mb-3">
+                    <div class="col-4">
+                        <a id="shareViaWhatsAppButton" class="btn btn-success btn-sm w-100" href="#" target="_blank">
+                            <i class="bi bi-whatsapp"></i>
                         </a>
                     </div>
-                    <small class="d-block mt-3 text-muted">Muestra el código QR para escanear directamente.</small>
+                    <div class="col-4">
+                        <a id="shareViaFacebookButton" class="btn btn-primary btn-sm w-100" href="#" target="_blank" style="background-color: #1877F2; border-color: #1877F2;">
+                            <i class="bi bi-facebook"></i>
+                        </a>
+                    </div>
+                    <div class="col-4">
+                        <a id="shareViaTwitterButton" class="btn btn-info btn-sm w-100" href="#" target="_blank" style="background-color: #1DA1F2; border-color: #1DA1F2;">
+                            <i class="bi bi-twitter"></i>
+                        </a>
+                    </div>
                 </div>
+                
+                <!-- Más Redes Sociales -->
+                <div class="row g-2 mb-4">
+                    <div class="col-4">
+                        <a id="shareViaInstagramButton" class="btn btn-danger btn-sm w-100" href="#" target="_blank" style="background: linear-gradient(45deg, #405DE6, #5851DB, #833AB4, #C13584, #E1306C, #FD1D1D); border: none;">
+                            <i class="bi bi-instagram"></i>
+                        </a>
+                    </div>
+                    <div class="col-4">
+                        <a id="shareViaTelegramButton" class="btn btn-info btn-sm w-100" href="#" target="_blank">
+                            <i class="bi bi-telegram"></i>
+                        </a>
+                    </div>
+                    <div class="col-4">
+                        <a id="shareViaEmailButton" class="btn btn-secondary btn-sm w-100" href="#">
+                            <i class="bi bi-envelope-fill"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <small class="d-block mt-3 text-muted">Muestra el código QR para escanear directamente o comparte el enlace.</small>
             </div>
         </div>
     </div>
+</div>
     <div class="modal fade" id="confirmClearCartModal" tabindex="-1" aria-labelledby="confirmClearCartModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
@@ -3203,6 +3431,37 @@ h6 { font-size: var(--text-sm); }
             </div>
         </div>
     </div>
+
+     <!-- MODAL DE INSTALACIÓN DE PWA -->
+ <div class="modal fade" id="pwaInstallModal" tabindex="-1" aria-labelledby="pwaInstallModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="pwaInstallModalLabel">
+                        <i class="bi bi-download me-2"></i>Instalar App DL Cumanayagua
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <div class="mb-4">
+                        <i class="bi bi-phone display-1 text-primary"></i>
+                    </div>
+                    <h4 class="mb-3">¡Instala nuestra app!</h4>
+                    <p class="mb-4">Obtén la mejor experiencia instalando DL Cumanayagua en tu dispositivo. Acceso rápido, notificaciones y funcionamiento offline.</p>
+                    <div class="d-grid gap-2">
+                        <button id="installPWAButton" class="btn btn-primary btn-lg">
+                            <i class="bi bi-download me-2"></i>Instalar App
+                        </button>
+                        <button class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                            Quizás más tarde
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
     <div class="floating-buttons-container">
         <a id="whatsappButton" href="https://wa.me/5355189657?text=Hola,%20tengo%20una%20consulta%20sobre%20DL%20Cumanayagua." class="floating-button" target="_blank" title="Chatea con nosotros">
             <i class="bi bi-whatsapp"></i>
@@ -3291,6 +3550,87 @@ const AVATAR_GALLERY_IMAGES = [
 ];
 
 // ===================================================================
+        // ==================== INSTALACIÓN DE PWA ===========================
+        // ===================================================================
+
+        let deferredPrompt;
+
+        // Registrar el Service Worker para habilitar PWA
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function() {
+                navigator.serviceWorker.register('./sw.js')
+                    .then(function(registration) {
+                        console.log('Service Worker registrado con éxito:', registration.scope);
+                    })
+                    .catch(function(error) {
+                        console.log('Error al registrar el Service Worker:', error);
+                    });
+            });
+        }
+
+        // Detectar cuando la app se puede instalar
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            // En lugar de un modal, mostramos nuestro banner superior
+            showPWAInstallBanner();
+        });
+
+        function showPWAInstallBanner() {
+    const banner = document.getElementById('pwa-install-banner');
+    const navbar = document.querySelector('.navbar-custom');
+    
+    // No mostrar si ya fue descartado en esta sesión
+    if (banner && !sessionStorage.getItem('pwaBannerDismissed')) {
+        // AJUSTE 3: Calculamos la posición para que quede debajo del navbar
+        if (navbar) {
+            banner.style.top = `${navbar.offsetHeight}px`;
+        }
+        
+        banner.style.display = 'flex';
+        banner.classList.add('animate__fadeInDown');
+    }
+}
+
+        // Detectar si la app ya está instalada
+        window.addEventListener('appinstalled', () => {
+            console.log('PWA fue instalada');
+            deferredPrompt = null;
+            hideInstallButton();
+        });
+
+        // Verificar si la app ya está instalada al cargar la página
+        function checkIfPWAInstalled() {
+            if (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone) {
+                console.log('App ya instalada.');
+                hideInstallButton();
+                return true;
+            }
+            return false;
+        }
+
+        function hideInstallButton() {
+            const installAppButton = document.getElementById('installAppButton');
+            const banner = document.getElementById('pwa-install-banner');
+            if (installAppButton) {
+                installAppButton.style.display = 'none';
+            }
+            if(banner){
+                banner.style.display = 'none';
+            }
+        }
+
+        // Mostrar manualmente el prompt de instalación
+        function showManualInstallPrompt() {
+            if (deferredPrompt) {
+                // Ahora muestra el banner en lugar del modal
+                showPWAInstallBanner();
+            } else {
+                showGlobalFeedback('Tu navegador no soporta la instalación o la app ya está instalada.', 'info', 4000);
+            }
+        }
+
+// ===================================================================
 // ==================== VARIABLES GLOBALES ===========================
 // ===================================================================
 let clientData = null;
@@ -3318,16 +3658,12 @@ document.addEventListener('DOMContentLoaded', async function() {
     
     handleInitialReferral();
     
-    // ================== CÓDIGO MODIFICADO ==================
-    // Si se detectó un código de referido Y el modal no se ha mostrado en esta sesión...
     if (initialReferralCode && !sessionStorage.getItem('referralModalShown')) {
         setTimeout(() => {
             openAuthModal('register');
-            // Establecer una bandera para no volver a mostrar el modal en esta sesión.
             sessionStorage.setItem('referralModalShown', 'true');
-        }, 1000); // Pequeño retraso para mejorar la experiencia del usuario.
+        }, 1000);
     }
-    // ========================================================
     
     initializeModals();
     loadCartFromStorage();
@@ -3340,12 +3676,51 @@ document.addEventListener('DOMContentLoaded', async function() {
     handleScroll();
     initializeShareModal();
     setupFloatingButtonFeedback();
-    handlePresentationVideo();
     setupNavbarToggler();
     populateAvatarGallery();
     setupSearchAndSort();
     setupVipCardInteraction();
-});
+
+    // Inicializar funcionalidades de PWA
+            checkIfPWAInstalled();
+            
+            const installAppButton = document.getElementById('installAppButton');
+            if (installAppButton && deferredPrompt) {
+                installAppButton.style.display = 'block';
+                installAppButton.addEventListener('click', showManualInstallPrompt);
+            }
+
+            // Lógica para el nuevo banner de instalación de PWA
+            const installBanner = document.getElementById('pwa-install-banner');
+            const installButtonBanner = document.getElementById('pwa-install-button');
+            const closeButtonBanner = document.getElementById('pwa-close-banner-button');
+
+            if (installButtonBanner) {
+                installButtonBanner.addEventListener('click', async () => {
+                    if (installBanner) installBanner.style.display = 'none';
+
+                    if (deferredPrompt) {
+                        deferredPrompt.prompt();
+                        const { outcome } = await deferredPrompt.userChoice;
+                        if (outcome === 'accepted') {
+                            showGlobalFeedback('¡App instalada con éxito!', 'success');
+                        } else {
+                            showGlobalFeedback('Instalación cancelada.', 'info');
+                        }
+                        deferredPrompt = null;
+                    }
+                });
+            }
+
+            // AÑADE ESTE NUEVO BLOQUE
+            if (installBanner) {
+                // Escucha el evento de Bootstrap cuando el banner se empieza a cerrar
+                installBanner.addEventListener('close.bs.alert', () => {
+                    // Recordar que el usuario cerró el banner en esta sesión
+                    sessionStorage.setItem('pwaBannerDismissed', 'true');
+                });
+            }
+        });
 
 // ===================================================================
 // ==================== SISTEMA DE REFERIDOS =========================
@@ -3389,7 +3764,11 @@ function initializeShareModal() {
         shareModalEl.addEventListener('shown.bs.modal', () => {
             const qrPageCanvas = document.getElementById('qrcodeCanvas');
             const pageUrl = generateReferralLink();
+            const shareText = "¡Echa un vistazo a DL Cumanayagua para enviar productos a Cuba! Fácil, rápido y seguro.";
+            const encodedShareText = encodeURIComponent(shareText);
+            const encodedUrl = encodeURIComponent(pageUrl);
 
+            // Generar QR Code
             if (qrPageCanvas) {
                 qrPageCanvas.innerHTML = '';
                 if (qrcodePageInstance) {
@@ -3397,27 +3776,63 @@ function initializeShareModal() {
                     qrcodePageInstance = null;
                 }
                 qrcodePageInstance = new QRCode(qrPageCanvas, {
-                    text: pageUrl, width: 130, height: 130,
-                    colorDark : "#000000", colorLight : "#ffffff", correctLevel : QRCode.CorrectLevel.H
+                    text: pageUrl, 
+                    width: 130, 
+                    height: 130,
+                    colorDark : "#000000", 
+                    colorLight : "#ffffff", 
+                    correctLevel : QRCode.CorrectLevel.H
                 });
+            }
 
-                let shareText = "¡Echa un vistazo a DL Cumanayagua para enviar productos a Cuba!";
-                if (clientData && clientData.referralcode) {
-                    shareText = "¡Usa mi enlace para registrarte en DL Cumanayagua y obtén puntos de bienvenida! Es genial para enviar productos a Cuba.";
-                }
+            // Configurar enlaces de redes sociales
+            document.getElementById('shareViaWhatsAppButton').href = `https://wa.me/?text=${encodedShareText}%20${encodedUrl}`;
+            document.getElementById('shareViaTelegramButton').href = `https://t.me/share/url?url=${encodedUrl}&text=${encodedShareText}`;
+            document.getElementById('shareViaFacebookButton').href = `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}&quote=${encodedShareText}`;
+            document.getElementById('shareViaTwitterButton').href = `https://twitter.com/intent/tweet?text=${encodedShareText}&url=${encodedUrl}`;
+            document.getElementById('shareViaInstagramButton').href = `https://www.instagram.com/?url=${encodedUrl}`;
+            document.getElementById('shareViaEmailButton').href = `mailto:?subject=${encodeURIComponent('DL Cumanayagua - Envíos a Cuba')}&body=${encodedShareText}%20${encodedUrl}`;
 
-                const encodedShareText = encodeURIComponent(`${shareText} ${pageUrl}`);
-                document.getElementById('shareViaWhatsAppButton').href = `https://wa.me/?text=${encodedShareText}`;
-                document.getElementById('shareViaTelegramButton').href = `https://t.me/share/url?url=${encodeURIComponent(pageUrl)}&text=${encodeURIComponent(shareText)}`;
-            
-                const copyLinkButton = document.getElementById('copyLinkButton');
-                copyLinkButton.onclick = function() {
-                    navigator.clipboard.writeText(pageUrl).then(() => {
-                        showGlobalFeedback('¡Enlace de referido copiado!', 'success', 2000);
-                    }, (err) => {
-                        showGlobalFeedback('Error al copiar el enlace.', 'danger');
-                    });
+            // Botón Copiar Enlace
+            const copyLinkButton = document.getElementById('copyLinkButton');
+            copyLinkButton.onclick = function() {
+                navigator.clipboard.writeText(pageUrl).then(() => {
+                    showGlobalFeedback('¡Enlace copiado al portapapeles!', 'success', 2000);
+                    // Animación de confirmación
+                    const originalText = copyLinkButton.innerHTML;
+                    copyLinkButton.innerHTML = '<i class="bi bi-check-lg me-1"></i>¡Copiado!';
+                    copyLinkButton.classList.remove('btn-primary');
+                    copyLinkButton.classList.add('btn-success');
+                    setTimeout(() => {
+                        copyLinkButton.innerHTML = originalText;
+                        copyLinkButton.classList.remove('btn-success');
+                        copyLinkButton.classList.add('btn-primary');
+                    }, 2000);
+                }).catch((err) => {
+                    showGlobalFeedback('Error al copiar el enlace.', 'danger');
+                });
+            };
+
+            // Botón Compartir Nativo (Web Share API)
+            const shareViaSystemButton = document.getElementById('shareViaSystemButton');
+            if (navigator.share) {
+                shareViaSystemButton.style.display = 'block';
+                shareViaSystemButton.onclick = async function() {
+                    try {
+                        await navigator.share({
+                            title: 'DL Cumanayagua - Envíos a Cuba',
+                            text: shareText,
+                            url: pageUrl
+                        });
+                        showGlobalFeedback('¡Contenido compartido!', 'success', 2000);
+                    } catch (err) {
+                        if (err.name !== 'AbortError') {
+                            showGlobalFeedback('Error al compartir.', 'warning');
+                        }
+                    }
                 };
+            } else {
+                shareViaSystemButton.style.display = 'none';
             }
         });
      }
@@ -3753,7 +4168,6 @@ function formatOrderDate(dateStr) {
     });
 }
 
-// ====== MODIFICADO: Añadido console.log para depuración ======
 async function loadUserOrders() {
     const container = document.getElementById('orders-history-container');
     if (!container) return;
@@ -3765,8 +4179,6 @@ async function loadUserOrders() {
     container.innerHTML = `<div class="text-center p-5"><div class="spinner-border text-primary"></div><p class="mt-2">Cargando envíos...</p></div>`;
     const result = await fetchDataFromGAS('getUserOrders', 'POST', { clientId: String(clientData.id) });
 
-    console.log("Datos de envíos recibidos del servidor:", result); 
-
     if (result.success && Array.isArray(result.data)) {
         if (result.data.length === 0) {
             container.innerHTML = `<div class="text-center p-5"><p>Aún no tienes envíos registrados.</p></div>`;
@@ -3775,8 +4187,6 @@ async function loadUserOrders() {
 
         let html = '<div class="accordion shadow-sm" id="ordersAccordion">';
         result.data.forEach((order, index) => {
-            
-            // Leemos directamente 'itemsjson' que ahora viene parseado del servidor.
             let items = order.itemsjson || []; 
             let itemsHtml = '<div class="table-responsive"><table class="table table-sm table-borderless small mt-2">';
             itemsHtml += '<thead class="text-muted"><tr><th>Cant.</th><th>Producto</th><th class="text-end">Precio Unit.</th><th class="text-end">Subtotal</th></tr></thead><tbody>';
@@ -3794,14 +4204,12 @@ async function loadUserOrders() {
             itemsHtml += '</tbody></table></div>';
             
             let sbc = 'bg-secondary';
-            // Leemos 'status', que ahora vendrá como clave fija.
             const os = String(order.status || '').toLowerCase();
             if (os.includes('pendiente')) sbc = 'bg-warning text-dark';
             else if (os.includes('procesado') || os.includes('preparación')) sbc = 'bg-info text-dark';
             else if (os.includes('entregado') || os.includes('completado')) sbc = 'bg-success';
             else if (os.includes('cancelado')) sbc = 'bg-danger';
 
-            // Usamos 'orderdateiso' (si existe) o 'orderdate'. Ambos vienen del servidor.
             const formattedDate = formatOrderDate(order.orderdateiso || order.orderdate);
             
             html += `
@@ -5026,47 +5434,6 @@ function adjustBodyPaddingAndFabPosition() {
      handleScroll();
 }
 
-function handlePresentationVideo() {
-    const videoAlreadyShown = localStorage.getItem(PRESENTATION_VIDEO_SHOWN_KEY);
-    const videoElement = document.getElementById('introVideo');
-    const presentationModalEl = document.getElementById('presentationVideoModal');
-
-    if (!videoAlreadyShown) {
-        if (presentationVideoModalInstance && videoElement) {
-            const anyMajorModalActive = ['authModal', 'cartModal', 'helpModal'].some(id => {
-                const modal = document.getElementById(id);
-                return modal && modal.classList.contains('show');
-            });
-
-            if (!anyMajorModalActive) {
-                setTimeout(() => presentationVideoModalInstance.show(), 1000);
-            }
-        } else {
-            console.warn("Modal de video o elemento de video no encontrado para mostrar automáticamente.");
-        }
-    }
-
-    if (presentationModalEl && videoElement) {
-        presentationModalEl.addEventListener('shown.bs.modal', function () {
-            videoElement.currentTime = 0;
-            videoElement.play().catch(error => {
-                console.warn("Autoplay del video bloqueado por el navegador:", error);
-            });
-        });
-
-        presentationModalEl.addEventListener('hidden.bs.modal', function () {
-            videoElement.pause();
-            localStorage.setItem(PRESENTATION_VIDEO_SHOWN_KEY, 'true');
-        });
-
-        videoElement.addEventListener('ended', function() {
-            if (presentationVideoModalInstance) {
-                presentationVideoModalInstance.hide();
-            }
-        });
-    }
-}
-
 function loadClientDataFromStorage() {
     const storedClientData = localStorage.getItem(LOGGED_IN_CLIENT_KEY);
     if (storedClientData) {
@@ -5117,7 +5484,6 @@ async function fetchDataFromGAS(action, method = 'POST', payloadData = null) {
         if (loadingSpinnerUser) loadingSpinnerUser.classList.remove('show');
     }
 }
-
 </script>
 </body>
 </html>
