@@ -3682,45 +3682,50 @@ document.addEventListener('DOMContentLoaded', async function() {
     setupVipCardInteraction();
 
     // Inicializar funcionalidades de PWA
-            checkIfPWAInstalled();
-            
-            const installAppButton = document.getElementById('installAppButton');
-            if (installAppButton && deferredPrompt) {
-                installAppButton.style.display = 'block';
-                installAppButton.addEventListener('click', showManualInstallPrompt);
-            }
+    checkIfPWAInstalled();
+    
+    const installAppButton = document.getElementById('installAppButton');
+    if (installAppButton && deferredPrompt) {
+        installAppButton.style.display = 'block';
+        installAppButton.addEventListener('click', showManualInstallPrompt);
+    }
 
-            // Lógica para el nuevo banner de instalación de PWA
-            const installBanner = document.getElementById('pwa-install-banner');
-            const installButtonBanner = document.getElementById('pwa-install-button');
-            const closeButtonBanner = document.getElementById('pwa-close-banner-button');
+    // Lógica para el nuevo banner de instalación de PWA
+    const installBanner = document.getElementById('pwa-install-banner');
+    const installButtonBanner = document.getElementById('pwa-install-button');
+    const closeButtonBanner = document.getElementById('pwa-close-banner-button');
 
-            if (installButtonBanner) {
-                installButtonBanner.addEventListener('click', async () => {
-                    if (installBanner) installBanner.style.display = 'none';
+    // Lógica para el botón de INSTALAR en el banner
+    if (installButtonBanner) {
+        installButtonBanner.addEventListener('click', async () => {
+            if (installBanner) installBanner.style.display = 'none';
 
-                    if (deferredPrompt) {
-                        deferredPrompt.prompt();
-                        const { outcome } = await deferredPrompt.userChoice;
-                        if (outcome === 'accepted') {
-                            showGlobalFeedback('¡App instalada con éxito!', 'success');
-                        } else {
-                            showGlobalFeedback('Instalación cancelada.', 'info');
-                        }
-                        deferredPrompt = null;
-                    }
-                });
-            }
-
-            // AÑADE ESTE NUEVO BLOQUE
-            if (installBanner) {
-                // Escucha el evento de Bootstrap cuando el banner se empieza a cerrar
-                installBanner.addEventListener('close.bs.alert', () => {
-                    // Recordar que el usuario cerró el banner en esta sesión
-                    sessionStorage.setItem('pwaBannerDismissed', 'true');
-                });
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                const { outcome } = await deferredPrompt.userChoice;
+                if (outcome === 'accepted') {
+                    showGlobalFeedback('¡App instalada con éxito!', 'success');
+                } else {
+                    showGlobalFeedback('Instalación cancelada.', 'info');
+                }
+                deferredPrompt = null;
             }
         });
+    }
+
+    // --- CÓDIGO CORREGIDO Y AÑADIDO ---
+    // Lógica para el botón de CERRAR (X) en el banner
+    if (closeButtonBanner) {
+        closeButtonBanner.addEventListener('click', () => {
+            if (installBanner) {
+                // Oculta el banner
+                installBanner.style.display = 'none';
+            }
+            // Guarda en la sesión para que no vuelva a aparecer al recargar
+            sessionStorage.setItem('pwaBannerDismissed', 'true');
+        });
+    }
+});
 
 // ===================================================================
 // ==================== SISTEMA DE REFERIDOS =========================
