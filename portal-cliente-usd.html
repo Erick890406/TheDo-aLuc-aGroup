@@ -3764,11 +3764,24 @@ function initializeShareModal() {
         shareModalEl.addEventListener('shown.bs.modal', () => {
             const qrPageCanvas = document.getElementById('qrcodeCanvas');
             const pageUrl = generateReferralLink();
-            const shareText = "¡Echa un vistazo a DL Cumanayagua para enviar productos a Cuba! Fácil, rápido y seguro.";
+
+            // --- INICIO DE LA NUEVA LÓGICA ---
+            let shareText;
+            const hasReferralCode = clientData && clientData.referralcode;
+
+            if (hasReferralCode) {
+                // Mensaje promocional si hay código de referido
+                shareText = `¡Te invito a DL Cumanayagua! Usa mi código de referido al registrarte y ambos ganaremos puntos de descuento. ¡Es fácil y seguro enviar a Cuba!`;
+            } else {
+                // Mensaje estándar si no hay código
+                shareText = "¡Echa un vistazo a DL Cumanayagua para enviar productos a Cuba! Fácil, rápido y seguro.";
+            }
+            // --- FIN DE LA NUEVA LÓGICA ---
+
             const encodedShareText = encodeURIComponent(shareText);
             const encodedUrl = encodeURIComponent(pageUrl);
 
-            // Generar QR Code
+            // Generar QR Code (no cambia)
             if (qrPageCanvas) {
                 qrPageCanvas.innerHTML = '';
                 if (qrcodePageInstance) {
@@ -3785,20 +3798,19 @@ function initializeShareModal() {
                 });
             }
 
-            // Configurar enlaces de redes sociales
+            // Configurar enlaces de redes sociales con el nuevo texto dinámico
             document.getElementById('shareViaWhatsAppButton').href = `https://wa.me/?text=${encodedShareText}%20${encodedUrl}`;
             document.getElementById('shareViaTelegramButton').href = `https://t.me/share/url?url=${encodedUrl}&text=${encodedShareText}`;
             document.getElementById('shareViaFacebookButton').href = `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}&quote=${encodedShareText}`;
             document.getElementById('shareViaTwitterButton').href = `https://twitter.com/intent/tweet?text=${encodedShareText}&url=${encodedUrl}`;
-            document.getElementById('shareViaInstagramButton').href = `https://www.instagram.com/?url=${encodedUrl}`;
-            document.getElementById('shareViaEmailButton').href = `mailto:?subject=${encodeURIComponent('DL Cumanayagua - Envíos a Cuba')}&body=${encodedShareText}%20${encodedUrl}`;
+            document.getElementById('shareViaInstagramButton').href = `https://www.instagram.com/?url=${encodedUrl}`; // Instagram no soporta texto predefinido
+            document.getElementById('shareViaEmailButton').href = `mailto:?subject=${encodeURIComponent('DL Cumanayagua - Envíos a Cuba')}&body=${encodedShareText}%0D%0A%0D%0A${encodedUrl}`;
 
-            // Botón Copiar Enlace
+            // Botón Copiar Enlace (no cambia)
             const copyLinkButton = document.getElementById('copyLinkButton');
             copyLinkButton.onclick = function() {
                 navigator.clipboard.writeText(pageUrl).then(() => {
                     showGlobalFeedback('¡Enlace copiado al portapapeles!', 'success', 2000);
-                    // Animación de confirmación
                     const originalText = copyLinkButton.innerHTML;
                     copyLinkButton.innerHTML = '<i class="bi bi-check-lg me-1"></i>¡Copiado!';
                     copyLinkButton.classList.remove('btn-primary');
@@ -3813,7 +3825,7 @@ function initializeShareModal() {
                 });
             };
 
-            // Botón Compartir Nativo (Web Share API)
+            // Botón Compartir Nativo (Web Share API) con el nuevo texto dinámico
             const shareViaSystemButton = document.getElementById('shareViaSystemButton');
             if (navigator.share) {
                 shareViaSystemButton.style.display = 'block';
@@ -3821,7 +3833,7 @@ function initializeShareModal() {
                     try {
                         await navigator.share({
                             title: 'DL Cumanayagua - Envíos a Cuba',
-                            text: shareText,
+                            text: shareText, // Usamos la variable con el texto dinámico
                             url: pageUrl
                         });
                         showGlobalFeedback('¡Contenido compartido!', 'success', 2000);
