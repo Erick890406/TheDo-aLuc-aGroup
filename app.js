@@ -14,9 +14,8 @@ const AVATAR_GALLERY_IMAGES = [
     'https://i.postimg.cc/DZJmXb0N/Caricature1.png', 'https://i.postimg.cc/NM9LHrFz/Caricature2.png',
     'https://i.postimg.cc/76Gb2Thc/Caricature3.png', 'https://i.postimg.cc/mDzhHFkJ/Caricature4.png',
     'https://i.postimg.cc/sXQ1hZ1x/Caricature5.png', 'https://i.postimg.cc/76FhMYTq/Caricature6.png',
-    'https://i.postimg.cc/V6xvBLbs/Caricature7.png', 'https://i.postimg.cc/RFkhQVnZ/Caricature8.png',
-    'https://i.postimg.cc/L5YwqF6J/Caricature9.png', 'https://i.postimg.cc/135z38H1/Caricature10.png',
-    'https://i.postimg.cc/L6Sg3M0R/Caricature11.png', 'https://i.postimg.cc/J0bZVXjD/Caricature12.png'
+    'https://i.postimg.cc/V6xvBLbs/Caricature7.png', 'https://i.postimg.cc/RFkhQVnZ/Caricature8.png'
+   
 ];
 
 // ================ GESTOR DE SONIDOS (NUEVO) ========================
@@ -1237,4 +1236,5 @@ async function loadAdminDashboard() {
     } else {
         container.innerHTML = `<div class="alert alert-warning">${result.message || 'No se pudieron cargar los datos.'}</div>`;
     }
+
 }
