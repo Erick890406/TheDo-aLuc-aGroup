@@ -39,8 +39,16 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
-    <!-- SweetAlert2 para Alertas Modernas -->
+    
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
+    <script>
+        if (!customElements.get('lottie-player')) {
+            const script = document.createElement('script');
+            script.src = 'https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js';
+            document.head.appendChild(script);
+        }
+    </script>
 
     <style>
         /* ============ ESTILOS MODERNOS (TIENDA LOCAL) ============ */
@@ -286,6 +294,49 @@
             #hero-promo h1 { font-size: 2rem; }
             .gm-headline { font-size: 1.8rem; }
         }
+        /* --- PANTALLA COMPLETA DE BLOQUEO (SOLID BACKGROUND) --- */
+        .full-screen-lockout {
+            background-color: #0f172a !important; /* Color Azul Navy Sólido */
+            width: 100% !important;
+            height: 100% !important;
+            padding: 0 !important;
+            z-index: 10000 !important; /* Por encima de todo */
+        }
+
+        /* Centrar el contenido en la pantalla completa */
+        .full-screen-lockout .modal-dialog {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            max-width: 100%;
+            margin: 0;
+        }
+
+        /* Quitar el fondo a la tarjeta interna para que se fusione con el fondo grande */
+        .full-screen-lockout .lockout-modal-content {
+            background-color: transparent !important; 
+            border: none !important;
+            box-shadow: none !important;
+        }
+
+        /* === CONTENEDORES DINÁMICOS PARA PROMOS === */
+        #promo-bottom-fixed {
+            position: fixed;
+            bottom: 20px; /* Encima de botones flotantes (que están a 30px, ajustar z-index) */
+            left: 5%; 
+            width: 90%;
+            z-index: 99; /* Debajo de los botones flotantes (z-100) */
+            display: none;
+        }
+        
+        /* Ajuste de Z-Index para asegurar visibilidad */
+        .floating-buttons-container { z-index: 200 !important; }
+        
+        /* ESTILOS POR DEFECTO PARA ELEMENTOS INYECTADOS SI LA PLANTILLA FALLA */
+        .promo-fallback {
+            background: #2563eb; color: white; padding: 15px; border-radius: 12px; text-align: center;
+        }
     </style>
 </head>
 <body id="top">
@@ -303,7 +354,6 @@
             <ul class="navbar-nav ms-auto align-items-center gap-lg-3 mt-3 mt-lg-0">
                 <li class="nav-item"><a class="nav-link" onclick="showTabAndScroll('menu-tab-link'); setCategoryFilter('all')">Menú</a></li>
                 
-                <!-- PESTAÑAS DINÁMICAS (NAVBAR) -->
                 <span id="dynamic-nav-items" class="d-lg-flex d-block gap-lg-3" style="display: contents;"></span>
 
                 <li class="nav-item"><a class="nav-link" onclick="showTabAndScroll('my-orders-tab-link')">Mis Pedidos</a></li>
@@ -386,7 +436,6 @@
     <ul class="nav nav-pills justify-content-center mb-4 gap-2">
         <li class="nav-item"><a class="nav-link active" id="menu-tab-link" data-bs-toggle="pill" href="#menu-tab" onclick="setCategoryFilter('all')">🍽️ Menú</a></li>
         
-        <!-- PESTAÑAS DINÁMICAS (PILLS) -->
         <span id="dynamic-pills-items" class="d-flex gap-2" style="display: contents;"></span>
         
         <li class="nav-item"><a class="nav-link" id="my-orders-tab-link" data-bs-toggle="pill" href="#my-orders-tab" onclick="loadUserOrders()">📋 Mis Pedidos</a></li>
@@ -407,6 +456,8 @@
                     </p>
                 </div>
             </div>
+
+            <div id="promo-banner-container" style="display: none;"></div>
 
             <div class="row justify-content-center mb-4">
                 <div class="col-lg-8">
@@ -434,6 +485,8 @@
 
 </main>
 
+<div id="promo-bottom-fixed"></div>
+
 <div class="floating-buttons-container">
     <a id="whatsappButton" href="https://wa.me/5355189657" class="floating-button" target="_blank"><i class="bi bi-whatsapp fs-3"></i></a>
     <button id="floatingCartButton" class="floating-button position-relative" data-bs-toggle="modal" data-bs-target="#cartModal" style="display: none;">
@@ -446,10 +499,8 @@
     <div class="spinner-border" role="status"></div>
 </div>
 
-<!-- NUEVO CONTENEDOR DE TOAST EN LA PARTE SUPERIOR -->
 <div class="toast-container-top" id="toastPlacement"></div>
 
-<!-- Modal de Confirmación de Refresco -->
 <div class="modal fade" id="refreshConfirmModal" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content border-0 shadow-lg rounded-4">
@@ -573,7 +624,6 @@
             <div class="col-md-6 text-center text-md-end">
                 <div class="d-flex justify-content-center justify-content-md-end gap-3 mb-2 align-items-center">
                     <a href="https://wa.me/5355189657" class="text-dark opacity-50 hover-opacity-100 fs-5"><i class="bi bi-whatsapp"></i></a>
-                    <!-- Nuevo Botón de Refresh con Modal de Confirmación -->
                     <i class="bi bi-arrow-clockwise refresh-btn-footer ms-3 opacity-50 hover-opacity-100" onclick="confirmRefresh()" data-bs-toggle="tooltip" title="Recargar App"></i>
                 </div>
                 <small class="text-muted">© 2025 DL CUMANAYAGUA.</small>
@@ -588,7 +638,7 @@
 <script>
     // ==================== CONFIGURACIÓN ====================
     // ¡IMPORTANTE! Asegúrate de que esta URL sea la correcta de tu script
-    const GOOGLE_SCRIPT_URL_USER = 'https://script.google.com/macros/s/AKfycbxJPJB28rfGRwIu1KoY0IMgV5Le8McL9sfs-CVM-DhjPgqnJkXj6DVGqUMX_10mtaCtMQ/exec';
+    const GOOGLE_SCRIPT_URL_USER = 'https://script.google.com/macros/s/AKfycbwWotvu6_YTsaTV4vBKn66NP0YmvrVJb7eqDC5O05iJxoU-_cghV9TsR8C3xRx0GEsfAw/exec';
     const LOGGED_IN_CLIENT_KEY = 'dlClient_v29_final';
     const USER_CART_KEY = 'dlCart_v29_final';
 
@@ -683,6 +733,11 @@
             document.getElementById('menu-tab').scrollIntoView({ behavior: 'smooth', block: 'start' });
         };
 
+        window.sharePromo = function(title, body) {
+            const text = `${title}\n${body}\n\n¡Mira esto aquí! 👉 ${FIXED_SHARE_URL}`;
+            window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
+        };
+
         loadClientData();
         loadCart();
         updateUI();
@@ -756,22 +811,88 @@
                 generateMenu();
             }
 
-            // 3. ESTADO TIENDA (Siempre verificar, incluso si productos no cambian)
-            if(res.data.globalMessage && res.data.globalMessage.isActive) {
-                renderGlobalMessage(res.data.globalMessage);
-            } else {
-                // Si la tienda estaba bloqueada y ahora está abierta, cerramos el modal
-                const modalEl = document.getElementById('globalMessageModal');
-                if(modalEl.classList.contains('show')) {
-                    // Verificamos si era un mensaje de bloqueo
-                    const isLockout = modalEl.querySelector('.gm-headline')?.innerText.toUpperCase().includes("CERRADO");
-                    if(isLockout) {
-                        // Recargar para limpiar el estado de bloqueo completamente
-                        window.location.reload();
-                    } else {
+            // 3. ESTADO TIENDA & PROMOS (Global Message)
+            if(res.data.globalMessage) {
+                const msg = res.data.globalMessage;
+
+                // Lógica de Bloqueo (Cierre de Tienda)
+                if(msg.isActive) {
+                    renderGlobalMessage(msg);
+                } else {
+                    // Si la tienda NO está bloqueada, verificamos si hay promo activa
+                    const modalEl = document.getElementById('globalMessageModal');
+                    const wasLocked = modalEl.classList.contains('full-screen-lockout');
+                    if(modalEl.classList.contains('show') || wasLocked) {
                         globalMsgModal.hide();
+                        modalEl.classList.remove('full-screen-lockout');
+                        document.body.style.overflow = 'auto'; 
+                        document.body.style.paddingRight = '';
+                        document.body.classList.remove('modal-open');
+                        const backdrops = document.querySelectorAll('.modal-backdrop');
+                        backdrops.forEach(bd => bd.remove());
                     }
+
+                    // Renderizar Promo Banner Dinámico
+                    renderPromoBanner(msg);
                 }
+            }
+        }
+    }
+    
+    // Función para renderizar el Anuncio Global (Promo) CON SOPORTE DE PLANTILLAS Y LOTTIE
+    function renderPromoBanner(msg) {
+        // 1. Limpiar todos los contenedores posibles
+        const containers = {
+            top: document.getElementById('promo-banner-container'),
+            bottom: document.getElementById('promo-bottom-fixed')
+        };
+        containers.top.innerHTML = '';
+        containers.top.style.display = 'none';
+        containers.bottom.innerHTML = '';
+        containers.bottom.style.display = 'none';
+
+        // 2. Validar que la promo esté activa y tenga HTML
+        if(!msg.promoActive || !msg.promoHTML) return;
+
+        // 3. Inyectar CSS Dinámico
+        let styleTag = document.getElementById('dynamic-promo-style');
+        if (!styleTag) {
+            styleTag = document.createElement('style');
+            styleTag.id = 'dynamic-promo-style';
+            document.head.appendChild(styleTag);
+        }
+        styleTag.innerHTML = msg.promoCSS || '';
+
+        // 4. Procesar HTML (Reemplazar marcadores)
+        let htmlContent = msg.promoHTML
+            .replace(/{{title}}/g, msg.promoTitle)
+            .replace(/{{body}}/g, msg.promoBody)
+            // Aseguramos escapar comillas para el JS del botón share
+            .replace(/sharePromo\('{{title}}','{{body}}'\)/g, `sharePromo('${msg.promoTitle.replace(/'/g, "\\'")}', '${msg.promoBody.replace(/'/g, "\\'")}')`);
+
+        // 5. Renderizar según Posición
+        const position = msg.promoPosition || 'top-menu';
+
+        if(position === 'top-menu') {
+            containers.top.innerHTML = htmlContent;
+            containers.top.style.display = 'block';
+        } 
+        else if (position === 'bottom-fixed') {
+            containers.bottom.innerHTML = htmlContent;
+            containers.bottom.style.display = 'block';
+        }
+        else if (position === 'popup') {
+            // Usamos SweetAlert para el popup, inyectando el HTML personalizado
+            // Solo lo mostramos si no está ya abierto para no molestar en cada recarga
+            if (!Swal.isVisible()) {
+                Swal.fire({
+                    html: htmlContent,
+                    showConfirmButton: false,
+                    showCloseButton: true,
+                    background: 'transparent',
+                    backdrop: 'rgba(0,0,0,0.8)',
+                    customClass: { popup: 'p-0 border-0 overflow-hidden' }
+                });
             }
         }
     }
@@ -787,56 +908,68 @@
     }
 
     function renderGlobalMessage(msg) {
-        const container = document.getElementById('global-message-content');
-        const modalEl = document.getElementById('globalMessageModal');
-        const modalContent = modalEl.querySelector('.modal-content');
-        
-        const isLockout = msg.title.toUpperCase().includes("CERRADO");
+    const container = document.getElementById('global-message-content');
+    const modalEl = document.getElementById('globalMessageModal'); // El contenedor padre
+    const modalContent = modalEl.querySelector('.modal-content'); // La tarjeta interna
+    
+    const isLockout = msg.title.toUpperCase().includes("CERRADO");
 
-        let htmlContent = '';
-        if (msg.body.includes('gm-actions') || msg.body.includes('btn-download')) {
-            htmlContent = msg.body;
-        } else {
-            if(isLockout) {
-                modalContent.classList.add('lockout-modal-content');
-                htmlContent = `
-                    <div class="text-center p-4">
-                        <i class="bi bi-clock-history clock-anim mb-3 d-block"></i>
-                        <h2 class="fw-bold mb-2 text-white">
-                            <i class="bi bi-dash-circle-fill text-danger me-2"></i> ${msg.title}
-                        </h2>
-                        <p class="text-white-50 mb-4 fs-5">${msg.body}</p>
-                        <a href="https://wa.me/5355189657" class="btn btn-success rounded-pill px-5 py-2 fw-bold fs-5 shadow">
-                            <i class="bi bi-whatsapp me-2"></i> Soporte
-                        </a>
-                    </div>
-                `;
-            } else {
-                modalContent.classList.remove('lockout-modal-content');
-                htmlContent = `
-                    <div class="global-message-wrapper">
-                        <div class="gm-content">
-                            <div class="gm-headline">${msg.title}</div>
-                            <div class="gm-subhead mt-3">${msg.body}</div>
-                            <div class="gm-cta" onclick="globalMsgModal.hide()">👇 ¡Explora el Menú! 👇</div>
-                        </div>
-                    </div>
-                `;
-            }
-        }
-        container.innerHTML = htmlContent;
+    let htmlContent = '';
+    if (msg.body.includes('gm-actions') || msg.body.includes('btn-download')) {
+        htmlContent = msg.body;
+    } else {
+        if(isLockout) {
+            // AQUI ESTA EL CAMBIO CLAVE:
+            // 1. Agregamos la clase al padre para que toda la pantalla sea azul oscura
+            modalEl.classList.add('full-screen-lockout');
+            
+            // 2. Agregamos la clase al hijo (para mantener lógica interna si la usas)
+            modalContent.classList.add('lockout-modal-content');
 
-        if (isLockout) {
-            globalMsgModal.dispose(); 
-            globalMsgModal = new bootstrap.Modal(modalEl, { backdrop: 'static', keyboard: false });
-            modalEl.querySelectorAll('.btn-close').forEach(btn => btn.style.display = 'none');
+            htmlContent = `
+                <div class="text-center p-4 animate__animated animate__zoomIn">
+                    <i class="bi bi-clock-history clock-anim mb-3 d-block" style="font-size: 5rem;"></i>
+                    <h1 class="fw-bold mb-3 text-white" style="font-size: 2.5rem;">
+                        ${msg.title}
+                    </h1>
+                    <p class="text-white-50 mb-5 fs-5 px-3" style="max-width: 600px; margin: 0 auto;">
+                        ${msg.body}
+                    </p>
+                    <a style="display: none;" href="https://wa.me/5355189657" class="btn btn-success rounded-pill px-5 py-3 fw-bold fs-5 shadow-lg scale-hover">
+                        <i class="bi bi-whatsapp me-2"></i> Contactar Soporte
+                    </a>
+                </div>
+            `;
         } else {
-             globalMsgModal.dispose();
-             globalMsgModal = new bootstrap.Modal(modalEl);
+            // Si NO es bloqueo, quitamos las clases de pantalla completa
+            modalEl.classList.remove('full-screen-lockout');
+            modalContent.classList.remove('lockout-modal-content');
+
+            htmlContent = `
+                <div class="global-message-wrapper">
+                    <div class="gm-content">
+                        <div class="gm-headline">${msg.title}</div>
+                        <div class="gm-subhead mt-3">${msg.body}</div>
+                        <div class="gm-cta" onclick="globalMsgModal.hide()">👇 ¡Explora el Menú! 👇</div>
+                    </div>
+                </div>
+            `;
         }
-        globalMsgModal.show();
     }
+    container.innerHTML = htmlContent;
 
+    if (isLockout) {
+        globalMsgModal.dispose(); 
+        // backdrop: false porque nosotros mismos ponemos el fondo sólido con CSS
+        globalMsgModal = new bootstrap.Modal(modalEl, { backdrop: false, keyboard: false });
+        modalEl.querySelectorAll('.btn-close').forEach(btn => btn.style.display = 'none');
+    } else {
+         globalMsgModal.dispose();
+         globalMsgModal = new bootstrap.Modal(modalEl);
+    }
+    globalMsgModal.show();
+}
+//style="display: none;"
     // ==================== MENU ====================
     function generateCategoryFilters() {
         const container = document.getElementById('category-pills-container');
