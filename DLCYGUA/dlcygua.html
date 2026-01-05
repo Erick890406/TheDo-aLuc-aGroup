@@ -337,6 +337,113 @@
         .promo-fallback {
             background: #2563eb; color: white; padding: 15px; border-radius: 12px; text-align: center;
         }
+        /* ============ ESTILOS MODAL ACTUALIZACIÓN (CYBER) ============ */
+.modal-cyber-backdrop {
+    background-color: rgba(15, 23, 42, 0.95) !important; /* Fondo muy oscuro */
+    backdrop-filter: blur(10px);
+}
+
+.cyber-card {
+    background: #1e293b;
+    border-radius: 24px;
+    padding: 2rem;
+    position: relative;
+    overflow: hidden;
+    text-align: center;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+.cyber-glow {
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(99, 102, 241, 0.15) 0%, transparent 70%);
+    animation: cyberSpin 10s linear infinite;
+    z-index: 0;
+}
+
+@keyframes cyberSpin { 100% { transform: rotate(360deg); } }
+
+.cyber-layout { position: relative; z-index: 1; }
+
+.cyber-icon-wrapper {
+    position: relative;
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.cyber-circle {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    opacity: 0.2;
+    animation: pulseCyber 2s infinite;
+}
+
+.cyber-icon {
+    font-size: 2.5rem;
+    color: #8b5cf6;
+    background: -webkit-linear-gradient(#6366f1, #8b5cf6);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 0 10px rgba(139, 92, 246, 0.5));
+}
+
+.cyber-badge {
+    display: inline-block;
+    padding: 4px 12px;
+    background: rgba(99, 102, 241, 0.1);
+    border: 1px solid rgba(99, 102, 241, 0.3);
+    color: #818cf8;
+    border-radius: 50px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    letter-spacing: 1px;
+}
+
+.cyber-title { color: white; font-weight: 800; margin-bottom: 0.5rem; }
+.cyber-body { color: #94a3b8; font-size: 0.95rem; margin-bottom: 2rem; }
+
+.cyber-btn {
+    position: relative;
+    width: 100%;
+    padding: 1rem;
+    border: none;
+    border-radius: 16px;
+    background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+    color: white;
+    font-weight: 700;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    z-index: 1;
+    box-shadow: 0 4px 15px rgba(79, 70, 229, 0.4);
+}
+
+.cyber-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(79, 70, 229, 0.5); }
+.cyber-btn:active { transform: scale(0.98); }
+
+.cyber-btn-shine {
+    position: absolute;
+    top: 0; left: -100%;
+    width: 100%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+    animation: btnShine 3s infinite;
+}
+
+@keyframes btnShine { 100% { left: 100%; } }
+@keyframes pulseCyber { 0% { transform: scale(1); opacity: 0.2; } 50% { transform: scale(1.1); opacity: 0.1; } 100% { transform: scale(1); opacity: 0.2; } }
     </style>
 </head>
 <body id="top">
@@ -608,7 +715,37 @@
 </div></div></div></div>
 
 <div class="modal fade" id="avatarGalleryModal" tabindex="-1"><div class="modal-dialog modal-dialog-centered modal-dialog-scrollable"><div class="modal-content border-0 rounded-4"><div class="modal-header border-0"><h5 class="fw-bold">Elige tu Avatar</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div id="avatar-gallery" class="d-flex flex-wrap gap-3 justify-content-center"></div></div></div></div></div>
+<div class="modal fade" id="updateAppModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content bg-transparent border-0 shadow-none">
+            <div class="modal-body p-0" id="update-modal-content">
+                <div class="cyber-card animate__animated animate__backInUp">
+                    <div class="cyber-glow"></div>
+                    
+                    <div class="cyber-layout">
+                        <div class="cyber-icon-wrapper">
+                            <div class="cyber-circle"></div>
+                            <i class="bi bi-rocket-takeoff-fill cyber-icon"></i>
+                        </div>
+                        
+                        <div class="cyber-content">
+                            <div class="cyber-badge">NUEVA VERSIÓN DISPONIBLE</div>
+                            <h3 class="cyber-title" id="update-title">Mejora Disponible</h3>
+                            <p class="cyber-body" id="update-body">Hemos añadido nuevas funciones y mejoras de velocidad. Actualiza para continuar.</p>
+                        </div>
+                    </div>
 
+                    <button class="cyber-btn" id="btn-force-update">
+                        <span class="cyber-btn-shine"></span>
+                        <span class="cyber-btn-content">
+                            <i class="bi bi-lightning-charge-fill"></i> INSTALAR MEJORA
+                        </span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 <footer class="footer-custom">
     <div class="container">
         <div class="row align-items-center gy-4">
@@ -637,19 +774,21 @@
 
 <script>
     // ==================== CONFIGURACIÓN ====================
-    const GOOGLE_SCRIPT_URL_USER = 'https://script.google.com/macros/s/AKfycbwWotvu6_YTsaTV4vBKn66NP0YmvrVJb7eqDC5O05iJxoU-_cghV9TsR8C3xRx0GEsfAw/exec';
+    const GOOGLE_SCRIPT_URL_USER = 'https://script.google.com/macros/s/AKfycbxnGPCddfcdV8osGZ0cpoYdvD6T-dCD6NjsWH65garMmxSW1-FDjXy10tbXYR_OR7QrUg/exec';
     const LOGGED_IN_CLIENT_KEY = 'dlClient_v29_final';
     const USER_CART_KEY = 'dlCart_v29_final';
-    // NUEVO: Clave para guardar el menú en memoria del teléfono
     const MENU_CACHE_KEY = 'dlMenu_cache_v1'; 
     const FIXED_SHARE_URL = 'https://erick890406.github.io/TheDo-aLuc-aGroup/dlcygua.html';
+    
+    // NUEVO: Clave para controlar la versión de la App
+    const APP_VERSION_KEY = 'dl_app_version_v1';
 
     // ==================== ESTADO ====================
     let clientData = null, menuItems = [], shoppingCart = [];
-    let authModal, cartModal, prodModal, globalMsgModal, shareModal, refreshModal;
+    let authModal, cartModal, prodModal, globalMsgModal, shareModal, refreshModal, updateModal;
     let currentFilterCategory = 'all';
     
-    // NUEVO: Variables para controlar que los mensajes no se repitan
+    // Variables para controlar que los mensajes no se repitan
     let lastProductHash = "";
     let lastGlobalMsgHash = ""; 
 
@@ -669,10 +808,13 @@
         globalMsgModal = new bootstrap.Modal(document.getElementById('globalMessageModal')); 
         shareModal = new bootstrap.Modal(document.getElementById('sharePageModal'));
         refreshModal = new bootstrap.Modal(document.getElementById('refreshConfirmModal'));
+        
+        // NUEVO: Inicializar el Modal de Actualización
+        updateModal = new bootstrap.Modal(document.getElementById('updateAppModal'));
 
         // GLOBAL VIBRATION LISTENER
         document.body.addEventListener('click', (e) => {
-            if (e.target.closest('button, a, .card, .nav-link, .step-item, .gm-cta, .btn-plus-overlay')) {
+            if (e.target.closest('button, a, .card, .nav-link, .step-item, .gm-cta, .btn-plus-overlay, .cyber-btn')) {
                 if(navigator.vibrate) navigator.vibrate(40);
             }
         });
@@ -683,6 +825,19 @@
                 if(navigator.vibrate) navigator.vibrate(25);
             }
         });
+
+        // NUEVO: Event Listener para el botón de forzar actualización
+        const btnForceUpdate = document.getElementById('btn-force-update');
+        if(btnForceUpdate) {
+            btnForceUpdate.addEventListener('click', () => {
+                // Obtenemos la versión pendiente que guardamos en el dataset del modal
+                const pendingVersion = document.getElementById('updateAppModal').dataset.pendingVersion;
+                if(pendingVersion) {
+                    localStorage.setItem(APP_VERSION_KEY, pendingVersion); // Guardamos la nueva versión
+                }
+                forceFullCacheRefresh(); // Ejecutamos la limpieza y recarga
+            });
+        }
 
         // FUNCIONES GLOBALES
         window.openAuthModal = function(tab) { authModal.show(); window.switchAuthTab(tab); };
@@ -749,7 +904,7 @@
             window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
         };
 
-        // NUEVO: Cargar menú desde caché ANTES de intentar conectar a internet
+        // Cargar menú desde caché ANTES de intentar conectar a internet
         loadCachedMenu();
 
         loadClientData();
@@ -763,7 +918,7 @@
         startAutoUpdate(); 
     });
 
-    // NUEVO: Función para cargar menú guardado (Offline support)
+    // Función para cargar menú guardado (Offline support)
     function loadCachedMenu() {
         const cached = localStorage.getItem(MENU_CACHE_KEY);
         if (cached) {
@@ -815,6 +970,33 @@
         // Si hay éxito, procesamos. Si falla (offline), ya cargamos el caché al inicio.
         if(res.success && res.data) {
             
+            // =========================================================
+            // LÓGICA DE ACTUALIZACIÓN DE APP (NUEVO)
+            // =========================================================
+            if(res.data.globalMessage && res.data.globalMessage.appVersion) {
+                const msg = res.data.globalMessage;
+                const serverVersion = String(msg.appVersion).trim();
+                const localVersion = localStorage.getItem(APP_VERSION_KEY) || "0";
+
+                // Si la versión del servidor es diferente a la local, mostramos el modal OBLIGATORIO
+                if (serverVersion !== localVersion) {
+                    console.log(`Nueva versión detectada: Server ${serverVersion} vs Local ${localVersion}`);
+                    
+                    const modalEl = document.getElementById('updateAppModal');
+                    // Guardamos la versión pendiente en el DOM para usarla al dar click en actualizar
+                    modalEl.dataset.pendingVersion = serverVersion;
+                    
+                    updateModal.show();
+                    
+                    // Bloqueamos el scroll para evitar que usen la app
+                    document.body.style.overflow = 'hidden'; 
+                    
+                    // DETENEMOS la ejecución aquí para que no cargue productos ni otros modales
+                    return; 
+                }
+            }
+            // =========================================================
+
             const currentHash = JSON.stringify(res.data.products);
             const hasChanged = currentHash !== lastProductHash;
             
@@ -841,7 +1023,7 @@
                     ...p, price: parseFloat(p.price)||0, id:String(p.id), category: p.category || 'Otros'
                 }));
 
-                // NUEVO: Guardar productos actualizados en localStorage para la próxima vez (Offline support)
+                // Guardar productos actualizados en localStorage para la próxima vez (Offline support)
                 localStorage.setItem(MENU_CACHE_KEY, JSON.stringify(menuItems));
 
                 generateCategoryFilters();
@@ -852,7 +1034,7 @@
             if(res.data.globalMessage) {
                 const msg = res.data.globalMessage;
 
-                // NUEVO: Lógica para evitar que el modal se abra cada 15 segundos
+                // Lógica para evitar que el mensaje global se repita constantemente
                 const currentMsgString = JSON.stringify(msg);
                 const isNewMessage = currentMsgString !== lastGlobalMsgHash;
 
@@ -1224,7 +1406,7 @@
             currentStep=3; updateStepper(); 
             const total=shoppingCart.reduce((s,i)=>s+i.price*i.quantity,0);
             
-            const waMsg=`*NUEVO PEDIDO DL Cumanayagua* 🛵\n------------------\n👤 CLIENTE: ${clientData.nombre}\n📦 Enviar a: ${d.recipientName}\n📍 Dirección: ${d.address}\n📞 Teléfono: ${d.recipientPhone}\n\n📝 RESUMEN:\n${shoppingCart.map(i=>`🛒 ${i.name}\n   Cant: ${i.quantity} | Subt: $${(i.price*i.quantity).toFixed(2)}`).join('\n')}\n\n------------------\n💰 *TOTAL: $${total.toFixed(2)} CUP*\n📝 Nota: ${d.notes}\n#Pedido: ${res.data.orderId.substr(-4)}`;
+            const waMsg=`*NUEVO PEDIDO DL Cumanayagua* 🛵\n------------------\n👤 CLIENTE: ${clientData.nombre}\n📦 Enviar a: ${d.recipientName}\n📍 Dirección: ${d.address}\n📞 Teléfono: ${d.recipientPhone}\n\n📝 RESUMEN:\n${shoppingCart.map(i=>`🛒 ${i.name}\n    Cant: ${i.quantity} | Subt: $${(i.price*i.quantity).toFixed(2)}`).join('\n')}\n\n------------------\n💰 *TOTAL: $${total.toFixed(2)} CUP*\n📝 Nota: ${d.notes}\n#Pedido: ${res.data.orderId.substr(-4)}`;
             
             document.getElementById('order-placement-feedback').innerHTML=`<div class="py-5"><div class="mb-4 text-success"><i class="bi bi-check-circle-fill display-1"></i></div><h3 class="fw-bold mb-3">¡Pedido Recibido!</h3><p class="text-muted mb-4">Orden <strong>#${res.data.orderId.substr(-4)}</strong> lista.</p><a href="https://wa.me/5355189657?text=${encodeURIComponent(waMsg)}" class="btn btn-success btn-lg rounded-pill w-100 shadow-lg fw-bold"><i class="bi bi-whatsapp me-2"></i> Confirmar por WhatsApp</a></div>`;
             shoppingCart=[]; saveCart(); updateUI();
@@ -1256,7 +1438,7 @@
     async function handleLoginAttempt(){const res=await fetchData('loginUser','POST',{telefono:document.getElementById('loginPhone').value,password:document.getElementById('loginPassword').value});if(res.success){clientData=res.data;saveClientData();updateUI();authModal.hide()}else document.getElementById('login-feedback').innerText=res.message}
     async function handleUserRegistrationAttempt(){const res=await fetchData('registerNewUser','POST',{nombre:document.getElementById('newUserName').value,telefono:document.getElementById('newUserPhone').value,email:document.getElementById('newUserEmail').value,password:document.getElementById('newUserPassword').value});if(res.success)document.getElementById('registration-feedback').innerHTML='<span class="text-success">¡Cuenta creada!</span>';else document.getElementById('registration-feedback').innerText=res.message}
     
-    // ==================== NUEVA FUNCIÓN DE RECARGA TOTAL ====================
+    // ==================== FUNCIÓN DE RECARGA TOTAL ====================
     async function forceFullCacheRefresh() {
         if ('serviceWorker' in navigator) {
             const registrations = await navigator.serviceWorker.getRegistrations();
