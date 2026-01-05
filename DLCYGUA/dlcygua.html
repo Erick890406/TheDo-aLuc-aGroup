@@ -409,7 +409,7 @@
                             <span class="badge bg-warning text-dark px-3 py-1 rounded-pill fw-bold shadow-sm mb-3">🔥 ¡OFERTA DEL DÍA!</span>
                             <h1 class="mb-3 fw-bold">Pizzas Calientes<br>a tu Puerta</h1>
                             <p class="mb-4 opacity-90 fs-6">Disfruta el sabor auténtico sin salir de casa.</p>
-                            <button class="btn btn-light text-warning fw-bold btn-lg rounded-pill px-5 shadow-sm" onclick="setCategoryFilter('Alimentos'); document.getElementById('menu-tab-link').click()">
+                            <button class="btn btn-light text-warning fw-bold btn-lg rounded-pill px-5 shadow-sm" onclick="setCategoryFilter('Pizzas'); showTabAndScroll('menu-tab-link')">
                                 Ordenar Ahora <i class="bi bi-arrow-right ms-2"></i>
                             </button>
                         </div>
@@ -718,6 +718,8 @@
         };
 
         window.setCategoryFilter = function(cat) {
+            // Limpiar buscador para evitar conflictos
+            document.getElementById('productSearchInput').value = ''; 
             currentFilterCategory = cat;
             generateCategoryFilters();
             generateMenu();
