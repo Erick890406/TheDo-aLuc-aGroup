@@ -640,13 +640,18 @@
     const GOOGLE_SCRIPT_URL_USER = 'https://script.google.com/macros/s/AKfycbwWotvu6_YTsaTV4vBKn66NP0YmvrVJb7eqDC5O05iJxoU-_cghV9TsR8C3xRx0GEsfAw/exec';
     const LOGGED_IN_CLIENT_KEY = 'dlClient_v29_final';
     const USER_CART_KEY = 'dlCart_v29_final';
+    // NUEVO: Clave para guardar el menú en memoria del teléfono
+    const MENU_CACHE_KEY = 'dlMenu_cache_v1'; 
     const FIXED_SHARE_URL = 'https://erick890406.github.io/TheDo-aLuc-aGroup/dlcygua.html';
 
     // ==================== ESTADO ====================
     let clientData = null, menuItems = [], shoppingCart = [];
     let authModal, cartModal, prodModal, globalMsgModal, shareModal, refreshModal;
     let currentFilterCategory = 'all';
+    
+    // NUEVO: Variables para controlar que los mensajes no se repitan
     let lastProductHash = "";
+    let lastGlobalMsgHash = ""; 
 
     // ==================== INICIALIZACIÓN ====================
     document.addEventListener('DOMContentLoaded', async () => {
@@ -742,6 +747,9 @@
             window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
         };
 
+        // NUEVO: Cargar menú desde caché ANTES de intentar conectar a internet
+        loadCachedMenu();
+
         loadClientData();
         loadCart();
         updateUI();
@@ -750,8 +758,26 @@
         document.getElementById('productSearchInput')?.addEventListener('input', generateMenu);
 
         await loadInitialData();
-        startAutoUpdate(); // Iniciar actualización en segundo plano
+        startAutoUpdate(); 
     });
+
+    // NUEVO: Función para cargar menú guardado (Offline support)
+    function loadCachedMenu() {
+        const cached = localStorage.getItem(MENU_CACHE_KEY);
+        if (cached) {
+            try {
+                menuItems = JSON.parse(cached);
+                // Si hay datos, generamos el menú inmediatamente
+                if(menuItems.length > 0) {
+                    generateCategoryFilters();
+                    generateMenu();
+                    console.log("Menú cargado desde caché local (Modo Offline listo)");
+                }
+            } catch (e) {
+                console.error("Error leyendo caché de menú", e);
+            }
+        }
+    }
 
     // ==================== DATOS & API ====================
     async function fetchData(action, method, payload=null, silent=false) {
@@ -770,7 +796,7 @@
             return JSON.parse(text);
         } catch(e) { 
             console.error(e); 
-            if(!silent) showToast("Error de conexión", "danger");
+            if(!silent) showToast("Estás trabajando sin conexión", "warning"); // Mensaje más amigable
             return {success:false}; 
         }
         finally {
@@ -783,6 +809,8 @@
 
     async function loadInitialData(silent = false) {
         const res = await fetchData('getInitialClientData', 'GET', null, silent);
+        
+        // Si hay éxito, procesamos. Si falla (offline), ya cargamos el caché al inicio.
         if(res.success && res.data) {
             
             const currentHash = JSON.stringify(res.data.products);
@@ -810,6 +838,10 @@
                 menuItems = (res.data.products||[]).map(p => ({
                     ...p, price: parseFloat(p.price)||0, id:String(p.id), category: p.category || 'Otros'
                 }));
+
+                // NUEVO: Guardar productos actualizados en localStorage para la próxima vez (Offline support)
+                localStorage.setItem(MENU_CACHE_KEY, JSON.stringify(menuItems));
+
                 generateCategoryFilters();
                 generateMenu();
             }
@@ -818,9 +850,19 @@
             if(res.data.globalMessage) {
                 const msg = res.data.globalMessage;
 
+                // NUEVO: Lógica para evitar que el modal se abra cada 15 segundos
+                const currentMsgString = JSON.stringify(msg);
+                const isNewMessage = currentMsgString !== lastGlobalMsgHash;
+
                 if(msg.isActive) {
-                    renderGlobalMessage(msg);
+                    // Si es "CERRADO" (Lockout), forzamos mostrarlo siempre si está cerrado.
+                    // Si es un mensaje normal, solo si es nuevo.
+                    if (msg.title.toUpperCase().includes("CERRADO") || isNewMessage) {
+                        lastGlobalMsgHash = currentMsgString;
+                        renderGlobalMessage(msg);
+                    }
                 } else {
+                    // Lógica para cerrar modal si ya no está activo
                     const modalEl = document.getElementById('globalMessageModal');
                     const wasLocked = modalEl.classList.contains('full-screen-lockout');
                     if(modalEl.classList.contains('show') || wasLocked) {
@@ -832,7 +874,11 @@
                         const backdrops = document.querySelectorAll('.modal-backdrop');
                         backdrops.forEach(bd => bd.remove());
                     }
-                    renderPromoBanner(msg);
+                    // Renderizamos promo banner solo si cambió
+                    if(isNewMessage) {
+                         lastGlobalMsgHash = currentMsgString;
+                         renderPromoBanner(msg);
+                    }
                 }
             }
         }
@@ -894,61 +940,61 @@
     }
 
     function renderGlobalMessage(msg) {
-    const container = document.getElementById('global-message-content');
-    const modalEl = document.getElementById('globalMessageModal'); 
-    const modalContent = modalEl.querySelector('.modal-content'); 
-    
-    const isLockout = msg.title.toUpperCase().includes("CERRADO");
+        const container = document.getElementById('global-message-content');
+        const modalEl = document.getElementById('globalMessageModal'); 
+        const modalContent = modalEl.querySelector('.modal-content'); 
+        
+        const isLockout = msg.title.toUpperCase().includes("CERRADO");
 
-    let htmlContent = '';
-    if (msg.body.includes('gm-actions') || msg.body.includes('btn-download')) {
-        htmlContent = msg.body;
-    } else {
-        if(isLockout) {
-            modalEl.classList.add('full-screen-lockout');
-            modalContent.classList.add('lockout-modal-content');
-
-            htmlContent = `
-                <div class="text-center p-4 animate__animated animate__zoomIn">
-                    <i class="bi bi-clock-history clock-anim mb-3 d-block" style="font-size: 5rem;"></i>
-                    <h1 class="fw-bold mb-3 text-white" style="font-size: 2.5rem;">
-                        ${msg.title}
-                    </h1>
-                    <p class="text-white-50 mb-5 fs-5 px-3" style="max-width: 600px; margin: 0 auto;">
-                        ${msg.body}
-                    </p>
-                    <a style="display: none;" href="https://wa.me/5355189657" class="btn btn-success rounded-pill px-5 py-3 fw-bold fs-5 shadow-lg scale-hover">
-                        <i class="bi bi-whatsapp me-2"></i> Contactar Soporte
-                    </a>
-                </div>
-            `;
+        let htmlContent = '';
+        if (msg.body.includes('gm-actions') || msg.body.includes('btn-download')) {
+            htmlContent = msg.body;
         } else {
-            modalEl.classList.remove('full-screen-lockout');
-            modalContent.classList.remove('lockout-modal-content');
+            if(isLockout) {
+                modalEl.classList.add('full-screen-lockout');
+                modalContent.classList.add('lockout-modal-content');
 
-            htmlContent = `
-                <div class="global-message-wrapper">
-                    <div class="gm-content">
-                        <div class="gm-headline">${msg.title}</div>
-                        <div class="gm-subhead mt-3">${msg.body}</div>
-                        <div class="gm-cta" onclick="globalMsgModal.hide()">👇 ¡Explora el Menú! 👇</div>
+                htmlContent = `
+                    <div class="text-center p-4 animate__animated animate__zoomIn">
+                        <i class="bi bi-clock-history clock-anim mb-3 d-block" style="font-size: 5rem;"></i>
+                        <h1 class="fw-bold mb-3 text-white" style="font-size: 2.5rem;">
+                            ${msg.title}
+                        </h1>
+                        <p class="text-white-50 mb-5 fs-5 px-3" style="max-width: 600px; margin: 0 auto;">
+                            ${msg.body}
+                        </p>
+                        <a style="display: none;" href="https://wa.me/5355189657" class="btn btn-success rounded-pill px-5 py-3 fw-bold fs-5 shadow-lg scale-hover">
+                            <i class="bi bi-whatsapp me-2"></i> Contactar Soporte
+                        </a>
                     </div>
-                </div>
-            `;
-        }
-    }
-    container.innerHTML = htmlContent;
+                `;
+            } else {
+                modalEl.classList.remove('full-screen-lockout');
+                modalContent.classList.remove('lockout-modal-content');
 
-    if (isLockout) {
-        globalMsgModal.dispose(); 
-        globalMsgModal = new bootstrap.Modal(modalEl, { backdrop: false, keyboard: false });
-        modalEl.querySelectorAll('.btn-close').forEach(btn => btn.style.display = 'none');
-    } else {
-         globalMsgModal.dispose();
-         globalMsgModal = new bootstrap.Modal(modalEl);
+                htmlContent = `
+                    <div class="global-message-wrapper">
+                        <div class="gm-content">
+                            <div class="gm-headline">${msg.title}</div>
+                            <div class="gm-subhead mt-3">${msg.body}</div>
+                            <div class="gm-cta" onclick="globalMsgModal.hide()">👇 ¡Explora el Menú! 👇</div>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+        container.innerHTML = htmlContent;
+
+        if (isLockout) {
+            globalMsgModal.dispose(); 
+            globalMsgModal = new bootstrap.Modal(modalEl, { backdrop: false, keyboard: false });
+            modalEl.querySelectorAll('.btn-close').forEach(btn => btn.style.display = 'none');
+        } else {
+             globalMsgModal.dispose();
+             globalMsgModal = new bootstrap.Modal(modalEl);
+        }
+        globalMsgModal.show();
     }
-    globalMsgModal.show();
-}
 
     // ==================== MENU ====================
     function generateCategoryFilters() {
@@ -969,22 +1015,27 @@
         if(currentFilterCategory !== 'all') items = items.filter(i => (i.category || 'Otros') === currentFilterCategory);
         items = items.filter(i => i.name.toLowerCase().includes(term));
 
-        container.innerHTML = items.map((p, index) => `
-            <div class="col-6 col-md-4 col-lg-3 animate__animated animate__fadeInUp" style="animation-delay: ${index*0.05}s">
-                <div class="card h-100" onclick="showProductDetails('${p.id}')" style="cursor: pointer;">
-                    <div class="card-body p-2">
-                        <div class="product-image-container">
-                            <img src="${p.imageurl||'./img/placeholder-product.png'}" class="product-image">
-                            <div class="btn-plus-overlay" onclick="event.stopPropagation(); addToCart('${p.id}')"><i class="bi bi-plus"></i></div>
-                        </div>
-                        <div class="text-center mt-2">
-                            <h6 class="card-title text-truncate">${p.name}</h6>
-                            <div class="price">$${p.price.toFixed(2)} CUP</div>
-                            <span class="badge-free">Envío Gratis</span>
+        if(items.length === 0) {
+            // Mensaje si no hay productos (o búsqueda sin resultados)
+            container.innerHTML = '<div class="col-12 text-center py-5"><p class="text-muted">No se encontraron productos.</p></div>';
+        } else {
+            container.innerHTML = items.map((p, index) => `
+                <div class="col-6 col-md-4 col-lg-3 animate__animated animate__fadeInUp" style="animation-delay: ${index*0.05}s">
+                    <div class="card h-100" onclick="showProductDetails('${p.id}')" style="cursor: pointer;">
+                        <div class="card-body p-2">
+                            <div class="product-image-container">
+                                <img src="${p.imageurl||'./img/placeholder-product.png'}" class="product-image">
+                                <div class="btn-plus-overlay" onclick="event.stopPropagation(); addToCart('${p.id}')"><i class="bi bi-plus"></i></div>
+                            </div>
+                            <div class="text-center mt-2">
+                                <h6 class="card-title text-truncate">${p.name}</h6>
+                                <div class="price">$${p.price.toFixed(2)} CUP</div>
+                                <span class="badge-free">Envío Gratis</span>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </div>`).join('');
+                </div>`).join('');
+        }
     }
 
     function generateRecommendations(currentProductId) {
@@ -1205,22 +1256,17 @@
     
     // ==================== NUEVA FUNCIÓN DE RECARGA TOTAL ====================
     async function forceFullCacheRefresh() {
-        // 1. Desregistrar Service Worker
         if ('serviceWorker' in navigator) {
             const registrations = await navigator.serviceWorker.getRegistrations();
             for (let registration of registrations) {
                 await registration.unregister();
             }
         }
-        // 2. Borrar Cache Storage
         if ('caches' in window) {
             const keys = await caches.keys();
             await Promise.all(keys.map(key => caches.delete(key)));
         }
-        // 3. Borrar LocalStorage (Opcional, pero para estar 100% seguros)
-        // localStorage.clear(); // DESCOMENTAR SI QUIERES QUE TAMBIÉN CIERRE SESIÓN
         
-        // 4. Recargar forzando desde el servidor
         window.location.reload(true);
     }
 
