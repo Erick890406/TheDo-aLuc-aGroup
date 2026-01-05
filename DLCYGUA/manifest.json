@@ -1,0 +1,22 @@
+{
+  "name": "DL Cumanayagua",
+  "short_name": "DL Cumanayagua",
+  "start_url": "./dlcygua.html",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#ffffff",
+  "description": "Tu mercado local online con envíos gratis.",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "./img/Logo-DL-Cumanayagua.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "./img/Logo-DL-Cumanayagua.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
