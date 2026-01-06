@@ -77,6 +77,7 @@
             -webkit-font-smoothing: antialiased;
             padding-top: 80px;
             overflow-x: hidden;
+            padding-bottom: 90px;
         }
 
         /* Navbar Glass */
@@ -101,6 +102,7 @@
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             overflow: hidden;
             height: 100%;
+            position: relative;
         }
         .card:hover { transform: translateY(-5px); box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1); }
         .card-body { padding: 1.25rem; display: flex; flex-direction: column; }
@@ -118,6 +120,29 @@
         }
         .btn-plus-overlay:hover { background: var(--primary); color: white; transform: scale(1.1); }
         .btn-plus-overlay:active { transform: scale(0.95); }
+
+        /* --- BOTÓN FAVORITO (CORAZÓN) CON ANIMACIÓN --- */
+        .btn-heart-overlay {
+            position: absolute; top: 10px; right: 10px; width: 35px; height: 35px;
+            background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(4px);
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1); color: #cbd5e1; font-size: 1.2rem;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); z-index: 5; cursor: pointer;
+        }
+        .btn-heart-overlay.active { color: #ef4444; background: white; transform: scale(1.1); }
+        .btn-heart-overlay:active { transform: scale(0.9); }
+
+        /* Animación de Latido */
+        @keyframes heartbeat {
+            0% { transform: scale(1); }
+            14% { transform: scale(1.3); }
+            28% { transform: scale(1); }
+            42% { transform: scale(1.3); }
+            70% { transform: scale(1); }
+        }
+        .animate-heartbeat {
+            animation: heartbeat 0.8s ease-in-out;
+        }
 
         .card-title { font-weight: 600; margin-bottom: 0.3rem; font-size: 1rem; color: var(--text-main); line-height: 1.4; }
         .price { font-weight: 800; color: var(--primary); font-size: 1.2rem; }
@@ -697,14 +722,14 @@
         }
         
         /* Imagen de fondo Full Bleed */
-.tiktok-img-bg {
-    width: 100%;
-    height: 100%;
-    object-fit: cover; /* Esto asegura que la imagen cubra todo el fondo */
-    position: absolute;
-    top: 0; left: 0;
-    z-index: 0;
-}
+        .tiktok-img-bg {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            position: absolute;
+            top: 0; left: 0;
+            z-index: 0;
+        }
 
         /* Overlay Gradiente */
         .tiktok-overlay {
@@ -800,6 +825,170 @@
         
         @keyframes pulseHint { 0% { transform: translateY(-50%) translateX(0); opacity: 0.5; } 50% { transform: translateY(-50%) translateX(5px); opacity: 1; } 100% { transform: translateY(-50%) translateX(0); opacity: 0.5; } }
 
+        /* ============ BARRA PROGRESO LUXURY GAMING (GLASSMORPHISM + PARTICLES) ============ */
+        .min-order-pill {
+            position: fixed;
+            bottom: 25px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 85%;
+            max-width: 320px;
+            height: 55px;
+            background: rgba(10, 10, 20, 0.75);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 50px;
+            overflow: hidden;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+            z-index: 1040;
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .min-order-pill.completed-anim {
+            border-color: rgba(255, 215, 0, 0.5);
+            box-shadow: 0 0 20px rgba(255, 165, 0, 0.4);
+        }
+
+        .min-order-content {
+            position: relative;
+            z-index: 3;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 25px;
+            height: 100%;
+            color: white;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .min-order-text {
+            font-size: 0.95rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            letter-spacing: 0.5px;
+        }
+
+        .min-order-bar-bg {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: 1;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .min-order-bar-fill {
+            height: 100%;
+            width: 0%;
+            position: absolute;
+            top: 0; left: 0;
+            z-index: 2;
+            background: linear-gradient(90deg, #ff8c00 0%, #ff0080 50%, #7928ca 100%);
+            background-size: 200% 100%;
+            opacity: 0.8;
+            transition: width 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+            animation: gamingFlow 3s linear infinite;
+        }
+
+        @keyframes gamingFlow {
+            0% { background-position: 100% 0; }
+            100% { background-position: 0 0; }
+        }
+
+        .lux-particle {
+            position: fixed;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: white;
+            z-index: 1050;
+            pointer-events: none;
+            opacity: 0;
+        }
+
+        /* ============ NUEVAS FUNCIONALIDADES (FOMO, TIMELINE) ============ */
+        
+        /* FOMO Notifications */
+        #fomo-container {
+            position: fixed;
+            bottom: 90px; /* Encima de la barra de progreso */
+            left: 20px;
+            z-index: 1030;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            pointer-events: none; /* Dejar pasar clicks */
+        }
+
+        .fomo-toast {
+            background: rgba(15, 23, 42, 0.85); /* Dark Glass */
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 12px 16px;
+            border-radius: 16px;
+            color: white;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            animation: slideInLeft 0.5s ease forwards, fadeOut 0.5s ease 4.5s forwards;
+            max-width: 280px;
+        }
+        
+        .fomo-icon {
+            font-size: 1.2rem;
+            color: #4ade80; /* Green accent */
+        }
+
+        @keyframes slideInLeft { from { opacity: 0; transform: translateX(-20px); } to { opacity: 1; transform: translateX(0); } }
+        @keyframes fadeOut { to { opacity: 0; transform: translateY(10px); } }
+
+        /* Timeline de Pedido */
+        .order-timeline {
+            position: relative;
+            padding-left: 20px;
+            margin-top: 15px;
+            border-left: 2px solid #e2e8f0;
+        }
+        
+        .timeline-step {
+            position: relative;
+            padding-bottom: 20px;
+            padding-left: 20px;
+        }
+        
+        .timeline-step:last-child { padding-bottom: 0; }
+
+        .timeline-dot {
+            position: absolute;
+            left: -26px; /* Ajuste para centrar en la línea */
+            top: 0;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: #cbd5e1;
+            border: 2px solid white;
+            box-shadow: 0 0 0 2px #f1f5f9;
+            transition: all 0.3s ease;
+        }
+        
+        .timeline-step.active .timeline-dot {
+            background: #22c55e; /* Green active */
+            box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.2);
+            transform: scale(1.2);
+        }
+        
+        .timeline-step.active .timeline-text { color: #0f172a; font-weight: 700; }
+        .timeline-text { font-size: 0.85rem; color: #64748b; }
+        .timeline-date { font-size: 0.75rem; color: #94a3b8; display: block; }
+
     </style>
 </head>
 <body id="top">
@@ -810,17 +999,18 @@
             <img src="img/Logo-DL-Cumanayagua.png" width="36" height="36" class="rounded-3 shadow-sm">
             DL Cumanayagua
         </a>
-        <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" id="navbarToggler">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ms-auto align-items-center gap-lg-3 mt-3 mt-lg-0">
-                <li class="nav-item"><a class="nav-link" onclick="showTabAndScroll('menu-tab-link'); setCategoryFilter('all')">Menú</a></li>
+                <li class="nav-item"><a class="nav-link" onclick="handleNavClick('menu-tab-link'); setCategoryFilter('all')">Menú</a></li>
+                <li class="nav-item"><a class="nav-link" id="favorites-tab-link" data-bs-toggle="pill" href="#favorites-tab" onclick="handleNavClick('favorites-tab-link'); renderFavorites()">❤️ Favoritos</a></li>
                 <span id="dynamic-nav-items" class="d-lg-flex d-block gap-lg-3" style="display: contents;"></span>
-                <li class="nav-item"><a class="nav-link" onclick="showTabAndScroll('my-orders-tab-link')">Mis Pedidos</a></li>
+                <li class="nav-item"><a class="nav-link" id="my-orders-tab-link" data-bs-toggle="pill" href="#my-orders-tab" onclick="handleNavClick('my-orders-tab-link'); loadUserOrders()">📋 Mis Pedidos</a></li>
                 
                 <li class="nav-item">
-                    <button class="btn btn-sm btn-danger rounded-pill px-3 ms-lg-2 mt-2 mt-lg-0 fw-bold shadow-sm" onclick="openPromoSwipe()">
+                    <button class="btn btn-sm btn-danger rounded-pill px-3 ms-lg-2 mt-2 mt-lg-0 fw-bold shadow-sm" onclick="openPromoSwipe(); closeNav()">
                         <i class="bi bi-megaphone-fill me-1"></i> 🔥 Promociones
                     </button>
                 </li>
@@ -909,6 +1099,7 @@
         
         <span id="dynamic-pills-items" class="d-flex gap-2" style="display: contents;"></span>
         
+        <li class="nav-item"><a class="nav-link" id="favorites-tab-link" data-bs-toggle="pill" href="#favorites-tab" onclick="renderFavorites()">❤️ Favoritos</a></li>
         <li class="nav-item"><a class="nav-link" id="my-orders-tab-link" data-bs-toggle="pill" href="#my-orders-tab" onclick="loadUserOrders()">📋 Mis Pedidos</a></li>
     </ul>
 
@@ -944,6 +1135,15 @@
             <div class="row g-3" id="menu-container"><div class="col-12 text-center py-5"><div class="spinner-border opacity-25"></div></div></div>
         </div>
 
+        <div class="tab-pane fade" id="favorites-tab">
+            <div class="row g-3" id="favorites-container">
+                <div class="col-12 text-center py-5 text-muted">
+                    <i class="bi bi-heart-break display-4 opacity-25"></i>
+                    <p class="mt-3">Aún no tienes favoritos.</p>
+                </div>
+            </div>
+        </div>
+
         <div class="tab-pane fade" id="my-orders-tab">
             <div id="orders-history-container" class="row justify-content-center g-3">
                 <div class="col-md-8 text-center py-5 text-muted">
@@ -976,6 +1176,18 @@
 </div>
 
 <div id="promo-bottom-fixed"></div>
+
+<div id="min-order-pill" class="min-order-pill">
+    <div class="min-order-bar-bg"><div class="min-order-bar-fill" id="min-order-bar-fill"></div></div>
+    <div class="min-order-content">
+        <span class="min-order-text" id="min-order-text">
+            <i class="bi bi-bag"></i> Calculando...
+        </span>
+        <span id="min-order-percent" class="small opacity-75">0%</span>
+    </div>
+</div>
+
+<div id="fomo-container"></div>
 
 <div class="floating-buttons-container">
     <a id="whatsappButton" href="https://wa.me/5355189657" class="floating-button" target="_blank"><i class="bi bi-whatsapp fs-3"></i></a>
@@ -1207,13 +1419,17 @@
     const LOGGED_IN_CLIENT_KEY = 'dlClient_v29_final';
     const USER_CART_KEY = 'dlCart_v29_final';
     const MENU_CACHE_KEY = 'dlMenu_cache_v1'; 
+    const USER_FAVORITES_KEY = 'dlFavorites_v1';
     const FIXED_SHARE_URL = 'https://erick890406.github.io/TheDo-aLuc-aGroup/DLCYGUA/dlcygua.html';
+    
+    // MÍNIMO DE COMPRA CONFIGURABLE
+    const MIN_ORDER_AMOUNT = 500;
     
     // NUEVO: Clave para controlar la versión de la App
     const APP_VERSION_KEY = 'dl_app_version_v1';
 
     // ==================== ESTADO ====================
-    let clientData = null, menuItems = [], shoppingCart = [];
+    let clientData = null, menuItems = [], shoppingCart = [], userFavorites = [];
     let authModal, cartModal, prodModal, globalMsgModal, shareModal, refreshModal, updateModal, promoSwipeModal;
     let currentFilterCategory = 'all';
     
@@ -1367,6 +1583,9 @@
         // Renderizar Historias
         renderStories();
 
+        // INICIAR LOOP FOMO
+        startFomoLoop();
+
         // FUNCIONES GLOBALES
         window.openAuthModal = function(tab) { authModal.show(); window.switchAuthTab(tab); };
         window.confirmRefresh = function() { refreshModal.show(); };
@@ -1430,9 +1649,24 @@
             const text = `${title}\n${body}\n\n¡Mira esto aquí! 👉 ${FIXED_SHARE_URL}`;
             window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
         };
+        
+        // --- NUEVO: CIERRE DE MENÚ Y SCROLL ---
+        window.closeNav = function() {
+            const nav = document.getElementById('navbarNav');
+            if(nav.classList.contains('show')) {
+                const toggler = document.getElementById('navbarToggler');
+                if(toggler) toggler.click(); // Manera más segura de cerrar
+            }
+        };
 
-        // Cargar menú desde caché
+        window.handleNavClick = function(tabId) {
+            closeNav();
+            showTabAndScroll(tabId);
+        };
+
+        // Cargar menú y favoritos
         loadCachedMenu();
+        loadFavorites();
         loadClientData();
         loadCart();
         updateUI();
@@ -1686,8 +1920,8 @@
                     let navHtml = ''; let pillsHtml = '';
                     res.data.tabs.forEach(tab => {
                         if(tab.isactive) { 
-                            navHtml += `<li class="nav-item"><a class="nav-link" onclick="filterAndScroll('${tab.categoryfilter}')">${tab.label}</a></li>`;
-                            pillsHtml += `<li class="nav-item"><a class="nav-link" onclick="filterAndScroll('${tab.categoryfilter}')">${tab.label}</a></li>`;
+                            navHtml += `<li class="nav-item"><a class="nav-link" onclick="handleNavClick('menu-tab-link'); filterAndScroll('${tab.categoryfilter}')">${tab.label}</a></li>`;
+                            pillsHtml += `<li class="nav-item"><a class="nav-link" onclick="handleNavClick('menu-tab-link'); filterAndScroll('${tab.categoryfilter}')">${tab.label}</a></li>`;
                         }
                     });
                     if(navContainer) navContainer.innerHTML = navHtml;
@@ -1849,6 +2083,84 @@
         globalMsgModal.show();
     }
 
+    // ==================== FAVORITOS (WISHLIST) ====================
+    function loadFavorites() {
+        try {
+            userFavorites = JSON.parse(localStorage.getItem(USER_FAVORITES_KEY)) || [];
+        } catch(e) { userFavorites = []; }
+    }
+
+    function toggleFavorite(id, btnElement) {
+        // Detener propagación para no abrir el modal del producto
+        if(event) event.stopPropagation();
+        
+        const index = userFavorites.indexOf(id);
+        
+        // --- 1. ACTUALIZAR ARRAY ---
+        if(index > -1) {
+            userFavorites.splice(index, 1);
+            showToast('Eliminado de favoritos', 'secondary');
+        } else {
+            userFavorites.push(id);
+            showToast('Añadido a favoritos');
+        }
+        localStorage.setItem(USER_FAVORITES_KEY, JSON.stringify(userFavorites));
+        
+        // --- 2. MANIPULACIÓN DOM OPTIMIZADA (SIN RECARGA TOTAL) ---
+        if(btnElement) {
+            // Cambiar clase 'active' (fondo blanco/color)
+            btnElement.classList.toggle('active');
+            
+            // Cambiar icono (relleno vs contorno)
+            const icon = btnElement.querySelector('i');
+            if(icon) {
+                if(btnElement.classList.contains('active')) {
+                    icon.className = 'bi bi-heart-fill';
+                } else {
+                    icon.className = 'bi bi-heart';
+                }
+            }
+            
+            // Animación de latido (CSS)
+            btnElement.classList.remove('animate-heartbeat');
+            void btnElement.offsetWidth; // Trigger reflow para reiniciar animación
+            btnElement.classList.add('animate-heartbeat');
+        }
+
+        // --- 3. SOLO RE-RENDERIZAR SI ESTAMOS EN LA PESTAÑA "FAVORITOS" ---
+        const favoritesTab = document.getElementById('favorites-tab');
+        if(favoritesTab && favoritesTab.classList.contains('active') && favoritesTab.classList.contains('show')) {
+            // Pequeño delay para que se vea la animación antes de desaparecer
+            setTimeout(renderFavorites, 300);
+        }
+    }
+
+    function renderFavorites() {
+        const container = document.getElementById('favorites-container');
+        const favItems = menuItems.filter(p => userFavorites.includes(p.id));
+        
+        if(favItems.length === 0) {
+            container.innerHTML = '<div class="col-12 text-center py-5 text-muted"><i class="bi bi-heart-break display-4 opacity-25"></i><p class="mt-3">Aún no tienes favoritos.</p></div>';
+        } else {
+            container.innerHTML = favItems.map((p, index) => `
+                <div class="col-6 col-md-4 col-lg-3 animate__animated animate__fadeInUp" style="animation-delay: ${index*0.05}s">
+                    <div class="card h-100" onclick="showProductDetails('${p.id}')" style="cursor: pointer;">
+                        <div class="card-body p-2">
+                            <div class="product-image-container">
+                                <img src="${p.imageurl||'./img/placeholder-product.png'}" class="product-image">
+                                <div class="btn-heart-overlay active" onclick="toggleFavorite('${p.id}', this)"><i class="bi bi-heart-fill"></i></div>
+                                <div class="btn-plus-overlay" onclick="event.stopPropagation(); addToCart('${p.id}')"><i class="bi bi-plus"></i></div>
+                            </div>
+                            <div class="text-center mt-2">
+                                <h6 class="card-title text-truncate">${p.name}</h6>
+                                <div class="price">$${p.price.toFixed(2)} CUP</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>`).join('');
+        }
+    }
+
     // ==================== MENU ====================
     function generateCategoryFilters() {
         const container = document.getElementById('category-pills-container');
@@ -1869,15 +2181,21 @@
         items = items.filter(i => i.name.toLowerCase().includes(term));
 
         if(items.length === 0) {
-            // Mensaje si no hay productos (o búsqueda sin resultados)
             container.innerHTML = '<div class="col-12 text-center py-5"><p class="text-muted">No se encontraron productos.</p></div>';
         } else {
-            container.innerHTML = items.map((p, index) => `
+            container.innerHTML = items.map((p, index) => {
+                const isFav = userFavorites.includes(p.id);
+                return `
                 <div class="col-6 col-md-4 col-lg-3 animate__animated animate__fadeInUp" style="animation-delay: ${index*0.05}s">
                     <div class="card h-100" onclick="showProductDetails('${p.id}')" style="cursor: pointer;">
                         <div class="card-body p-2">
                             <div class="product-image-container">
                                 <img src="${p.imageurl||'./img/placeholder-product.png'}" class="product-image">
+                                
+                                <div class="btn-heart-overlay ${isFav ? 'active' : ''}" onclick="toggleFavorite('${p.id}', this)">
+                                    <i class="bi bi-heart${isFav ? '-fill' : ''}"></i>
+                                </div>
+
                                 <div class="btn-plus-overlay" onclick="event.stopPropagation(); addToCart('${p.id}')"><i class="bi bi-plus"></i></div>
                             </div>
                             <div class="text-center mt-2">
@@ -1887,7 +2205,8 @@
                             </div>
                         </div>
                     </div>
-                </div>`).join('');
+                </div>`;
+            }).join('');
         }
     }
 
@@ -1933,7 +2252,40 @@
         prodModal.show();
     }
 
-    // ==================== ORDERS ====================
+    // ==================== ORDERS & TIMELINE ====================
+    
+    function getTimelineHTML(status) {
+        // Mapear status a pasos (1-4)
+        let currentStep = 1;
+        if(status.toLowerCase().includes('empaquetando') || status.toLowerCase().includes('proceso')) currentStep = 2;
+        if(status.toLowerCase().includes('camino') || status.toLowerCase().includes('enviado')) currentStep = 3;
+        if(status.toLowerCase().includes('entregado')) currentStep = 4;
+
+        const steps = [
+            { label: 'Recibido', date: 'Pedido confirmado' },
+            { label: 'Empaquetando', date: 'Preparando tu orden' },
+            { label: 'En Camino', date: 'Repartidor asignado' },
+            { label: 'Entregado', date: '¡Disfrútalo!' }
+        ];
+
+        let html = '<div class="order-timeline">';
+        steps.forEach((step, index) => {
+            const isActive = (index + 1) <= currentStep;
+            const isLast = index === steps.length - 1;
+            
+            html += `
+            <div class="timeline-step ${isActive ? 'active' : ''}">
+                <div class="timeline-dot"></div>
+                <div class="timeline-content">
+                    <div class="timeline-text">${step.label}</div>
+                    <small class="timeline-date">${isActive ? step.date : 'Pendiente'}</small>
+                </div>
+            </div>`;
+        });
+        html += '</div>';
+        return html;
+    }
+
     async function loadUserOrders() {
         if(!clientData) return;
         const container = document.getElementById('orders-history-container');
@@ -1958,6 +2310,8 @@
                     </li>
                 `).join('');
 
+                const timelineHTML = getTimelineHTML(o.status);
+
                 return `
                 <div class="accordion accordion-flush mt-3 border rounded-4 shadow-sm overflow-hidden" id="accordion-${o.orderid}">
                     <div class="accordion-item border-0">
@@ -1977,10 +2331,16 @@
                         </h2>
                         <div id="flush-${o.orderid}" class="accordion-collapse collapse" data-bs-parent="#accordion-${o.orderid}">
                             <div class="accordion-body bg-light border-top p-3">
-                                <h6 class="small fw-bold text-muted text-uppercase mb-2 ls-1" style="font-size: 0.7rem;">Detalle del Pedido</h6>
-                                <ul class="list-group list-group-flush mb-3 border rounded-3 overflow-hidden shadow-sm">
-                                    ${productsHtml || '<li class="list-group-item small text-muted text-center">Detalles no disponibles</li>'}
-                                </ul>
+                                
+                                ${timelineHTML}
+
+                                <div class="mt-4">
+                                    <h6 class="small fw-bold text-muted text-uppercase mb-2 ls-1" style="font-size: 0.7rem;">Detalle del Pedido</h6>
+                                    <ul class="list-group list-group-flush mb-3 border rounded-3 overflow-hidden shadow-sm">
+                                        ${productsHtml || '<li class="list-group-item small text-muted text-center">Detalles no disponibles</li>'}
+                                    </ul>
+                                </div>
+
                                 <div class="bg-white rounded-3 p-3 border shadow-sm">
                                     <h6 class="small fw-bold text-muted text-uppercase mb-2 ls-1" style="font-size: 0.7rem;">Datos de Entrega</h6>
                                     <div class="d-flex align-items-center gap-2 mb-2 small text-dark">
@@ -2007,6 +2367,18 @@
         if(dir===1) {
             if(currentStep===1) {
                 if(shoppingCart.length===0) return;
+                
+                // VALIDACIÓN DE MÍNIMO DE COMPRA ANTES DE SEGUIR
+                const total = shoppingCart.reduce((s,i)=>s+i.price*i.quantity,0);
+                if(total < MIN_ORDER_AMOUNT) {
+                    showToast(`El pedido mínimo es de $${MIN_ORDER_AMOUNT} CUP`, 'warning');
+                    // Efecto visual en la barra de progreso
+                    const pill = document.getElementById('min-order-pill');
+                    pill.classList.add('animate__animated', 'animate__headShake');
+                    setTimeout(() => pill.classList.remove('animate__animated', 'animate__headShake'), 1000);
+                    return;
+                }
+
                 if(!clientData) { authModal.show(); return; }
                 document.getElementById('step2-client-name').innerText = clientData.nombre;
             }
@@ -2036,12 +2408,27 @@
     function renderCart() {
         const list=document.getElementById('cart-items-container'), empty=document.getElementById('empty-cart-msg');
         if(shoppingCart.length===0) { list.innerHTML=''; empty.classList.remove('d-none'); document.getElementById('btnNext').disabled=true; return; }
-        empty.classList.add('d-none'); document.getElementById('btnNext').disabled=false;
+        empty.classList.add('d-none');
+        
         let total=0;
         list.innerHTML=shoppingCart.map(item=>{
             total+=item.price*item.quantity; const prod=menuItems.find(p=>p.id===item.productId);
             return `<div class="cart-item-card"><img src="${prod?.imageurl||'./img/placeholder-product.png'}" class="cart-item-img"><div class="flex-grow-1"><h6 class="mb-0 fw-bold text-truncate">${item.name}</h6><small class="text-muted">$${item.price.toFixed(2)} x ${item.quantity}</small></div><div class="d-flex flex-column gap-2"><button class="cart-qty-btn" onclick="updateQty('${item.productId}',1)">+</button><button class="cart-qty-btn" onclick="updateQty('${item.productId}',-1)">-</button></div></div>`;
         }).join('')+`<div class="d-flex justify-content-between align-items-center mt-3 p-3 bg-light rounded-4"><span class="fw-bold text-secondary">Total</span><span class="fs-4 fw-bold text-primary">$${total.toFixed(2)} CUP</span></div><div class="text-center mt-3"><button class="btn btn-sm text-danger opacity-75 hover-opacity-100" onclick="clearCart()"><i class="bi bi-trash3 me-1"></i> Vaciar Carrito</button></div>`;
+        
+        // Bloquear botón Siguiente si no cumple el mínimo
+        const btnNext = document.getElementById('btnNext');
+        if (total < MIN_ORDER_AMOUNT) {
+            btnNext.disabled = true;
+            btnNext.innerHTML = `<i class="bi bi-lock-fill me-1"></i> Mínimo $${MIN_ORDER_AMOUNT}`;
+            btnNext.classList.remove('btn-dark');
+            btnNext.classList.add('btn-secondary');
+        } else {
+            btnNext.disabled = false;
+            btnNext.innerText = 'Siguiente';
+            btnNext.classList.remove('btn-secondary');
+            btnNext.classList.add('btn-dark');
+        }
     }
     
     function clearCart(){ 
@@ -2066,6 +2453,10 @@
         const req=['deliveryName','deliveryPhone','deliveryAddress','deliveryRef'];
         for(const id of req) if(!document.getElementById(id).value.trim()) return showToast('Error: Datos incompletos','danger');
         
+        // Doble validación por seguridad
+        const total = shoppingCart.reduce((s,i)=>s+i.price*i.quantity,0);
+        if(total < MIN_ORDER_AMOUNT) return showToast(`Pedido mínimo: $${MIN_ORDER_AMOUNT}`, 'danger');
+
         document.getElementById('btnPay').innerHTML='<span class="spinner-border spinner-border-sm"></span>'; 
         document.getElementById('btnPay').disabled=true;
         
@@ -2086,7 +2477,7 @@
         
         if(res.success) {
             currentStep=3; updateStepper(); 
-            const total=shoppingCart.reduce((s,i)=>s+i.price*i.quantity,0);
+            // const total ya calculado arriba
             
             const waMsg=`*NUEVO PEDIDO DL Cumanayagua* 🛵\n------------------\n👤 CLIENTE: ${clientData.nombre}\n📦 Enviar a: ${d.recipientName}\n📍 Dirección: ${d.address}\n📞 Teléfono: ${d.recipientPhone}\n\n📝 RESUMEN:\n${shoppingCart.map(i=>`🛒 ${i.name}\n    Cant: ${i.quantity} | Subt: $${(i.price*i.quantity).toFixed(2)}`).join('\n')}\n\n------------------\n💰 *TOTAL: $${total.toFixed(2)} CUP*\n📝 Nota: ${d.notes}\n#Pedido: ${res.data.orderId.substr(-4)}`;
             
@@ -2101,35 +2492,25 @@
 
     // ==================== LÓGICA TARJETAS DESLIZABLES (PROMOS STYLE) ====================
     const promoSteps = [
-    { 
-        title: "🌍 Remesas Familiares", 
-        desc: "Envía amor desde el exterior. Compra desde USA pagando con Zelle y tu familia recibe todo en la puerta de su casa.", 
-        // REEMPLAZA CON EL ENLACE REAL DE TU IMAGEN 1
-        img: "https://i.postimg.cc/5tc4G4y4/remesasfamiliares.jpg", 
-        btnText: "Ver Productos"
-    },
-    { 
-        title: "💎 Ahorra en Grande", 
-        desc: "¡Descuento exclusivo! Obtén un 5% de REBAJA automática en todas tus compras superiores a $5000 CUP.", 
-        // REEMPLAZA CON EL ENLACE REAL DE TU IMAGEN 2
-        img: "https://i.postimg.cc/dVZQ4kq5/descuento.jpg", 
-        btnText: "Llenar Carrito"
-    },
-    { 
-        title: "💎 Ahorra en Grande", 
-        desc: "¡Descuento exclusivo! Obtén un 5% de REBAJA automática en todas tus compras superiores a $5000 CUP.", 
-        // REEMPLAZA CON EL ENLACE REAL DE TU IMAGEN 2
-        img: "https://i.postimg.cc/Z5vYVBTV/descuento2.jpg", 
-        btnText: "Llenar Carrito"
-    },
-    { 
-        title: "⚡ Tiempo o Gratis", 
-        desc: "Nuestra promesa: Si tu pedido no llega en el tiempo estimado, ¡te devolvemos el costo del envío! Velocidad garantizada.", 
-        // REEMPLAZA CON EL ENLACE REAL DE TU IMAGEN 3
-        img: "https://i.postimg.cc/vHNHrLdV/prometido_o_gratis.jpg", 
-        btnText: "Pedir Ahora"
-    }
-];
+        { 
+            title: "🔥 ¡2x1 en Pizzas!", 
+            desc: "Solo por hoy, compra una familiar y llévate otra totalmente GRATIS. ¡Corre que se acaban!", 
+            img: "https://i.postimg.cc/QdCNKRg6/meta.jpg",
+            btnText: "Pedir Ahora"
+        },
+        { 
+            title: "🚚 Envíos Flash", 
+            desc: "Nuevos repartidores en la zona. Tus pedidos llegan en menos de 20 minutos.", 
+            img: "https://i.postimg.cc/K8MqzJYj/Enviosgratisfoto.jpg",
+            btnText: "Ver Menú"
+        },
+        { 
+            title: "🎁 Sorteo Semanal", 
+            desc: "Realiza un pedido mayor a $1000 CUP y participa por una canasta de productos.", 
+            img: "https://i.postimg.cc/mrhQkrjy/ayudaimegen3.jpg",
+            btnText: "Participar"
+        }
+    ];
 
     window.openPromoSwipe = function() {
         const carouselInner = document.getElementById('promo-carousel-inner');
@@ -2160,7 +2541,7 @@
         promoSwipeModal.show();
     }
 
-    // UTILS
+    // UTILS & PROGRESS BAR LOGIC (LUXURY GAMING)
     function updateUI() {
         const isLogged=!!clientData;
         const toggle=(id,s)=>{const el=document.getElementById(id);if(el)el.style.display=s?(el.id.includes('hero-auth')?'flex':'block'):'none'};
@@ -2169,7 +2550,224 @@
         else document.getElementById('auth-buttons-nav').innerHTML=`<button class="btn btn-sm btn-outline-dark rounded-pill px-3" onclick="openAuthModal('login')">Acceder</button>`;
         const c=shoppingCart.reduce((s,i)=>s+i.quantity,0);
         document.getElementById('floatingCartButton').style.display=c>0?'flex':'none'; document.getElementById('floating-cart-count').innerText=c;
+        
+        // ACTUALIZAR BARRA PROGRESO MÍNIMO
+        updateMinOrderProgress();
     }
+    
+    function updateMinOrderProgress() {
+        const total = shoppingCart.reduce((s,i)=>s+i.price*i.quantity,0);
+        const pill = document.getElementById('min-order-pill');
+        const bar = document.getElementById('min-order-bar-fill');
+        const text = document.getElementById('min-order-text');
+        const percent = document.getElementById('min-order-percent');
+
+        if (total > 0) {
+            pill.style.display = 'flex';
+            
+            let percentage = (total / MIN_ORDER_AMOUNT) * 100;
+            if (percentage > 100) percentage = 100;
+            
+            bar.style.width = `${percentage}%`;
+            
+            if (total >= MIN_ORDER_AMOUNT) {
+                pill.classList.add('completed-anim'); // Borde dorado
+                
+                // Texto de éxito
+                text.innerHTML = '<i class="bi bi-check-circle-fill text-success"></i> <span style="color:#4ade80; text-shadow:0 0 10px rgba(74,222,128,0.5);">¡MÍNIMO ALCANZADO!</span>';
+                percent.innerText = '';
+                
+                // Barra en verde brillante pulsante
+                bar.style.background = 'linear-gradient(90deg, #22c55e 0%, #4ade80 100%)';
+                bar.style.boxShadow = '0 0 15px rgba(74, 222, 128, 0.6)';
+                
+                // Disparar explosión de partículas una sola vez al llegar
+                if (!pill.dataset.exploded) {
+                    pill.dataset.exploded = "true";
+                    triggerLuxuryExplosion(pill);
+                    if(navigator.vibrate) navigator.vibrate([50, 50, 50]);
+                }
+                
+            } else {
+                pill.classList.remove('completed-anim');
+                pill.dataset.exploded = ""; // Resetear explosión
+                
+                const remaining = MIN_ORDER_AMOUNT - total;
+                text.innerHTML = `<i class="bi bi-basket text-warning"></i> Faltan $${remaining.toFixed(0)}`;
+                percent.innerText = `${Math.round(percentage)}%`;
+                
+                // Gradiente original "Gaming"
+                bar.style.background = 'linear-gradient(90deg, #ff8c00 0%, #ff0080 50%, #7928ca 100%)';
+                bar.style.boxShadow = 'none';
+            }
+        } else {
+            pill.style.display = 'none';
+            pill.classList.remove('completed-anim');
+            pill.dataset.exploded = "";
+        }
+    }
+
+    function triggerLuxuryExplosion(element) {
+        const rect = element.getBoundingClientRect();
+        const center = { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 };
+        
+        // Crear 30 partículas
+        for (let i = 0; i < 30; i++) {
+            const particle = document.createElement('div');
+            particle.classList.add('lux-particle');
+            document.body.appendChild(particle);
+            
+            // Color aleatorio (Blanco, Dorado, Verde Neon)
+            const colors = ['#ffffff', '#fbbf24', '#4ade80'];
+            particle.style.background = colors[Math.floor(Math.random() * colors.length)];
+            
+            // Posición inicial
+            particle.style.left = center.x + 'px';
+            particle.style.top = center.y + 'px';
+            
+            // Trayectoria aleatoria
+            const angle = Math.random() * Math.PI * 2;
+            const velocity = 20 + Math.random() * 60; // Distancia de explosión
+            const tx = Math.cos(angle) * velocity;
+            const ty = Math.sin(angle) * velocity;
+            
+            // Animación manual con Web Animations API para mejor rendimiento
+            const anim = particle.animate([
+                { transform: 'translate(0, 0) scale(1)', opacity: 1 },
+                { transform: `translate(${tx}px, ${ty}px) scale(0)`, opacity: 0 }
+            ], {
+                duration: 600 + Math.random() * 400,
+                easing: 'cubic-bezier(0, .9, .57, 1)'
+            });
+            
+            anim.onfinish = () => particle.remove();
+        }
+        
+        // Flash Effect en la barra
+        const flash = document.createElement('div');
+        flash.style.position = 'absolute';
+        flash.style.top = '0'; flash.style.left = '0';
+        flash.style.width = '100%'; flash.style.height = '100%';
+        flash.style.background = 'white';
+        flash.style.opacity = '0.8';
+        flash.style.pointerEvents = 'none';
+        flash.style.mixBlendMode = 'overlay';
+        element.appendChild(flash);
+        
+        const flashAnim = flash.animate([
+            { opacity: 0.8 }, { opacity: 0 }
+        ], { duration: 300 });
+        
+        flashAnim.onfinish = () => flash.remove();
+    }
+
+    // ==================== FOMO LOGIC (SOCIAL PROOF) ====================
+    
+    // Fake names/locations for backup
+    const fakeFomoNames = ["Maria", "Pedro", "Ana", "Carlos", "Luis", "Yude", "Ale", "Sofía", "Jorge", "Dayana", "Michel", "Yuniel", "Yanisleidi", "Yoandri", "Lázaro", "Yordanis", "Yulieski", "Dianelis", "Maikel", "Yusniel", "Bárbaro", "Yanet", "Reinier", "Yaima", "Geovanis", "Mimi", "Tito", "Neno"];
+    const fakeFomoLocations = ["Cumanayagua", "El Tablon", "Las Brisas", "Rafaelitos", "Calle 50", "La Campanita", "Parque Marti", "Calle Nueva", "Calle Orlando Gómez e/ Arquímides y Cienfuegos", "Calle Los Filtros, Cumanayagua", "Calle Independencia e/ Maceo y Martí, Cumanayagua", "Calle Rafael Trejo e/ 24 de Febrero y Agramonte", "Calle Cienfuegos e/ Orlando Gómez y 24 de Febrero, Cumanayagua", "Entronque"];
+
+    let realFomoQueue = [];
+    let fomoIndex = 0;
+
+    async function startFomoLoop() {
+        // 1. Intentar cargar datos reales del backend
+        await loadRealFomoData();
+
+        // 2. Iniciar el ciclo de notificaciones
+        scheduleNextFomo();
+    }
+
+    async function loadRealFomoData() {
+        // Llamada silenciosa al backend
+        const res = await fetchData('getFomoData', 'GET', null, true); // true = silent (sin spinner)
+        
+        if (res.success && res.data && res.data.length > 0) {
+            // Filtramos solo pedidos de las últimas 24 horas (1440 minutos) para que sea relevante
+            realFomoQueue = res.data.filter(item => item.minsAgo < 1440);
+        }
+    }
+
+    function scheduleNextFomo() {
+        // Tiempo aleatorio entre 15 y 40 segundos
+        const nextTime = Math.random() * (40000 - 15000) + 15000;
+        setTimeout(showFomoToast, nextTime);
+    }
+
+    function showFomoToast() {
+        const container = document.getElementById('fomo-container');
+        if(!container) return;
+
+        let item;
+
+        // ESTRATEGIA DE MEZCLA:
+        if (realFomoQueue.length > 0) {
+            // Usar dato real (cíclico)
+            item = realFomoQueue[fomoIndex % realFomoQueue.length];
+            fomoIndex++;
+        } else {
+            // Usar dato fake CON PRODUCTO REAL
+            let prodName = "Oferta Especial";
+            if (menuItems && menuItems.length > 0) {
+                const randomProd = menuItems[Math.floor(Math.random() * menuItems.length)];
+                prodName = randomProd.name;
+            }
+            
+            item = {
+                name: fakeFomoNames[Math.floor(Math.random() * fakeFomoNames.length)],
+                product: prodName,
+                location: fakeFomoLocations[Math.floor(Math.random() * fakeFomoLocations.length)],
+                minsAgo: Math.floor(Math.random() * 53) + 2
+            };
+        }
+
+        // Formatear el tiempo "Hace X"
+        let timeText = "Hace un momento";
+        if (item.minsAgo > 0) {
+            if (item.minsAgo < 60) {
+                timeText = `Hace ${item.minsAgo} min`;
+            } else {
+                const hours = Math.floor(item.minsAgo / 60);
+                timeText = `Hace ${hours} ${hours === 1 ? 'hora' : 'horas'}`;
+            }
+        }
+
+        // Crear el Toast
+        const toast = document.createElement('div');
+        toast.className = 'fomo-toast';
+        // Animación de entrada
+        toast.style.animation = "slideInLeft 0.5s ease forwards"; 
+        
+        toast.innerHTML = `
+            <div class="fomo-icon"><i class="bi bi-bag-check-fill"></i></div>
+            <div>
+                <div class="fw-bold" style="font-size:0.75rem; color:#cbd5e1; text-transform:uppercase; letter-spacing:0.5px;">
+                    ${timeText}
+                </div>
+                <div style="font-size:0.9rem; line-height:1.2; margin-top:2px;">
+                    <span class="text-white fw-bold">${item.name}</span> compró <span class="text-warning fw-bold">${item.product}</span><span class="text-white fw-bold">, entre otras cosas...</span>
+                </div>
+                <div style="font-size:0.75rem; color:rgba(255,255,255,0.5); margin-top:2px;">
+                    <i class="bi bi-geo-alt-fill me-1"></i>${item.location}
+                </div>
+            </div>
+        `;
+
+        // Limpiar anteriores
+        container.innerHTML = ''; 
+        container.appendChild(toast);
+
+        // Eliminar y programar el siguiente
+        setTimeout(() => {
+            // Animación de salida manual antes de eliminar
+            toast.style.animation = "fadeOut 0.5s ease forwards";
+            setTimeout(() => { 
+                if(toast.parentElement) toast.remove(); 
+                scheduleNextFomo(); // Programar el siguiente solo cuando este termine
+            }, 500);
+        }, 5000); // 5 segundos visible
+    }
+
     function addToCart(id) { if(!clientData)return window.openAuthModal('login'); const p=menuItems.find(x=>x.id===id), item=shoppingCart.find(x=>x.productId===id); if(item)item.quantity++; else shoppingCart.push({productId:id,name:p.name,price:p.price,quantity:1}); saveCart(); updateUI(); showToast('Añadido al carrito'); }
     function updateQty(id,d) { const item=shoppingCart.find(x=>x.productId===id); if(item){item.quantity+=d; if(item.quantity<=0)removeFromCart(id); else{saveCart(); renderCart(); updateUI();}} }
     function removeFromCart(id) { shoppingCart=shoppingCart.filter(x=>x.productId!==id); saveCart(); renderCart(); updateUI(); }
