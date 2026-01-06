@@ -697,14 +697,14 @@
         }
         
         /* Imagen de fondo Full Bleed */
-        .tiktok-img-bg {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            position: absolute;
-            top: 0; left: 0;
-            z-index: 0;
-        }
+.tiktok-img-bg {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Esto asegura que la imagen cubra todo el fondo */
+    position: absolute;
+    top: 0; left: 0;
+    z-index: 0;
+}
 
         /* Overlay Gradiente */
         .tiktok-overlay {
@@ -2101,25 +2101,35 @@
 
     // ==================== LÓGICA TARJETAS DESLIZABLES (PROMOS STYLE) ====================
     const promoSteps = [
-        { 
-            title: "🔥 ¡2x1 en Pizzas!", 
-            desc: "Solo por hoy, compra una familiar y llévate otra totalmente GRATIS. ¡Corre que se acaban!", 
-            img: "https://i.postimg.cc/QdCNKRg6/meta.jpg",
-            btnText: "Pedir Ahora"
-        },
-        { 
-            title: "🚚 Envíos Flash", 
-            desc: "Nuevos repartidores en la zona. Tus pedidos llegan en menos de 20 minutos.", 
-            img: "https://i.postimg.cc/K8MqzJYj/Enviosgratisfoto.jpg",
-            btnText: "Ver Menú"
-        },
-        { 
-            title: "🎁 Sorteo Semanal", 
-            desc: "Realiza un pedido mayor a $1000 CUP y participa por una canasta de productos.", 
-            img: "https://i.postimg.cc/mrhQkrjy/ayudaimegen3.jpg",
-            btnText: "Participar"
-        }
-    ];
+    { 
+        title: "🌍 Remesas Familiares", 
+        desc: "Envía amor desde el exterior. Compra desde USA pagando con Zelle y tu familia recibe todo en la puerta de su casa.", 
+        // REEMPLAZA CON EL ENLACE REAL DE TU IMAGEN 1
+        img: "https://i.postimg.cc/5tc4G4y4/remesasfamiliares.jpg", 
+        btnText: "Ver Productos"
+    },
+    { 
+        title: "💎 Ahorra en Grande", 
+        desc: "¡Descuento exclusivo! Obtén un 5% de REBAJA automática en todas tus compras superiores a $5000 CUP.", 
+        // REEMPLAZA CON EL ENLACE REAL DE TU IMAGEN 2
+        img: "https://i.postimg.cc/dVZQ4kq5/descuento.jpg", 
+        btnText: "Llenar Carrito"
+    },
+    { 
+        title: "💎 Ahorra en Grande", 
+        desc: "¡Descuento exclusivo! Obtén un 5% de REBAJA automática en todas tus compras superiores a $5000 CUP.", 
+        // REEMPLAZA CON EL ENLACE REAL DE TU IMAGEN 2
+        img: "https://i.postimg.cc/Z5vYVBTV/descuento2.jpg", 
+        btnText: "Llenar Carrito"
+    },
+    { 
+        title: "⚡ Tiempo o Gratis", 
+        desc: "Nuestra promesa: Si tu pedido no llega en el tiempo estimado, ¡te devolvemos el costo del envío! Velocidad garantizada.", 
+        // REEMPLAZA CON EL ENLACE REAL DE TU IMAGEN 3
+        img: "https://i.postimg.cc/vHNHrLdV/prometido_o_gratis.jpg", 
+        btnText: "Pedir Ahora"
+    }
+];
 
     window.openPromoSwipe = function() {
         const carouselInner = document.getElementById('promo-carousel-inner');
