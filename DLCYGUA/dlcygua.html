@@ -8,7 +8,7 @@
     <meta name="description" content="DL Cumanayagua: Tu mercado local online. Disfruta de ENVÍOS GRATIS en todo el municipio. Compra alimentos y regalos desde el exterior pagando con Zelle.">
     
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://erick890406.github.io/TheDo-aLuc-aGroup/dlcygua.html">
+    <meta property="og:url" content="https://erick890406.github.io/TheDo-aLuc-aGroup/DLCYGUA/dlcygua.html">
     <meta property="og:site_name" content="DL Cumanayagua">
     <meta property="og:title" content="DL Cumanayagua: ¡Envíos GRATIS en el Municipio! 🚛">
     <meta property="og:description" content="Servicio exclusivo. Compra comida y regalos para tu familia con entrega gratuita. Pagos seguros vía Zelle.">
@@ -64,6 +64,10 @@
             --radius-md: 12px;
             --radius-lg: 20px;
             --shadow-soft: 0 10px 30px -10px rgba(0,0,0,0.08);
+            
+            /* Colores Stories */
+            --story-gradient: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+            --story-brand-gradient: linear-gradient(45deg, #ea580c, #16a34a);
         }
 
         body {
@@ -338,112 +342,464 @@
             background: #2563eb; color: white; padding: 15px; border-radius: 12px; text-align: center;
         }
         /* ============ ESTILOS MODAL ACTUALIZACIÓN (CYBER) ============ */
-.modal-cyber-backdrop {
-    background-color: rgba(15, 23, 42, 0.95) !important; /* Fondo muy oscuro */
-    backdrop-filter: blur(10px);
-}
+        .modal-cyber-backdrop {
+            background-color: rgba(15, 23, 42, 0.95) !important; /* Fondo muy oscuro */
+            backdrop-filter: blur(10px);
+        }
 
-.cyber-card {
-    background: #1e293b;
-    border-radius: 24px;
-    padding: 2rem;
-    position: relative;
-    overflow: hidden;
-    text-align: center;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-    max-width: 400px;
-    margin: 0 auto;
-}
+        .cyber-card {
+            background: #1e293b;
+            border-radius: 24px;
+            padding: 2rem;
+            position: relative;
+            overflow: hidden;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            max-width: 400px;
+            margin: 0 auto;
+        }
 
-.cyber-glow {
-    position: absolute;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
-    background: radial-gradient(circle, rgba(99, 102, 241, 0.15) 0%, transparent 70%);
-    animation: cyberSpin 10s linear infinite;
-    z-index: 0;
-}
+        .cyber-glow {
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(99, 102, 241, 0.15) 0%, transparent 70%);
+            animation: cyberSpin 10s linear infinite;
+            z-index: 0;
+        }
 
-@keyframes cyberSpin { 100% { transform: rotate(360deg); } }
+        @keyframes cyberSpin { 100% { transform: rotate(360deg); } }
 
-.cyber-layout { position: relative; z-index: 1; }
+        .cyber-layout { position: relative; z-index: 1; }
 
-.cyber-icon-wrapper {
-    position: relative;
-    width: 80px;
-    height: 80px;
-    margin: 0 auto 1.5rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
+        .cyber-icon-wrapper {
+            position: relative;
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
 
-.cyber-circle {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    border-radius: 50%;
-    background: linear-gradient(135deg, #6366f1, #8b5cf6);
-    opacity: 0.2;
-    animation: pulseCyber 2s infinite;
-}
+        .cyber-circle {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            opacity: 0.2;
+            animation: pulseCyber 2s infinite;
+        }
 
-.cyber-icon {
-    font-size: 2.5rem;
-    color: #8b5cf6;
-    background: -webkit-linear-gradient(#6366f1, #8b5cf6);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    filter: drop-shadow(0 0 10px rgba(139, 92, 246, 0.5));
-}
+        .cyber-icon {
+            font-size: 2.5rem;
+            color: #8b5cf6;
+            background: -webkit-linear-gradient(#6366f1, #8b5cf6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 0 10px rgba(139, 92, 246, 0.5));
+        }
 
-.cyber-badge {
-    display: inline-block;
-    padding: 4px 12px;
-    background: rgba(99, 102, 241, 0.1);
-    border: 1px solid rgba(99, 102, 241, 0.3);
-    color: #818cf8;
-    border-radius: 50px;
-    font-size: 0.75rem;
-    font-weight: 700;
-    margin-bottom: 1rem;
-    letter-spacing: 1px;
-}
+        .cyber-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            background: rgba(99, 102, 241, 0.1);
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            color: #818cf8;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            letter-spacing: 1px;
+        }
 
-.cyber-title { color: white; font-weight: 800; margin-bottom: 0.5rem; }
-.cyber-body { color: #94a3b8; font-size: 0.95rem; margin-bottom: 2rem; }
+        .cyber-title { color: white; font-weight: 800; margin-bottom: 0.5rem; }
+        .cyber-body { color: #94a3b8; font-size: 0.95rem; margin-bottom: 2rem; }
 
-.cyber-btn {
-    position: relative;
-    width: 100%;
-    padding: 1rem;
-    border: none;
-    border-radius: 16px;
-    background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
-    color: white;
-    font-weight: 700;
-    overflow: hidden;
-    transition: all 0.3s ease;
-    z-index: 1;
-    box-shadow: 0 4px 15px rgba(79, 70, 229, 0.4);
-}
+        .cyber-btn {
+            position: relative;
+            width: 100%;
+            padding: 1rem;
+            border: none;
+            border-radius: 16px;
+            background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+            color: white;
+            font-weight: 700;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            z-index: 1;
+            box-shadow: 0 4px 15px rgba(79, 70, 229, 0.4);
+        }
 
-.cyber-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(79, 70, 229, 0.5); }
-.cyber-btn:active { transform: scale(0.98); }
+        .cyber-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(79, 70, 229, 0.5); }
+        .cyber-btn:active { transform: scale(0.98); }
 
-.cyber-btn-shine {
-    position: absolute;
-    top: 0; left: -100%;
-    width: 100%; height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
-    animation: btnShine 3s infinite;
-}
+        .cyber-btn-shine {
+            position: absolute;
+            top: 0; left: -100%;
+            width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            animation: btnShine 3s infinite;
+        }
 
-@keyframes btnShine { 100% { left: 100%; } }
-@keyframes pulseCyber { 0% { transform: scale(1); opacity: 0.2; } 50% { transform: scale(1.1); opacity: 0.1; } 100% { transform: scale(1); opacity: 0.2; } }
+        @keyframes btnShine { 100% { left: 100%; } }
+        @keyframes pulseCyber { 0% { transform: scale(1); opacity: 0.2; } 50% { transform: scale(1.1); opacity: 0.1; } 100% { transform: scale(1); opacity: 0.2; } }
+
+        /* ============ ESTILOS STORIES (INSTAGRAM STYLE) ============ */
+        .stories-wrapper {
+            display: flex;
+            gap: 15px;
+            overflow-x: auto;
+            padding: 10px 15px;
+            scrollbar-width: none; /* Firefox */
+            margin-bottom: 1rem;
+            background: white;
+            border-bottom: 1px solid #f1f5f9;
+        }
+        .stories-wrapper::-webkit-scrollbar { display: none; }
+
+        .story-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            width: 72px;
+            flex-shrink: 0;
+        }
+
+        .story-circle-container {
+            width: 72px;
+            height: 72px;
+            border-radius: 50%;
+            padding: 3px;
+            /* Gradiente de marca: Naranja a Verde */
+            background: var(--story-brand-gradient); 
+            position: relative;
+            transition: transform 0.2s ease;
+        }
+        
+        .story-circle-container.seen {
+            background: #e2e8f0; /* Color gris si ya fue visto */
+        }
+
+        .story-item:hover .story-circle-container {
+            transform: scale(1.05);
+        }
+
+        .story-img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid white; /* Borde blanco interno */
+            background-color: #f1f5f9;
+        }
+
+        .story-label {
+            font-size: 0.75rem;
+            margin-top: 5px;
+            color: var(--text-main);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            width: 100%;
+            text-align: center;
+        }
+
+        /* --- VISOR DE HISTORIAS (FULL SCREEN) --- */
+        #story-viewer {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: black;
+            z-index: 1050; /* Encima de todo, debajo de SweetAlert */
+            display: none;
+            flex-direction: column;
+            user-select: none; /* Prevenir selección al mantener presionado */
+        }
+
+        .story-content-container {
+            flex-grow: 1;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #111;
+        }
+
+        .story-full-img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+        /* Barras de progreso */
+        .story-progress-container {
+            position: absolute;
+            top: 10px;
+            left: 0;
+            width: 100%;
+            padding: 0 10px;
+            display: flex;
+            gap: 5px;
+            z-index: 10;
+        }
+
+        .story-progress-bar-bg {
+            height: 3px;
+            background: rgba(255,255,255,0.3);
+            flex-grow: 1;
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .story-progress-bar-fill {
+            height: 100%;
+            background: white;
+            width: 0%;
+            /* Animación controlada por Keyframes para poder pausar */
+        }
+        
+        /* Keyframe para la animación de la barra */
+        @keyframes fillStoryBar {
+            from { width: 0%; }
+            to { width: 100%; }
+        }
+
+        /* Controles de navegación invisibles */
+        .story-nav-left, .story-nav-right {
+            position: absolute;
+            top: 0;
+            height: 100%;
+            width: 30%; /* Reducido para dejar centro libre para press */
+            z-index: 5;
+        }
+        .story-nav-left { left: 0; }
+        .story-nav-right { right: 0; }
+
+        /* Cabecera del Story */
+        .story-header {
+            position: absolute;
+            top: 25px;
+            left: 15px;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: white;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.5);
+        }
+        .story-header-avatar { width: 32px; height: 32px; border-radius: 50%; border: 1px solid white; }
+        .story-header-name { font-weight: 600; font-size: 0.9rem; }
+        .story-close-btn {
+            position: absolute;
+            top: 20px;
+            right: 15px;
+            z-index: 20;
+            color: white;
+            background: transparent;
+            border: none;
+            font-size: 1.5rem;
+            padding: 10px;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.5);
+        }
+
+        /* ============ DETALLE PRODUCTO FULLSCREEN ============ */
+        #productDetailModal .modal-content {
+            background: #f8fafc;
+        }
+        .detail-image-container {
+            width: 100%;
+            height: 45vh;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-bottom-left-radius: 30px;
+            border-bottom-right-radius: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            position: relative;
+            overflow: hidden;
+            padding-bottom: 20px;
+        }
+        .detail-image {
+            max-height: 90%;
+            max-width: 90%;
+            object-fit: contain;
+            transition: transform 0.3s ease;
+        }
+        .detail-close-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 40px;
+            height: 40px;
+            background: rgba(255,255,255,0.9);
+            backdrop-filter: blur(5px);
+            border-radius: 50%;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            color: #334155;
+            z-index: 10;
+            font-size: 1.2rem;
+        }
+        .detail-info-container {
+            padding: 25px;
+            background: transparent;
+        }
+        .detail-price-tag {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--primary);
+            letter-spacing: -1px;
+        }
+        .detail-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-main);
+            line-height: 1.2;
+            margin-bottom: 10px;
+        }
+        .recommendation-scroll-wrapper {
+            display: flex;
+            gap: 15px;
+            overflow-x: auto;
+            padding: 10px 5px 20px 5px;
+            scrollbar-width: none;
+        }
+        .recommendation-scroll-wrapper::-webkit-scrollbar { display: none; }
+        .rec-card-modern {
+            min-width: 140px;
+            background: white;
+            border-radius: 16px;
+            padding: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+            border: 1px solid #f1f5f9;
+        }
+
+        /* ============ ESTILOS PROMOCIONES (TIKTOK STYLE PREMIUM) ============ */
+        .tiktok-card {
+            background: #000;
+            border: none;
+            border-radius: 20px; /* Bordes redondeados en el modal */
+            padding: 0;
+            overflow: hidden;
+            position: relative;
+            height: 75vh; /* Altura considerable */
+            width: 100%;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+        }
+        
+        /* Imagen de fondo Full Bleed */
+        .tiktok-img-bg {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            position: absolute;
+            top: 0; left: 0;
+            z-index: 0;
+        }
+
+        /* Overlay Gradiente */
+        .tiktok-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 50%; /* Gradiente desde la mitad */
+            background: linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.6) 50%, transparent 100%);
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 2rem;
+            text-align: left;
+        }
+
+        .tiktok-content {
+            position: relative;
+            z-index: 2;
+            color: white;
+        }
+
+        .tiktok-badge {
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 5px 12px;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+            display: inline-block;
+        }
+
+        .tiktok-title {
+            font-size: 2rem;
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 0.5rem;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+        }
+
+        .tiktok-desc {
+            font-size: 1rem;
+            opacity: 0.9;
+            margin-bottom: 1.5rem;
+            line-height: 1.5;
+        }
+
+        .tiktok-btn {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            color: white;
+            width: 100%;
+            padding: 12px;
+            border-radius: 12px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: all 0.3s;
+        }
+        .tiktok-btn:hover {
+            background: white;
+            color: black;
+            transform: translateY(-2px);
+        }
+
+        /* Indicador de Swipe */
+        .tiktok-swipe-hint {
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+            z-index: 5;
+            opacity: 0.7;
+            animation: pulseHint 2s infinite;
+        }
+        .tiktok-swipe-hint i {
+            font-size: 1.5rem;
+            color: white;
+            text-shadow: 0 2px 5px rgba(0,0,0,0.5);
+        }
+        
+        @keyframes pulseHint { 0% { transform: translateY(-50%) translateX(0); opacity: 0.5; } 50% { transform: translateY(-50%) translateX(5px); opacity: 1; } 100% { transform: translateY(-50%) translateX(0); opacity: 0.5; } }
+
     </style>
 </head>
 <body id="top">
@@ -460,11 +816,16 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ms-auto align-items-center gap-lg-3 mt-3 mt-lg-0">
                 <li class="nav-item"><a class="nav-link" onclick="showTabAndScroll('menu-tab-link'); setCategoryFilter('all')">Menú</a></li>
-                
                 <span id="dynamic-nav-items" class="d-lg-flex d-block gap-lg-3" style="display: contents;"></span>
-
                 <li class="nav-item"><a class="nav-link" onclick="showTabAndScroll('my-orders-tab-link')">Mis Pedidos</a></li>
-                <li class="nav-item d-flex align-items-center" id="auth-buttons-nav-container">
+                
+                <li class="nav-item">
+                    <button class="btn btn-sm btn-danger rounded-pill px-3 ms-lg-2 mt-2 mt-lg-0 fw-bold shadow-sm" onclick="openPromoSwipe()">
+                        <i class="bi bi-megaphone-fill me-1"></i> 🔥 Promociones
+                    </button>
+                </li>
+
+                <li class="nav-item d-flex align-items-center mt-2 mt-lg-0" id="auth-buttons-nav-container">
                     <div id="auth-buttons-nav"></div>
                     <button id="btn-share-nav" class="btn btn-sm btn-light border rounded-pill ms-2" onclick="openShareModal()"><i class="bi bi-share-fill"></i></button>
                     <button id="logoutButtonNav" class="btn btn-sm btn-outline-danger rounded-pill px-3 ms-2" style="display:none;" onclick="logoutClient()">Salir</button>
@@ -475,6 +836,9 @@
 </nav>
 
 <main class="container mt-4 pt-2 pb-5">
+
+    <div id="stories-section" class="animate__animated animate__fadeIn">
+        </div>
 
     <div id="hero-promo" class="animate__animated animate__fadeInUp">
         <div id="heroCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="3500">
@@ -592,6 +956,25 @@
 
 </main>
 
+<div id="story-viewer">
+    <div class="story-progress-container" id="story-progress-bars">
+        </div>
+    
+    <div class="story-header">
+        <img src="img/Logo-DL-Cumanayagua.png" class="story-header-avatar">
+        <span class="story-header-name" id="story-header-title">DL Cumanayagua</span>
+    </div>
+
+    <button class="story-close-btn" onclick="closeStory()"><i class="bi bi-x-lg"></i></button>
+
+    <div class="story-content-container">
+        <div class="story-nav-left" onclick="prevStorySlide()"></div>
+        <div class="story-nav-right" onclick="nextStorySlide()"></div>
+        
+        <img src="" class="story-full-img animate__animated" id="story-image">
+    </div>
+</div>
+
 <div id="promo-bottom-fixed"></div>
 
 <div class="floating-buttons-container">
@@ -700,19 +1083,42 @@
         </div>
     </div></div></div>
 
-<div class="modal fade" id="productDetailModal" tabindex="-1"><div class="modal-dialog modal-dialog-centered"><div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden"><div class="modal-header border-0 position-absolute end-0 top-0 z-2"><button type="button" class="btn-close bg-white rounded-circle p-2 m-2 shadow-sm" data-bs-dismiss="modal"></button></div><div class="modal-body p-0">
-    <img src="" id="modal-product-image" class="w-100 object-fit-cover" style="height: 300px;">
-    <div class="p-4 bg-white position-relative" style="margin-top: -20px; border-radius: 24px 24px 0 0;">
-        <div class="d-flex justify-content-between align-items-start mb-2">
-            <h3 id="modal-product-name" class="fw-bold mb-0 text-dark"></h3>
-            <h4 id="modal-product-price" class="text-primary fw-bold mb-0"></h4>
+<div class="modal fade" id="productDetailModal" tabindex="-1">
+    <div class="modal-dialog modal-fullscreen">
+        <div class="modal-content border-0">
+            <div class="modal-body p-0 position-relative overflow-y-auto" style="padding-bottom: 100px !important;">
+                
+                <button type="button" class="detail-close-btn" data-bs-dismiss="modal"><i class="bi bi-x-lg"></i></button>
+
+                <div class="detail-image-container">
+                    <img src="" id="modal-product-image" class="detail-image">
+                </div>
+
+                <div class="detail-info-container">
+                    <div class="d-flex flex-column gap-1 mb-3">
+                        <h2 id="modal-product-name" class="detail-title"></h2>
+                        <h3 id="modal-product-price" class="detail-price-tag"></h3>
+                    </div>
+
+                    <p id="modal-product-description" class="text-muted fs-6 mb-4 lh-base"></p>
+                    
+                    <div class="d-flex align-items-center gap-2 mb-4">
+                        <span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25 px-3 py-2 rounded-pill"><i class="bi bi-scooter me-1"></i> Envío Gratis</span>
+                        <span class="badge bg-light text-dark border px-3 py-2 rounded-pill"><i class="bi bi-shield-check me-1"></i> Compra Segura</span>
+                    </div>
+
+                    <hr class="opacity-10 my-4">
+
+                    <div id="modal-recommendations-container">
+                        </div>
+                </div>
+            </div>
+            <div class="modal-footer border-0 fixed-bottom bg-white shadow-lg p-3 justify-content-center" style="z-index: 1055;">
+                <div id="modal-add-to-cart-button-container" class="w-100" style="max-width: 600px;"></div>
+            </div>
         </div>
-        <p id="modal-product-description" class="text-muted mb-4"></p>
-        <span class="badge bg-success bg-opacity-10 text-success mb-3 border border-success border-opacity-25 px-3 py-2"><i class="bi bi-scooter me-1"></i> Envío Gratis</span>
-        <div id="modal-add-to-cart-button-container"></div>
-        <div id="modal-recommendations-container" class="mt-4 pt-4 border-top"></div>
     </div>
-</div></div></div></div>
+</div>
 
 <div class="modal fade" id="avatarGalleryModal" tabindex="-1"><div class="modal-dialog modal-dialog-centered modal-dialog-scrollable"><div class="modal-content border-0 rounded-4"><div class="modal-header border-0"><h5 class="fw-bold">Elige tu Avatar</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div id="avatar-gallery" class="d-flex flex-wrap gap-3 justify-content-center"></div></div></div></div></div>
 <div class="modal fade" id="updateAppModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1">
@@ -746,6 +1152,29 @@
         </div>
     </div>
 </div>
+
+<div class="modal fade" id="promoSwipeModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content bg-transparent border-0">
+            <div id="promoCarousel" class="carousel slide help-carousel-container" data-bs-ride="false" data-bs-touch="true">
+                <div class="carousel-inner" id="promo-carousel-inner">
+                    </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#promoCarousel" data-bs-slide="prev" style="width: 10%;">
+                    <span class="carousel-control-prev-icon bg-dark rounded-circle p-3" aria-hidden="true"></span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#promoCarousel" data-bs-slide="next" style="width: 10%;">
+                    <span class="carousel-control-next-icon bg-dark rounded-circle p-3" aria-hidden="true"></span>
+                </button>
+            </div>
+             <div class="text-center mt-3">
+                <button class="btn btn-light rounded-pill px-4 fw-bold shadow-lg" data-bs-dismiss="modal">
+                    <i class="bi bi-x-circle me-2"></i> Cerrar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <footer class="footer-custom">
     <div class="container">
         <div class="row align-items-center gy-4">
@@ -778,19 +1207,91 @@
     const LOGGED_IN_CLIENT_KEY = 'dlClient_v29_final';
     const USER_CART_KEY = 'dlCart_v29_final';
     const MENU_CACHE_KEY = 'dlMenu_cache_v1'; 
-    const FIXED_SHARE_URL = 'https://erick890406.github.io/TheDo-aLuc-aGroup/dlcygua.html';
+    const FIXED_SHARE_URL = 'https://erick890406.github.io/TheDo-aLuc-aGroup/DLCYGUA/dlcygua.html';
     
     // NUEVO: Clave para controlar la versión de la App
     const APP_VERSION_KEY = 'dl_app_version_v1';
 
     // ==================== ESTADO ====================
     let clientData = null, menuItems = [], shoppingCart = [];
-    let authModal, cartModal, prodModal, globalMsgModal, shareModal, refreshModal, updateModal;
+    let authModal, cartModal, prodModal, globalMsgModal, shareModal, refreshModal, updateModal, promoSwipeModal;
     let currentFilterCategory = 'all';
     
     // Variables para controlar que los mensajes no se repitan
     let lastProductHash = "";
     let lastGlobalMsgHash = ""; 
+
+    // ==================== STORIES DATA (AYUDA) ====================
+    const storiesData = [
+            {
+                id: 'story1',
+                title: '¿Cómo pedir?',
+                thumbnail: 'https://i.postimg.cc/XvXwqvL1/ayudaminiatura.jpg', // Miniatura naranja
+                slides: [
+                    { type: 'image', url: 'https://i.postimg.cc/hGh9vGs5/ayudaimegen1.jpg', duration: 5000 },
+                    { type: 'image', url: 'https://i.postimg.cc/g0rvj0sB/ayudaimegen2.jpg', duration: 5000 },
+                    { type: 'image', url: 'https://i.postimg.cc/mrhQkrjy/ayudaimegen3.jpg', duration: 5000 }
+                ]
+            },
+        {
+            id: 'story2',
+            title: 'Envíos Gratis',
+            thumbnail: 'https://i.postimg.cc/g2ZSJN0m/envio_gratis.jpg', // Miniatura verde
+            slides: [
+                { type: 'image', url: 'https://i.postimg.cc/3xvSRnwK/Pedidominimo500cup.jpg', duration: 5000 },
+                { type: 'image', url: 'https://i.postimg.cc/K8MqzJYj/Enviosgratisfoto.jpg', duration: 5000 }
+            ]
+        },
+        {
+            id: 'story3',
+            title: 'Horarios',
+            thumbnail: 'https://i.postimg.cc/jjRHbXn2/horariosminiatura.jpg', // Miniatura gris
+            slides: [
+                { type: 'image', url: 'https://i.postimg.cc/qRRZk06V/horario1.jpg', duration: 5000 },
+                { type: 'image', url: 'https://i.postimg.cc/d11SqvZK/horario2.jpg', duration: 5000 }
+            ]
+        },
+        // --- NUEVAS HISTORIAS AGREGADAS ---
+        {
+            id: 'story4',
+            title: 'Ofertas Flash',
+            thumbnail: 'https://i.postimg.cc/zfDz5bJt/Gemini-Generated-Image-3uab4x3uab4x3uab.png', // Miniatura Roja
+            slides: [
+                { type: 'image', url: 'https://i.postimg.cc/sfT22JBn/Gemini-Generated-Image-je6jtyje6jtyje6j.png', duration: 5000 },
+                { type: 'image', url: 'https://i.postimg.cc/Hs7CC0b8/Gemini-Generated-Image-lnv3cplnv3cplnv3.png', duration: 5000 }
+            ]
+        },
+        {
+            id: 'story5',
+            title: 'Formas de Pago',
+            thumbnail: 'https://i.postimg.cc/W1kW3X43/Gemini_Generated_Image_dqx3tdqx3tdqx3td2.jpg', // Miniatura Azul
+            slides: [
+                { type: 'image', url: 'https://i.postimg.cc/CLMmGwL2/Gemini_Generated_Image_jumi68jumi68jumi_(1).jpg', duration: 5000 },
+                { type: 'image', url: 'https://i.postimg.cc/yYP6GyKh/Gemini_Generated_Image_dqx3tdqx3tdqx3td_(3).jpg', duration: 5000 },
+                { type: 'image', url: 'https://i.postimg.cc/m2wZny4y/Gemini_Generated_Image_dqx3tdqx3tdqx3td_(2).jpg', duration: 5000 },
+                { type: 'image', url: 'https://i.postimg.cc/CLMmGwLQ/Gemini_Generated_Image_jumi68jumi68jumi_(2).jpg', duration: 5000 }
+            ]
+        },
+        {
+            id: 'story6',
+            title: 'Soporte',
+            thumbnail: 'https://i.postimg.cc/d09hjc10/Gemini_Generated_Image_dqx3tdqx3tdqx3td.jpg', // Miniatura Violeta
+            slides: [
+                { type: 'image', url: 'https://i.postimg.cc/Xvgrk6JJ/Gemini_Generated_Image_dqx3tdqx3tdqx3td_(1).jpg', duration: 5000 }
+            ]
+        }
+    ];
+
+    let currentStoryIndex = 0;
+    let currentSlideIndex = 0;
+    let storyTimer = null;
+    let storyStartTime = 0;
+    let storyDuration = 0;
+    
+    // Variables para Pausa de Historias
+    let isStoryPaused = false;
+    let storyRemainingTime = 0;
+    let storyStartTimestamp = 0;
 
     // ==================== INICIALIZACIÓN ====================
     document.addEventListener('DOMContentLoaded', async () => {
@@ -808,13 +1309,12 @@
         globalMsgModal = new bootstrap.Modal(document.getElementById('globalMessageModal')); 
         shareModal = new bootstrap.Modal(document.getElementById('sharePageModal'));
         refreshModal = new bootstrap.Modal(document.getElementById('refreshConfirmModal'));
-        
-        // NUEVO: Inicializar el Modal de Actualización
         updateModal = new bootstrap.Modal(document.getElementById('updateAppModal'));
+        promoSwipeModal = new bootstrap.Modal(document.getElementById('promoSwipeModal'));
 
         // GLOBAL VIBRATION LISTENER
         document.body.addEventListener('click', (e) => {
-            if (e.target.closest('button, a, .card, .nav-link, .step-item, .gm-cta, .btn-plus-overlay, .cyber-btn')) {
+            if (e.target.closest('button, a, .card, .nav-link, .step-item, .gm-cta, .btn-plus-overlay, .cyber-btn, .story-item')) {
                 if(navigator.vibrate) navigator.vibrate(40);
             }
         });
@@ -825,19 +1325,47 @@
                 if(navigator.vibrate) navigator.vibrate(25);
             }
         });
+        
+        // EVENTOS PARA PAUSAR HISTORIAS (Desktop & Mobile)
+        const storyViewer = document.getElementById('story-viewer');
+        
+        // Touch events
+        storyViewer.addEventListener('touchstart', (e) => {
+            if(e.target.closest('.story-close-btn') || e.target.closest('.story-nav-left') || e.target.closest('.story-nav-right')) return;
+            pauseStory();
+        }, {passive: true});
+        
+        storyViewer.addEventListener('touchend', (e) => {
+             if(e.target.closest('.story-close-btn') || e.target.closest('.story-nav-left') || e.target.closest('.story-nav-right')) return;
+             resumeStory();
+        }, {passive: true});
+
+        // Mouse events
+        storyViewer.addEventListener('mousedown', (e) => {
+             if(e.target.closest('.story-close-btn') || e.target.closest('.story-nav-left') || e.target.closest('.story-nav-right')) return;
+             pauseStory();
+        });
+        
+        storyViewer.addEventListener('mouseup', (e) => {
+             if(e.target.closest('.story-close-btn') || e.target.closest('.story-nav-left') || e.target.closest('.story-nav-right')) return;
+             resumeStory();
+        });
+
 
         // NUEVO: Event Listener para el botón de forzar actualización
         const btnForceUpdate = document.getElementById('btn-force-update');
         if(btnForceUpdate) {
             btnForceUpdate.addEventListener('click', () => {
-                // Obtenemos la versión pendiente que guardamos en el dataset del modal
                 const pendingVersion = document.getElementById('updateAppModal').dataset.pendingVersion;
                 if(pendingVersion) {
-                    localStorage.setItem(APP_VERSION_KEY, pendingVersion); // Guardamos la nueva versión
+                    localStorage.setItem(APP_VERSION_KEY, pendingVersion); 
                 }
-                forceFullCacheRefresh(); // Ejecutamos la limpieza y recarga
+                forceFullCacheRefresh(); 
             });
         }
+
+        // Renderizar Historias
+        renderStories();
 
         // FUNCIONES GLOBALES
         window.openAuthModal = function(tab) { authModal.show(); window.switchAuthTab(tab); };
@@ -873,7 +1401,6 @@
         };
 
         window.setCategoryFilter = function(cat) {
-            // Limpiar buscador para evitar conflictos
             document.getElementById('productSearchInput').value = ''; 
             currentFilterCategory = cat;
             generateCategoryFilters();
@@ -904,9 +1431,8 @@
             window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
         };
 
-        // Cargar menú desde caché ANTES de intentar conectar a internet
+        // Cargar menú desde caché
         loadCachedMenu();
-
         loadClientData();
         loadCart();
         updateUI();
@@ -918,13 +1444,173 @@
         startAutoUpdate(); 
     });
 
+    // ==================== LÓGICA DE STORIES ====================
+    function renderStories() {
+        const container = document.getElementById('stories-section');
+        if(!container) return;
+        
+        let html = '<div class="stories-wrapper">';
+        storiesData.forEach((story, index) => {
+            html += `
+                <div class="story-item" onclick="openStory(${index})">
+                    <div class="story-circle-container">
+                        <img src="${story.thumbnail}" class="story-img">
+                    </div>
+                    <span class="story-label">${story.title}</span>
+                </div>
+            `;
+        });
+        html += '</div>';
+        container.innerHTML = html;
+    }
+
+    window.openStory = function(index) {
+        currentStoryIndex = index;
+        currentSlideIndex = 0;
+        
+        const viewer = document.getElementById('story-viewer');
+        viewer.style.display = 'flex';
+        document.body.style.overflow = 'hidden'; // Bloquear scroll de fondo
+        
+        loadStorySlide();
+    };
+
+    window.closeStory = function() {
+        const viewer = document.getElementById('story-viewer');
+        viewer.style.display = 'none';
+        document.body.style.overflow = 'auto'; // Restaurar scroll
+        clearTimeout(storyTimer);
+        isStoryPaused = false;
+    };
+
+    function loadStorySlide(resume = false) {
+        const story = storiesData[currentStoryIndex];
+        const slide = story.slides[currentSlideIndex];
+        
+        if (!resume) {
+            // Actualizar Cabecera
+            document.getElementById('story-header-title').innerText = story.title;
+            
+            // Actualizar Imagen Central
+            const imgEl = document.getElementById('story-image');
+            imgEl.style.display = 'none'; // Ocultar mientras carga o cambia
+            imgEl.classList.remove('animate__fadeIn');
+            
+            setTimeout(() => {
+                imgEl.src = slide.url;
+                imgEl.style.display = 'block';
+                imgEl.classList.add('animate__fadeIn');
+            }, 50);
+            
+            storyRemainingTime = slide.duration;
+        }
+
+        // Generar/Actualizar Barras de Progreso
+        const progressContainer = document.getElementById('story-progress-bars');
+        
+        if (!resume) {
+            progressContainer.innerHTML = '';
+            story.slides.forEach((s, idx) => {
+                const barBg = document.createElement('div');
+                barBg.className = 'story-progress-bar-bg';
+                
+                const barFill = document.createElement('div');
+                barFill.className = 'story-progress-bar-fill';
+                barFill.id = `story-bar-${idx}`;
+                
+                if (idx < currentSlideIndex) {
+                    barFill.style.width = '100%';
+                } else if (idx === currentSlideIndex) {
+                    barFill.style.width = '0%';
+                    barFill.style.animation = `fillStoryBar ${slide.duration}ms linear forwards`;
+                } else {
+                    barFill.style.width = '0%';
+                }
+                
+                barBg.appendChild(barFill);
+                progressContainer.appendChild(barBg);
+            });
+        } else {
+            // Si es resume, reajustamos la animación de la barra actual
+            const currentBar = document.getElementById(`story-bar-${currentSlideIndex}`);
+            if(currentBar) {
+                currentBar.style.animationPlayState = 'running';
+            }
+        }
+
+        // Configurar Timer
+        clearTimeout(storyTimer);
+        storyStartTimestamp = Date.now();
+        storyTimer = setTimeout(() => {
+            nextStorySlide();
+        }, storyRemainingTime);
+    }
+    
+    function pauseStory() {
+        if (isStoryPaused) return;
+        isStoryPaused = true;
+        clearTimeout(storyTimer);
+        
+        const elapsed = Date.now() - storyStartTimestamp;
+        storyRemainingTime -= elapsed;
+        
+        // Pausar animación CSS
+        const currentBar = document.getElementById(`story-bar-${currentSlideIndex}`);
+        if(currentBar) {
+            currentBar.style.animationPlayState = 'paused';
+        }
+    }
+    
+    function resumeStory() {
+        if (!isStoryPaused) return;
+        isStoryPaused = false;
+        
+        loadStorySlide(true); // Resume mode
+    }
+
+    window.nextStorySlide = function() {
+        const story = storiesData[currentStoryIndex];
+        
+        if (currentSlideIndex < story.slides.length - 1) {
+            currentSlideIndex++;
+            loadStorySlide();
+        } else {
+            // Fin de esta historia, pasar a la siguiente si existe
+            if (currentStoryIndex < storiesData.length - 1) {
+                currentStoryIndex++;
+                currentSlideIndex = 0;
+                loadStorySlide();
+            } else {
+                closeStory(); // Fin de todas las historias
+            }
+        }
+    };
+
+    window.prevStorySlide = function() {
+        if (currentSlideIndex > 0) {
+            currentSlideIndex--;
+            loadStorySlide();
+        } else {
+            // Volver a la historia anterior
+            if (currentStoryIndex > 0) {
+                currentStoryIndex--;
+                currentSlideIndex = storiesData[currentStoryIndex].slides.length - 1; // Ir a la última de la anterior
+                loadStorySlide();
+            } else {
+                // Principio de todo, reiniciar timer de la primera
+                currentSlideIndex = 0;
+                loadStorySlide();
+            }
+        }
+    };
+
+
     // Función para cargar menú guardado (Offline support)
     function loadCachedMenu() {
         const cached = localStorage.getItem(MENU_CACHE_KEY);
         if (cached) {
             try {
                 menuItems = JSON.parse(cached);
-                // Si hay datos, generamos el menú inmediatamente
                 if(menuItems.length > 0) {
                     generateCategoryFilters();
                     generateMenu();
@@ -953,7 +1639,7 @@
             return JSON.parse(text);
         } catch(e) { 
             console.error(e); 
-            if(!silent) showToast("Estás trabajando sin conexión", "warning"); // Mensaje más amigable
+            if(!silent) showToast("Estás trabajando sin conexión", "warning"); 
             return {success:false}; 
         }
         finally {
@@ -967,31 +1653,21 @@
     async function loadInitialData(silent = false) {
         const res = await fetchData('getInitialClientData', 'GET', null, silent);
         
-        // Si hay éxito, procesamos. Si falla (offline), ya cargamos el caché al inicio.
         if(res.success && res.data) {
             
             // =========================================================
-            // LÓGICA DE ACTUALIZACIÓN DE APP (NUEVO)
+            // LÓGICA DE ACTUALIZACIÓN DE APP
             // =========================================================
             if(res.data.globalMessage && res.data.globalMessage.appVersion) {
                 const msg = res.data.globalMessage;
                 const serverVersion = String(msg.appVersion).trim();
                 const localVersion = localStorage.getItem(APP_VERSION_KEY) || "0";
 
-                // Si la versión del servidor es diferente a la local, mostramos el modal OBLIGATORIO
                 if (serverVersion !== localVersion) {
-                    console.log(`Nueva versión detectada: Server ${serverVersion} vs Local ${localVersion}`);
-                    
                     const modalEl = document.getElementById('updateAppModal');
-                    // Guardamos la versión pendiente en el DOM para usarla al dar click en actualizar
                     modalEl.dataset.pendingVersion = serverVersion;
-                    
                     updateModal.show();
-                    
-                    // Bloqueamos el scroll para evitar que usen la app
                     document.body.style.overflow = 'hidden'; 
-                    
-                    // DETENEMOS la ejecución aquí para que no cargue productos ni otros modales
                     return; 
                 }
             }
@@ -1023,30 +1699,24 @@
                     ...p, price: parseFloat(p.price)||0, id:String(p.id), category: p.category || 'Otros'
                 }));
 
-                // Guardar productos actualizados en localStorage para la próxima vez (Offline support)
                 localStorage.setItem(MENU_CACHE_KEY, JSON.stringify(menuItems));
 
                 generateCategoryFilters();
                 generateMenu();
             }
 
-            // 3. ESTADO TIENDA & PROMOS (Global Message)
+            // 3. GLOBAL MESSAGE
             if(res.data.globalMessage) {
                 const msg = res.data.globalMessage;
-
-                // Lógica para evitar que el mensaje global se repita constantemente
                 const currentMsgString = JSON.stringify(msg);
                 const isNewMessage = currentMsgString !== lastGlobalMsgHash;
 
                 if(msg.isActive) {
-                    // Si es "CERRADO" (Lockout), forzamos mostrarlo siempre si está cerrado.
-                    // Si es un mensaje normal, solo si es nuevo.
                     if (msg.title.toUpperCase().includes("CERRADO") || isNewMessage) {
                         lastGlobalMsgHash = currentMsgString;
                         renderGlobalMessage(msg);
                     }
                 } else {
-                    // Lógica para cerrar modal si ya no está activo
                     const modalEl = document.getElementById('globalMessageModal');
                     const wasLocked = modalEl.classList.contains('full-screen-lockout');
                     if(modalEl.classList.contains('show') || wasLocked) {
@@ -1058,7 +1728,6 @@
                         const backdrops = document.querySelectorAll('.modal-backdrop');
                         backdrops.forEach(bd => bd.remove());
                     }
-                    // Renderizamos promo banner solo si cambió
                     if(isNewMessage) {
                          lastGlobalMsgHash = currentMsgString;
                          renderPromoBanner(msg);
@@ -1225,28 +1894,41 @@
     function generateRecommendations(currentProductId) {
         const container = document.getElementById('modal-recommendations-container');
         if(!container) return;
-        container.innerHTML = '<h6 class="fw-bold mb-3 small text-uppercase ls-1 text-muted">Te recomendamos</h6>';
-        const recs = menuItems.filter(p => p.id !== currentProductId && p.active !== false).sort(() => 0.5 - Math.random()).slice(0, 3);
+        container.innerHTML = '<h6 class="fw-bold mb-3 small text-uppercase ls-1 text-muted">También te podría gustar</h6>';
+        const recs = menuItems.filter(p => p.id !== currentProductId && p.active !== false).sort(() => 0.5 - Math.random()).slice(0, 4); // Mostramos 4
 
         if(recs.length > 0) {
-            const row = document.createElement('div'); row.className = 'row g-2';
-            row.innerHTML = recs.map(r => `
-                <div class="col-4"><div class="card h-100 border-0 bg-light" onclick="showProductDetails('${r.id}')" style="cursor:pointer;">
-                    <div class="p-2 pb-0"><img src="${r.imageurl || './img/placeholder-product.png'}" class="rounded-3 w-100 object-fit-cover" style="aspect-ratio:1/1;"></div>
-                    <div class="card-body p-2 text-center"><small class="d-block text-truncate fw-bold" style="font-size:0.7rem;">${r.name}</small><small class="text-primary fw-bold" style="font-size:0.7rem;">$${r.price.toFixed(2)}</small></div>
-                </div></div>`).join('');
-            container.appendChild(row);
+            const wrapper = document.createElement('div');
+            wrapper.className = 'recommendation-scroll-wrapper';
+            
+            wrapper.innerHTML = recs.map(r => `
+                <div class="rec-card-modern" onclick="showProductDetails('${r.id}')" style="cursor:pointer;">
+                    <div class="mb-2 position-relative">
+                        <img src="${r.imageurl || './img/placeholder-product.png'}" class="rounded-3 w-100 object-fit-cover" style="aspect-ratio:1/1;">
+                    </div>
+                    <div class="text-center">
+                        <small class="d-block text-truncate fw-bold mb-1" style="font-size:0.75rem;">${r.name}</small>
+                        <small class="text-primary fw-bold" style="font-size:0.8rem;">$${r.price.toFixed(2)}</small>
+                    </div>
+                </div>`).join('');
+            container.appendChild(wrapper);
         } else container.innerHTML = '';
     }
 
     function showProductDetails(id) {
         const p = menuItems.find(x => x.id === id);
+        
         document.getElementById('modal-product-image').src = p.imageurl;
         document.getElementById('modal-product-name').innerText = p.name;
-        document.getElementById('modal-product-description').innerText = p.description;
+        // Fix para signos de más en descripciones
+        document.getElementById('modal-product-description').innerText = p.description ? p.description.replace(/\+/g, ' ') : '';
         document.getElementById('modal-product-price').innerText = `$${p.price.toFixed(2)} CUP`;
+        
         document.getElementById('modal-add-to-cart-button-container').innerHTML =
-            `<button class="btn btn-primary w-100 btn-lg rounded-pill shadow" onclick="addToCart('${id}'); prodModal.hide()">Añadir al Carrito</button>`;
+            `<button class="btn btn-primary w-100 btn-lg rounded-pill shadow fw-bold py-3" onclick="addToCart('${id}'); prodModal.hide()">
+                <i class="bi bi-cart-plus-fill me-2"></i> Añadir al Carrito - $${p.price.toFixed(2)}
+             </button>`;
+        
         generateRecommendations(id);
         prodModal.show();
     }
@@ -1415,6 +2097,57 @@
             document.getElementById('btnPay').innerHTML='Confirmar Pedido'; 
             document.getElementById('btnPay').disabled=false; 
         }
+    }
+
+    // ==================== LÓGICA TARJETAS DESLIZABLES (PROMOS STYLE) ====================
+    const promoSteps = [
+        { 
+            title: "🔥 ¡2x1 en Pizzas!", 
+            desc: "Solo por hoy, compra una familiar y llévate otra totalmente GRATIS. ¡Corre que se acaban!", 
+            img: "https://i.postimg.cc/QdCNKRg6/meta.jpg",
+            btnText: "Pedir Ahora"
+        },
+        { 
+            title: "🚚 Envíos Flash", 
+            desc: "Nuevos repartidores en la zona. Tus pedidos llegan en menos de 20 minutos.", 
+            img: "https://i.postimg.cc/K8MqzJYj/Enviosgratisfoto.jpg",
+            btnText: "Ver Menú"
+        },
+        { 
+            title: "🎁 Sorteo Semanal", 
+            desc: "Realiza un pedido mayor a $1000 CUP y participa por una canasta de productos.", 
+            img: "https://i.postimg.cc/mrhQkrjy/ayudaimegen3.jpg",
+            btnText: "Participar"
+        }
+    ];
+
+    window.openPromoSwipe = function() {
+        const carouselInner = document.getElementById('promo-carousel-inner');
+        carouselInner.innerHTML = promoSteps.map((step, index) => `
+            <div class="carousel-item ${index === 0 ? 'active' : ''}">
+                <div class="tiktok-card">
+                    <img src="${step.img}" class="tiktok-img-bg" alt="${step.title}">
+                    
+                    <div class="tiktok-overlay">
+                        <div class="tiktok-content">
+                            <span class="tiktok-badge">Novedad</span>
+                            <h2 class="tiktok-title">${step.title}</h2>
+                            <p class="tiktok-desc">${step.desc}</p>
+                            
+                            <button class="tiktok-btn" data-bs-dismiss="modal" onclick="document.getElementById('menu-tab-link').click()">
+                                ${step.btnText} <i class="bi bi-arrow-right"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    ${index < promoSteps.length - 1 ? 
+                    `<div class="tiktok-swipe-hint">
+                        <i class="bi bi-chevron-compact-right"></i>
+                    </div>` : ''}
+                </div>
+            </div>
+        `).join('');
+        promoSwipeModal.show();
     }
 
     // UTILS
