@@ -1329,25 +1329,25 @@
         // EVENTOS PARA PAUSAR HISTORIAS (Desktop & Mobile)
         const storyViewer = document.getElementById('story-viewer');
         
-        // Touch events
+        // Touch events - PAUSA AL PRESIONAR CUALQUIER PARTE
         storyViewer.addEventListener('touchstart', (e) => {
-            if(e.target.closest('.story-close-btn') || e.target.closest('.story-nav-left') || e.target.closest('.story-nav-right')) return;
+            if(e.target.closest('.story-close-btn')) return;
             pauseStory();
         }, {passive: true});
         
         storyViewer.addEventListener('touchend', (e) => {
-             if(e.target.closest('.story-close-btn') || e.target.closest('.story-nav-left') || e.target.closest('.story-nav-right')) return;
+             if(e.target.closest('.story-close-btn')) return;
              resumeStory();
         }, {passive: true});
 
         // Mouse events
         storyViewer.addEventListener('mousedown', (e) => {
-             if(e.target.closest('.story-close-btn') || e.target.closest('.story-nav-left') || e.target.closest('.story-nav-right')) return;
+             if(e.target.closest('.story-close-btn')) return;
              pauseStory();
         });
         
         storyViewer.addEventListener('mouseup', (e) => {
-             if(e.target.closest('.story-close-btn') || e.target.closest('.story-nav-left') || e.target.closest('.story-nav-right')) return;
+             if(e.target.closest('.story-close-btn')) return;
              resumeStory();
         });
 
