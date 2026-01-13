@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>DL Envios - Repartidor Pro</title>
+    
+    <!-- Evitar error 404 de favicon -->
+    <link rel="icon" href="data:,">
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <style>
+        :root { 
+            --bg-body: #f0f2f5;
+            --card-surface: #ffffff;
+            --text-primary: #1a1a1a;
+            --text-secondary: #5a5a5a;
+            --accent-blue: #0d6efd;
+            --accent-green: #198754;
+            --touch-height: 60px; 
+        }
+
+        body { 
+            background-color: var(--bg-body); 
+            font-family: system-ui, -apple-system, sans-serif; 
+            padding-bottom: 120px; 
+            color: var(--text-primary);
+            user-select: none; 
+        }
+
+        /* Efecto Touch */
+        button:active, .btn:active, .fab:active {
+            transform: scale(0.96) !important;
+            transition: transform 0.1s;
+        }
+
+        /* Estados */
+        .status-pendiente { border-top: 8px solid #ffc107; }
+        .status-camino { border: 3px solid #0d6efd !important; background-color: #f8fbff; }
+        .status-entregado { border-top: 8px solid #198754; opacity: 0.6; background-color: #e9ecef; }
+        .status-sync-pending { border-right: 8px solid #dc3545 !important; }
+
+        /* Tarjetas */
+        .order-card { 
+            background: var(--card-surface);
+            border-radius: 20px; 
+            padding: 20px; 
+            margin-bottom: 24px; 
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08); 
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .client-name { 
+            font-size: 1.8rem; 
+            font-weight: 800; 
+            line-height: 1.1; 
+            margin-bottom: 12px;
+            color: #000;
+        }
+        
+        /* BLOQUE DE DIRECCIÓN MEJORADO */
+        .location-container {
+            background-color: #f8f9fa;
+            border-radius: 15px;
+            padding: 15px;
+            margin-bottom: 15px;
+            border: 1px solid #e9ecef;
+        }
+
+        .info-block {
+            margin-bottom: 10px;
+            padding-bottom: 10px;
+            border-bottom: 1px dashed #dee2e6;
+        }
+        .info-block:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+        
+        .info-label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            color: #6c757d;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .info-value {
+            font-size: 1.25rem; /* Tamaño aumentado para la dirección */
+            color: #212529;
+            font-weight: 700;
+            line-height: 1.3;
+        }
+        
+        /* LISTA DE PRODUCTOS DESPLEGABLE */
+        .products-toggle-btn {
+            background-color: white;
+            border: 2px solid #dee2e6;
+            color: #212529;
+            border-radius: 12px;
+            padding: 12px;
+            width: 100%;
+            text-align: left;
+            font-weight: 700;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        
+        .product-list-container {
+            background: #fff;
+            border: 1px solid #dee2e6;
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 15px;
+        }
+        
+        .product-item {
+            padding: 12px 15px;
+            border-bottom: 1px solid #f0f0f0;
+            display: flex;
+            justify-content: space-between;
+            font-size: 1rem;
+        }
+        .product-item:last-child { border-bottom: none; }
+
+        .price-box {
+            background-color: #e6f9ee;
+            color: var(--accent-green);
+            padding: 10px 20px;
+            border-radius: 12px;
+            font-size: 2.5rem;
+            font-weight: 900;
+            text-align: right;
+            display: inline-block;
+            border: 2px solid #a3cfbb;
+        }
+
+        /* Botones */
+        .btn-touch {
+            height: var(--touch-height);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            font-weight: 700;
+            border-radius: 15px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            text-decoration: none; 
+        }
+
+        .btn-call { background-color: white; border: 2px solid #343a40; color: #343a40; }
+        .btn-whatsapp { background-color: #25D366; border: none; color: white; }
+        .btn-drive { background-color: #0d6efd; border: none; color: white; height: 70px; font-size: 1.3rem; }
+        .btn-pay { background-color: #198754; border: none; color: white; height: 80px; font-size: 1.5rem; width: 100%; }
+
+        /* Header & Nav */
+        .app-header {
+            background: white; padding: 15px; position: sticky; top: 0; z-index: 1000;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+        }
+        .nav-pills .nav-link { border-radius: 50px; font-size: 1.2rem; padding: 12px; background-color: #e9ecef; color: #6c757d; }
+        .nav-pills .nav-link.active { background-color: #212529; color: white; font-weight: bold; }
+
+        /* Floating Action Button */
+        .fab { 
+            position: fixed; bottom: 30px; right: 30px; width: 75px; height: 75px; 
+            background: #212529; color: white; border-radius: 50%; 
+            display: flex; align-items: center; justify-content: center; font-size: 32px; 
+            box-shadow: 0 8px 25px rgba(0,0,0,0.3); z-index: 100; cursor: pointer; border: 4px solid white;
+        }
+
+        /* Search */
+        .search-input { height: 65px; font-size: 1.3rem; border-radius: 15px; border: 2px solid #dee2e6; padding-left: 55px; }
+        .search-icon { position: absolute; left: 20px; top: 20px; font-size: 1.5rem; color: #adb5bd; z-index: 5; }
+
+        /* Animaciones */
+        .card-exit-drive { animation: driveOffRight 0.6s forwards ease-in; }
+        @keyframes driveOffRight { 0% { transform: translateX(0); opacity: 1; } 100% { transform: translateX(100vw); opacity: 0; } }
+        .card-exit-paid { animation: paidSuccess 0.7s forwards ease-out; z-index: 10; }
+        @keyframes paidSuccess { 0% { transform: scale(1); } 40% { transform: scale(1.1); background-color: #198754; } 100% { transform: scale(0); opacity: 0; } }
+
+        /* Status Bar */
+        #connection-status { position: fixed; top: 0; left: 0; width: 100%; padding: 5px; text-align: center; font-weight: bold; font-size: 1rem; z-index: 2001; display: none; color: white; }
+        .status-online { background-color: #198754; }
+        .status-offline { background-color: #dc3545; }
+    </style>
+</head>
+<body>
+
+    <div id="connection-status"></div>
+
+    <div id="app-interface">
+        <div class="app-header d-flex justify-content-between align-items-center mb-3">
+            <div>
+                <h1 class="m-0 fw-bold" style="font-size: 1.8rem;"><i class="bi bi-box-seam-fill"></i> DL Envios</h1>
+                <div id="last-sync-text" class="text-muted fw-bold small">Cargando...</div>
+            </div>
+            <div class="d-flex gap-2">
+                <button class="btn btn-outline-dark rounded-circle p-0" style="width: 55px; height: 55px;" onclick="openReportModal()">
+                    <i class="bi bi-wallet2 fs-3"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="container">
+            <ul class="nav nav-pills nav-fill mb-4">
+                <li class="nav-item"><button class="nav-link active" onclick="renderOrders('active')">PENDIENTES</button></li>
+                <li class="nav-item"><button class="nav-link" onclick="renderOrders('history')">HISTORIAL</button></li>
+            </ul>
+
+            <div class="position-relative mb-4">
+                <i class="bi bi-search search-icon"></i>
+                <input type="text" id="searchInput" class="form-control search-input shadow-sm" placeholder="Buscar..." onkeyup="renderOrders(currentView)">
+            </div>
+
+            <div id="sync-alert" class="alert alert-danger py-3 shadow border-0 rounded-4 mb-4" style="display:none; cursor: pointer;" onclick="syncAndReload(false)">
+                <div class="d-flex align-items-center justify-content-between">
+                    <div><i class="bi bi-cloud-slash-fill fs-2 me-2"></i><span class="fs-5 fw-bold"><span id="sync-count">0</span> offline</span></div>
+                    <button class="btn btn-light fw-bold text-danger">SUBIR</button>
+                </div>
+            </div>
+
+            <div id="orders-list" class="pb-5"></div>
+        </div>
+
+        <div class="fab" onclick="syncAndReload(false)"><i class="bi bi-arrow-clockwise"></i></div>
+    </div>
+
+    <!-- Modal Reporte -->
+    <div class="modal fade" id="reportModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <div class="modal-header"><h5 class="modal-title fw-bold fs-3">💵 Caja del Día</h5><button type="button" class="btn-close fs-4" data-bs-dismiss="modal"></button></div>
+                <div class="modal-body text-center">
+                    <select id="report-date-selector" class="form-select form-select-lg mb-3 fs-4 text-center fw-bold bg-light border-0" onchange="renderReportForSelectedDate()"></select>
+                    <div class="bg-light rounded-5 p-4 mb-3">
+                        <div class="text-muted fw-bold ls-1 text-uppercase">Total Recaudado</div>
+                        <div id="report-total-amount" class="report-total">$0.00</div>
+                        <span class="badge bg-dark fs-5 px-4 py-2 rounded-pill"><span id="report-count">0</span> Pedidos</span>
+                    </div>
+                    <div class="text-start"><h6 class="text-muted ms-2 mb-2 fw-bold">Detalles:</h6><div id="report-items-list" style="max-height: 250px; overflow-y: auto;" class="bg-white border rounded-4"></div></div>
+                </div>
+                <div class="modal-footer pb-4 px-4">
+                    <button class="btn btn-success w-100 btn-touch" style="height: 70px;" onclick="shareReportViaWhatsApp()"><i class="bi bi-whatsapp me-2 fs-2"></i> ENVIAR REPORTE</button>
+                </div>
+            </div>
+        </div>
+    </div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwPEou5TaXiSIbfkRQgAUsOnsHOjMRf2O1hAhNf4nFL2TanCcHBynaD5z5mxSFBawkSUA/exec'; 
+        const ADMIN_PHONE = "5355189657"; 
+        const NOTIF_SOUND = new Audio('https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3');
+        const KEY_ORDERS = 'dl_orders_cache';
+        const KEY_QUEUE = 'dl_sync_queue';
+        const KEY_LOGS = 'dl_delivery_logs'; 
+
+        let allOrders = [];
+        let currentView = 'active';
+        let modalReportInstance;
+        let lastKnownOrderIds = new Set();
+        let backgroundInterval = null;
+        let currentReportText = "";
+
+        document.addEventListener('DOMContentLoaded', () => {
+            modalReportInstance = new bootstrap.Modal(document.getElementById('reportModal'));
+            
+            const cached = localStorage.getItem(KEY_ORDERS);
+            if(cached) {
+                try {
+                    allOrders = JSON.parse(cached);
+                    allOrders.forEach(o => lastKnownOrderIds.add(o.orderid));
+                    renderOrders(currentView);
+                } catch(e){}
+            }
+            checkSyncQueue();
+            
+            // Primera carga
+            syncAndReload(false); 
+            
+            // Iniciar actualización en segundo plano
+            startBackgroundUpdate();
+
+            // Eventos de red del navegador
+            window.addEventListener('online', () => updateConnectionStatus(true));
+            window.addEventListener('offline', () => updateConnectionStatus(false));
+            
+            // Verificación inicial del estado
+            updateConnectionStatus(navigator.onLine);
+            
+            document.body.addEventListener('click', () => { NOTIF_SOUND.load(); }, {once:true});
+        });
+
+        function startBackgroundUpdate() {
+            if(backgroundInterval) clearInterval(backgroundInterval);
+            backgroundInterval = setInterval(() => {
+                if(navigator.onLine) {
+                    syncAndReload(true);
+                }
+            }, 10000); 
+        }
+
+        async function syncAndReload(silent = false) {
+            // Si es manual (no silencioso), ponemos estado cargando/online
+            if(!silent) updateConnectionStatus(true);
+            
+            if(navigator.onLine) await processSyncQueue();
+
+            try {
+                if(!silent) document.getElementById('last-sync-text').innerText = 'Actualizando...';
+                
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 10000); 
+
+                const response = await fetch(`${SCRIPT_URL}?action=getAdminOrders&t=${Date.now()}`, {
+                    signal: controller.signal
+                });
+                clearTimeout(timeoutId);
+                
+                const json = await response.json();
+                
+                if (json.success) {
+                    // ¡CORRECCIÓN AQUÍ!
+                    // Si tuvimos éxito, SIEMPRE quitamos el cartel rojo, incluso en segundo plano
+                    updateConnectionStatus(true);
+
+                    const fetchedOrders = json.data;
+                    let hasNewOrders = false;
+                    
+                    fetchedOrders.forEach(order => {
+                        if (order.status !== 'Entregado' && order.status !== 'Cancelado' && !lastKnownOrderIds.has(order.orderid)) {
+                            hasNewOrders = true;
+                        }
+                        lastKnownOrderIds.add(order.orderid);
+                    });
+
+                    if (hasNewOrders) {
+                        if (window.Android && window.Android.triggerNotification) {
+                            window.Android.triggerNotification("¡Nuevo Pedido!", "Revisa la lista de pendientes.");
+                        } 
+                        try { NOTIF_SOUND.play().catch(e => {}); } catch(e) {}
+                        
+                        Swal.fire({
+                            title: '¡NUEVO PEDIDO!',
+                            text: 'Revisa la lista de pendientes',
+                            icon: 'info',
+                            backdrop: `rgba(13, 110, 253, 0.4)`,
+                            timer: 4000,
+                            showConfirmButton: false
+                        });
+                    }
+
+                    allOrders = fetchedOrders;
+                    localStorage.setItem(KEY_ORDERS, JSON.stringify(allOrders));
+                    document.getElementById('last-sync-text').innerText = 'Actualizado: ' + new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+                    
+                    renderOrders(currentView);
+                    
+                    if(!silent && !hasNewOrders) {
+                        const toast = Swal.mixin({ toast: true, position: 'top', showConfirmButton: false, timer: 1500 });
+                        toast.fire({ icon: 'success', title: 'Datos al día' });
+                    }
+                }
+            } catch (e) {
+                // Solo mostramos error si fue una actualización manual
+                if(!silent) {
+                    document.getElementById('last-sync-text').innerText = 'Offline';
+                    updateConnectionStatus(false);
+                }
+                // Si falla en segundo plano (silent), NO hacemos nada (no ponemos el cartel rojo)
+            }
+        }
+
+        // ================= COLA OFFLINE =================
+        function queueAction(action, payload) {
+            let queue = JSON.parse(localStorage.getItem(KEY_QUEUE) || '[]');
+            const timestamp = new Date().toLocaleString();
+            payload.offlineTimestamp = timestamp;
+            queue.push({ action, payload, timestamp });
+            localStorage.setItem(KEY_QUEUE, JSON.stringify(queue));
+            checkSyncQueue();
+        }
+
+        async function processSyncQueue() {
+            let queue = JSON.parse(localStorage.getItem(KEY_QUEUE) || '[]');
+            if (queue.length === 0) return;
+            let remaining = [];
+            for (const item of queue) {
+                try {
+                    const formData = new URLSearchParams();
+                    formData.append('data', JSON.stringify({ action: item.action, payload: item.payload }));
+                    await fetch(SCRIPT_URL, { method: 'POST', body: formData });
+                    logActivity(`SYNC OK: #${String(item.payload.orderId).substr(-4)} subido.`);
+                } catch (e) {
+                    remaining.push(item);
+                }
+            }
+            localStorage.setItem(KEY_QUEUE, JSON.stringify(remaining));
+            checkSyncQueue();
+        }
+
+        function checkSyncQueue() {
+            const queue = JSON.parse(localStorage.getItem(KEY_QUEUE) || '[]');
+            const alert = document.getElementById('sync-alert');
+            if (queue.length > 0) {
+                alert.style.display = 'block'; 
+                document.getElementById('sync-count').innerText = queue.length;
+            } else {
+                alert.style.display = 'none';
+            }
+        }
+
+        function updateLocalOrderVisual(id, status) {
+            const idx = allOrders.findIndex(o => String(o.orderid) === String(id));
+            if (idx !== -1) {
+                allOrders[idx].status = status;
+                allOrders[idx]._pendingSync = true;
+                localStorage.setItem(KEY_ORDERS, JSON.stringify(allOrders));
+                renderOrders(currentView);
+            }
+        }
+
+        // ================= RENDERIZADO =================
+        function renderOrders(view) {
+            currentView = view;
+            const list = document.getElementById('orders-list');
+            const search = document.getElementById('searchInput').value.toLowerCase();
+            list.innerHTML = '';
+
+            document.querySelectorAll('.nav-link').forEach(b => b.classList.remove('active'));
+            const activeBtn = document.querySelector(`button[onclick="renderOrders('${view}')"]`);
+            if(activeBtn) activeBtn.classList.add('active');
+
+            let filtered = allOrders.filter(o => {
+                const matchStatus = view === 'active' ? !['Entregado','Cancelado'].includes(o.status) : ['Entregado','Cancelado'].includes(o.status);
+                const matchSearch = !search || JSON.stringify(o).toLowerCase().includes(search);
+                return matchStatus && matchSearch;
+            });
+
+            if (filtered.length === 0) {
+                list.innerHTML = `<div class="text-center mt-5 p-5 bg-white rounded-5 shadow-sm opacity-75"><i class="bi bi-inbox fs-1 text-muted d-block mb-3"></i><h3 class="text-muted fw-bold">No hay pedidos</h3></div>`;
+                return;
+            }
+
+            filtered.sort((a, b) => {
+                if (a.deliverynotes && !b.deliverynotes) return -1;
+                return new Date(b.orderdateiso) - new Date(a.orderdateiso);
+            });
+
+            filtered.forEach(order => list.appendChild(createCard(order)));
+        }
+
+        function createCard(order) {
+            const div = document.createElement('div');
+            div.id = `card-${order.orderid}`;
+            
+            let statusClass = 'status-pendiente';
+            if (order.status && order.status.includes('Camino')) { statusClass = 'status-camino'; }
+            if (order.status === 'Entregado') { statusClass = 'status-entregado'; }
+            const syncClass = order._pendingSync ? 'status-sync-pending' : '';
+
+            const recipName = order.recipientname || order.clientname || "Cliente";
+            const rawPhone = order.recipientphone || order.clientphone || "";
+            const cleanPhone = String(rawPhone).replace(/[^0-9]/g, ''); 
+            const waPhone = cleanPhone.startsWith('53') ? cleanPhone : `53${cleanPhone}`;
+
+            const address = order.deliveryaddress || "Dirección no especificada";
+            const refAndNotes = order.deliverynotes || ""; 
+
+            let productsHtml = "";
+            let itemsCount = 0;
+            let items = [];
+
+            try {
+                if (typeof order.itemsjson === 'string') {
+                    items = JSON.parse(order.itemsjson);
+                } else if (Array.isArray(order.itemsjson) || typeof order.itemsjson === 'object') {
+                    items = order.itemsjson || [];
+                }
+                
+                itemsCount = items.length;
+                if (itemsCount > 0) {
+                    productsHtml = `
+                        <button class="products-toggle-btn collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#prod-${order.orderid}">
+                            <span><i class="bi bi-bag-fill text-primary me-2"></i> Ver ${itemsCount} Producto(s)</span>
+                            <i class="bi bi-chevron-down"></i>
+                        </button>
+                        <div class="collapse" id="prod-${order.orderid}">
+                            <div class="product-list-container">
+                                ${items.map(i => `
+                                    <div class="product-item">
+                                        <span class="fw-bold text-dark">${i.name}</span>
+                                        <span class="text-muted">x${i.quantity}</span>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    `;
+                }
+            } catch (e) { 
+                console.error("Error procesando items", e);
+            }
+
+            const displayPrice = parseFloat(order.totalamount || 0).toFixed(2);
+            
+            const telLink = cleanPhone ? `tel:${cleanPhone}` : '#';
+            const waLink = cleanPhone ? `https://api.whatsapp.com/send?phone=${waPhone}` : '#';
+
+            div.className = `order-card ${statusClass} ${syncClass}`;
+            
+            div.innerHTML = `
+                <div class="d-flex justify-content-between align-items-start mb-2">
+                    <span class="badge bg-secondary rounded-pill px-3 py-2 fs-6">#${String(order.orderid).substr(-4)}</span>
+                    <span class="text-secondary fw-bold fs-5">${new Date(order.orderdateiso).toLocaleString([], {hour:'2-digit', minute:'2-digit'})}</span>
+                </div>
+                
+                <h2 class="client-name">${recipName}</h2>
+                
+                <div class="location-container">
+                    <div class="info-block">
+                        <span class="info-label"><i class="bi bi-geo-alt-fill text-danger me-1"></i> DIRECCIÓN</span>
+                        <div class="info-value">${address}</div>
+                    </div>
+                    ${refAndNotes ? `
+                    <div class="info-block">
+                        <span class="info-label"><i class="bi bi-megaphone-fill text-warning me-1"></i> REFERENCIA / NOTAS</span>
+                        <div class="info-value text-secondary small">${refAndNotes}</div>
+                    </div>` : ''}
+                </div>
+
+                ${productsHtml}
+
+                <div class="d-flex justify-content-end mb-4">
+                    <div class="price-box">$${displayPrice}</div>
+                </div>
+
+                <div class="row g-2 mb-3">
+                    <div class="col-6">
+                        <a href="${telLink}" target="_blank" class="btn btn-call btn-touch w-100">
+                            <i class="bi bi-telephone-fill me-2 fs-4"></i> Llamar
+                        </a>
+                    </div>
+                    <div class="col-6">
+                        <a href="${waLink}" target="_blank" class="btn btn-whatsapp btn-touch w-100">
+                            <i class="bi bi-whatsapp me-2 fs-3"></i> Chat
+                        </a>
+                    </div>
+                </div>
+
+                ${order.status !== 'Entregado' && order.status !== 'Cancelado' ? `
+                    <div class="d-flex flex-column gap-2 mt-2">
+                        <button class="btn btn-drive btn-touch w-100 shadow" onclick="animateAndProcess('${order.orderid}', 'En Camino')">
+                            <i class="bi bi-scooter fs-1 me-3"></i> VOY EN CAMINO
+                        </button>
+                        <button class="btn btn-pay btn-touch w-100 shadow" onclick="confirmDelivery('${order.orderid}', ${order.totalamount})">
+                            <i class="bi bi-cash-stack fs-1 me-3"></i> ¡COBRADO!
+                        </button>
+                    </div>
+                ` : `<div class="text-center p-3 bg-success bg-opacity-10 rounded-4 text-success fw-bold fs-4 border border-success"><i class="bi bi-check-circle-fill"></i> FINALIZADO</div>`}
+                
+                ${order._pendingSync ? '<div class="text-danger mt-3 fw-bold text-center fs-5"><i class="bi bi-phone-vibrate"></i> Guardado en celular (Falta subir)</div>' : ''}
+            `;
+            return div;
+        }
+
+        function animateAndProcess(orderId, newStatus, amount = 0) {
+            const card = document.getElementById(`card-${orderId}`);
+            if (card) {
+                if (newStatus === 'En Camino') {
+                    card.classList.add('card-exit-drive');
+                    setTimeout(() => executeStatusUpdate(orderId, newStatus, amount), 600);
+                } 
+                else if (newStatus === 'Entregado') {
+                    card.classList.add('card-exit-paid');
+                    setTimeout(() => {
+                        executeStatusUpdate(orderId, newStatus, amount);
+                        Swal.fire({ icon: 'success', title: '¡Excelente!', timer: 2000, showConfirmButton: false });
+                    }, 700);
+                } else {
+                    executeStatusUpdate(orderId, newStatus, amount);
+                }
+            }
+        }
+
+        function executeStatusUpdate(orderId, newStatus, amount) {
+            const now = new Date();
+            if(newStatus === 'Entregado') {
+                const logData = `ENTREGA_COMPLETA|${orderId}|${now.toLocaleDateString()}|${now.toLocaleTimeString()}|${amount}`;
+                logActivity(logData);
+            } else if (newStatus === 'En Camino') {
+                logActivity(`ACCIÓN: En camino #${String(orderId).substr(-4)} - ${now.toLocaleTimeString()}`);
+            }
+
+            updateLocalOrderVisual(orderId, newStatus);
+            if (navigator.onLine) {
+                queueAction('updateOrderStatus', { orderId: orderId, newStatus: newStatus });
+                processSyncQueue();
+            } else {
+                queueAction('updateOrderStatus', { orderId: orderId, newStatus: newStatus });
+            }
+        }
+
+        function confirmDelivery(id, amount) {
+            Swal.fire({
+                title: `<span class='display-6 fw-bold'>¿Tienes los $${parseFloat(amount).toFixed(2)}?</span>`,
+                icon: 'question', showCancelButton: true, confirmButtonText: 'SÍ, YA COBRÉ', confirmButtonColor: '#198754', cancelButtonText: 'NO AÚN',
+                customClass: { popup: 'rounded-4', confirmButton: 'btn btn-lg btn-success w-100 mb-2 py-3 fs-4', cancelButton: 'btn btn-lg btn-secondary w-100 py-3 fs-4', actions: 'd-flex flex-column w-100 px-4' }
+            }).then((r) => { if (r.isConfirmed) animateAndProcess(id, 'Entregado', amount); });
+        }
+
+        function openReportModal() {
+            const logs = JSON.parse(localStorage.getItem(KEY_LOGS) || '[]');
+            const dates = new Set();
+            const today = new Date().toLocaleDateString();
+            dates.add(today);
+            logs.forEach(log => { if (log.startsWith('ENTREGA_COMPLETA')) { const parts = log.split('|'); if(parts[2]) dates.add(parts[2]); } });
+            const selector = document.getElementById('report-date-selector');
+            selector.innerHTML = '';
+            Array.from(dates).sort().forEach(date => {
+                const option = document.createElement('option');
+                option.value = date;
+                option.text = (date === today) ? `HOY (${date})` : date;
+                selector.appendChild(option);
+            });
+            renderReportForSelectedDate();
+            modalReportInstance.show();
+        }
+
+        function renderReportForSelectedDate() {
+            const selectedDate = document.getElementById('report-date-selector').value;
+            const logs = JSON.parse(localStorage.getItem(KEY_LOGS) || '[]');
+            const dailyLogs = logs.filter(l => l.startsWith('ENTREGA_COMPLETA') && l.includes(`|${selectedDate}|`));
+            let totalCash = 0;
+            let htmlList = '';
+            dailyLogs.forEach(log => {
+                const parts = log.split('|');
+                const amount = parseFloat(parts[4]) || 0;
+                totalCash += amount;
+                htmlList += `<div class="p-3 border-bottom d-flex justify-content-between align-items-center"><div><span class="badge bg-light text-dark border me-2">#${String(parts[1]).substr(-4)}</span><span class="text-muted small">${parts[3]}</span></div><span class="fw-bold text-success">$${amount.toFixed(2)}</span></div>`;
+            });
+            document.getElementById('report-total-amount').innerText = `$${totalCash.toFixed(2)}`;
+            document.getElementById('report-count').innerText = dailyLogs.length;
+            document.getElementById('report-items-list').innerHTML = htmlList || '<div class="p-4 text-center text-muted">Nada por aquí</div>';
+            currentReportText = `*REPORTE CAJA - ${selectedDate}*\n💰 *TOTAL: $${totalCash.toFixed(2)}*\n📦 Entregas: ${dailyLogs.length}`;
+        }
+
+        function shareReportViaWhatsApp() {
+            if(!currentReportText) return;
+            const url = `https://api.whatsapp.com/send?phone=53${ADMIN_PHONE}&text=${encodeURIComponent(currentReportText)}`;
+            const link = document.createElement('a'); link.href = url; link.target = '_blank';
+            document.body.appendChild(link); link.click(); document.body.removeChild(link);
+        }
+
+        function logActivity(msg) {
+            let logs = JSON.parse(localStorage.getItem(KEY_LOGS) || '[]');
+            logs.unshift(msg); if (logs.length > 1000) logs.pop(); 
+            localStorage.setItem(KEY_LOGS, JSON.stringify(logs));
+        }
+
+        function updateConnectionStatus(isOnline) {
+            const el = document.getElementById('connection-status');
+            el.innerText = isOnline ? "🟢 CONECTADO" : "🔴 SIN INTERNET (OFFLINE)";
+            el.className = isOnline ? "status-online" : "status-offline";
+            el.style.display = isOnline ? 'none' : 'block';
+        }
+    </script>
+</body>
+</html>
